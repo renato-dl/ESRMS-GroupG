@@ -3,7 +3,7 @@
 ## Start server
 
 * npm install
-* npm start
+* npm run watch
 
 ## Start frontend
 

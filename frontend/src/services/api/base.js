@@ -1,10 +1,11 @@
 import axios from 'axios';
 import {UNAUTHORIZED} from 'http-status-codes';
+import { config } from '../../config';
 
 export class BaseAPIService {
   constructor() {
-    const options = { baseURL: '/api' };
-    this.instance = axios(options);
+    const options = { baseURL: config.apiBaseUrl };
+    this.instance = axios.create(options);
     this.attachInterceptors();
   }
 

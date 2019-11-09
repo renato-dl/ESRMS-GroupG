@@ -1,4 +1,4 @@
-class BaseController {
+export class BaseController {
 
   processRequest(action, req, res) {
     // process all the request here
@@ -19,5 +19,3 @@ class BaseController {
   }
 
 }
-
-module.exports = BaseController;

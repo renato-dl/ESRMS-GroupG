@@ -1,4 +1,4 @@
-const BaseController = require("./baseController");
+import { BaseController } from "./baseController";
 
 class TestController extends BaseController {
   index(req, res) {
@@ -6,4 +6,4 @@ class TestController extends BaseController {
   }
 }
 
-module.exports = new TestController();
+export default new TestController();
