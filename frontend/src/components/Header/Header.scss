@@ -1,0 +1,14 @@
+@import '../../assets/styles/colors.scss';
+
+.header {
+  background-color: $black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 75px;
+
+  h1 {
+    color: $grey;
+  }
+
+}

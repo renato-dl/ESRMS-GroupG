@@ -1,0 +1,13 @@
+@import '../../assets/styles/colors.scss';
+
+.footer {
+  background-color: $black;
+  color: #fff;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
