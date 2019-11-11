@@ -84,7 +84,7 @@ export class Model {
       });
     }
 
-    updateSQL += ` WHERE id = ?;`;
+    updateSQL += ` WHERE ID = ?;`;
     
     const result = await connection.query(updateSQL, [...Object.values(data), id]);
     connection.release();
@@ -99,7 +99,7 @@ export class Model {
    */
   async remove(id) {
     const connection = await this.db.getConnection();
-    await connection.query(`DELETE FROM ${this.tableName} WHERE id = ?`, [id]);
+    await connection.query(`DELETE FROM ${this.tableName} WHERE ID = ?`, [id]);
     connection.release();
   }
   
