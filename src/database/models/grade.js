@@ -4,9 +4,9 @@ class Grade extends Model {
   constructor() {
     super('Grades');
   }
-  async findByStudentId(parentId, studentId) {
+  async findByStudentId(parentId, studentId, pagination) {
     const connection = await this.db.getConnection();
-    const results = await connection.query(
+    let query =
         `SELECT Subjects.Name, Grade, Date
         FROM ${this.tableName}, Subjects, Students
         WHERE
@@ -14,9 +14,14 @@ class Grade extends Model {
           ${this.tableName}.StudentId = Student.ID AND
           StudentId = ? AND
           (Parent1 = ? OR Parent2 = ?)
-        ORDER BY Date DESC`,
-        [studentId, parentId, parentId]
-    );
+        ORDER BY Date DESC`;
+
+    if (pagination) {
+      query += ` ${this.db.getPaginationQuery(pagination)}`
+    }
+
+    const results = await connection.query(query, [studentId, parentId, parentId]);
+
     connection.release();
 
     if (!results.length) {
