@@ -10,7 +10,7 @@ export class BaseController {
     try {
       this[action](req, res);
     } catch(error) {
-      res.status(422).json({
+      res.sendStatus(422).json({
         errors: [{
           msg: error.message
         }]

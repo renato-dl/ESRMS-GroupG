@@ -5,7 +5,7 @@ import indexRouter from './routes/index';
 import {config} from './config';
 import cors from 'cors';
 import createError from 'http-errors';
-import {NOT_FOUND, SERVICE_UNAVAILABLE} from 'http-status';
+import {NOT_FOUND} from 'http-status';
 
 export class Application {
   constructor() {
@@ -49,13 +49,13 @@ export class Application {
    */
   setErrorMiddleware() {
     // catch 404 and forward to error handler
-    this.app.use(function(req, res, next) {
+    this.app.use((req, res, next) => {
       next(createError(NOT_FOUND));
     });
 
     // error handler
-    this.app.use(function(err, req, res, next) {
-      res.status(NOT_FOUND).json({ message: err.message });
+    this.app.use((err, req, res, next) => {
+      res.sendStatus(NOT_FOUND).json({ message: err.message });
     });
   }
 
