@@ -13,7 +13,7 @@ export class Model {
    */
   async findById(id) {
     const connection = await this.db.getConnection();
-    const results = await connection.query(`SELECT * FROM ${this.tableName} WHERE id = ?`, [id]);
+    const results = await connection.query(`SELECT * FROM ${this.tableName} WHERE ID = ?`, [id]);
 
     if (!results.length) {
       throw new Error('Entity not found');
