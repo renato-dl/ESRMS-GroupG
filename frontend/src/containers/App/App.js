@@ -3,7 +3,9 @@ import {Header} from '../../components/Header/Header';
 import {Footer} from '../../components/Footer/Footer';
 import '../../assets/styles/global.scss';
 import {Container} from 'semantic-ui-react';
-
+import {Switch, Route} from 'react-router-dom';
+import { Parents } from '../Parents/Parents';
+import { NotFound } from '../NotFound/NotFound';
 
 export class App extends React.Component {
   render() {
@@ -13,7 +15,10 @@ export class App extends React.Component {
 
         <Container>
           
-          Content goes here
+          <Switch>
+            <Route path="/parents" component={Parents} />
+            <Route path="*" component={NotFound} />
+          </Switch>
           
         </Container>
 
