@@ -14,6 +14,7 @@ export class Model {
   async findById(id) {
     const connection = await this.db.getConnection();
     const results = await connection.query(`SELECT * FROM ${this.tableName} WHERE id = ?`, [id]);
+    connection.release();
 
     if (!results.length) {
       throw new Error('Entity not found');
@@ -35,7 +36,8 @@ export class Model {
       query += ` ${this.db.getPaginationQuery(pagination)}`
     }
 
-    return await connection.query(query, );
+    connection.release();
+    return await connection.query(query);
   }
 
   /**
@@ -55,6 +57,7 @@ export class Model {
       `INSERT INTO ${this.tableName}(${attributes}) VALUES(${preparePattern})`, 
       values
     );
+    connection.release();
 
     if (!result.affectedRows) {
       throw new Error("Couldn't save entity");
@@ -84,7 +87,8 @@ export class Model {
     updateSQL += ` WHERE id = ?;`;
     
     const result = await connection.query(updateSQL, [...Object.values(data), id]);
-    
+    connection.release();
+
     return !!result.affectedRows;
   }
 
@@ -96,6 +100,7 @@ export class Model {
   async remove(id) {
     const connection = await this.db.getConnection();
     await connection.query(`DELETE FROM ${this.tableName} WHERE id = ?`, [id]);
+    connection.release();
   }
   
 }
