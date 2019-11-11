@@ -35,9 +35,10 @@ export class Model {
     if (pagination) {
       query += ` ${this.db.getPaginationQuery(pagination)}`
     }
-
+    const result = await connection.query(query);
     connection.release();
-    return await connection.query(query);
+    
+    return result;
   }
 
   /**
