@@ -13,7 +13,7 @@ export class Model {
    */
   async findById(id) {
     const connection = await this.db.getConnection();
-    const results = await connection.query(`SELECT * FROM ${this.tableName} WHERE id = ?`, [id]);
+    const results = await connection.query(`SELECT * FROM ${this.tableName} WHERE ID = ?`, [id]);
     connection.release();
 
     if (!results.length) {
@@ -35,9 +35,10 @@ export class Model {
     if (pagination) {
       query += ` ${this.db.getPaginationQuery(pagination)}`
     }
-
+    const result = await connection.query(query);
     connection.release();
-    return await connection.query(query);
+    
+    return result;
   }
 
   /**
@@ -84,7 +85,7 @@ export class Model {
       });
     }
 
-    updateSQL += ` WHERE id = ?;`;
+    updateSQL += ` WHERE ID = ?;`;
     
     const result = await connection.query(updateSQL, [...Object.values(data), id]);
     connection.release();
@@ -99,7 +100,7 @@ export class Model {
    */
   async remove(id) {
     const connection = await this.db.getConnection();
-    await connection.query(`DELETE FROM ${this.tableName} WHERE id = ?`, [id]);
+    await connection.query(`DELETE FROM ${this.tableName} WHERE ID = ?`, [id]);
     connection.release();
   }
   
