@@ -21,7 +21,6 @@ export class Application {
       this.setClientFallback();
     }
 
-    this.setErrorMiddleware();
     this.startServer();
   }
 
@@ -42,21 +41,6 @@ export class Application {
 
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
-  }
-
-  /**
-   * Error middleware when no route is matched
-   */
-  setErrorMiddleware() {
-    // catch 404 and forward to error handler
-    this.app.use((req, res, next) => {
-      next(createError(NOT_FOUND));
-    });
-
-    // error handler
-    this.app.use((err, req, res, next) => {
-      res.sendStatus(NOT_FOUND).json({ message: err.message });
-    });
   }
 
   setRoutes() {
