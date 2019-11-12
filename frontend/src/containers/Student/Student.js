@@ -16,14 +16,20 @@ export class Student extends React.Component {
       this.setState({children: response.data});
     }
   }
+  selectMarks = async () => {
+    console.log();
+    this.props.history.push(`/student/${this.state.id}/marks`);
+  }
 
   render() {
     return (
       <div className="student-container">
         <h2 className="title">Students place in here</h2>
-
-        {/* This will be removed at for the moment is only to display the data */}
-        <StudentCard {...this.state} />
+        <StudentCard {...this.state} 
+        />
+        <button className='student_grades'type='button'onClick={() => this.selectMarks(this.state.id)} >
+        show grades
+        </button>
 
       </div>
     )
