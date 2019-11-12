@@ -8,7 +8,7 @@ import {App} from './containers/App/App';
 render(
   <BrowserRouter>
     <Switch>
-      <Route exact path="/" render={() => <Redirect to="/parents" />} />
+      <Route exact path="/" render={() => <Redirect to="/parent" />} />
       <Route exact path="/login" render={() => <div>Login</div>} />
       <Route path="/" component={App} />
     </Switch>

@@ -8,7 +8,6 @@ export const StudentCard = (props) => (
     className="student" 
     key={props.id} 
     onClick={props.onClick ? props.onClick : null}
-    style={props.selected ? {border: '1px solid green'} : null}
   >
     <Image src={studentStubImage} wrapped ui={false} />
     <Card.Content>
