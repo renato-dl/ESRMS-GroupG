@@ -7,19 +7,19 @@ class TeacherController extends BaseController {
   // GET /teacher/:teacherId/subjects
   async subjectsByTeacherId(req, res) {
     const subjects = await Subject.findByTeacherId(req.params.teacherId);
-    res.send(subjects);
+    // TODO: get class orf 
+    const response = []
+    subjects.forEach(subject => {
+      const elem = {"subjectId": subject['ID'], "subject": subject["Name"], "classId": subject["classid"]};
+      response.push(elem);
+    });
+    res.send(response);
   }
 
   // POST /teacher/:teacherId/addTopic
   // Body: classId, subjectId, topicTitle, topicDescription, topicDate
   async addTopic(req, res) {
     const result = await Topic.insertNewTopic(/* PARAMS*/);
-    res.send(result);
-  }
-
-  // DELETE /teacher/:teacherId/deleteTopic/:topicId
-  async deleteTopic(req, res) {
-    const result = await Topic.deleteTopic(req.params.topicId);
     res.send(result);
   }
 
