@@ -3,7 +3,7 @@ import path from 'path';
 import logger from 'morgan';
 import indexRouter from './routes/index';
 import parentRouter from './routes/parent';
-import teacherRouter from './routes/tacher';
+import teacherRouter from './routes/teacher';
 import {config} from './config';
 import cors from 'cors';
 
