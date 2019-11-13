@@ -33,6 +33,10 @@ class Tpoic extends Model {
     return results;
   }
 
+  async editTopic(/* PARAMS*/) {
+    // @Xileny
+  }
+
 }
 
 export default new Topic();
