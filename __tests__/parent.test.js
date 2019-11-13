@@ -1,4 +1,3 @@
-import Grade from "../src/database/models/grade";
 import Student from "../src/database/models/student";
 
 describe('Parent tests', () => {
@@ -49,4 +48,15 @@ describe('Parent tests', () => {
 
        )]));
     });
+
+    test('should throw Error with message \'Entity not found\' when the passed Id does not exist', async () => {
+        try{
+            const students = await Student.findByParentId("32e905eaa2770b66baf20282dff09191");
+        }
+        catch(error){
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Entity not found');
+        }
+    });
+
 });
