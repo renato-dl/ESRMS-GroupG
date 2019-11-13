@@ -2,10 +2,10 @@ import express from 'express';
 import path from 'path';
 import logger from 'morgan';
 import indexRouter from './routes/index';
+import parentRouter from './routes/parent'
 import {config} from './config';
 import cors from 'cors';
-import createError from 'http-errors';
-import {NOT_FOUND} from 'http-status';
+
 
 export class Application {
   constructor() {
@@ -21,7 +21,6 @@ export class Application {
       this.setClientFallback();
     }
 
-    this.setErrorMiddleware();
     this.startServer();
   }
 
@@ -44,23 +43,9 @@ export class Application {
     this.app.use(express.urlencoded({ extended: false }));
   }
 
-  /**
-   * Error middleware when no route is matched
-   */
-  setErrorMiddleware() {
-    // catch 404 and forward to error handler
-    this.app.use((req, res, next) => {
-      next(createError(NOT_FOUND));
-    });
-
-    // error handler
-    this.app.use((err, req, res, next) => {
-      res.sendStatus(NOT_FOUND).json({ message: err.message });
-    });
-  }
-
   setRoutes() {
     this.app.use(`${config.env.api_prefix}/`, indexRouter);
+    this.app.use(`${config.env.api_prefix}/parent`, parentRouter);
   }
 
   // sends back the index.html for the client if none of the routes is matched
