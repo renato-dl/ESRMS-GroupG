@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "start": "npm run dev",
+    "test": "jest --runInBand",
     "server": "babel-node ./src",
     "server:prod": "node ./dist",
     "dev": "cross-env NODE_ENV=development npm-run-all server",
     "clean": "rimraf dist",
     "build": "babel ./src --out-dir ./dist",
     "prod": "cross-env NODE_ENV=production npm-run-all clean build server:prod",
-    "watch": "nodemon",
-    "test": "jest __tests__ --runInBand"
+    "watch": "nodemon"
   },
   "dependencies": {
     "@babel/runtime": "^7.7.2",
