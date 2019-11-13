@@ -37,6 +37,10 @@ class Tpoic extends Model {
     // @Xileny
   }
 
+  async findByTeacherClassSubject(/* PARAMS*/) {
+    // @Xhoi, good luck
+  }
+
 }
 
 export default new Topic();

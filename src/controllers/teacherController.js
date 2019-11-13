@@ -23,7 +23,7 @@ class TeacherController extends BaseController {
     res.send(result);
   }
 
-  // PATCH /teacher/:teacherId/editTopic/
+  // PATCH /teacher/:teacherId/editTopic
   // Body: topicID, topicTitle, topicDescription, topicDate
   // Teacher can't modify class or subject
   async patchTopic(req, res) {
@@ -31,8 +31,19 @@ class TeacherController extends BaseController {
     res.send(result);
   }
 
+  /* GET /teacher/:teacherId/topics
+            ?topicId=123
+            &classId=123
+            &subjectId=123
+            &startDate=UTC_STRING&endDate=UTC_STRING [OPTIONAL]
+            &page=2&pageSize=10 [OPTIONAL]  */
+  async topicsByTeacherClassSubject(req, res) {
+    const result = await Topic.findByTeacherClassSubject(/* PARAMS*/);
+    res.send(result);
+  }
 
 
 }
+
 
 export default new TeacherController();
