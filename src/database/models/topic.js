@@ -1,6 +1,6 @@
 import {Model} from './base';
 
-class Tpoic extends Model {
+class Topic extends Model {
   constructor() {
     super('Topics');
   }
