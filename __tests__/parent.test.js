@@ -110,7 +110,7 @@ describe('Parent tests 2', () => {
         }
     });
 
-    test('should throw Error with message \'Entity not found\' when the passed student Id does not exist', async () => {
+    test('should throw Error with message \'Entity not found\' when missmatching between parent and student', async () => {
         try{
             const grades = await Grade.findByStudentId("32d905eaa2770b66baf20282dff09191", "266667153e975bbf735b89d4b03d9f93"); 
         }
