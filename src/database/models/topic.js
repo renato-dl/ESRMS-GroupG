@@ -23,10 +23,26 @@ class Topic extends Model {
     // @Xileny
   }
 
-  async findByTeacherClassSubject(/* PARAMS*/) {
-    // @Xhoi, good luck
+  async findByTeacherClassSubject(teacherId, classId, subjectId, page, pageSize) {
+    try{
+    const connection = await this.db.getConnection();
+    let sql_query = `SELECT t.SubjectId, t.Title, t.TopicDate 
+    FROM teachersubjectclassrelation tscr, topics t
+    WHERE tscr.SubjectId = t.SubjectId AND tscr.TeacherId = ? AND tscr.ClassId = ? AND tscr.SubjectId = ? 
+    ORDER BY CreatedOn DESC;`;
+ 
+    const results = await connection.query(sql_query, [teacherId, classId, subjectId]);
+    connection.release();
+    if (!results.length) {
+      throw new Error('Entity not found');
+    }
+      return results;
+  }catch(e){
+      console.log(e);
+      throw e;
   }
-
 }
+}
+ 
 
 export default new Topic();
