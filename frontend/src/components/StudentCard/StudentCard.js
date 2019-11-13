@@ -11,10 +11,11 @@ export const StudentCard = (props) => (
   >
     <Image src={studentStubImage} wrapped ui={false} />
     <Card.Content>
-      <Card.Header>{props.firstName} {props.lastName}</Card.Header>
+      <Card.Header>{props.FirstName} {props.LastName}</Card.Header>
     </Card.Content>
     <Card.Content extra>
-      <span>First Class</span>
+      <div>SSN: {props.SSN}</div>
+      <div>BirthDate: {new Date(props.BirthDate).toDateString()}</div>
     </Card.Content>
   </Card>
 );

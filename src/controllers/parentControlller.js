@@ -11,7 +11,6 @@ class ParentController extends BaseController {
   }
 
   async gradesByStudentId(req, res) {
-    // TODO: fix pagination
     const grades = await Grade.findByStudentId(req.params.parentId, req.query.studentId);
     res.send(grades);
   }
