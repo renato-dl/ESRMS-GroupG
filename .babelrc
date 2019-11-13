@@ -1,4 +1,7 @@
 { 
   "presets": ["@babel/preset-env"],
-  "ignore": ["node_modules", "frontend", "dist"]
+  "ignore": ["node_modules", "frontend", "dist"],
+  "plugins": [
+      ["@babel/transform-runtime"]
+  ]
 }
