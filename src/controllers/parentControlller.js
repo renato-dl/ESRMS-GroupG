@@ -1,4 +1,4 @@
-import { BaseController } from "./baseController";
+import {BaseController} from "./baseController";
 import Student from "../database/models/student";
 import Grade from '../database/models/grade'
 import uuid from 'uuid';

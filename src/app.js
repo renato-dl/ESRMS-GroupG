@@ -5,8 +5,7 @@ import indexRouter from './routes/index';
 import parentRouter from './routes/parent'
 import {config} from './config';
 import cors from 'cors';
-import createError from 'http-errors';
-import {NOT_FOUND} from 'http-status';
+
 
 export class Application {
   constructor() {
