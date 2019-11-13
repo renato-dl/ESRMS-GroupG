@@ -49,21 +49,4 @@ describe('Parent tests', () => {
 
        )]));
     });
-
-
-        /* expect(students).toEqual({"BirthDate": "2005-05-18T22:00:00.000Z", "FirstName": "Sara", "ID": "266667153e975bbf735b89d4b03d9f93", "LastName": "Lorenzini", "SSN": "LRNSRA05E59L219Q"});
-       expect(students.FirstName).toBe("Sara");
-        expect(students.LastName).toBe("Lorenzini");
-        expect(students.SSN).toBe("LRNSRA05E59L219Q");
-        expect(students.BirthData).toBe("2005-05-18T22:00:00.000Z")
-*/
-    
-   
-   /* test('It should retrive the grades of that student', async () => {
-        const grades = await Grade.findByStudentId("9d64fa59c91d9109b11cd9e05162c675", "266667153e975bbf735b89d4b03d9f93");
-       // console.log(grades);
-        expect(grades).toBeGreaterThan(0);
-
-    });*/
-
 });
