@@ -6,18 +6,26 @@ class Subject extends Model {
   }
 
   async findByTeacherId(teacherId) {
-    const connection = await this.db.getConnection();
-    const results = await connection.query(/* @Xileny your query here, see student model for reference */);
+    try{
+      const connection = await this.db.getConnection();
+      const sql_query = `select s.*, tscr.classid 
+      from teachersubjectclassrelation tscr, ${this.tableName} s
+      where tscr.teacherid = ? and tscr.subjectid = s.id ;`;
+      const results = await connection.query(sql_query, [teacherId]);
 
-    connection.release();
+      connection.release();
 
-    if (!results.length) {
-      throw new Error('Entity not found');
+      if (!results.length) {
+        throw new Error('Entity not found');
+      }
+
+      return results;
     }
-
-    return results;
+    catch(e){
+      console.log(e);
+      throw e;
+    }    
   }
-
 }
 
 export default new Subject();
