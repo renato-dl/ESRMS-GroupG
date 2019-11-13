@@ -17,6 +17,14 @@ class TeacherController extends BaseController {
     res.send(result);
   }
 
+  // DELETE /teacher/:teacherId/deleteTopic/:topicId
+  async deleteTopic(req, res) {
+    const result = await Topic.deleteTopic(req.params.topicId);
+    res.send(result);
+  }
+
+  // PATCH 
+
 }
 
 export default new TeacherController();

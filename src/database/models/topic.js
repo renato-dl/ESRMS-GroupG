@@ -19,6 +19,20 @@ class Tpoic extends Model {
     return results;
   }
 
+  async deleteTopic(topicId) {
+    const connection = await this.db.getConnection();
+    const results = await connection.query(/* @Renato */);
+
+    connection.release();
+
+    // @Renato
+    if (!results.length) {
+      throw new Error();
+    }
+
+    return results;
+  }
+
 }
 
 export default new Topic();
