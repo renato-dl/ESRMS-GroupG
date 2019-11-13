@@ -1,4 +1,5 @@
 import Student from "../src/database/models/student";
+import Grade from "../src/database/models/grade";
 
 describe('Parent tests 1', () => {
 
@@ -59,4 +60,63 @@ describe('Parent tests 1', () => {
         }
     });
 
+});
+
+describe('Parent tests 2', () => {
+
+    test('It should retrive the grades of a given student', async () => {
+        const grades = await Grade.findByStudentId("9d64fa59c91d9109b11cd9e05162c675", "266667153e975bbf735b89d4b03d9f93"); 
+        expect(grades).not.toBeNull();
+        expect(grades).toHaveLength(2);
+
+        const gradeDate1 = new Date('2019-11-03T09:00:00.000Z');
+        const gradeDate2 = new Date('2019-10-29T09:00:00.000Z');
+
+        expect(grades).toEqual(
+            expect.arrayContaining(
+                [
+                    expect.objectContaining(
+                        {
+                            "Name": "Mathematics",
+                            "Grade": 9,
+                            "GradeDate": gradeDate1
+                        },
+                        {
+                            "Name": "English",
+                            "Grade": 7,
+                            "GradeDate": gradeDate2
+                        }
+       )]));
+    });
+
+    test('should throw Error with message \'Entity not found\' when the passed parent Id does not exist', async () => {
+        try{
+            const grades = await Grade.findByStudentId("9e64fa59c91d9109b11cd9e05162c675", "266667153e975bbf735b89d4b03d9f93"); 
+        }
+        catch(error){
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Entity not found');
+        }
+    });
+
+
+    test('should throw Error with message \'Entity not found\' when the passed student Id does not exist', async () => {
+        try{
+            const grades = await Grade.findByStudentId("9d64fa59c91d9109b11cd9e05162c675", "267667153e975bbf735b89d4b03d9f93"); 
+        }
+        catch(error){
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Entity not found');
+        }
+    });
+
+    test('should throw Error with message \'Entity not found\' when missmatching between parent and student', async () => {
+        try{
+            const grades = await Grade.findByStudentId("32d905eaa2770b66baf20282dff09191", "266667153e975bbf735b89d4b03d9f93"); 
+        }
+        catch(error){
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Entity not found');
+        }
+    });
 });

@@ -1,5 +1,5 @@
 import express from 'express';
-import ParentController from '../controllers/parentControlller';
+import ParentController from '../controllers/parentController';
 
 const router = express.Router();
 
