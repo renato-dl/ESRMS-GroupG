@@ -1,6 +1,6 @@
 import Student from "../src/database/models/student";
 
-describe('Parent tests', () => {
+describe('Parent tests 1', () => {
 
     test('It should retrive the student of a given parent', async () => {
         const students = await Student.findByParentId("9d64fa59c91d9109b11cd9e05162c675");
