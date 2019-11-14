@@ -7,6 +7,7 @@ import {Switch, Route} from 'react-router-dom';
 import { Parent } from '../Parent/Parent';
 import { NotFound } from '../NotFound/NotFound';
 import { Student } from '../Student/Student';
+import {Marks}  from'../Marks/Marks';
 
 export class App extends React.Component {
   render() {
@@ -20,6 +21,7 @@ export class App extends React.Component {
             
             <Route exact path="/parent" component={Parent} />
             <Route exact path="/student/:studentID" component={Student} />
+            <Route exact path="/student/:studentID/marks/"component={Marks}/>
             <Route path="*" component={NotFound} />
 
           </Switch>
