@@ -24,7 +24,6 @@ class Topic extends Model {
   }
 
   async findByTeacherClassSubject(teacherId, classId, subjectId, pagination) {
-    try{
     const connection = await this.db.getConnection();
     let sql_query = `SELECT t.SubjectId, t.Title, t.TopicDate 
     FROM TeacherSubjectClassRelation tscr, Topics t
@@ -42,11 +41,7 @@ class Topic extends Model {
       throw new Error('Entity not found');
     }
       return results;
-  }catch(e){
-      console.log(e);
-      throw e;
-  }
-}
+    }
 }
  
 
