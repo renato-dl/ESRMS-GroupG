@@ -22,14 +22,14 @@ export class Parent extends React.Component {
 
   selectChild = async (childId) => {
     console.log(childId);
+
     this.props.history.push(`/student/${childId}`);
   }
 
   render() {
     return (
       <div className="parent-container">
-        <h2 className="title">My children</h2>
-
+        <h3 className="contentHeader">Application Content Header</h3>
         <div className="children">
           {this.state.children.map((child, index) => (
             <StudentCard 

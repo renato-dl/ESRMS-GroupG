@@ -34,50 +34,61 @@ export const AppSidebar = ({ animation, direction, visible, className }) => (
   className="mySidebar">
   <Sidebar
     as={Menu}
-    animation='outslide along'
+    animation='slide along'
     //icon='labeled'
     inverted
-    left
+    //left
     vertical
-    sidebar
-    menu
-    visible = 'true'
-    width=' thin '
+    sidebar = "true"
+    menu = "true"
+    visible
+    //width = "thin"
   >
 
-
     <Menu.Item as='a' href="/parent" className="menuChildItem">
-    <span>
       
-      <br/>
-        <b>STUDENT:
-          <br/>
-          <br/>
-        <Icon name='user circle' />
-         Tarzan Prenga</b> 
-      <br/>
-      <br/>
+      <span>
+        <br/>
+        <Icon name='child' size="big" />
+        ChildName 
+        <br/>
+        <br/>
       </span>
+      {/* <span>
+        <Icon name='user circle big' />
+        Student
+        <br/><br/>
+        Name Surname
+        <br/>
+      </span> */}
+      
     </Menu.Item>
 
     <Menu.Item as='a' href= "/student/:studentID/marks" className="menuStandard">
 
-        <Icon name='address card outline' />
+        <Icon name='sort numeric up' />
         Grades
 
     </Menu.Item>
     <Menu.Item as='a' href="/student/:studentID/homeworks" className="menuStandard">
-      
       <Icon name='home' />
       Homeworks
-      
+    </Menu.Item>
+    
+    <Menu.Item as='a' href="/student/:studentID/homeworks" className="menuStandard">
+      <Icon name='calendar check outline' />
+      Attendance
+    </Menu.Item>
+    <Menu.Item as='a' href="/student/:studentID/homeworks" className="menuStandard">
+      <Icon name='file alternate outline' />
+      Study Plan
     </Menu.Item>
   </Sidebar>
 
   <Sidebar.Pusher>
     <Segment basic>
-      <Header as='h3'>Application Content</Header>
-      <Container>
+      {/* <Header as='h3' className="contentHeader">Application Content Header</Header> */}
+      <div>
           
           <Switch>
             
@@ -88,7 +99,7 @@ export const AppSidebar = ({ animation, direction, visible, className }) => (
 
           </Switch>
           
-        </Container>
+        </div>
     </Segment>
   </Sidebar.Pusher>
 </Sidebar.Pushable>

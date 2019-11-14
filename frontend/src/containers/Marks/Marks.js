@@ -2,6 +2,8 @@ import React from 'react';
 import { api } from '../../services/api';
 import './Marks.scss';
 
+import { Header, Icon} from 'semantic-ui-react';
+
 export class Marks extends React.Component{
     constructor(props)
     {
@@ -28,6 +30,8 @@ export class Marks extends React.Component{
       render(){
         return (
             <div className="Marks-container">
+              <h3 className="contentHeader"> 
+        <Icon name='sort numeric up' /> Grades of Nume Surname 2019-2020</h3>
             <h2 className="title">Student{this.props.match.params.studentID}'s score:</h2>
             {this.state.Marks.map(mark=>
             <p>
