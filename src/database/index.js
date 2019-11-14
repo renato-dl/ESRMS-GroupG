@@ -25,6 +25,10 @@ class Database {
   }
   
   getPaginationQuery({ page, pageSize }) {
+    if (!page || !pageSize) {
+      return '';
+    }
+
     return `LIMIT ${pageSize} OFFSET ${page * pageSize}`;
   }
 }

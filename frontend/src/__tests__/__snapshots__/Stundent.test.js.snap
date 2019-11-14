@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing Student component Testing snapshot 1`] = `
+<div
+  className="student-container"
+>
+  <h2
+    className="title"
+  >
+    Students place in here
+  </h2>
+  <div
+    className="ui card student"
+    onClick={[Function]}
+  >
+    <div
+      className="image"
+    >
+      <img
+        src="student-stub.png"
+      />
+    </div>
+    <div
+      className="content"
+    >
+      <div
+        className="header"
+      >
+         
+        Prenga
+      </div>
+    </div>
+    <div
+      className="extra content"
+    >
+      <span>
+        First Class
+      </span>
+    </div>
+  </div>
+</div>
+`;
