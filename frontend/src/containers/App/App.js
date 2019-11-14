@@ -8,13 +8,15 @@ import { Parent } from '../Parent/Parent';
 import { NotFound } from '../NotFound/NotFound';
 import { Student } from '../Student/Student';
 import {Marks}  from'../Marks/Marks';
+import { AppSidebar } from '../../components/Sidebar/Sidebar';
 
 export class App extends React.Component {
   render() {
     return (
       <div className="app">
         <Header />
-
+          <AppSidebar/>
+{/* 
         <Container>
           
           <Switch>
@@ -26,9 +28,9 @@ export class App extends React.Component {
 
           </Switch>
           
-        </Container>
+        </Container> */}
 
-        <Footer />
+         <Footer />
       </div>
     )
   }

@@ -2,6 +2,7 @@ import React from 'react';
 import { api } from '../../services/api';
 import { StudentCard } from '../../components/StudentCard/StudentCard';
 import './Parent.scss';
+import { AppSidebar } from '../../components/Sidebar/Sidebar';
 
 export class Parent extends React.Component {
   state = {
