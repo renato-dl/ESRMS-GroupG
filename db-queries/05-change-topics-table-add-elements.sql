@@ -16,7 +16,7 @@ create table Topics (
   TopicDate datetime not null, 
   CreatedOn timestamp not null DEFAULT CURRENT_TIMESTAMP, 
   PRIMARY KEY (ID), 
-  FOREIGN KEY (SubjectId) REFERENCES subjects(ID),
+  FOREIGN KEY (SubjectId) REFERENCES Subjects(ID),
   FOREIGN KEY (ClassId) REFERENCES TeacherSubjectClassRelation(ClassId) 
   );
 
