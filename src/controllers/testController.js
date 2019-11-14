@@ -1,4 +1,4 @@
-import {BaseController} from "./baseController";
+import { BaseController } from "./baseController";
 import User from "../database/models/user";
 import uuid from 'uuid';
 
