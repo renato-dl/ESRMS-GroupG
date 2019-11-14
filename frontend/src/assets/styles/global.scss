@@ -11,8 +11,14 @@
     border: 0!important;
     border-radius: 0;
 
-    div.sidebar{background:  #273037;}
-    div.pusher{background-color:#E4E4E4}
+    div.sidebar{
+        //background:  #273037;  
+        background: #fff url(../images/blur1.jpg) repeat top left;
+    }
+    div.pusher{    
+        //background-color:#E4E4E4
+        background: #fff url(../images/blur3.JPG) no-repeat top center;
+    }
 }
 
 
@@ -20,7 +26,7 @@
 .contentHeader{    
     height: 82px;
     width: 100%;
-    background-color: #fff;
+    //background-color: #fff;
     color:#273037;
     padding: 30px!important;
 }
