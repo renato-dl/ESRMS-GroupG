@@ -36,8 +36,8 @@ class TeacherController extends BaseController {
       req.params.teacherId,
       req.query.classId, 
       req.query.subjectId,
-      req.query.page,
-      req.query.pageSize
+      {page: req.query.page,
+      pageSize: req.query.pageSize}
       );
     res.send(result);
   }

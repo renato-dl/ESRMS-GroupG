@@ -23,15 +23,20 @@ class Topic extends Model {
     // @Xileny
   }
 
-  async findByTeacherClassSubject(teacherId, classId, subjectId, page, pageSize) {
+  async findByTeacherClassSubject(teacherId, classId, subjectId, pagination) {
     try{
     const connection = await this.db.getConnection();
     let sql_query = `SELECT t.SubjectId, t.Title, t.TopicDate 
-    FROM teachersubjectclassrelation tscr, topics t
+    FROM TeacherSubjectClassRelation tscr, Topics t
     WHERE tscr.SubjectId = t.SubjectId AND tscr.TeacherId = ? AND tscr.ClassId = ? AND tscr.SubjectId = ? 
-    ORDER BY CreatedOn DESC;`;
+    ORDER BY t.TopicDate DESC`;
  
+    if (pagination) {
+      sql_query += ` ${this.db.getPaginationQuery(pagination)}`
+    }
+
     const results = await connection.query(sql_query, [teacherId, classId, subjectId]);
+
     connection.release();
     if (!results.length) {
       throw new Error('Entity not found');
