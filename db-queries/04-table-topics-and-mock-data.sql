@@ -11,7 +11,7 @@ create table Topics (
   TopicDate datetime not null, 
   CreatedOn timestamp not null DEFAULT CURRENT_TIMESTAMP, 
   PRIMARY KEY (ID), 
-  FOREIGN KEY (SubjectId) REFERENCES subjects(ID) 
+  FOREIGN KEY (SubjectId) REFERENCES Subjects(ID) 
   );
 
 -- insert some topics
@@ -25,4 +25,4 @@ INSERT INTO Topics(ID, SubjectId, Title, TopicDate, CreatedOn)
 VALUES(NULL, 1, "Expressions Part 3", "2019-10-21 10:00:00", NULL);
 
 -- correct dates of math exams (to Monday, incorrect date)
-update grades set gradedate = '2019-11-04 10:00:00' where subjectid = 1;
+update Grades set GradeDate = '2019-11-04 10:00:00' where SubjectId = 1;
