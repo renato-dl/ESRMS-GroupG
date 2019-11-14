@@ -12,7 +12,8 @@ create table Topics (
   CreatedOn timestamp not null DEFAULT CURRENT_TIMESTAMP, 
   PRIMARY KEY (ID), 
   FOREIGN KEY (SubjectId) REFERENCES subjects(ID) 
-  );
+  )ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 -- insert some topics
 INSERT INTO Topics(ID, SubjectId, Title, TopicDate, CreatedOn) 

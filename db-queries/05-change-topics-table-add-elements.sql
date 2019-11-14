@@ -18,7 +18,8 @@ create table Topics (
   PRIMARY KEY (ID), 
   FOREIGN KEY (SubjectId) REFERENCES subjects(ID),
   FOREIGN KEY (ClassId) REFERENCES TeacherSubjectClassRelation(ClassId) 
-  );
+  )ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 -- insert some topics
 INSERT INTO Topics(ID, SubjectId, ClassId, Title, TopicDescription, TopicDate, CreatedOn) 
