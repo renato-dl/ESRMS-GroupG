@@ -1,3 +1,6 @@
+USE `ESRMS`;
+
+
 -- first one teacher to be the coordinator
 INSERT INTO `Teachers` (`ID`, `FirstName`, `LastName`, `eMail`, `SSN`, `CreatedOn`, `Password`) VALUES ('6e5c9976f5813e59816b40a814e29899', 'Giulia', 'Tesori', 'giulia.tesori@gmail.com', 'TSRGLI74R52L219F', CURRENT_TIMESTAMP, 'easypass');
 
