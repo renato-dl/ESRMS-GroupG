@@ -7,15 +7,14 @@ export class BaseController {
     }
 
     // calls the method
-    try {
-      this[action](req, res);
-    } catch(error) {
-      res.sendStatus(422).json({
-        errors: [{
-          msg: error.message
-        }]
+    this[action](req, res)
+      .catch((error) => {
+        res.status(422).json({
+          errors: [{
+            msg: error.message
+          }]
+        });
       });
-    }
   }
 
 }
