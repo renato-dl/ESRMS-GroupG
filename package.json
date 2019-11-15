@@ -9,7 +9,7 @@
     "db:migration:rollback": "./node_modules/knex/bin/cli.js migrate:rollback",
     "db:seed:make": "./node_modules/knex/bin/cli.js seed:make",
     "db:seed:run": "./node_modules/knex/bin/cli.js seed:run",
-    "test": "jest --runInBand",
+    "test": "jest --runInBand --detectOpenHandles",
     "server": "babel-node ./src",
     "server:prod": "node ./dist",
     "dev": "cross-env NODE_ENV=development npm-run-all server",
