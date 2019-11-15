@@ -29,6 +29,7 @@ class Admin extends Model {
 
     const connection = await this.db.getConnection();
 
+    //admin authorization
     const selectResult = await connection.query(
       `SELECT *
       FROM Users
@@ -40,12 +41,13 @@ class Admin extends Model {
       throw new Error('Unauthorized');
     };
 
+    //insert of data
     const parentId = crypto.createHash('sha256').update(eMail).digest('hex');
     const parentPassword = crypto.createHash('sha256').update(password).digest('hex');
 
     const insertResult = await connection.query(
       `INSERT INTO Parent (ID, FirstName, LastName, eMail, SSN, password)
-      VALUES (?, ?, ?, ?);`,
+      VALUES (?, ?, ?, ?, ?, ?);`,
       [parentId, firstName, lastName, eMail, SSN, parentPassword]
     );
 
