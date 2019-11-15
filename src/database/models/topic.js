@@ -18,13 +18,16 @@ class Topic extends Model {
     if (!topicTitle) {
       throw new Error('Missing or invalid topic title');
     }
+    if (!topicDescription) {
+      topicDescription = '';
+    }
     if (!topicDate) {
       throw new Error('Missing or invalid topic date');
     }
 
     const date = moment.utc(topicDate);
     const now = moment().utc();
-    const lastMonday = moment().utc().day(1);
+    const lastMonday = moment().utc().day(moment().utc().day() >= 1 ? 1 :-6);
 
     if (!date.isValid()) {
       throw new Error('Invalid topic date');
@@ -56,7 +59,7 @@ class Topic extends Model {
     const insertResult = await connection.query(
       `INSERT INTO ${this.tableName} (TeacherSubjectClassRelationId, Title, TopicDescription, TopicDate)
       VALUES (?, ?, ?, ?);`,
-      [selectResult[0].id, topicTitle, topicDescription, date.format('YYYY-MM-DD HH:mm:ss')]
+      [selectResult[0].id, topicTitle, topicDescription, date.format(this.db.getDateTimeFormatString())]
     );
 
     connection.release();
