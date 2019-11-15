@@ -5,13 +5,12 @@ class AdminController extends BaseController {
 
     async insertParentData(req, res) {
         const parent = await Admin.insertParentData(
-          req.params.parentId, 
-          req.body.ID, 
-          req.body.FirstName, 
-          req.body.LastName, 
+          req.params.adminId,  
+          req.body.firstName, 
+          req.body.lastName, 
           req.body.eMail, 
           req.body.SSN, 
-          req.body.Password
+          req.body.password
           );
         res.send(parent);
     

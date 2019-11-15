@@ -3,6 +3,6 @@ import AdminController from '../controllers/AdminController';
 
 const router = express.Router();
 
-router.post('/:parentId/parent', AdminController.processRequest.bind(AdminController, 'insertParentData'));
+router.post('/:adminId/parent', AdminController.processRequest.bind(AdminController, 'insertParentData'));
 
 export default router;
