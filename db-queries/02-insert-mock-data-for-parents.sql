@@ -1,3 +1,6 @@
+
+USE `ESRMS`;
+
 -- Parents
 
 INSERT INTO `Parents` (`ID`, `FirstName`, `LastName`, `eMail`, `SSN`, `CreatedOn`, `Password`) VALUES ('32d905eaa2770b66baf20282dff09191', 'Lucia', 'Verdi', 'lucia.verdi@gmail.com', 'VRDLCU75A41L219F', CURRENT_TIMESTAMP, 'easypass');
