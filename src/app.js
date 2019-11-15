@@ -2,7 +2,8 @@ import express from 'express';
 import path from 'path';
 import logger from 'morgan';
 import indexRouter from './routes/index';
-import parentRouter from './routes/parent'
+import parentRouter from './routes/parent';
+import teacherRouter from './routes/teacher';
 import {config} from './config';
 import cors from 'cors';
 
@@ -46,6 +47,7 @@ export class Application {
   setRoutes() {
     this.app.use(`${config.env.api_prefix}/`, indexRouter);
     this.app.use(`${config.env.api_prefix}/parent`, parentRouter);
+    this.app.use(`${config.env.api_prefix}/teacher`, teacherRouter);
   }
 
   // sends back the index.html for the client if none of the routes is matched
