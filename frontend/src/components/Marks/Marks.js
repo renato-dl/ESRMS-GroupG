@@ -31,6 +31,7 @@ export class Marks extends React.Component{
           <h2 className="title">Student {this.props.match.params.studentID}'s score:</h2>
           {this.state.marks.map((mark) =>
             <p>
+              
               Subject: { mark.Name },
               Marks: { mark.Grade }
             </p>
