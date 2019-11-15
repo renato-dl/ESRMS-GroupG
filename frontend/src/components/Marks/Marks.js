@@ -5,13 +5,13 @@ import './Marks.scss';
 export class Marks extends React.Component{
     constructor(props) {
       super(props);
-
       this.state = {
         marks: []
       }
     }
     
     async componentDidMount(){
+      console.log(this.props.params)
       const response = await api.parent.getChildMarks('9d64fa59c91d9109b11cd9e05162c675', '266667153e975bbf735b89d4b03d9f93');
       console.log(response);
       if (response) {
@@ -25,9 +25,10 @@ export class Marks extends React.Component{
     }
 
     render(){
+      console.log(this.props.match)
       return (
         <div className="Marks-container">
-          <h2 className="title">Student{this.props.match.params.studentID}'s score:</h2>
+          <h2 className="title">Student {this.props.match.params.studentID}'s score:</h2>
           {this.state.marks.map((mark) =>
             <p>
               Subject: { mark.Name },

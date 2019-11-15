@@ -18,50 +18,19 @@ exports[`Testing StudentCard component Testing snapshot 1`] = `
     <div
       className="header"
     >
-      Name
        
-      Surname
     </div>
   </div>
   <div
     className="extra content"
   >
-    <span>
-      First Class
-    </span>
-  </div>
-</div>
-`;
-
-exports[`Testing StudentCard component Testing snapshot 2`] = `
-<div
-  className="ui card student"
-  onClick={[Function]}
->
-  <div
-    className="image"
-  >
-    <img
-      src="student-stub.png"
-    />
-  </div>
-  <div
-    className="content"
-  >
-    <div
-      className="header"
-    >
-      Name
-       
-      Surname
+    <div>
+      SSN: 
     </div>
-  </div>
-  <div
-    className="extra content"
-  >
-    <span>
-      First Class
-    </span>
+    <div>
+      BirthDate: 
+      Invalid Date
+    </div>
   </div>
 </div>
 `;
