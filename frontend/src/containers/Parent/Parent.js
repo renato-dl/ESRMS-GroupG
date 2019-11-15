@@ -5,15 +5,11 @@ import './Parent.scss';
 
 export class Parent extends React.Component {
   state = {
-    children: [
-      {id: 1, firstName: 'Name', lastName: 'Surname'},
-      {id: 2, firstName: 'Nam2', lastName: 'Surname2'},
-      {id: 3, firstName: 'Nam3', lastName: 'Surname3'}
-    ]
+    children: []
   }
 
   async componentDidMount() {
-    const response = await api.parent.getChilds(1);
+    const response = await api.parent.getChilds('9d64fa59c91d9109b11cd9e05162c675');
     if (response) {
       this.setState({children: response.data})
     }
@@ -35,7 +31,7 @@ export class Parent extends React.Component {
               key={index}
               {...child} 
               selected={child.id === this.state.selectedChild}
-              onClick={() => this.selectChild(child.id)} 
+              onClick={() => this.selectChild(child.ID)} 
             />
           ))}
         </div>
