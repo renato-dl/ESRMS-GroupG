@@ -18,16 +18,13 @@ class Topic extends Model {
     if (!topicTitle) {
       throw new Error('Missing or invalid topic title');
     }
-    if (!topicDescription) {
-      throw new Error('Missing or invalid topic description');
-    }
     if (!topicDate) {
       throw new Error('Missing or invalid topic date');
     }
 
-    const date = moment(topicDate);
-    const now = moment();
-    const lastMonday = moment().day(1);
+    const date = moment.utc(topicDate);
+    const now = moment().utc();
+    const lastMonday = moment().utc().day(1);
 
     if (!date.isValid()) {
       throw new Error('Invalid topic date');
@@ -46,25 +43,24 @@ class Topic extends Model {
     const connection = await this.db.getConnection();
 
     const selectResult = await connection.query(
-      `SELECT COUNT(*) AS count
+      `SELECT ID AS id
       FROM TeacherSubjectClassRelation
       WHERE SubjectId = ? AND TeacherId = ? AND ClassId = ?;`,
       [subjectId, teacherId, classId]
     );
 
-    if(selectResult[0].count != 0) {
+    if(selectResult.length != 1) {
       throw new Error('Unauthorized');
     };
 
     const insertResult = await connection.query(
-      `INSERT INTO ${this.tableName} (SubjectId, ClassId, Title, TopicDescription, TopicDate)
-      VALUES (?, ?, ?, ?, ?);`,
-      [subjectId, classId, topicTitle, topicDescription, date.format('YYYY-MM-DD')]
+      `INSERT INTO ${this.tableName} (TeacherSubjectClassRelationId, Title, TopicDescription, TopicDate)
+      VALUES (?, ?, ?, ?);`,
+      [selectResult[0].id, topicTitle, topicDescription, date.format('YYYY-MM-DD HH:mm:ss')]
     );
 
     connection.release();
 
-    // @Renato
     if (insertResult.affectedRows != 1) {
       throw new Error('Operation failed');
     }
