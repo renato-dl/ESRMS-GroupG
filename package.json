@@ -17,7 +17,8 @@
     "build": "babel ./src --out-dir ./dist",
     "prod": "cross-env NODE_ENV=production npm-run-all clean build server:prod",
     "watch": "nodemon",
-    "debug": "nodemon --inspect"
+    "debug": "nodemon --inspect",
+    "test": "jest __tests__ --runInBand --detectOpenHandles"
   },
   "dependencies": {
     "@babel/runtime": "^7.7.2",
