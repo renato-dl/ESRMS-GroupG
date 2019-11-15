@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing Parent component Testing snapshot 1`] = `
+<div
+  className="parent-container"
+>
+  <h2
+    className="title"
+  >
+    My children
+  </h2>
+  <div
+    className="children"
+  >
+    <a
+      className="ui card student"
+      onClick={[Function]}
+    >
+      <div
+        className="image"
+      >
+        <img
+          src="student-stub.png"
+        />
+      </div>
+      <div
+        className="content"
+      >
+        <div
+          className="header"
+        >
+          Name
+           
+          Surname
+        </div>
+      </div>
+      <div
+        className="extra content"
+      >
+        <span>
+          First Class
+        </span>
+      </div>
+    </a>
+    <a
+      className="ui card student"
+      onClick={[Function]}
+    >
+      <div
+        className="image"
+      >
+        <img
+          src="student-stub.png"
+        />
+      </div>
+      <div
+        className="content"
+      >
+        <div
+          className="header"
+        >
+          Nam2
+           
+          Surname2
+        </div>
+      </div>
+      <div
+        className="extra content"
+      >
+        <span>
+          First Class
+        </span>
+      </div>
+    </a>
+    <a
+      className="ui card student"
+      onClick={[Function]}
+    >
+      <div
+        className="image"
+      >
+        <img
+          src="student-stub.png"
+        />
+      </div>
+      <div
+        className="content"
+      >
+        <div
+          className="header"
+        >
+          Nam3
+           
+          Surname3
+        </div>
+      </div>
+      <div
+        className="extra content"
+      >
+        <span>
+          First Class
+        </span>
+      </div>
+    </a>
+  </div>
+</div>
+`;
