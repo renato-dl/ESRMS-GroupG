@@ -13,22 +13,22 @@ export const ParentMenu = (props) => (
       </span>
     </Menu.Item>
 
-    <Menu.Item as={Link} to='/student/:studentID/marks'>
+    <Menu.Item as={Link} to='/parent/student/:studentID/marks'>
       <Icon name='sort numeric up' />
       Grades
     </Menu.Item>
 
-    <Menu.Item as={Link} to="/student/:studentID/homeworks">
+    <Menu.Item as={Link} to="/parent/student/:studentID/homeworks">
       <Icon name='home'/>
       Homeworks
     </Menu.Item>
     
-    <Menu.Item as={Link} to="/student/:studentID/homeworks">
+    <Menu.Item as={Link} to="/parent/student/:studentID/homeworks">
       <Icon name='calendar check outline'/>
       Attendance
     </Menu.Item>
 
-    <Menu.Item as={Link} to="/student/:studentID/homeworks">
+    <Menu.Item as={Link} to="/parent/student/:studentID/homeworks">
       <Icon name='file alternate outline'/>
       Study Plan
     </Menu.Item>

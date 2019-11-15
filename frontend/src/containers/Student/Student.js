@@ -18,7 +18,7 @@ export class Student extends React.Component {
   }
   selectMarks = async () => {
     console.log();
-    this.props.history.push(`/student/${this.state.id}/marks`);
+    this.props.history.push(`/parent/student/${this.state.id}/marks`);
   }
 
   render() {

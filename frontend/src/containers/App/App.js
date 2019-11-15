@@ -20,8 +20,8 @@ export class App extends React.Component {
           <Container>
             <Switch>  
               <Route exact path="/parent" component={Parent} />
-              <Route exact path="/student/:studentID" component={Student} />
-              <Route exact path="/student/:studentID/marks/"component={Marks}/>
+              <Route exact path="/parent/student/:studentID" component={Student} />
+              <Route exact path="/parent/student/:studentID/marks/"component={Marks}/>
               <Route path="*" component={NotFound} />
             </Switch>
           </Container>

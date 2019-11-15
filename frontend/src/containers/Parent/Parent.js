@@ -19,7 +19,7 @@ export class Parent extends React.Component {
   selectChild = async (childId) => {
     console.log(childId);
 
-    this.props.history.push(`/student/${childId}`);
+    this.props.history.push(`/parent/student/${childId}`);
   }
 
   render() {
