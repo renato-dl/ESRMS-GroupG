@@ -33,8 +33,8 @@ export class Marks extends React.Component{
               <h3 className="contentHeader"> 
         <Icon name='sort numeric up' /> Grades of Nume Surname 2019-2020</h3>
             <h2 className="title">Student{this.props.match.params.studentID}'s score:</h2>
-            {this.state.Marks.map(mark=>
-            <p>
+            {this.state.Marks.map((mark, index)=>
+            <p key={index}>
               subject:{mark.subject},
               marks:{mark.marks}
             </p>

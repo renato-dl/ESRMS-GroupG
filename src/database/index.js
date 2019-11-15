@@ -8,7 +8,8 @@ class Database {
       port: config.db.port,
       database: config.db.database,
       user: config.db.username,
-      password: config.db.password
+      password: config.db.password,
+      timezone: 'utc'
     });
   }
 
@@ -25,6 +26,10 @@ class Database {
   }
   
   getPaginationQuery({ page, pageSize }) {
+    if (!page || !pageSize) {
+      return '';
+    }
+
     return `LIMIT ${pageSize} OFFSET ${page * pageSize}`;
   }
 }

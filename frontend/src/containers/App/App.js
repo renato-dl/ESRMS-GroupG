@@ -8,35 +8,26 @@ import { Parent } from '../Parent/Parent';
 import { NotFound } from '../NotFound/NotFound';
 import { Student } from '../Student/Student';
 import {Marks}  from'../Marks/Marks';
-import {Teacher}  from'../Teacher/Teacher';
 import { AppSidebar } from '../../components/Sidebar/Sidebar';
-
 
 export class App extends React.Component {
   render() {
     return (
       <div className="app">
         <Header />
-        <AppSidebar/>
-  {/* 
-        <Switch>
-          <Route exact path="/parent" component={AppSidebar} />
-          <Route exact path="/teacher" component={Teacher} />
-        </Switch>
-  */}
 
-  {/*   
-        <Container>
-          <Switch>  
-            <Route exact path="/parent" component={Parent} />
-            <Route exact path="/student/:studentID" component={Student} />
-            <Route exact path="/student/:studentID/marks/"component={Marks}/>
-            <Route path="*" component={NotFound} />
-          </Switch>
-        </Container> 
- */}
-
-         <Footer />
+        <AppSidebar>
+          <Container>
+            <Switch>  
+              <Route exact path="/parent" component={Parent} />
+              <Route exact path="/student/:studentID" component={Student} />
+              <Route exact path="/student/:studentID/marks/"component={Marks}/>
+              <Route path="*" component={NotFound} />
+            </Switch>
+          </Container>
+        </AppSidebar>
+        
+        {/* <Footer /> */}
       </div>
     )
   }
