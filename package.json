@@ -9,7 +9,6 @@
     "db:migration:rollback": "./node_modules/knex/bin/cli.js migrate:rollback",
     "db:seed:make": "./node_modules/knex/bin/cli.js seed:make",
     "db:seed:run": "./node_modules/knex/bin/cli.js seed:run",
-    "test": "jest --runInBand --detectOpenHandles",
     "server": "babel-node ./src",
     "server:prod": "node ./dist",
     "dev": "cross-env NODE_ENV=development npm-run-all server",
@@ -17,6 +16,7 @@
     "build": "babel ./src --out-dir ./dist",
     "prod": "cross-env NODE_ENV=production npm-run-all clean build server:prod",
     "watch": "nodemon",
+    "debug": "nodemon --inspect",
     "test": "jest __tests__ --runInBand --detectOpenHandles"
   },
   "dependencies": {
