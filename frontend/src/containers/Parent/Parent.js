@@ -30,7 +30,7 @@ export class Parent extends React.Component {
             <StudentCard 
               key={index}
               {...child} 
-              selected={child.id === this.state.selectedChild}
+              selected={child.ID === this.state.selectedChild}
               onClick={() => this.selectChild(child.ID)} 
             />
           ))}
