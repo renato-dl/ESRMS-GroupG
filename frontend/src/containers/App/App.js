@@ -8,6 +8,7 @@ import { Parent } from '../Parent/Parent';
 import { NotFound } from '../NotFound/NotFound';
 import { Student } from '../Student/Student';
 import {Marks}  from'../Marks/Marks';
+import {Teacher}  from'../Teacher/Teacher';
 import { AppSidebar } from '../../components/Sidebar/Sidebar';
 
 

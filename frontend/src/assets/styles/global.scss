@@ -7,6 +7,7 @@
     height: 100%;
 }
 .app > .ui.segment.pushable.mySidebar{
+    height: calc(100% - 73px);
     margin:0!important;
     border: 0!important;
     border-radius: 0;
