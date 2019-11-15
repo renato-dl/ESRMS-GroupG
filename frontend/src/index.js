@@ -1,16 +1,16 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { unregister } from './serviceWorker';
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
 import {App} from './containers/App/App';
-import { NotFound } from './containers/NotFound/NotFound';
 
 render(
   <BrowserRouter>
     <Switch>
-      <Route test={false} exact path="/" component={App} />
-      <Route path="*" component={NotFound} />
+      <Route exact path="/" render={() => <Redirect to="/parent" />} />
+      <Route exact path="/login" render={() => <div>Login</div>} />
+      <Route path="/" component={App} />
     </Switch>
   </BrowserRouter>,
   document.getElementById('root')
