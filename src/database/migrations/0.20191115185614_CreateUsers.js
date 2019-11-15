@@ -5,7 +5,7 @@ exports.up = function(knex) {
       table.string('eMail', 30).notNullable();
       table.timestamp('CreatedOn').defaultTo(knex.fn.now()).notNullable();
       table.string('Password', 50).notNullable();
-      table.enu('Role', ['principal', 'admin', 'teacher', 'parent']);
+      table.enu('Role', ['principal', 'admin', 'teacher', 'parent']).notNullable();
     })  
 };
 
