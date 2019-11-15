@@ -13,21 +13,22 @@
 
     div.sidebar{
         //background:  #273037;  
-        background: #fff url(../images/blur1.jpg) repeat top left;
+        background: #fff url(../images/blur1.jpg) no-repeat top left;
+        background-size: cover;
     }
     div.pusher{    
         //background-color:#E4E4E4
-        background: #fff url(../images/blur3.JPG) no-repeat top center;
+        background: #fff url(../images/blur8.jpg) no-repeat top center;
+        background-size: cover;
     }
 }
 
-
-.ui.segment{padding:0}
+/* .ui.segment{padding:0}
 .contentHeader{    
     height: 82px;
     width: 100%;
     //background-color: #fff;
     color:#273037;
     padding: 30px!important;
-}
+} */
 
