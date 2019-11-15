@@ -5,7 +5,7 @@ exports.up = function(knex) {
     table.string('FirstName', 30).notNullable();
     table.string('LastName', 30).notNullable();
     table.string('SSN', 16).unique().notNullable();
-    table.date('BirthDate').notNullable();
+    table.timestamp('BirthDate').notNullable();
     table.string('Parent1', 50).notNullable();
     table.string('Parent2', 50).nullable().defaultTo(null);
     table.integer('ClassId').unsigned().notNullable();
