@@ -7,7 +7,7 @@ describe('Parent tests 1', () => {
         const students = await Student.findByParentId("9d64fa59c91d9109b11cd9e05162c675");
         expect(students).not.toBeNull();
         expect(students).toHaveLength(1);
-        const date = new Date('2005-05-18T22:00:00.000Z');
+        const date = new Date('2005-05-19T00:00:00.000Z');
         expect(students).toEqual(
             expect.arrayContaining(
                 [
@@ -27,7 +27,7 @@ describe('Parent tests 1', () => {
         expect(students).not.toBeNull();
         expect(students).toHaveLength(2);
 
-        const date = new Date('2005-05-31T22:00:00.000Z');
+        const date = new Date('2005-06-01T00:00:00.000Z');
         expect(students).toEqual(
             expect.arrayContaining(
                 [
@@ -39,6 +39,10 @@ describe('Parent tests 1', () => {
                             "SSN": "MNZMTN05H41L219C",
                             "BirthDate": date
                         },
+                        
+
+       ),
+                    expect.objectContaining(
                         {
                             "ID": "868d6ec1dfc8467f6d260c48b5620543",
                             "FirstName": "Gianluca",
@@ -46,8 +50,8 @@ describe('Parent tests 1', () => {
                             "SSN": "MNZGLC05H01L219X",
                             "BirthDate": date
                         }
-
-       )]));
+                    )
+    ]));
     });
 
     test('should throw Error with message \'Entity not found\' when the passed Id does not exist', async () => {
@@ -69,8 +73,8 @@ describe('Parent tests 2', () => {
         expect(grades).not.toBeNull();
         expect(grades).toHaveLength(2);
 
-        const gradeDate1 = new Date('2019-11-03T09:00:00.000Z');
-        const gradeDate2 = new Date('2019-10-29T09:00:00.000Z');
+        const gradeDate1 = new Date('2019-11-03T00:00:00.000Z');
+        const gradeDate2 = new Date('2019-10-29T00:00:00.000Z');
 
         expect(grades).toEqual(
             expect.arrayContaining(
