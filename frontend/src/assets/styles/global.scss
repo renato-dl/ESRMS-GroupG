@@ -7,28 +7,24 @@
     height: 100%;
 }
 .app > .ui.segment.pushable.mySidebar{
-    height: calc(100% - 73px);
+    //height: calc(100% - 73px);
     margin:0!important;
     border: 0!important;
     border-radius: 0;
 
-    div.sidebar{
-        //background:  #273037;  
-        background: #fff url(../images/blur1.jpg) no-repeat top left;
-        background-size: cover;
-    }
-    div.pusher{    
-        //background-color:#E4E4E4
-        background: #fff url(../images/blur8.jpg) no-repeat top center;
-        background-size: cover;
-    }
+    div.sidebar{background:  #273037;}
+    div.pusher{background-color:#E4E4E4}
+}
+
+.menuStandard > i{
+    float:right;
 }
 
 /* .ui.segment{padding:0}
 .contentHeader{    
     height: 82px;
     width: 100%;
-    //background-color: #fff;
+    background-color: #fff;
     color:#273037;
     padding: 30px!important;
 } */

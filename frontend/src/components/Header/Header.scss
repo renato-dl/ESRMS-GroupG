@@ -26,9 +26,7 @@
   height: inherit;
   width: 455px;
   //width: 150px;
-  
-  background: #fff url(../../assets/images/gradient.png) no-repeat top center;
-  //background-color:#133149;// #008272;
+  background-color: #008272;
   border-bottom:2px solid #DBCA47;
   //border-top-left-radius: 15px;
   padding-left: 15px;
@@ -39,9 +37,7 @@
 .headerToolbarFiled{
   height: 100%;
   width: calc(100% - 150px);
-  //background-color:#133149;// #009B8B;
-  background-color:#366A86;
-  border-bottom:2px solid #DBCA47;
+  background-color: #009B8B;
   padding-left:calc(100% - 400px);;
   display: flex;
   align-items: center;

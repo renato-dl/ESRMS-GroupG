@@ -16,8 +16,7 @@ const options = [
     ),
     disabled: true,
   },
-  { key: 'childProfile', text: 'Switch Child' },
-  { key: 'sign-out', text: 'Sign Out' },
+  { key: 'sign-out', text: 'Sign Out' }
 ]
 
 export const Header = (props) => (
