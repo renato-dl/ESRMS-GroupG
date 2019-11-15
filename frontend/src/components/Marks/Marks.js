@@ -1,8 +1,7 @@
 import React from 'react';
-import { api } from '../../services/api';
-import './Marks.scss';
+//import { api } from '../../services/api';
 
-import { Header, Icon} from 'semantic-ui-react';
+import {Icon} from 'semantic-ui-react';
 
 export class Marks extends React.Component{
     constructor(props)

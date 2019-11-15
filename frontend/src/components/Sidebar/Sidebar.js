@@ -1,26 +1,9 @@
 import React from 'react';
-import { Icon, Menu, Segment, Sidebar } from 'semantic-ui-react';
+import { Menu, Segment, Sidebar } from 'semantic-ui-react';
 import '../../assets/styles/global.scss';
 import { ParentMenu } from '../ParentMenu/ParentMenu';
 import { TeacherMenu } from '../TeacherMenu/TeacherMenu';
 
-const trigger = (
-  <span><Icon name='user' /></span>
-)
-
-const options = [
-  {
-    key: 'user',
-    text: (
-      <span>
-        Signed in as <strong>Bob Smith</strong>
-      </span>
-    ),
-    disabled: true,
-  },
-  { key: 'childProfile', text: 'Switch Child' },
-  { key: 'sign-out', text: 'Sign Out' },
-]
 
 const PSidebar = true;
 
