@@ -7,7 +7,7 @@ import {Switch, Route} from 'react-router-dom';
 import { Parent } from '../Parent/Parent';
 import { NotFound } from '../NotFound/NotFound';
 import { Student } from '../Student/Student';
-import {Marks}  from'../Marks/Marks';
+import {Marks}  from '../../components/Marks/Marks';
 
 export class App extends React.Component {
   render() {
