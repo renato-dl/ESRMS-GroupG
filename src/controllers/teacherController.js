@@ -36,11 +36,15 @@ class TeacherController extends BaseController {
             &subjectId=123
             &page=2&pageSize=10 [OPTIONAL]  */
   async topicsByTeacherClassSubject(req, res) {
-    const result = await Topic.findByTeacherClassSubject(/* PARAMS*/);
+    const result = await Topic.findByTeacherClassSubject(
+      req.params.teacherId,
+      req.query.classId, 
+      req.query.subjectId,
+      {page: req.query.page,
+      pageSize: req.query.pageSize}
+      );
     res.send(result);
   }
-
-
 }
 
 
