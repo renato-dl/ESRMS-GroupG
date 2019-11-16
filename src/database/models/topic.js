@@ -165,8 +165,8 @@ class Topic extends Model {
       }
       const connection = await this.db.getConnection();
       const result = await connection.query(
-        `select tscr.teacherid from teachersubjectclassrelation tscr, topics t 
-        where t.id = ? and t.teachersubjectclassrelationid = tscr.id ;`,
+        `select tscr.TeacherId from TeacherSubjectClassRelation tscr, Topics t 
+        where t.ID = ? and t.TeacherSubjectClassRelationId = tscr.ID ;`,
         [topicId]
       );
       connection.release();
