@@ -2,6 +2,44 @@ import Admin from '../src/database/models/admin';
 import crypto from 'crypto';
 import db from '../src/database';
 
+
+
+describe('Tests about the visualization of inserted parents', () =>{
+
+  test('It should show the inserted parent data', async () => {
+
+    const parents = await Admin.getParentData();
+
+    expect(parents).not.toBeNull();
+    expect(parents.length).toBeGreaterThan(0);
+    expect(parents).toEqual(
+            expect.arrayContaining(
+                [
+                  expect.objectContaining(
+                    {
+                        "FirstName": "Marco",
+                        "LastName": "Lorenzini",
+                        "SSN": "LRNMRC76A02L219A"
+                    },
+                    {
+                        "FirstName": "Nadia",
+                        "LastName": "Rossi",
+                        "SSN": "RSSNDA76A41L219U"
+                    },
+                    {
+                        "FirstName": "Lucia",
+                        "LastName": "Verdi",
+                        "SSN": "VRDLCU75A41L219F"
+                    }
+       )]));
+  });
+
+
+});
+
+
+
+
 describe('Tests about the insertion of parent data by admin', () => {
 
     /*
