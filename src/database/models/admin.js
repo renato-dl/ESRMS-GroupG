@@ -8,6 +8,21 @@ class Admin extends Model {
     super('Admin');
   }
   
+  async getParentData(){
+    const connection = await this.db.getConnection();
+    const results = await connection.query(
+        `SELECT FirstName, LastName, SSN 
+        FROM Parents
+        ORDER BY LastName`
+    );
+    
+    connection.release();
+    if (!results.length) {
+      throw new Error('No parents registered in the system');
+    }
+    return results;
+  }
+
   async insertParentData(adminId, firstName, lastName, eMail, SSN, password) {
 
       //input data validation
