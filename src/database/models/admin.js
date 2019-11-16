@@ -8,6 +8,21 @@ class Admin extends Model {
     super('Admin');
   }
   
+  async getParentData(){
+    const connection = await this.db.getConnection();
+    const results = await connection.query(
+        `SELECT FirstName, LastName, SSN 
+        FROM Parents
+        ORDER BY LastName`
+    );
+    
+    connection.release();
+    if (!results.length) {
+      throw new Error('No parents registered in the system');
+    }
+    return results;
+  }
+
   async insertParentData(adminId, firstName, lastName, eMail, SSN, password) {
 
       //input data validation
@@ -47,8 +62,7 @@ class Admin extends Model {
     //insert of data
     const parentId = crypto.createHash('sha256').update(eMail).digest('hex');
     const parentPassword = this.createSecurePassword(password);
-    let insertParentResult;
-
+    
     //begin transaction
     try {
       await connection.query(
@@ -57,7 +71,7 @@ class Admin extends Model {
         [parentId, eMail, parentPassword]
       );
 
-      insertParentResult = await connection.query(
+      await connection.query(
         `INSERT INTO Parents (ID, FirstName, LastName, SSN)
         VALUES (?, ?, ?, ?);`,
         [parentId, firstName, lastName, SSN]
