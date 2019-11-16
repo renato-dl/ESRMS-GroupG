@@ -1,11 +1,12 @@
 import {Model} from './base';
+import moment from 'moment';
 
 class Class extends Model {
   constructor() {
-    super('Class');
+    super('Classes');
   }
 
-  async getClassName(classId) {
+  async getClassNameById(classId) {
     try{
       const connection = await this.db.getConnection();
       const sql_query = `select ID, CreationYear, Name from ${this.tableName} 
@@ -18,7 +19,14 @@ class Class extends Model {
         throw new Error('Entity not found');
       }
 
-      return results;
+      const classObj = results[0];
+      const currYear = moment().utc().year();
+      
+      const classYear =  classObj["CreationYear"]
+      const yearName = currYear - classYear + 1;
+      
+      const className = yearName + classObj["Name"];
+      return className;
     }
     catch(e){
       console.log(e);
