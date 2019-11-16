@@ -34,8 +34,22 @@ class TeacherController extends BaseController {
   // Body: topicID, topicTitle, topicDescription, topicDate
   // Teacher can't modify class or subject
   async patchTopic(req, res) {
-    const result = await Topic.editTopic(/* PARAMS*/);
-    res.send(result);
+    try{
+      const teacherId = req.params.teacherId;
+      const topicId = req.body.topicId;
+      const topicTitle = req.body.topicTitle;
+      const topicDescription = req.body.topicDescription;
+      const topicDate = req.body.topicDate;
+      const result = await Topic.editTopic(teacherId, topicId, topicTitle, topicDescription, topicDate);
+      res.send(result);
+    }
+    catch(e){
+      console.log(e);
+      const editTopicResult = {};
+      editTopicResult["Success"] = false;
+      editTopicResult["Message"] = "Something went wrong.";
+      res.send(editTopicResult);
+    }
   }
 
   /* GET /teacher/:teacherId/topics

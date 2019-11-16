@@ -1,41 +1,47 @@
 import React from 'react';
+import { Icon} from 'semantic-ui-react';
 import { api } from '../../services/api';
 import { StudentCard } from '../../components/StudentCard/StudentCard';
 import './Parent.scss';
+import {ApplicationStoreContext} from '../../store';
 
 export class Parent extends React.Component {
+  static contextType = ApplicationStoreContext;
+
   state = {
     children: []
-  }
+  };
 
   async componentDidMount() {
-    const response = await api.parent.getChilds('9d64fa59c91d9109b11cd9e05162c675');
+    const response = await api.parent.getChilds(this.context.state.parent.ID);
     if (response) {
       this.setState({children: response.data})
     }
   }
 
-  selectChild = async (childId) => {
-    console.log(childId);
-    this.props.history.push(`/student/${childId}`);
-  }
+  selectChild = async (child) => {
+    this.context.setSelectedStudent(child);
+    this.props.history.push(`/parent/student/${child.ID}`);
+  };
 
   render() {
     return (
       <div className="parent-container">
-        <h2 className="title">My children</h2>
-
+        <h3 className="contentHeader">
+        <Icon name='braille' size="small" />
+        Select/Switch child</h3>
+        {/* <h2 className="title">My children</h2> */}
         <div className="children">
           {this.state.children.map((child, index) => (
-            <StudentCard 
+            <StudentCard
               key={index}
-              {...child} 
-              selected={child.ID === this.state.selectedChild}
-              onClick={() => this.selectChild(child.ID)} 
+              {...child}
+              onClick={() => this.selectChild(child)}
             />
           ))}
         </div>
+
       </div>
-    )
+    );
   }
 }

@@ -1,32 +1,41 @@
 import React from 'react';
-import {
-  Sidebar,
-  Menu,
-  Icon
-} from 'semantic-ui-react'
+import { Menu, Segment, Sidebar } from 'semantic-ui-react';
+import '../../assets/styles/global.scss';
+import { ParentMenu } from '../ParentMenu/ParentMenu';
+import { TeacherMenu } from '../TeacherMenu/TeacherMenu';
+import { ApplicationStoreContext } from '../../store';
 
-export const AppSidebar = ({ animation, direction, visible }) => (
+
+const PSidebar = true;
+
+export const AppSidebar = (props) => {
+  return (
+<Sidebar.Pushable as={Segment} 
+  className="mySidebar">
   <Sidebar
     as={Menu}
-    animation={animation}
-    direction={direction}
-    icon='labeled'
+    animation='slide along'
+    //icon='labeled'
     inverted
+    //left
     vertical
-    visible={visible}
-    width='thin'
+    sidebar = "true"
+    menu = "true"
+    visible
+    //width = "thin"
   >
-    <Menu.Item as='a'>
-      <Icon name='home' />
-      Home
-    </Menu.Item>
-    <Menu.Item as='a'>
-      <Icon name='gamepad' />
-      Games
-    </Menu.Item>
-    <Menu.Item as='a'>
-      <Icon name='camera' />
-      Channels
-    </Menu.Item>
+    {PSidebar && <ParentMenu />}
+
+    {!PSidebar && <TeacherMenu />}
+
   </Sidebar>
-);
+
+  <Sidebar.Pusher>
+    <Segment basic>
+      {/* <Header as='h3' className="contentHeader">Application Content Header</Header> */}
+      {props.children}
+    </Segment>
+  </Sidebar.Pusher>
+</Sidebar.Pushable>
+  )
+}
