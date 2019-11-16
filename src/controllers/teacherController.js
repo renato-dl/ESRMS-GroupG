@@ -1,6 +1,7 @@
 import {BaseController} from "./baseController";
 import Subject from "../database/models/subject";
-import Topic from '../database/models/topic'
+import Topic from '../database/models/topic';
+import Class from '../database/models/class';
 
 class TeacherController extends BaseController {
 
@@ -9,10 +10,16 @@ class TeacherController extends BaseController {
     const subjects = await Subject.findByTeacherId(req.params.teacherId);
     // TODO: get class orf 
     const response = []
-    subjects.forEach(subject => {
-      const elem = {"subjectId": subject['ID'], "subject": subject["Name"], "classId": subject["classid"]};
+    for(let i = 0; i < subjects.length; i++){
+      const subject = subjects[i];
+      const classId = subject["classid"];
+      let classN = await Class.getClassNameById(classId);
+      const elem = {"subjectId": subject['ID'], 
+      "subject": subject["Name"], 
+      "classId": subject["classid"],
+      "class": classN };
       response.push(elem);
-    });
+    }
     res.send(response);
   }
 

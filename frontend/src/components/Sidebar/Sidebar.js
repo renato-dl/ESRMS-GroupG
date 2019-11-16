@@ -6,7 +6,7 @@ import { TeacherMenu } from '../TeacherMenu/TeacherMenu';
 import { ApplicationStoreContext } from '../../store';
 
 
-const PSidebar = false;
+const PSidebar = true;
 
 export const AppSidebar = (props) => {
   return (

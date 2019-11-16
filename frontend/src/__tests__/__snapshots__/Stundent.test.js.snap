@@ -27,16 +27,26 @@ exports[`Testing Student component Testing snapshot 1`] = `
         className="header"
       >
          
-        Prenga
       </div>
     </div>
     <div
       className="extra content"
     >
-      <span>
-        First Class
-      </span>
+      <div>
+        SSN: 
+      </div>
+      <div>
+        BirthDate: 
+        Invalid Date
+      </div>
     </div>
   </div>
+  <button
+    className="student_grades"
+    onClick={[Function]}
+    type="button"
+  >
+    show grades
+  </button>
 </div>
 `;
