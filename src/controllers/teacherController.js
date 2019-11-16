@@ -8,7 +8,6 @@ class TeacherController extends BaseController {
   // GET /teacher/:teacherId/subjects
   async subjectsByTeacherId(req, res) {
     const subjects = await Subject.findByTeacherId(req.params.teacherId);
-    // TODO: get class orf 
     const response = []
     for(let i = 0; i < subjects.length; i++){
       const subject = subjects[i];
