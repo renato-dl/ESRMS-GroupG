@@ -11,9 +11,8 @@ class AdminController extends BaseController {
           req.body.eMail, 
           req.body.SSN, 
           req.body.password
-          );
-        res.send(parent);
-    
+        );
+        res.send(parent); 
     }
 }
 

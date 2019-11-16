@@ -1,32 +1,32 @@
 import {Model} from './base';
-const crypto =  require('crypto');
-const passwordValidator = require('password-validator');
-const eMailValidator = require('email-validator');
-const stringValidator = require('validator');
+import crypto from 'crypto';
+import passwordValidator from 'password-validator';
+import validator from 'validator';
 
 class Admin extends Model {
   constructor() {
     super('Admin');
   }
+  
   async insertParentData(adminId, firstName, lastName, eMail, SSN, password) {
 
       //input data validation
       if (!adminId){
         throw new Error('Missing or invalid admin Id');
       }
-      if (!stringValidator.isAlpha(firstName)) {
+      if (!validator.isAlpha(firstName)) {
         throw new Error('Missing or invalid first name');
       }
-      if (!stringValidator.isAlpha(lastName)) {
+      if (!validator.isAlpha(lastName)) {
         throw new Error('Missing or invalid last name');
       }
-      if (!eMailValidator.validate(eMail)) {
+      if (!validator.isEmail(eMail)) {
         throw new Error('Missing or invalid email');
       }
       if (!SSN || !this.validateSSN(SSN)) {
         throw new Error('Missing or invalid SSN');
       }
-      if (!this.validatePassword(SSN)) {
+      if (!this.validatePassword(password)) {
         throw new Error('Missing or invalid password');
       }
 
@@ -48,31 +48,29 @@ class Admin extends Model {
     const parentId = crypto.createHash('sha256').update(eMail).digest('hex');
     const parentPassword = this.createSecurePassword(password);
     let insertParentResult;
+
     //begin transaction
-    connection.beginTransaction()
-        .then(() =>{
-          connection.query(
-            `INSERT INTO Users (ID, eMail, Password, Role)
-            VALUES (?, ?, ?, 'parent');`,
-            [parentId, eMail, parentPassword]
-          );
-          
-          insertParentResult = connection.query(
-            `INSERT INTO Parents (ID, FirstName, LastName, SSN)
-            VALUES (?, ?, ?, ?);`,
-            [parentId, firstName, lastName, SSN]
-          );
-        
-        })
-        .then(() => {
-          connection.commit();
-          connection.release();
-          return {id: insertParentResult.parentId};
-        })
-        .catch((err) => {
-          connection.rollback();
-          throw newError('Operation failed');
-        })
+    try {
+      await connection.query(
+        `INSERT INTO Users (ID, eMail, Password, Role)
+        VALUES (?, ?, ?, 'parent');`,
+        [parentId, eMail, parentPassword]
+      );
+
+      insertParentResult = await connection.query(
+        `INSERT INTO Parents (ID, FirstName, LastName, SSN)
+        VALUES (?, ?, ?, ?);`,
+        [parentId, firstName, lastName, SSN]
+      );
+      
+    } catch(err) {
+      connection.rollback();
+      connection.release();
+      throw new Error('Operation failed');
+    }
+    connection.commit();
+    connection.release();
+    return {id: parentId};
   }
 
   validateSSN(SSN){
@@ -93,7 +91,6 @@ class Admin extends Model {
   }
   
   createSecurePassword(password){
-
     //first we create the salt
     const genRandomString = function(length){
       return crypto.randomBytes(Math.ceil(length/2))
