@@ -9,8 +9,8 @@ class Subject extends Model {
     try{
       const connection = await this.db.getConnection();
       const sql_query = `select s.*, tscr.classid 
-      from teachersubjectclassrelation tscr, ${this.tableName} s
-      where tscr.teacherid = ? and tscr.subjectid = s.id ;`;
+      from TeacherSubjectClassRelation tscr, ${this.tableName} s
+      where tscr.TeacherId = ? and tscr.SubjectId = s.ID ;`;
       const results = await connection.query(sql_query, [teacherId]);
 
       connection.release();
