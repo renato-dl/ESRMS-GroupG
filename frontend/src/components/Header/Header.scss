@@ -1,14 +1,53 @@
 @import '../../assets/styles/colors.scss';
 
 .app-header {
-  background-color: $black;
+ // background-color: $black !important;
+  //background-color: #009B8B;
+  color:black;
+  display: flex;
+  //align-items: center;
+  /* justify-content: center; */
+  height: 50px;
+  margin-bottom:0!important;
+
+  i{
+    color:#DBFDFC;
+  }
+}
+.ui.dropdown>.dropdown.icon{
+  margin-left:0;
+}
+.headerlogoField{
+  //color:#DBCA47!important;
+  font-family: Comic Sans MS;
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 75px;
-
-  h1 {
-    color: $grey;
+  color:#DBFDFC;
+  height: inherit;
+  width: 448px;
+  //width: 150px;
+  background-color: #008272;
+  border-bottom:2px solid #DBCA47;
+  //border-top-left-radius: 15px;
+  padding-left: 15px;
+  .logoIcon{
+  color:#DBCA47!important;
   }
+}
+.headerToolbarFiled{
+  height: 100%;
+  width: calc(100% - 150px);
+  background-color: #009B8B;
+  padding-left:calc(100% - 400px);;
+  display: flex;
+  align-items: center;
+  align-items: center;
 
+  div.ui.dropdown{
+    font-size: 15px;
+  }
+}
+
+.ui.dropdown .menu {
+  left: -130px;
 }
