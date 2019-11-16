@@ -173,7 +173,7 @@ class Topic extends Model {
       if (!result.length) {
         throw new Error('Teacher id not found');
       }
-      if (result[0] && result[0]["teacherid"] == teacherId){
+      if (result[0] && result[0]["TeacherId"] == teacherId){
         return true;
       }
       return false;
