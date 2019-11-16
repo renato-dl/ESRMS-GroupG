@@ -2,7 +2,16 @@ import React from 'react';
 //import { api } from '../../services/api';
 import "./Marks.scss"
 
-import {Icon, Table, Header, Container} from 'semantic-ui-react';
+import _ from 'lodash';
+import {Icon, Table, Header, Grid, Image} from 'semantic-ui-react';
+
+
+const columns = _.times(16, (i) => (
+  <Grid.Column key={i}>
+    <Image src='https://react.semantic-ui.com/images/wireframe/image.png' />
+  </Grid.Column>
+))
+
 
 export class Marks extends React.Component{
     constructor(props)
@@ -47,7 +56,7 @@ export class Marks extends React.Component{
                   {this.state.Marks.map((mark, index)=>
                   
                   <Table.Row  key = {index}>
-                    <Table.Cell warning>
+                    <Table.Cell >
                       <Header as='h4' image>
                        {/* <Icon name='angle right' size=" small"/> */}
                         <Header.Content>
@@ -78,6 +87,14 @@ export class Marks extends React.Component{
  */}
 
             </div>
+
+
+
+            
+            <Grid>{columns}</Grid>
+
+
+
           </>
         )
     }
