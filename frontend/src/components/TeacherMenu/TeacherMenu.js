@@ -4,11 +4,17 @@ import {Link} from 'react-router-dom';
 
 export const TeacherMenu = (props) => (
   <>
-    <Menu.Item className="menuStandard">
-      <Link to="/student/:studentID/marks">
-        <Icon name='sort numeric up' />
-        I am teacher
-      </Link>
+    <Menu.Item as={Link} to="/teacher">
+      <span>
+        <br/>
+        <Icon name='user' size="big" />
+        TEACHER 
+        <br/><br/>
+      </span>
+    </Menu.Item>
+    <Menu.Item as={Link} to='/teacher/:teacherID/subjects'>
+      <Icon name='book' />
+      Subjects
     </Menu.Item>
   </>
 );
