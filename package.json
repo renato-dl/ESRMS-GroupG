@@ -8,15 +8,13 @@
     "db:migration:run": "./node_modules/knex/bin/cli.js migrate:latest",
     "db:migration:rollback": "./node_modules/knex/bin/cli.js migrate:rollback",
     "db:seed:make": "./node_modules/knex/bin/cli.js seed:make",
-    "db:seed:run": "./node_modules/knex/bin/cli.js seed:run",
-    "test": "jest __tests__ --runInBand --detectOpenHandles",
+    "db:seed:run": "./node_modules/knex/bin/cli.js seed:run"
     "server": "babel-node ./src",
     "server:prod": "node ./dist",
     "dev": "cross-env NODE_ENV=development npm-run-all server",
     "clean": "rimraf dist",
     "build": "babel ./src --out-dir ./dist",
-    "prod": "cross-env NODE_ENV=production npm-run-all clean build server:prod",
-    "watch": "nodemon"
+    "prod": "cross-env NODE_ENV=production npm-run-all clean build server:prod"
   },
   "dependencies": {
     "@babel/runtime": "^7.7.2",

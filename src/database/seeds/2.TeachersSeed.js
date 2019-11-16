@@ -9,9 +9,7 @@ exports.seed = function(knex) {
           ID: '6e5c9976f5813e59816b40a814e29899',
           FirstName: 'Giulia',
           LastName: 'Tesori',
-          SSN: 'TSRGLI74R52L219F',
-          eMail: 'giulia.tesori@gmail.com',
-          Password: 'easypass'
+          SSN: 'TSRGLI74R52L219F'
         }
       ]);
     });
