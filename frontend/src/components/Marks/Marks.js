@@ -21,12 +21,13 @@ export class Marks extends React.Component{
       super(props)
       this.state={
       Marks:[
-        {subject:"subj1",marks:"100"},
-        {subject:"subj2",marks:"90"},
-        {subject:"subj3",marks:"80"}
+        {subject:"subj1",marks:"100", data: "timestamp"},
+        {subject:"subj2",marks:"90", data: "timestamp"},
+        {subject:"subj3",marks:"80", data: "timestamp"}
       ]
       }
     }
+
     // async componentDidMount(){
     //     const responce=await api.marks.getMarks(1);
     //     if(responce){

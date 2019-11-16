@@ -5,7 +5,7 @@ import { Button, Form, Grid, Header, Icon, Segment } from 'semantic-ui-react'
 export class LoginParent extends React.Component {
     render() {
         return (
-            <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
+            <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle' className="loginContainer">
                 <Grid.Column style={{ maxWidth: 450 }}>
                 <Header as='h2' color='teal' textAlign='center'>
                     <Icon name='leaf' /> Log-in to Parent account
