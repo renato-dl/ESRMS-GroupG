@@ -11,10 +11,11 @@
     i{color:#607D8B}
 }
 .item.myListItem:hover{
-    background-color: #E3EBEE;
+    //background-color: #E3EBEE;
     border:0;
-    
     border-left:5px solid #008272;
+    box-shadow: 3px 3px 3px  grey;
+    cursor:pointer;
 }
 
 
