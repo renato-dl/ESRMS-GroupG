@@ -47,8 +47,7 @@ class Admin extends Model {
     //insert of data
     const parentId = crypto.createHash('sha256').update(eMail).digest('hex');
     const parentPassword = this.createSecurePassword(password);
-    let insertParentResult;
-
+    
     //begin transaction
     try {
       await connection.query(
@@ -57,7 +56,7 @@ class Admin extends Model {
         [parentId, eMail, parentPassword]
       );
 
-      insertParentResult = await connection.query(
+      await connection.query(
         `INSERT INTO Parents (ID, FirstName, LastName, SSN)
         VALUES (?, ?, ?, ?);`,
         [parentId, firstName, lastName, SSN]
