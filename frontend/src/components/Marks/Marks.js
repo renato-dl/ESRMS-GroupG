@@ -29,6 +29,14 @@ export class Marks extends React.Component{
     }
 
     // async componentDidMount(){
+    //   const {parent} = this.context.state;
+    //   const response = await api.parent.getChildMarks(parent.ID, parent.selectedStudent.ID);
+    //   if (response) {
+    //     this.setState({ marks: response.data })
+    //   }
+    // }
+    
+    // async componentDidMount(){
     //     const responce=await api.marks.getMarks(1);
     //     if(responce){
     //         this.setState({Marks:responce.data})
