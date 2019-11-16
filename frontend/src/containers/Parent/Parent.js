@@ -1,11 +1,12 @@
 import React from 'react';
+import { Icon} from 'semantic-ui-react';
 import { api } from '../../services/api';
 import { StudentCard } from '../../components/StudentCard/StudentCard';
 import './Parent.scss';
 
 export class Parent extends React.Component {
   state = {
-    children: []
+    children: [
   }
 
   async componentDidMount() {
@@ -24,7 +25,10 @@ export class Parent extends React.Component {
   render() {
     return (
       <div className="parent-container">
-        <h2 className="title">My children</h2>
+        <h3 className="contentHeader">
+        <Icon name='braille' size="small" />
+        Select/Switch child</h3>
+        {/* <h2 className="title">My children</h2> */}
         <div className="children">
           {this.state.children.map((child, index) => (
             <StudentCard 

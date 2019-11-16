@@ -21,14 +21,14 @@ export class App extends React.Component {
         <Header />
 
         <AppSidebar>
-          <Container>
+          {/* <Container> */}
             <Switch>  
               <Route exact path="/parent" component={Parent} />
               <Route exact path="/parent/student/:studentID" component={Student} />
               <Route exact path="/parent/student/:studentID/marks/"component={Marks}/>
               <Route path="*" component={NotFound} />
             </Switch>
-          </Container>
+          {/* </Container> */}
         </AppSidebar>
         
         {/* <Footer /> */}

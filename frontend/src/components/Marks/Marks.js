@@ -1,7 +1,8 @@
 import React from 'react';
 //import { api } from '../../services/api';
+import "./Marks.scss"
 
-import {Icon} from 'semantic-ui-react';
+import {Icon, Table, Header, Container} from 'semantic-ui-react';
 
 export class Marks extends React.Component{
     constructor(props)
@@ -28,9 +29,45 @@ export class Marks extends React.Component{
     // }
       render(){
         return (
+          <>
+            <h3 className="contentHeader"> 
+                <Icon name='sort numeric up' /> Grades of Nume Surname 2019-2020
+              </h3>
             <div className="Marks-container">
-              <h3 className="contentHeader"> 
-        <Icon name='sort numeric up' /> Grades of Nume Surname 2019-2020</h3>
+              <div className="tableContainer">
+              <Table basic='very' celled collapsing>
+                <Table.Header>
+                  <Table.Row>
+                  <Table.HeaderCell><Icon name='book' />SUBJECT</Table.HeaderCell>
+                  <Table.HeaderCell><Icon name='sort numeric up' />GRADE</Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+
+                <Table.Body>
+                  {this.state.Marks.map((mark, index)=>
+                  
+                  <Table.Row  key = {index}>
+                    <Table.Cell warning>
+                      <Header as='h4' image>
+                       {/* <Icon name='angle right' size=" small"/> */}
+                        <Header.Content>
+                          {mark.subject}
+                          {/* <Header.Subheader>Human Resources</Header.Subheader> */}
+                        </Header.Content>
+                      </Header>
+                    </Table.Cell>
+                    <Table.Cell positive>
+                      {mark.marks}
+                      </Table.Cell>
+                  </Table.Row>
+
+                  )}
+
+                </Table.Body>
+              </Table>
+              </div>
+
+{/* 
             <h2 className="title">Student{this.props.match.params.studentID}'s score:</h2>
             {this.state.Marks.map((mark, index)=>
             <p key={index}>
@@ -38,7 +75,10 @@ export class Marks extends React.Component{
               marks:{mark.marks}
             </p>
               )}
+ */}
+
             </div>
+          </>
         )
     }
     }
