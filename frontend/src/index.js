@@ -9,7 +9,7 @@ render(
   <BrowserRouter>
     <Switch>
       <Route exact path="/" render={() => <Redirect to="/parent" />} />
-      <Route exact path="/login" render={() => <div>Login</div>} />
+      <Route exact path="/login" render={() => <Redirect to="/login/parent" />} />
       <Route path="/" component={App} />
     </Switch>
   </BrowserRouter>,

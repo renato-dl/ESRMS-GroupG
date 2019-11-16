@@ -10,6 +10,7 @@ import {Header} from '../../components/Header/Header';
 import { Parent } from '../Parent/Parent';
 import { NotFound } from '../NotFound/NotFound';
 import { Student } from '../Student/Student';
+import {LoginParent} from '../Login/LoginParent';
 
 import {Marks}  from'../../components/Marks/Marks';
 import { AppSidebar } from '../../components/Sidebar/Sidebar';
@@ -26,6 +27,9 @@ export class App extends React.Component {
               <Route exact path="/parent" component={Parent} />
               <Route exact path="/parent/student/:studentID" component={Student} />
               <Route exact path="/parent/student/:studentID/marks/"component={Marks}/>
+
+              <Route exact path="/login/parent" component={LoginParent}/>
+
               <Route path="*" component={NotFound} />
             </Switch>
           {/* </Container> */}
