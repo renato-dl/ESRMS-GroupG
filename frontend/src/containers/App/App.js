@@ -8,6 +8,7 @@ import { Parent } from '../Parent/Parent';
 import { NotFound } from '../NotFound/NotFound';
 import { Student } from '../Student/Student';
 import {Marks}  from '../../components/Marks/Marks';
+import{Topic}  from'../../components/Topic/Topic'
 
 export class App extends React.Component {
   render() {
@@ -22,6 +23,7 @@ export class App extends React.Component {
             <Route exact path="/parent" component={Parent} />
             <Route exact path="/student/:studentID" component={Student} />
             <Route exact path="/student/:studentID/marks/"component={Marks}/>
+            <Route exact path="/teacher/:teacherID/topics" component={Topic} />
             <Route path="*" component={NotFound} />
 
           </Switch>
