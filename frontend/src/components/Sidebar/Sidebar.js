@@ -3,12 +3,14 @@ import { Menu, Segment, Sidebar } from 'semantic-ui-react';
 import '../../assets/styles/global.scss';
 import { ParentMenu } from '../ParentMenu/ParentMenu';
 import { TeacherMenu } from '../TeacherMenu/TeacherMenu';
+import { ApplicationStoreContext } from '../../store';
 
 
-const PSidebar = true;
+const PSidebar = false;
 
-export const AppSidebar = (props) => (
-  <Sidebar.Pushable as={Segment} 
+export const AppSidebar = (props) => {
+  return (
+<Sidebar.Pushable as={Segment} 
   className="mySidebar">
   <Sidebar
     as={Menu}
@@ -35,4 +37,5 @@ export const AppSidebar = (props) => (
     </Segment>
   </Sidebar.Pusher>
 </Sidebar.Pushable>
-);
+  )
+}

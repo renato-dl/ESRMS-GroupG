@@ -6,9 +6,10 @@ import {Parent} from '../Parent/Parent';
 import { NotFound } from '../NotFound/NotFound';
 import { Student } from '../Student/Student';
 import {Marks}  from '../../components/Marks/Marks';
+import {Header}  from '../../components/Header/Header';
+
 import {ApplicationStore, ApplicationStoreContext} from '../../store';
 
-import {Marks}  from'../../components/Marks/Marks';
 import { AppSidebar } from '../../components/Sidebar/Sidebar';
 
 export class App extends React.Component {
@@ -20,7 +21,7 @@ export class App extends React.Component {
         <div className="app">
           <Header />
 
-          <Container>
+          <AppSidebar>
 
             <Switch>
 
@@ -31,9 +32,7 @@ export class App extends React.Component {
 
             </Switch>
 
-          </Container>
-
-          <Footer />
+          </AppSidebar>
         </div>
       </ApplicationStore>
     )
