@@ -1,15 +1,26 @@
 .item.myListItem{
+    width:613px;
     background-color: #fff;
-    padding:17px!important;
-    height: 70px;
+    padding:13px!important;
+    height: 59px;
     border:1px solid #c5c5c5;
     border-left:5px solid #008272;
     margin-bottom:10px;
-    font-size:16px;
+    font-size:12;
+
+    i{color:#607D8B}
 }
 .item.myListItem:hover{
     background-color: #E3EBEE;
     border:0;
     
     border-left:5px solid #008272;
+}
+
+
+.subjectList{
+position: relative;
+  width: 613px;
+  top: 50%;
+  left: calc(50% - 306px);
 }

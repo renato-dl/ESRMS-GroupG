@@ -21,6 +21,10 @@
 }
 
  //.ui.segment{padding:0}
+ .contentContainer{
+     
+  width: calc(100% - 260px);
+ }
 .contentHeader{    
     height: auto;
     width: 100%;

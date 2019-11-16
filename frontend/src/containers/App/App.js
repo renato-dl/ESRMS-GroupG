@@ -5,6 +5,9 @@ import {Switch, Route} from 'react-router-dom';
 import {Parent} from '../Parent/Parent';
 import { NotFound } from '../NotFound/NotFound';
 import { Student } from '../Student/Student';
+
+import {Teacher} from '../Teacher/Teacher';
+
 import {Marks}  from '../../components/Marks/Marks';
 import {Header}  from '../../components/Header/Header';
 
@@ -28,6 +31,7 @@ export class App extends React.Component {
               <Route exact path="/parent" component={Parent} />
               <Route exact path="/parent/student/:studentID" component={Student} />
               <Route exact path="/parent/student/:studentID/marks/" component={Marks}/>
+              <Route exact path="/teacher" component={Teacher}/>
               <Route path="*" component={NotFound} />
 
             </Switch>
