@@ -5,7 +5,11 @@ import {Switch, Route} from 'react-router-dom';
 import {Parent} from '../Parent/Parent';
 import { NotFound } from '../NotFound/NotFound';
 import { Student } from '../Student/Student';
+
+import {Teacher} from '../Teacher/Teacher';
+
 import {Marks}  from '../../components/Marks/Marks';
+import{Topic}  from'../../components/Topic/Topic';
 import {Header}  from '../../components/Header/Header';
 
 import {ApplicationStore, ApplicationStoreContext} from '../../store';
@@ -28,7 +32,11 @@ export class App extends React.Component {
               <Route exact path="/parent" component={Parent} />
               <Route exact path="/parent/student/:studentID" component={Student} />
               <Route exact path="/parent/student/:studentID/marks/" component={Marks}/>
+              <Route exact path="/teacher" component={Teacher}/>
+              <Route exact path="/teacher/:teacherID/subjects" component={Teacher}/>
+              <Route exact path="/teacher/:teacherID/topics" component={Topic} />
               <Route path="*" component={NotFound} />
+              
 
             </Switch>
 
