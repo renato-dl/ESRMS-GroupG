@@ -664,7 +664,7 @@ describe("Teacher tests about editing of the inserted topics", () =>{
     connection.release();
   });
 
-  test("It should not update the topic given null topic date", async() =>{
+  test("It should not update the topic given invalid topic date", async() =>{
     // better to insert another topic and do update on the new one
     const teacherId = "6e5c9976f5813e59816b40a814e29899";
     const classId = 1;
@@ -676,21 +676,21 @@ describe("Teacher tests about editing of the inserted topics", () =>{
     const topicDateUpdate = topicDate;
     if (dayOfTheWeek == "Sun" || dayOfTheWeek == "Sat"){
       topicDate.subtract(2, 'days');      
-    }
-    topicDateUpdate.add(3, "days");
+    }    
     const topicDateStr = topicDate.format("YYYY-MM-DD");
+    topicDateUpdate.add(3, "days");
     const topicInserted = await Topic.insertNewTopic(teacherId, classId, subjectId, topicTitle, topicDescription, topicDateStr);
     const topicId = topicInserted["id"];
     const topicTitleUpdate =  "This is a test for topic edit - edited";
     const topicDescriptionUpdate = "Testing topic editing - edited"; 
     const topicDateUpdateStr = topicDateUpdate.format("YYYY-MM-DD");   
-    const resultObj = await Topic.editTopic(teacherId, topicId, topicTitleUpdate, topicDescriptionUpdate, null);
+    const resultObj = await Topic.editTopic(teacherId, topicId, topicTitleUpdate, topicDescriptionUpdate, topicDateUpdateStr);
     expect(resultObj).not.toBeNull();
     expect(resultObj).toEqual(
       expect.objectContaining(
       {
         "Success": false,
-        "Message": "Missing or invalid topic date"
+        "Message": "Future topics cannot be inserted"
       }
     ));
     const connection = await db.getConnection();
@@ -716,7 +716,7 @@ describe("Teacher tests about editing of the inserted topics", () =>{
     connection.release();
   });
 
-  test("It should not update the topic given invalid topic date", async() =>{
+  test("It should not update the topic given null topic date", async() =>{
     // better to insert another topic and do update on the new one
     const teacherId = "6e5c9976f5813e59816b40a814e29899";
     const classId = 1;
