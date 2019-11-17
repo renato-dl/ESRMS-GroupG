@@ -3,7 +3,8 @@ import { api } from '../../services/api';
 import './Topic.scss';
 import {
   Table,
-  Button, Icon
+  Button,
+  Icon
 } from 'semantic-ui-react'
 import moment from 'moment';
 import TopicDetails from './TopicDetail/TopicDetails';
@@ -13,6 +14,7 @@ export class Topic extends React.Component{
       super(props);
 
       this.state = {
+        subject: null,
         topics: [],
         editingTopic: null,
         isTopicDetailsOpen: false
@@ -21,14 +23,28 @@ export class Topic extends React.Component{
     
     async componentDidMount() {
       await this.fetchTopics();
+      await this.fetchSubject();
     }
 
     fetchTopics =  async () => {
       const {params} = this.props.match;
 
-      const response = await api.teacher.getTeacherTopics(params.teacherID, '1', params.subjectID);
+      const response = await api.teacher.getTeacherTopics(params.teacherID, 1, params.subjectID);
       if (response) {
         this.setState({ topics: response.data, editingTopic: null })
+      }
+    };
+
+    fetchSubject = async () => {
+      const {params} = this.props.match;
+
+      const response = await api.teacher.getTeacherSubjects(params.teacherID);
+      if (response) {
+        response.data.forEach((subject) => {
+          if (subject.subjectId == params.subjectID) {
+            this.setState({subject});
+          }
+        });
       }
     };
 
@@ -46,13 +62,19 @@ export class Topic extends React.Component{
 
     render(){
       return (
-        <div className="Topic-container">
-          <h2 className="title">Teacher {this.props.match.params.teacherID}'s topics:</h2>
-          <Button content='Add topic' primary onClick={this.addTopic} />
+        <div className="Topic-container contentContainer">
+          <h3 className="contentHeader">
+            <Icon name='braille' size="small" />
+            {this.state.subject ? this.state.subject.subject : ''} topics:
+          </h3>
+          <Button className="ui vk button" onClick={this.addTopic}>
+            <Icon name="plus" />
+            Add topic
+          </Button>
           <Table celled>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell textAlign="left">Title</Table.HeaderCell>
+                <Table.HeaderCell textAlign="left">#</Table.HeaderCell>
                 <Table.HeaderCell textAlign="left">Title</Table.HeaderCell>
                 <Table.HeaderCell textAlign="left">Description</Table.HeaderCell>
                 <Table.HeaderCell textAlign="left">Date</Table.HeaderCell>
@@ -66,7 +88,7 @@ export class Topic extends React.Component{
                   <Table.Cell textAlign="left">{ topic.Title }</Table.Cell>
                   <Table.Cell textAlign="left">{ topic.TopicDescription }</Table.Cell>
                   <Table.Cell textAlign="left" width={2}>{ moment(topic.TopicDate).format('LL') }</Table.Cell>
-                  <Table.Cell textAlign="left" className="edit-cell" onClick={() => this.editTopic(topic)}>
+                  <Table.Cell textAlign="left" className="edit-cell" onClick={() => this.editTopic(topic)} width={1}>
                     <Icon name="edit"/> Edit
                   </Table.Cell>
                 </Table.Row>
