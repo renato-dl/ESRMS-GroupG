@@ -16,6 +16,19 @@ class TopicDetails extends React.Component {
     isSaving: false
   };
 
+  componentDidMount() {
+    const {topic} = this.props;
+    console.log(topic);
+    if (topic) {
+      this.setState({
+        topicID: topic.ID,
+        title: topic.Title,
+        description: topic.TopicDescription,
+        date: new Date(topic.TopicDate)
+      });
+    }
+  }
+
   handleInputChange = (e, { name, value }) => {
     this.setState({[name]: value});
   };
@@ -42,10 +55,15 @@ class TopicDetails extends React.Component {
         topicDate: this.state.date.toUTCString()
       };
 
-      await api.teacher.saveTopic(
-        params.teacherID,
-        topicData
-      );
+      this.state.topicID ?
+        await api.teacher.updateTopic(
+          params.teacherID,
+          topicData
+        ) :
+        await api.teacher.saveTopic(
+          params.teacherID,
+          topicData
+        );
     } catch (e) {
       console.log(e);
     }
@@ -66,7 +84,7 @@ class TopicDetails extends React.Component {
     return (
       <Modal dimmer="blurring" open className="topic-detail" size="small">
         <Modal.Header>
-          <span>Insert a topic</span>
+          <span>{this.state.topicID ? 'Edit topic' : 'Insert a topic'}</span>
           <Icon onClick={this.onClose} className="close-icn" name="close" />
         </Modal.Header>
         <Modal.Content>

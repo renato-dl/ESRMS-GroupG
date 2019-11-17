@@ -14,6 +14,7 @@ export class Topic extends React.Component{
 
       this.state = {
         topics: [],
+        editingTopic: null,
         isTopicDetailsOpen: false
       }
     }
@@ -27,7 +28,7 @@ export class Topic extends React.Component{
 
       const response = await api.teacher.getTeacherTopics(params.teacherID, '1', params.subjectID);
       if (response) {
-        this.setState({ topics: response.data })
+        this.setState({ topics: response.data, editingTopic: null })
       }
     };
 
@@ -37,6 +38,10 @@ export class Topic extends React.Component{
 
     onTopicDetailClose = () => {
       this.setState({isTopicDetailsOpen: false});
+    };
+
+    editTopic = (topic) => {
+      this.setState({editingTopic: topic, isTopicDetailsOpen: true});
     };
 
     render(){
@@ -70,6 +75,7 @@ export class Topic extends React.Component{
           </Table>
           {this.state.isTopicDetailsOpen &&
             <TopicDetails
+              topic={this.state.editingTopic}
               onClose={this.onTopicDetailClose}
               onSave={() => {
                 this.fetchTopics();
