@@ -1,12 +1,18 @@
 import React from 'react';
 import { Menu, Segment, Sidebar } from 'semantic-ui-react';
+
 import '../../assets/styles/global.scss';
-import { ParentMenu } from '../ParentMenu/ParentMenu';
-import { TeacherMenu } from '../TeacherMenu/TeacherMenu';
+
 import { ApplicationStoreContext } from '../../store';
 
+import { ParentMenu } from '../ParentMenu/ParentMenu';
+import { TeacherMenu } from '../TeacherMenu/TeacherMenu';
+import { AdminMenu } from '../AdminMenu/AdminMenu';
 
-const PSidebar = true;
+
+const Parent = false;
+const Teacher = false;
+const Admin = true;
 
 export const AppSidebar = (props) => {
   return (
@@ -24,9 +30,9 @@ export const AppSidebar = (props) => {
     visible
     //width = "thin"
   >
-    {PSidebar && <ParentMenu />}
-
-    {!PSidebar && <TeacherMenu />}
+    {Parent && <ParentMenu />}
+    {Teacher && <TeacherMenu />}
+    {Admin && <AdminMenu />}
 
   </Sidebar>
 

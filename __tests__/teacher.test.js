@@ -360,34 +360,416 @@ describe('Teacher tests about visualization of the topics', () => {
             expect(error).toBeInstanceOf(Error);
             expect(error).toHaveProperty('message', 'Entity not found');
         }
-    });
-
-    test("It should retrieve the subjects of a given teacher", async() =>{
-      const subjects = await Subject.findByTeacherId('6e5c9976f5813e59816b40a814e29899');
-      expect(subjects).not.toBeNull();
-      expect(subjects).toHaveLength(1);
-      expect(subjects).toEqual(
-        expect.arrayContaining(
-            [
-              expect.objectContaining(
-                {
-                    "ID": 1,
-                    "Name": "Mathematics",
-                    "classid": 1
-                }
-              )
-            ]
-          )
-       );
-      }
-    );
-
-    test("It should retrieve the class name by its id", async() =>{
-      const classObj = await Classes.getClassNameById(1);
-      expect(classObj).not.toBeNull();
-      expect(classObj).toHaveLength(2);
-      expect(classObj).toEqual("1A");
-      }
-    );
+    });  
     
 });
+
+describe('Teacher tests about visualization of the subjects', () => {
+  test("It should retrieve the subjects of a given teacher", async() =>{
+    const subjects = await Subject.findByTeacherId('6e5c9976f5813e59816b40a814e29899');
+    expect(subjects).not.toBeNull();
+    expect(subjects).toHaveLength(1);
+    expect(subjects).toEqual(
+      expect.arrayContaining(
+          [
+            expect.objectContaining(
+              {
+                  "ID": 1,
+                  "Name": "Mathematics",
+                  "classid": 1
+              }
+            )
+          ]
+        )
+     );
+    }
+  );
+
+  test("It should retrieve the class name by its id", async() =>{
+    const classObj = await Classes.getClassNameById(1);
+    expect(classObj).not.toBeNull();
+    expect(classObj).toHaveLength(2);
+    expect(classObj).toEqual("1A");
+    }
+  );
+});
+
+describe("Teacher tests about editing of the inserted topics", () =>{
+  test("It should update the topic given the topic id, title, description and date", async() =>{
+    // better to insert another topic and do update on the new one
+    const teacherId = "6e5c9976f5813e59816b40a814e29899";
+    const classId = 1;
+    const subjectId = 1;
+    const topicTitle =  "This is a test for topic edit";
+    const topicDescription = "Testing topic editing";
+    const dayOfTheWeek = moment().utc().format("ddd");
+    const topicDate = moment().utc();
+    const topicDateUpdate = topicDate;
+    if (dayOfTheWeek == "Sun" || dayOfTheWeek == "Sat"){
+      topicDate.subtract(2, 'days');      
+    }
+    if (dayOfTheWeek != "Mon"){
+      topicDateUpdate.subtract(1, 'days');
+    }
+    const topicDateStr = topicDate.format("YYYY-MM-DD");
+    const topicInserted = await Topic.insertNewTopic(teacherId, classId, subjectId, topicTitle, topicDescription, topicDateStr);
+    const topicId = topicInserted["id"];
+    const topicTitleUpdate =  "This is a test for topic edit - edited";
+    const topicDescriptionUpdate = "Testing topic editing - edited"; 
+    const topicDateUpdateStr = topicDateUpdate.format("YYYY-MM-DD");   
+    const resultObj = await Topic.editTopic(teacherId, topicId, topicTitleUpdate, topicDescriptionUpdate, topicDateUpdateStr);
+    expect(resultObj).not.toBeNull();
+    expect(resultObj).toEqual(
+      expect.objectContaining(
+      {
+        "Success": true
+      }
+    ));
+    const connection = await db.getConnection();
+    const updateResult = await connection.query(
+      `select Title, TopicDescription, CAST( TopicDate AS datetime) AS TopicDate
+      from Topics
+      where ID = ?;`,
+      [topicId]
+    );
+    const updatedTopic = updateResult[0];
+    expect(updatedTopic.Title).toEqual(topicTitleUpdate);
+    expect(updatedTopic.TopicDescription).toEqual(topicDescriptionUpdate);
+    expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateUpdateStr + "T00:00:00.000Z"));
+
+    // clean db
+    const deleteResult = await connection.query(
+      `DELETE
+      FROM Topics
+      WHERE ID = ?;`,
+      [topicId]
+    );
+
+    connection.release();
+  });
+
+  test("It should not update the topic given unauthorized teacher id", async() =>{
+    // better to insert another topic and do update on the new one
+    const teacherId = "6e5c9976f5813e59816b40a814e29899";
+    const classId = 1;
+    const subjectId = 1;
+    const topicTitle =  "This is a test for topic edit";
+    const topicDescription = "Testing topic editing";
+    const dayOfTheWeek = moment().utc().format("ddd");
+    const topicDate = moment().utc();
+    const topicDateUpdate = topicDate;
+    if (dayOfTheWeek == "Sun" || dayOfTheWeek == "Sat"){
+      topicDate.subtract(2, 'days');      
+    }
+    if (dayOfTheWeek != "Mon"){
+      topicDateUpdate.subtract(1, 'days');
+    }
+    const topicDateStr = topicDate.format("YYYY-MM-DD");
+    const topicInserted = await Topic.insertNewTopic(teacherId, classId, subjectId, topicTitle, topicDescription, topicDateStr);
+    const topicId = topicInserted["id"];
+    const topicTitleUpdate =  "This is a test for topic edit - edited";
+    const topicDescriptionUpdate = "Testing topic editing - edited"; 
+    const topicDateUpdateStr = topicDateUpdate.format("YYYY-MM-DD");   
+    const resultObj = await Topic.editTopic("randomTeacherId", topicId, topicTitleUpdate, topicDescriptionUpdate, topicDateUpdateStr);
+    expect(resultObj).not.toBeNull();
+    expect(resultObj).toEqual(
+      expect.objectContaining(
+      {
+        "Success": false,
+        "Message": "Teacher is not authorized!"
+      }
+    ));
+    const connection = await db.getConnection();
+    const updateResult = await connection.query(
+      `select Title, TopicDescription, CAST( TopicDate AS datetime) AS TopicDate
+      from Topics
+      where ID = ?;`,
+      [topicId]
+    );
+    const updatedTopic = updateResult[0];
+    expect(updatedTopic.Title).toEqual(topicTitle);
+    expect(updatedTopic.TopicDescription).toEqual(topicDescription);
+    expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
+
+    // clean db
+    const deleteResult = await connection.query(
+      `DELETE
+      FROM Topics
+      WHERE ID = ?;`,
+      [topicId]
+    );
+
+    connection.release();
+  });
+  
+  test("It should not update the topic given unauthorized topic id", async() =>{
+    // better to insert another topic and do update on the new one
+    const teacherId = "6e5c9976f5813e59816b40a814e29899";
+    const classId = 1;
+    const subjectId = 1;
+    const topicTitle =  "This is a test for topic edit";
+    const topicDescription = "Testing topic editing";
+    const dayOfTheWeek = moment().utc().format("ddd");
+    const topicDate = moment().utc();
+    const topicDateUpdate = topicDate;
+    if (dayOfTheWeek == "Sun" || dayOfTheWeek == "Sat"){
+      topicDate.subtract(2, 'days');      
+    }
+    if (dayOfTheWeek != "Mon"){
+      topicDateUpdate.subtract(1, 'days');
+    }
+    const topicDateStr = topicDate.format("YYYY-MM-DD");
+    const topicInserted = await Topic.insertNewTopic(teacherId, classId, subjectId, topicTitle, topicDescription, topicDateStr);
+    const topicId = topicInserted["id"];
+    const topicTitleUpdate =  "This is a test for topic edit - edited";
+    const topicDescriptionUpdate = "Testing topic editing - edited"; 
+    const topicDateUpdateStr = topicDateUpdate.format("YYYY-MM-DD");   
+    const resultObj = await Topic.editTopic(teacherId, -300, topicTitleUpdate, topicDescriptionUpdate, topicDateUpdateStr);
+    expect(resultObj).not.toBeNull();
+    expect(resultObj).toEqual(
+      expect.objectContaining(
+      {
+        "Success": false,
+        "Message": "Teacher id not found"
+      }
+    ));
+    const connection = await db.getConnection();
+    const updateResult = await connection.query(
+      `select Title, TopicDescription, CAST( TopicDate AS datetime) AS TopicDate
+      from Topics
+      where ID = ?;`,
+      [topicId]
+    );
+    const updatedTopic = updateResult[0];
+    expect(updatedTopic.Title).toEqual(topicTitle);
+    expect(updatedTopic.TopicDescription).toEqual(topicDescription);
+    expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
+
+    // clean db
+    const deleteResult = await connection.query(
+      `DELETE
+      FROM Topics
+      WHERE ID = ?;`,
+      [topicId]
+    );
+
+    connection.release();
+  });
+
+  test("It should not update the topic given null topic id", async() =>{
+    // better to insert another topic and do update on the new one
+    const teacherId = "6e5c9976f5813e59816b40a814e29899";
+    const classId = 1;
+    const subjectId = 1;
+    const topicTitle =  "This is a test for topic edit";
+    const topicDescription = "Testing topic editing";
+    const dayOfTheWeek = moment().utc().format("ddd");
+    const topicDate = moment().utc();
+    const topicDateUpdate = topicDate;
+    if (dayOfTheWeek == "Sun" || dayOfTheWeek == "Sat"){
+      topicDate.subtract(2, 'days');      
+    }
+    if (dayOfTheWeek != "Mon"){
+      topicDateUpdate.subtract(1, 'days');
+    }
+    const topicDateStr = topicDate.format("YYYY-MM-DD");
+    const topicInserted = await Topic.insertNewTopic(teacherId, classId, subjectId, topicTitle, topicDescription, topicDateStr);
+    const topicId = topicInserted["id"];
+    const topicTitleUpdate =  "This is a test for topic edit - edited";
+    const topicDescriptionUpdate = "Testing topic editing - edited"; 
+    const topicDateUpdateStr = topicDateUpdate.format("YYYY-MM-DD");   
+    const resultObj = await Topic.editTopic(teacherId, null, topicTitleUpdate, topicDescriptionUpdate, topicDateUpdateStr);
+    expect(resultObj).not.toBeNull();
+    expect(resultObj).toEqual(
+      expect.objectContaining(
+      {
+        "Success": false,
+        "Message": "Topic id is missing."
+      }
+    ));
+    const connection = await db.getConnection();
+    const updateResult = await connection.query(
+      `select Title, TopicDescription, CAST( TopicDate AS datetime) AS TopicDate
+      from Topics
+      where ID = ?;`,
+      [topicId]
+    );
+    const updatedTopic = updateResult[0];
+    expect(updatedTopic.Title).toEqual(topicTitle);
+    expect(updatedTopic.TopicDescription).toEqual(topicDescription);
+    expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
+
+    // clean db
+    const deleteResult = await connection.query(
+      `DELETE
+      FROM Topics
+      WHERE ID = ?;`,
+      [topicId]
+    );
+
+    connection.release();
+  });
+
+  test("It should not update the topic given null topic title", async() =>{
+    // better to insert another topic and do update on the new one
+    const teacherId = "6e5c9976f5813e59816b40a814e29899";
+    const classId = 1;
+    const subjectId = 1;
+    const topicTitle =  "This is a test for topic edit";
+    const topicDescription = "Testing topic editing";
+    const dayOfTheWeek = moment().utc().format("ddd");
+    const topicDate = moment().utc();
+    const topicDateUpdate = topicDate;
+    if (dayOfTheWeek == "Sun" || dayOfTheWeek == "Sat"){
+      topicDate.subtract(2, 'days');      
+    }
+    if (dayOfTheWeek != "Mon"){
+      topicDateUpdate.subtract(1, 'days');
+    }
+    const topicDateStr = topicDate.format("YYYY-MM-DD");
+    const topicInserted = await Topic.insertNewTopic(teacherId, classId, subjectId, topicTitle, topicDescription, topicDateStr);
+    const topicId = topicInserted["id"];
+    const topicTitleUpdate =  "This is a test for topic edit - edited";
+    const topicDescriptionUpdate = "Testing topic editing - edited"; 
+    const topicDateUpdateStr = topicDateUpdate.format("YYYY-MM-DD");   
+    const resultObj = await Topic.editTopic(teacherId, topicId, null, topicDescriptionUpdate, topicDateUpdateStr);
+    expect(resultObj).not.toBeNull();
+    expect(resultObj).toEqual(
+      expect.objectContaining(
+      {
+        "Success": false,
+        "Message": "Missing or invalid topic title"
+      }
+    ));
+    const connection = await db.getConnection();
+    const updateResult = await connection.query(
+      `select Title, TopicDescription, CAST( TopicDate AS datetime) AS TopicDate
+      from Topics
+      where ID = ?;`,
+      [topicId]
+    );
+    const updatedTopic = updateResult[0];
+    expect(updatedTopic.Title).toEqual(topicTitle);
+    expect(updatedTopic.TopicDescription).toEqual(topicDescription);
+    expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
+
+    // clean db
+    const deleteResult = await connection.query(
+      `DELETE
+      FROM Topics
+      WHERE ID = ?;`,
+      [topicId]
+    );
+
+    connection.release();
+  });
+
+  test("It should not update the topic given invalid topic date", async() =>{
+    // better to insert another topic and do update on the new one
+    const teacherId = "6e5c9976f5813e59816b40a814e29899";
+    const classId = 1;
+    const subjectId = 1;
+    const topicTitle =  "This is a test for topic edit";
+    const topicDescription = "Testing topic editing";
+    const dayOfTheWeek = moment().utc().format("ddd");
+    const topicDate = moment().utc();
+    const topicDateUpdate = topicDate;
+    if (dayOfTheWeek == "Sun" || dayOfTheWeek == "Sat"){
+      topicDate.subtract(2, 'days');      
+    }    
+    const topicDateStr = topicDate.format("YYYY-MM-DD");
+    topicDateUpdate.add(3, "days");
+    const topicInserted = await Topic.insertNewTopic(teacherId, classId, subjectId, topicTitle, topicDescription, topicDateStr);
+    const topicId = topicInserted["id"];
+    const topicTitleUpdate =  "This is a test for topic edit - edited";
+    const topicDescriptionUpdate = "Testing topic editing - edited"; 
+    const topicDateUpdateStr = topicDateUpdate.format("YYYY-MM-DD");   
+    const resultObj = await Topic.editTopic(teacherId, topicId, topicTitleUpdate, topicDescriptionUpdate, topicDateUpdateStr);
+    expect(resultObj).not.toBeNull();
+    expect(resultObj).toEqual(
+      expect.objectContaining(
+      {
+        "Success": false,
+        "Message": "Future topics cannot be inserted"
+      }
+    ));
+    const connection = await db.getConnection();
+    const updateResult = await connection.query(
+      `select Title, TopicDescription, CAST( TopicDate AS datetime) AS TopicDate
+      from Topics
+      where ID = ?;`,
+      [topicId]
+    );
+    const updatedTopic = updateResult[0];
+    expect(updatedTopic.Title).toEqual(topicTitle);
+    expect(updatedTopic.TopicDescription).toEqual(topicDescription);
+    expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
+
+    // clean db
+    const deleteResult = await connection.query(
+      `DELETE
+      FROM Topics
+      WHERE ID = ?;`,
+      [topicId]
+    );
+
+    connection.release();
+  });
+
+  test("It should not update the topic given null topic date", async() =>{
+    // better to insert another topic and do update on the new one
+    const teacherId = "6e5c9976f5813e59816b40a814e29899";
+    const classId = 1;
+    const subjectId = 1;
+    const topicTitle =  "This is a test for topic edit";
+    const topicDescription = "Testing topic editing";
+    const dayOfTheWeek = moment().utc().format("ddd");
+    const topicDate = moment().utc();
+    const topicDateUpdate = topicDate;
+    if (dayOfTheWeek == "Sun" || dayOfTheWeek == "Sat"){
+      topicDate.subtract(2, 'days');      
+    }
+    if (dayOfTheWeek != "Mon"){
+      topicDateUpdate.subtract(1, 'days');
+    }
+    const topicDateStr = topicDate.format("YYYY-MM-DD");
+    const topicInserted = await Topic.insertNewTopic(teacherId, classId, subjectId, topicTitle, topicDescription, topicDateStr);
+    const topicId = topicInserted["id"];
+    const topicTitleUpdate =  "This is a test for topic edit - edited";
+    const topicDescriptionUpdate = "Testing topic editing - edited"; 
+    const topicDateUpdateStr = topicDateUpdate.format("YYYY-MM-DD");   
+    const resultObj = await Topic.editTopic(teacherId, topicId, topicTitleUpdate, topicDescriptionUpdate, null);
+    expect(resultObj).not.toBeNull();
+    expect(resultObj).toEqual(
+      expect.objectContaining(
+      {
+        "Success": false,
+        "Message": "Missing or invalid topic date"
+      }
+    ));
+    const connection = await db.getConnection();
+    const updateResult = await connection.query(
+      `select Title, TopicDescription, CAST( TopicDate AS datetime) AS TopicDate
+      from Topics
+      where ID = ?;`,
+      [topicId]
+    );
+    const updatedTopic = updateResult[0];
+    expect(updatedTopic.Title).toEqual(topicTitle);
+    expect(updatedTopic.TopicDescription).toEqual(topicDescription);
+    expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
+
+    // clean db
+    const deleteResult = await connection.query(
+      `DELETE
+      FROM Topics
+      WHERE ID = ?;`,
+      [topicId]
+    );
+
+    connection.release();
+  });
+
+});
+
+

@@ -28,8 +28,9 @@ export class Parent extends React.Component {
     return (
       <div className="parent-container">
         <h3 className="contentHeader">
-        <Icon name='braille' size="small" />
-        Select/Switch child</h3>
+          <Icon name='braille' size="small" />
+          Select/Switch child
+        </h3>
         {/* <h2 className="title">My children</h2> */}
         <div className="children">
           {this.state.children.map((child, index) => (
