@@ -2,7 +2,7 @@ import {BaseAPIService} from './base';
 
 export class TeacherAPIService extends BaseAPIService {
 
-  getTeacherSubjects(teacherId, classId, subjectId) {
+  getTeacherSubjects(teacherId) {
     return this.get(`/teacher/${teacherId}/subjects`);
   }
 
