@@ -27,6 +27,12 @@ exports.seed = function(knex) {
           eMail: 'giulia.tesori@gmail.com',
           Password: 'easypass',
           Role: 'teacher'
+        },
+        {
+          ID: '205db8275d3c06e6ce3fe7a47b30e0fe', 
+          eMail: 'admin@phonyschool.com', 
+          Password:'EasyPassAdmin123',
+          Role: 'admin'
         }
     ]);
   });
