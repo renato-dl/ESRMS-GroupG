@@ -271,16 +271,19 @@ describe('Teacher tests about visualization of the topics', () => {
             expect.arrayContaining(
                 [
                     {
+                        "ID": 3,
                         "Title": "Expressions",
                         "TopicDescription": "Part 3",
                         "TopicDate": date1
                     },
                     {
+                        "ID": 2,
                         "Title": "Expressions",
                         "TopicDescription": "Part 2",
                         "TopicDate": date2
                     },
                     {
+                        "ID": 1,
                         "Title": "Expressions",
                         "TopicDescription": "Part 1",
                         "TopicDate": date3

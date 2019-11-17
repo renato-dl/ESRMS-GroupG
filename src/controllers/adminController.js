@@ -5,7 +5,12 @@ class AdminController extends BaseController {
 
 
   async getParentData(req, res){
-    const parents = await Admin.getParentData();
+    const parents = await Admin.getParentData(
+      {
+        page: req.query.page,
+        pageSize: req.query.pageSize
+      });
+      
     res.send(parents);
   }
 
