@@ -19,17 +19,23 @@ describe('Tests about the visualization of inserted parents', () =>{
                     {
                         "FirstName": "Marco",
                         "LastName": "Lorenzini",
-                        "SSN": "LRNMRC76A02L219A"
+                        "SSN": "LRNMRC76A02L219A",
+                        "eMail": "marco.lorenzini@gmail.com",
+                        "CreatedOn": expect.anything()
                     },
                     {
                         "FirstName": "Nadia",
                         "LastName": "Rossi",
-                        "SSN": "RSSNDA76A41L219U"
+                        "SSN": "RSSNDA76A41L219U",
+                        "eMail": "nadia.rossi@gmail.com",
+                        "CreatedOn": expect.anything()
                     },
                     {
                         "FirstName": "Lucia",
                         "LastName": "Verdi",
-                        "SSN": "VRDLCU75A41L219F"
+                        "SSN": "VRDLCU75A41L219F",
+                        "eMail": "lucia.verdi@gmail.com",
+                        "CreatedOn": expect.anything()
                     }
        )]));
   });
