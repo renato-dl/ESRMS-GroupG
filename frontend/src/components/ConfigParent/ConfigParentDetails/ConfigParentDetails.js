@@ -33,8 +33,8 @@ class ConfigParentDetails extends React.Component {
         const {params} = this.props.match;
         try {
             const parentData = {
-                FirstName: this.state.firstName,
-                LastName: this.state.lastName,
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
                 eMail: this.state.email,
                 password: this.state.password
             };
