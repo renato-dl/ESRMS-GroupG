@@ -1,5 +1,6 @@
 import React from 'react';
 import '../../assets/styles/global.scss';
+import 'toastr/toastr.scss';
 //import {Container} from 'semantic-ui-react';
 
 import {Switch, Route} from 'react-router-dom';

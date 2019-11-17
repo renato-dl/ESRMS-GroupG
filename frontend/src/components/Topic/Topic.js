@@ -12,7 +12,6 @@ import TopicDetails from './TopicDetail/TopicDetails';
 export class Topic extends React.Component{
     constructor(props) {
       super(props);
-
       this.state = {
         subject: null,
         topics: [],
@@ -53,7 +52,7 @@ export class Topic extends React.Component{
     };
 
     onTopicDetailClose = () => {
-      this.setState({isTopicDetailsOpen: false});
+      this.setState({editingTopic: null, isTopicDetailsOpen: false});
     };
 
     editTopic = (topic) => {
