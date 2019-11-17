@@ -4,7 +4,7 @@ import { api } from '../../services/api';
 import {Table, Icon} from 'semantic-ui-react';
 
 import moment from 'moment';
-//import ConfigParentDetails from "./ConfigParentDetails/ConfigParentDetails"
+import ConfigParentDetails from "./ConfigParentDetails/ConfigParentDetails"
 
 export class ConfigParent extends React.Component{
     constructor(props) {
@@ -59,10 +59,10 @@ export class ConfigParent extends React.Component{
                         <Table.HeaderCell textAlign="left">NAME</Table.HeaderCell>
                         <Table.HeaderCell textAlign="left">SURMANE</Table.HeaderCell>
                         <Table.HeaderCell textAlign="left">SSN</Table.HeaderCell>
-                        {/* 
+                         
                         <Table.HeaderCell textAlign="left">EMAIL</Table.HeaderCell>
                         <Table.HeaderCell textAlign="left">AUTH DATE</Table.HeaderCell>
-                        */}
+                        
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -72,10 +72,10 @@ export class ConfigParent extends React.Component{
                     <Table.Cell textAlign="left">{ parent.FirstName }</Table.Cell>
                     <Table.Cell textAlign="left">{ parent.LastName }</Table.Cell>
                     <Table.Cell textAlign="left">{ parent.SSN }</Table.Cell>
-                    {/* 
+                     
                     <Table.Cell textAlign="left">{ parent.eMail }</Table.Cell>
                     <Table.Cell textAlign="left" width={2}>{ moment(parent.CreatedOn).format('LL') }</Table.Cell>
-                    */}
+                    
                     </Table.Row>
                 )}
                 </Table.Body>

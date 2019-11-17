@@ -10,8 +10,18 @@ import { withRouter } from "react-router";
 
 class ConfigParentDetails extends React.Component {
     state = {
+        firstName:'',
+        lastName:'',
+        ssn:'',
+        email:'',
+        password:'',
+        confirmPass:'',
         isSaving: false
     };
+
+    handleInputChange = (e, { name, value }) => {
+        this.setState({[name]: value});
+      };
     
     onClose = () => {
         if (this.state.isSaving) {
@@ -26,15 +36,81 @@ class ConfigParentDetails extends React.Component {
 
             <Modal dimmer="blurring" open className="topic-detail" size="small">
         <Modal.Header>
-          <span>Add a Parent</span>
+          <span>Add a parent</span>
           <Icon onClick={this.onClose} className="close-icn" name="close" />
-        
         </Modal.Header>
         <Modal.Content>
-          <p>blablablablab</p>
+
+        <Form loading={this.state.isSaving}>
+            <Form.Group widths='equal'>
+                <Form.Input
+                name='firstName'
+                label='Name'
+                placeholder='Name'
+                value={this.state.firstName}
+                onChange={this.handleInputChange}
+                />
+                <Form.Input
+                name='lastName'
+                label='Surname'
+                placeholder='Surname'
+                value={this.state.lastName}
+                onChange={this.handleInputChange}
+                />
+            </Form.Group>
+
+            <Form.Input
+              name='ssn'
+              label='SSN'
+              placeholder='SSN'
+              value={this.state.ssn}
+              onChange={this.handleInputChange}
+            />
+
+            <Form.Input 
+                fluid icon='user' 
+                iconPosition='left'
+                
+                name="email"
+                label='E-mail'
+                placeholder='E-mail'
+                type='email' 
+                placeholder='E-mail address' 
+                value={this.state.email}
+                onChange={this.handleInputChange}
+            />
+            <Form.Group widths='equal'>
+                <Form.Input                
+                    fluid 
+                    icon='lock' 
+                    iconPosition='left'
+
+                    name="password"
+                    label='Password'
+                    placeholder='Password'
+                    type='password' 
+                    value={this.state.password}
+                    onChange={this.handleInputChange}
+                />
+                <Form.Input
+                    fluid 
+                    icon='lock' 
+                    iconPosition='left'
+
+                    name="confirmPass"
+                    label='Confirm Password'
+                    placeholder='Cpnfirm Password'
+                    type='password' 
+                    value={this.state.confirmPass}
+                    onChange={this.handleInputChange}
+                />
+            </Form.Group>            
+          </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button/>
+            <Button positive onClick={this.onSave} disabled={!this.state.firstName || !this.state.lastName || !this.state.ssn || !this.state.email || !this.state.email || !this.state.password || this.state.password}>
+                <Icon name='checkmark' /> Confirm
+            </Button>
 
         </Modal.Actions>
       </Modal>
