@@ -1,11 +1,11 @@
 import React from 'react';
-import {render} from '@testing-library/react'
 import { StudentCard } from '../components/StudentCard/StudentCard';
+import {shallow} from 'enzyme';
 
 describe('Testing StudentCard component', () => {
   
   test('Test if component is rendered', () => {
-    const component = render(
+    shallow(
       <StudentCard 
         id="1"
         firstName="Name"
