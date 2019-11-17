@@ -23,17 +23,17 @@ export const ParentMenu = (props) => {
       Grades
     </Menu.Item>
 
-    <Menu.Item as={Link} to="/parent/student/:studentID/homeworks">
+    <Menu.Item as={Link} to="/parent/student/:studentID/abcdef">
       <Icon name='home'/>
       Homeworks
     </Menu.Item>
     
-    <Menu.Item as={Link} to="/parent/student/:studentID/homeworks">
+    <Menu.Item as={Link} to="/parent/student/:studentID/abcdef">
       <Icon name='calendar check outline'/>
       Attendance
     </Menu.Item>
 
-    <Menu.Item as={Link} to="/parent/student/:studentID/homeworks">
+    <Menu.Item as={Link} to="/parent/student/:studentID/abcdef">
       <Icon name='file alternate outline'/>
       Study Plan
     </Menu.Item>
