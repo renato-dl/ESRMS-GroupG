@@ -34,6 +34,10 @@ export class BaseAPIService {
           // maybe show some alert to the user
         }
 
+        if (error.response.data.errors) {
+          return Promise.reject(error.response.data.errors[0].msg);
+        }
+
         return Promise.reject(error);
       });
   }
