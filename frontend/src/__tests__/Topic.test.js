@@ -1,15 +1,14 @@
 import React from 'react';
 import {Topic} from '../components/Topic/Topic';
-import renderer from 'react-test-renderer';
+import {render} from '@testing-library/react';
+import {getRouterPropsForTest} from '../utils';
 
 describe('Testing Topic component', () => {
   
-  test('Testing snapshot', () => {
-    const component = renderer.create(
-      <Topic />
+  test('Test if component is rendered', () => {
+    const component = render(
+      <Topic {...getRouterPropsForTest()} />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
   });
 
-})
+});

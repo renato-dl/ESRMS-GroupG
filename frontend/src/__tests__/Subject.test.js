@@ -1,16 +1,14 @@
 import React from 'react';
-import {Teacher} from '../containers/Teacher/Teacherw';
-import renderer from 'react-test-renderer';
+import {Teacher} from '../containers/Teacher/Teacher';
+import {render} from '@testing-library/react'
+import {getRouterPropsForTest} from '../utils';
 
 describe('Testing Subject component', () => {
   
-  test('Testing snapshot', () => {
-    const component = renderer.create(
-      <Teacher />
+  test('Test if component is rendered', () => {
+    const component = render(
+      <Teacher {...getRouterPropsForTest()} />
     );
-  
-    let tree = component.toJSON();
-    expect().toMatchSnapshot();
   });
 
-})
+});

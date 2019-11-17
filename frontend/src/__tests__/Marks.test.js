@@ -1,18 +1,14 @@
 import React from 'react';
 import {Marks} from '../components/Marks/Marks';
-import renderer from 'react-test-renderer';
+import {render} from '@testing-library/react'
+import {getRouterPropsForTest} from '../utils';
 
 describe('Testing Marks component', () => {
   
-  test('Testing snapshot', () => {
-    const component = renderer.create(
-      <Marks />
+  test('Test if component is rendered', () => {
+    const component = render(
+      <Marks {...getRouterPropsForTest()} />
     );
-  
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
-
-    
   });
 
-})
+});

@@ -29,6 +29,10 @@ export class BaseAPIService {
         return response;
       },
       async (error) => {
+        if (!error.response) {
+          return Promise.reject(error);
+        }
+
         if (error.response.status === UNAUTHORIZED) {
           console.log('Unauthorized user....');
           // maybe show some alert to the user
