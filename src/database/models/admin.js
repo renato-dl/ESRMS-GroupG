@@ -134,7 +134,7 @@ class Admin extends Model {
     try{
       const emailService =  `${config.email.service}`;
       const senderEmail = `${config.email.sender_email}`;
-      const senderPass = `${config.email.sender_psw}`; "czxmscdcbwmfnntd";//"uNdoOO^Efc21KmNl"; //"ruarozjuptzmwtxn";
+      const senderPass = `${config.email.sender_psw}`; 
       const fullName = parentName + " " + parentSurname;
       var transporter = nodemailer.createTransport({
         service: emailService,
