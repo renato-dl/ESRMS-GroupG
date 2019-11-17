@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./TopicDetail.scss";
 import {api} from '../../../services/api';
 import { withRouter } from "react-router";
+import * as toastr from 'toastr';
 
 class TopicDetails extends React.Component {
   state = {
@@ -18,7 +19,7 @@ class TopicDetails extends React.Component {
 
   componentDidMount() {
     const {topic} = this.props;
-    console.log(topic);
+
     if (topic) {
       this.setState({
         topicID: topic.ID,
@@ -64,8 +65,11 @@ class TopicDetails extends React.Component {
           params.teacherID,
           topicData
         );
+
+      toastr.success(`Topic ${this.state.topicID ? 'updated' : 'added'} successfully.`);
     } catch (e) {
-      console.log(e);
+      this.setState({isSaving: false});
+      return toastr.error(e);
     }
 
     this.setState({isSaving: false});
@@ -82,7 +86,7 @@ class TopicDetails extends React.Component {
 
   render() {
     return (
-      <Modal dimmer="blurring" open className="topic-detail" size="small">
+      <Modal dimmer open className="topic-detail" size="small">
         <Modal.Header>
           <span>{this.state.topicID ? 'Edit topic' : 'Insert a topic'}</span>
           <Icon onClick={this.onClose} className="close-icn" name="close" />
