@@ -22,6 +22,37 @@ class ConfigParentDetails extends React.Component {
     handleInputChange = (e, { name, value }) => {
         this.setState({[name]: value});
       };
+
+
+    onSave = async () => {
+        if (this.state.isSaving) {
+            return;
+        }
+
+        this.setState({isSaving: true});
+        const {params} = this.props.match;
+        try {
+            const parentData = {
+                FirstName: this.state.firstName,
+                LastName: this.state.lastName,
+                eMail: this.state.email,
+                password: this.state.password
+            };
+
+            console.log(parentData);
+            
+            await api.admin.saveNewParent(
+                params.adminId,
+                parentData
+            ); 
+        } catch (e) {
+            console.log(e);
+        }
+
+        this.setState({isSaving: false});
+        this.props.onSave();
+    };
+
     
     onClose = () => {
         if (this.state.isSaving) {
@@ -108,10 +139,9 @@ class ConfigParentDetails extends React.Component {
           </Form>
         </Modal.Content>
         <Modal.Actions>
-            <Button positive onClick={this.onSave} disabled={!this.state.firstName || !this.state.lastName || !this.state.ssn || !this.state.email || !this.state.email || !this.state.password || this.state.password}>
+            <Button positive onClick={this.onSave} disabled={!this.state.firstName || !this.state.lastName || !this.state.ssn || !this.state.email || !this.state.password || !this.state.confirmPass}>
                 <Icon name='checkmark' /> Confirm
             </Button>
-
         </Modal.Actions>
       </Modal>
         )
