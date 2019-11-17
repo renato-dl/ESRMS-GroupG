@@ -12,7 +12,7 @@ export const TeacherMenu = (props) => (
         <br/><br/>
       </span>
     </Menu.Item>
-    <Menu.Item as={Link} to='/teacher/:teacherID/subjects'>
+    <Menu.Item as={Link} to='/teacher'>
       <Icon name='book' />
       Subjects
     </Menu.Item>
