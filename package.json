@@ -58,6 +58,10 @@
     }
   },
   "jest": {
-    "testPathIgnorePatterns": ["/frontend/", "/dist/", "/node_modules/"]
+    "testPathIgnorePatterns": [
+      "/frontend/",
+      "/dist/",
+      "/node_modules/"
+    ]
   }
 }
