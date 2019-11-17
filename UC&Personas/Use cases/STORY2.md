@@ -9,7 +9,7 @@
   - The teacher would like to see the topics she has inserted as easily and clearly as possible
 - **Precondition**: the server and database must be set correctly, the teacher account must be configured in order to see the inserted topics.
 - **Success guarantee**: the teacher visualizes clearly and easily the inserted topics.
-- **Main Success Scenario **: 
+- **Main Success Scenario**: 
   1. The teacher enters her personal page.
   2. The teacher specifies the class and the subject names
   3. The teacher confirms her choice.
@@ -28,7 +28,7 @@
   - The teacher would like to add a new topic as easily and clearly as possible.
 - **Precondition**: the server and database must be set correctly, the teacher account must be configured in order to add a new topic.
 - **Success guarantee**: the teacher can add clearly and easily a new topic.
-- **Main Success Scenario **: 
+- **Main Success Scenario**: 
   1. The teacher enters her personal page.
   2. The teacher chooses the class and subject.
   3. The teacher specifies the title, description and the date of the topic.
@@ -50,7 +50,7 @@
   - The teacher would like to edit a topic she has inserted as easily and clearly as possible.
 - **Precondition**: the server and database must be set correctly, the teacher account must be configured in order to edit the topic.
 - **Success guarantee**: the teacher can edit clearly and easily the inserted topics.
-- **Main Success Scenario **: 
+- **Main Success Scenario**: 
   1. The teacher enters her personal page.
   2. The teacher specifies the class and the subject
   3. The teacher chooses the topic to edit.
