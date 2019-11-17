@@ -105,7 +105,7 @@ class Topic extends Model {
 
   async findByTeacherClassSubject(teacherId, classId, subjectId, pagination) {
     const connection = await this.db.getConnection();
-    let sql_query = `SELECT t.Title, t.TopicDescription, t.TopicDate 
+    let sql_query = `SELECT t.ID, t.Title, t.TopicDescription, t.TopicDate 
     FROM TeacherSubjectClassRelation tscr, Topics t
     WHERE tscr.ID = t.TeacherSubjectClassRelationId AND tscr.TeacherId = ? AND tscr.ClassId = ? AND tscr.SubjectId = ? 
     ORDER BY t.TopicDate DESC`;
