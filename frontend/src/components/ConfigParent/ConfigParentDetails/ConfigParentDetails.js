@@ -33,6 +33,7 @@ class ConfigParentDetails extends React.Component {
         const {params} = this.props.match;
         try {
             const parentData = {
+                SSN:this.state.ssn,
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
                 eMail: this.state.email,
@@ -130,7 +131,7 @@ class ConfigParentDetails extends React.Component {
 
                     name="confirmPass"
                     label='Confirm Password'
-                    placeholder='Cpnfirm Password'
+                    placeholder='Confirm Password'
                     type='password' 
                     value={this.state.confirmPass}
                     onChange={this.handleInputChange}
