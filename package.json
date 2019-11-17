@@ -15,7 +15,8 @@
     "clean": "rimraf dist",
     "build": "babel ./src --out-dir ./dist",
     "prod": "cross-env NODE_ENV=production npm-run-all clean build server:prod",
-    "test": "jest __tests__ --run-in-band --detect-open-handles"
+    "test": "jest __tests__ --run-in-band --detect-open-handles",
+    "watch": "nodemon"
   },
   "dependencies": {
     "@babel/runtime": "^7.7.2",
@@ -34,6 +35,7 @@
     "moment": "^2.24.0",
     "morgan": "~1.9.1",
     "mysql": "^2.17.1",
+    "nodemailer": "^6.3.1",
     "npm-run-all": "^4.1.5",
     "password-validator": "^5.0.3",
     "rimraf": "^3.0.0",
@@ -58,6 +60,10 @@
     }
   },
   "jest": {
-    "testPathIgnorePatterns": ["/frontend/", "/dist/", "/node_modules/"]
+    "testPathIgnorePatterns": [
+      "/frontend/",
+      "/dist/",
+      "/node_modules/"
+    ]
   }
 }

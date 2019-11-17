@@ -12,5 +12,10 @@ export const config = {
     database: process.env.DB_DATABASE,
     host: process.env.DB_HOST,
     port: parseInt(process.env.DB_PORT)
+  }, 
+  email: {
+    sender_email: process.env.SD_EMAIL,
+    sender_psw: process.env.SD_PSW,
+    service: process.env.E_SERVICE
   }
 }

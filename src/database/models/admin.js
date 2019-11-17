@@ -2,6 +2,8 @@ import {Model} from './base';
 import crypto from 'crypto';
 import passwordValidator from 'password-validator';
 import validator from 'validator';
+import nodemailer from 'nodemailer';
+import {config} from './../../config';
 
 class Admin extends Model {
   constructor() {
@@ -87,8 +89,12 @@ class Admin extends Model {
       connection.release();
       throw new Error('Operation failed');
     }
-    connection.commit();
-    connection.release();
+    finally{
+      connection.commit();
+      connection.release();
+      this.sendEmailToParent(eMail, password, firstName, lastName);
+    }
+    
     return {id: parentId};
   }
 
@@ -124,5 +130,46 @@ class Admin extends Model {
   
   }
 
+  sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){
+    try{
+      const emailService =  `${config.email.service}`;
+      const senderEmail = `${config.email.sender_email}`;
+      const senderPass = `${config.email.sender_psw}`; "czxmscdcbwmfnntd";//"uNdoOO^Efc21KmNl"; //"ruarozjuptzmwtxn";
+      const fullName = parentName + " " + parentSurname;
+      var transporter = nodemailer.createTransport({
+        service: emailService,
+        auth: {
+          user: senderEmail,
+          pass: senderPass
+        }
+      });
+      var mailOptions = {
+        from: senderEmail,
+        to: parentEmail,
+        subject: 'Welcome to ESRMS platform!',
+        html: `<h3>Welcome to ESRMS platform! </h3> 
+        <p>Dear ` + fullName + `, </p>
+        <p>You have been granted access to ESRMS platform. </p>
+        <p>Here is your first login password: <b>` +  parentPassword + `</b></p>
+        <p>You will be asked to change it after your first access to the platform. </p>
+        <p>Have a nice day, </p>
+        <p>ESRMS Group G</p> `
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log("Email not sent");
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+    }
+    catch(e){
+      console.log(e);
+      //throw e; 
+    }
+    return;
+  }
 }
 export default new Admin();
