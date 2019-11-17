@@ -34,10 +34,10 @@ class Admin extends Model {
       if (!adminId){
         throw new Error('Missing or invalid admin Id');
       }
-      if (!validator.isAlpha(firstName)) {
+      if (!validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
         throw new Error('Missing or invalid first name');
       }
-      if (!validator.isAlpha(lastName)) {
+      if (!validator.matches(lastName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
         throw new Error('Missing or invalid last name');
       }
       if (!validator.isEmail(eMail)) {
