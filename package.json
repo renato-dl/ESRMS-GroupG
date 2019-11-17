@@ -15,9 +15,7 @@
     "clean": "rimraf dist",
     "build": "babel ./src --out-dir ./dist",
     "prod": "cross-env NODE_ENV=production npm-run-all clean build server:prod",
-    "watch": "nodemon",
-    "debug": "nodemon --inspect",
-    "test": "jest __tests__ --runInBand --detectOpenHandles"
+    "test": "jest __tests__ --run-in-band --detect-open-handles"
   },
   "dependencies": {
     "@babel/runtime": "^7.7.2",
@@ -58,5 +56,8 @@
         "@babel/plugin-transform-modules-commonjs"
       ]
     }
+  },
+  "jest": {
+    "testPathIgnorePatterns": ["/frontend/", "/dist/", "/node_modules/"]
   }
 }

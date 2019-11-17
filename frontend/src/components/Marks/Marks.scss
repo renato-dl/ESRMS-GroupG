@@ -1,3 +1,15 @@
-.Marks{
-    
+.Marks-container{
+    width:calc(100% - 260px);
+    padding: 0 30px 30px 30px;
+}
+.tableContainer{
+    background-color:#fff;
+    padding:15px;
+    width:auto;
+} 
+.ui.basic.table{
+    text-align: center;
+    padding:5px;
+    //background-color:#FFF6F6;
+    //border: 15px solid #FFF6F6;
 }
