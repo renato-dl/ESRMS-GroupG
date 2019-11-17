@@ -35,8 +35,9 @@ export class Teacher extends React.Component{
     return (
         <div className="contentContainer">
             <h3 className="contentHeader">
-            <Icon name='braille' size="small" />
-            Subjects assigned to you </h3>
+                <Icon name='braille' size="small" />
+                Teaching Plan, Subjects 
+            </h3>
 
             <List  relaxed className="subjectList">
 
