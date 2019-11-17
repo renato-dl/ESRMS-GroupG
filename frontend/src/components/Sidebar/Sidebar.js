@@ -1,9 +1,12 @@
 import React from 'react';
 import { Menu, Segment, Sidebar } from 'semantic-ui-react';
+
 import '../../assets/styles/global.scss';
+
+import { ApplicationStoreContext } from '../../store';
+
 import { ParentMenu } from '../ParentMenu/ParentMenu';
 import { TeacherMenu } from '../TeacherMenu/TeacherMenu';
-import { ApplicationStoreContext } from '../../store';
 import { AdminMenu } from '../AdminMenu/AdminMenu';
 
 

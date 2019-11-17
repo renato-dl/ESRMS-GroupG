@@ -1,22 +1,24 @@
 import React from 'react';
 import '../../assets/styles/global.scss';
-import {Container} from 'semantic-ui-react';
+//import {Container} from 'semantic-ui-react';
+
 import {Switch, Route} from 'react-router-dom';
-import {Parent} from '../Parent/Parent';
-import { NotFound } from '../NotFound/NotFound';
-import { Student } from '../Student/Student';
-
-import {Teacher} from '../Teacher/Teacher';
-
-import {Marks}  from '../../components/Marks/Marks';
-import{Topic}  from'../../components/Topic/Topic';
-import {Header}  from '../../components/Header/Header';
 
 import {ApplicationStore, ApplicationStoreContext} from '../../store';
 
-import { AppSidebar } from '../../components/Sidebar/Sidebar';
-import { Admin } from '../Admin/Admin';
-import { ConfigParent } from '../../components/ConfigParent/ConfigParent';
+import {Header}  from '../../components/Header/Header';
+import {NotFound} from '../NotFound/NotFound';
+import {AppSidebar} from '../../components/Sidebar/Sidebar';
+
+import {Parent} from '../Parent/Parent';
+import {Student} from '../Student/Student';
+import {Teacher} from '../Teacher/Teacher';
+import {Marks}  from '../../components/Marks/Marks';
+import {Topic}  from'../../components/Topic/Topic';
+import {Admin} from '../Admin/Admin';
+import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
+
+
 
 export class App extends React.Component {
   static contextType = ApplicationStoreContext;
@@ -39,7 +41,7 @@ export class App extends React.Component {
               <Route exact path="/teacher/:teacherID/subjects" component={Teacher}/>
               <Route exact path="/teacher/:teacherID/subjects/:subjectID/topics" component={Topic}/>
 
-			  <Route exact path="/admin" component={Admin}/>
+			        <Route exact path="/admin" component={Admin}/>
               <Route exact path="/admin/configParent" component={ConfigParent}/>
               <Route path="*" component={NotFound} />
               

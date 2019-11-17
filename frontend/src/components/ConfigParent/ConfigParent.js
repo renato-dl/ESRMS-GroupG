@@ -1,23 +1,53 @@
 import React from 'react';
 import { api } from '../../services/api';
 
-import {Link} from 'react-router-dom';
+import {Table, Icon} from 'semantic-ui-react';
 
-import {Icon,List} from 'semantic-ui-react';
-
+//import moment from 'moment';
+//import ConfigParentDetails from "./ConfigParentDetails/ConfigParentDetails"
 
 export class ConfigParent extends React.Component{
-
-    async componentDidMount(){
-        //const response = await api.teacher.getTeacherSubjects(this.props.match.params.teacherID);
-        const response = await api.teacher.getTeacherSubjects('6e5c9976f5813e59816b40a814e29899');
-
-        console.log(response);
-        if (response) {
-            this.setState({ sumbjectList: response.data })
+    constructor(props) {
+        super(props);
+  
+        this.state = {
+          authParents: [
+/* 
+              {ID: "202db8275d3c06e6ce3fe7a47b30e0fe", FirstName: "Marco", LastName: "Lorenzini", eMail: "marco.lorenzini@gmail.com", SSN: "LRNMRC76A02L219A", CreatedOn: "2019-11-15 09:43:03"},
+              {ID: "202db8275d3c06e6ce3fe7a47b30e0fe", FirstName: "Marco", LastName: "Lorenzini", eMail: "marco.lorenzini@gmail.com", SSN: "LRNMRC76A02L219A", CreatedOn: "2019-11-15 09:43:03"},
+              {ID: "202db8275d3c06e6ce3fe7a47b30e0fe", FirstName: "Marco", LastName: "Lorenzini", eMail: "marco.lorenzini@gmail.com", SSN: "LRNMRC76A02L219A", CreatedOn: "2019-11-15 09:43:03"},
+              {ID: "202db8275d3c06e6ce3fe7a47b30e0fe", FirstName: "Marco", LastName: "Lorenzini", eMail: "marco.lorenzini@gmail.com", SSN: "LRNMRC76A02L219A", CreatedOn: "2019-11-15 09:43:03"}
+             */
+            ],
+          isConfigParentDetailsOpen: false
         }
-    }
+      }
 
+    fetchParents =  async () => {
+        //const {params} = this.props.match;
+  
+        const response = await api.admin.getAuthParentList();
+        
+        console.log(response);
+
+        if (response) {
+            console.log(response);
+          this.setState({ authParents: response.data})
+        }
+    };
+
+    async componentDidMount() {
+        await this.fetchParents();
+        
+    }  
+
+    addParent = () => {
+        this.setState({isConfigParentDetailsOpen: true});
+    };
+
+    onConfigPrentDetailsClose = () => {
+        this.setState({isConfigParentDetailsOpen: false});
+    };
 
     render() {
     return (
@@ -26,6 +56,53 @@ export class ConfigParent extends React.Component{
                 <Icon name='braille' size="small" />
                 Parents Accounts Configuration 
             </h3>
+
+            <button className="ui vk button" onClick={this.addParent}>
+                <i className="user plus icon"></i>
+                 Add Parent
+            </button>
+
+            <Table celled>
+            <Table.Header>
+              <Table.Row>
+                  
+                <Table.HeaderCell textAlign="left">#</Table.HeaderCell>
+                <Table.HeaderCell textAlign="left">NAME</Table.HeaderCell>
+                <Table.HeaderCell textAlign="left">SURMANE</Table.HeaderCell>
+                <Table.HeaderCell textAlign="left">SSN</Table.HeaderCell>
+                {/* 
+                <Table.HeaderCell textAlign="left">EMAIL</Table.HeaderCell>
+                <Table.HeaderCell textAlign="left">AUTH DATE</Table.HeaderCell>
+                */}
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {this.state.authParents.map((parent, index) =>
+                <Table.Row key={index}>
+                  <Table.Cell textAlign="left" width={1}>{ index + 1 }</Table.Cell>
+                  <Table.Cell textAlign="left">{ parent.FirstName }</Table.Cell>
+                  <Table.Cell textAlign="left">{ parent.LastName }</Table.Cell>
+                  <Table.Cell textAlign="left">{ parent.SSN }</Table.Cell>
+                  {/* 
+                  <Table.Cell textAlign="left">{ parent.eMail }</Table.Cell>
+                  <Table.Cell textAlign="left" width={2}>{ moment(parent.CreatedOn).format('LL') }</Table.Cell>
+                   */}
+                </Table.Row>
+              )}
+            </Table.Body>
+          </Table>
+          {/* {this.state.isConfigParentDetailsOpen &&
+            <ConfigParentDetails
+              //topic={this.state.editingTopic}
+              onClose={this.onConfigPrentDetailsClose}
+              onSave={() => {
+                this.fetchPrents();
+                this.onConfigPrentDetailsClose();
+              }}
+            />
+          } */}
+
+
         </div>
     )}
 }
