@@ -1,99 +1,90 @@
 import React from 'react';
 import { api } from '../../services/api';
-
 import {Table, Icon} from 'semantic-ui-react';
-
 import moment from 'moment';
 import ConfigParentDetails from "./ConfigParentDetails/ConfigParentDetails"
 
 export class ConfigParent extends React.Component{
-    constructor(props) {
-        super(props);
-  
-        this.state = {
-          authParents: [],
-          isConfigParentDetailsOpen: false
-        }
-      }
+  constructor(props) {
+    super(props);
 
-    fetchParents =  async () => {
-        //const {params} = this.props.match;
-        const response = await api.admin.getAuthParentList();
-        if (response) {
-            console.log(response);
-          this.setState({ authParents: response.data})
-        }
-    };
+    this.state = {
+      authParents: [],
+      isConfigParentDetailsOpen: false
+    }
+  }
 
-    async componentDidMount() {
-        await this.fetchParents();
-        
-    }  
+  fetchParents =  async () => {
+    //const {params} = this.props.match;
+    const response = await api.admin.getAuthParentList();
+    if (response) {
+        console.log(response);
+      this.setState({ authParents: response.data });
+    }
+  };
 
-    addParent = () => {
-        this.setState({isConfigParentDetailsOpen: true});
-    };
+  async componentDidMount() {
+    await this.fetchParents();
+  }
 
-    onConfigPrentDetailsClose = () => {
-        this.setState({isConfigParentDetailsOpen: false});
-    };
+  addParent = () => {
+    this.setState({isConfigParentDetailsOpen: true});
+  };
 
-    render() {
+  onConfigPrentDetailsClose = () => {
+    this.setState({isConfigParentDetailsOpen: false});
+  };
+
+  render() {
     return (
-        <div className="contentContainer">
-            <h3 className="contentHeader">
-                <Icon name='braille' size="small" />
-                Parents Accounts Configuration 
-            </h3>
+      <div className="contentContainer">
+        <h3 className="contentHeader">
+          <Icon name='braille' size="small" />
+          Parents Accounts Configuration
+        </h3>
 
-            <button className="ui vk button" onClick={this.addParent}>
-                <i className="user plus icon"></i>
-                 Add Parent
-            </button>
+        <button className="ui vk button" onClick={this.addParent}>
+          <i className="user plus icon"></i>
+           Add Parent
+        </button>
 
-            <Table celled>
-                <Table.Header>
-                    <Table.Row>
-                        
-                        <Table.HeaderCell textAlign="left">#</Table.HeaderCell>
-                        <Table.HeaderCell textAlign="left">NAME</Table.HeaderCell>
-                        <Table.HeaderCell textAlign="left">SURMANE</Table.HeaderCell>
-                        <Table.HeaderCell textAlign="left">SSN</Table.HeaderCell>
-                         
-                        <Table.HeaderCell textAlign="left">EMAIL</Table.HeaderCell>
-                        <Table.HeaderCell textAlign="left">AUTH DATE</Table.HeaderCell>
-                        
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                {this.state.authParents.map((parent, index) =>
-                    <Table.Row key={index}>
-                    <Table.Cell textAlign="left" width={1}>{ index + 1 }</Table.Cell>
-                    <Table.Cell textAlign="left">{ parent.FirstName }</Table.Cell>
-                    <Table.Cell textAlign="left">{ parent.LastName }</Table.Cell>
-                    <Table.Cell textAlign="left">{ parent.SSN }</Table.Cell>
-                     
-                    <Table.Cell textAlign="left">{ parent.eMail }</Table.Cell>
-                    <Table.Cell textAlign="left" width={2}>{ moment(parent.CreatedOn).format('LL') }</Table.Cell>
-                    
-                    </Table.Row>
-                )}
-                </Table.Body>
-            </Table>
+        <Table celled>
+            <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell textAlign="left">#</Table.HeaderCell>
+                    <Table.HeaderCell textAlign="left">NAME</Table.HeaderCell>
+                    <Table.HeaderCell textAlign="left">SURMANE</Table.HeaderCell>
+                    <Table.HeaderCell textAlign="left">SSN</Table.HeaderCell>
+                    <Table.HeaderCell textAlign="left">EMAIL</Table.HeaderCell>
+                    <Table.HeaderCell textAlign="left">AUTH DATE</Table.HeaderCell>
+                </Table.Row>
+            </Table.Header>
+            <Table.Body>
+            {this.state.authParents.map((parent, index) =>
+                <Table.Row key={index}>
+                <Table.Cell textAlign="left" width={1}>{ index + 1 }</Table.Cell>
+                <Table.Cell textAlign="left">{ parent.FirstName }</Table.Cell>
+                <Table.Cell textAlign="left">{ parent.LastName }</Table.Cell>
+                <Table.Cell textAlign="left">{ parent.SSN }</Table.Cell>
 
-            {
-            this.state.isConfigParentDetailsOpen &&
-            <ConfigParentDetails
-              //topic={this.state.editingTopic}
-              onClose={this.onConfigPrentDetailsClose}
-              onSave={() => {
-                this.fetchPrents();
-                this.onConfigPrentDetailsClose();
-              }}
-            />
-            }
+                <Table.Cell textAlign="left">{ parent.eMail }</Table.Cell>
+                <Table.Cell textAlign="left" width={2}>{ moment(parent.CreatedOn).format('LL') }</Table.Cell>
 
+                </Table.Row>
+            )}
+            </Table.Body>
+        </Table>
 
-        </div>
-    )}
+        {this.state.isConfigParentDetailsOpen &&
+          <ConfigParentDetails
+            onClose={this.onConfigPrentDetailsClose}
+            onSave={() => {
+              this.fetchParents();
+              this.onConfigPrentDetailsClose();
+            }}
+          />
+        }
+      </div>
+    )
+  }
 }

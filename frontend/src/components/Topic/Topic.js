@@ -12,7 +12,6 @@ import TopicDetails from './TopicDetail/TopicDetails';
 export class Topic extends React.Component{
     constructor(props) {
       super(props);
-
       this.state = {
         subject: null,
         topics: [],
