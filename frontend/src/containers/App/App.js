@@ -37,11 +37,10 @@ export class App extends React.Component {
               
               <Route exact path="/teacher" component={Teacher}/>
               <Route exact path="/teacher/:teacherID/subjects" component={Teacher}/>
-              <Route exact path="/teacher/:teacherID/topics" component={Topic} />
+              <Route exact path="/teacher/:teacherID/subjects/:subjectID/topics" component={Topic}/>
 
-              <Route exact path="/admin" component={Admin}/>
+			  <Route exact path="/admin" component={Admin}/>
               <Route exact path="/admin/configParent" component={ConfigParent}/>
-
               <Route path="*" component={NotFound} />
               
 

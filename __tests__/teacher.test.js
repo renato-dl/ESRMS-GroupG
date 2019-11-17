@@ -83,7 +83,6 @@ describe('Tests about topic insertion by teacher', () => {
         testTopicDate
       );
     } catch (error) {
-      console.log(error);
       expect(error).toHaveProperty('message', 'Missing or invalid class id');
     }
 
@@ -107,7 +106,6 @@ describe('Tests about topic insertion by teacher', () => {
         testTopicDate
       );
     } catch (error) {
-      console.log(error);
       expect(error).toHaveProperty('message', 'Missing or invalid subject id');
     }
 
@@ -131,7 +129,6 @@ describe('Tests about topic insertion by teacher', () => {
         testTopicDate
       );
     } catch (error) {
-      console.log(error);
       expect(error).toHaveProperty('message', 'Missing or invalid topic title');
     }
 
@@ -155,7 +152,6 @@ describe('Tests about topic insertion by teacher', () => {
         undefined
       );
     } catch (error) {
-      console.log(error);
       expect(error).toHaveProperty('message', 'Missing or invalid topic date');
     }
 
@@ -180,7 +176,6 @@ describe('Tests about topic insertion by teacher', () => {
         testTopicDate
       );
     } catch (error) {
-      console.log(error);
       expect(error).toHaveProperty('message', 'Invalid topic date');
     }
 
@@ -205,7 +200,6 @@ describe('Tests about topic insertion by teacher', () => {
         testTopicDate
       );
     } catch (error) {
-      console.log(error);
       expect(error).toHaveProperty('message', 'Unauthorized');
     }
 
@@ -230,7 +224,6 @@ describe('Tests about topic insertion by teacher', () => {
         testTopicDate
       );
     } catch (error) {
-      console.log(error);
       expect(error).toHaveProperty('message', 'Only topics taught in the current week can be inserted');
     }
 
@@ -255,7 +248,6 @@ describe('Tests about topic insertion by teacher', () => {
         testTopicDate
       );
     } catch (error) {
-      console.log(error);
       expect(error).toHaveProperty('message', 'Future topics cannot be inserted');
     }
 
@@ -279,16 +271,19 @@ describe('Teacher tests about visualization of the topics', () => {
             expect.arrayContaining(
                 [
                     {
+                        "ID": 3,
                         "Title": "Expressions",
                         "TopicDescription": "Part 3",
                         "TopicDate": date1
                     },
                     {
+                        "ID": 2,
                         "Title": "Expressions",
                         "TopicDescription": "Part 2",
                         "TopicDate": date2
                     },
                     {
+                        "ID": 1,
                         "Title": "Expressions",
                         "TopicDescription": "Part 1",
                         "TopicDate": date3
