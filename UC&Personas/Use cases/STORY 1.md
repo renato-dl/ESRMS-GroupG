@@ -5,7 +5,7 @@
 
 **So that** *I can monitor his/her performance*
 
-- **Use Case**: Show marks of a student
+- **Use Case**: View marks of a student
 - **Scope**: School management
 - **Level**: User-goal
 - **Intention in context**: A parent of a student wants to see the marks their child received

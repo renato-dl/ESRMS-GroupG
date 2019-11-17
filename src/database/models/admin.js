@@ -10,8 +10,9 @@ class Admin extends Model {
   
   async getParentData(pagination){
     const connection = await this.db.getConnection();
-    let query = `SELECT FirstName, LastName, SSN 
-    FROM Parents
+    let query = `SELECT FirstName, LastName, SSN , eMail, Parents.CreatedOn
+    FROM Parents, Users
+    WHERE Parents.ID = Users.ID
     ORDER BY LastName`;
 
     if (pagination) {

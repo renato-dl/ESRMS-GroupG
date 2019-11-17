@@ -3,8 +3,8 @@ import { api } from '../../services/api';
 
 import {Table, Icon} from 'semantic-ui-react';
 
-//import moment from 'moment';
-import ConfigParentDetails from "./ConfigParentDetails/ConfigParentDetails"
+import moment from 'moment';
+//import ConfigParentDetails from "./ConfigParentDetails/ConfigParentDetails"
 
 export class ConfigParent extends React.Component{
     constructor(props) {

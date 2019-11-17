@@ -1,4 +1,4 @@
-## USE CASE 1: Visualization of inserted topics ##
+## USE CASE 1: Visualize inserted topics ##
 
 - **Scope**: web app section of teacher
 - **Level**: User-goal
@@ -17,7 +17,7 @@
 - **Extensions**:
   - There are not inserted topics for that subject and class, so an empty list is shown.
 
-## USE CASE 2: Insertion of a topic
+## USE CASE 2: Insert a topic
 
 - **Scope**: web app section of the teacher
 - **Level**: User-goal
@@ -39,7 +39,7 @@
 
 
 
-## USE CASE 3: Editing of a topic
+## USE CASE 3: Edit a topic
 
 - **Scope**: web app section of teacher
 - **Level**: User-goal
