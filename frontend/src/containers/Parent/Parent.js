@@ -4,6 +4,7 @@ import { api } from '../../services/api';
 import { StudentCard } from '../../components/StudentCard/StudentCard';
 import './Parent.scss';
 import {ApplicationStoreContext} from '../../store';
+import { NoData } from '../../components/NoData/NoData';
 
 export class Parent extends React.Component {
   static contextType = ApplicationStoreContext;
@@ -18,31 +19,46 @@ export class Parent extends React.Component {
       this.setState({children: response.data})
     }
   }
-
+ 
   selectChild = async (child) => {
     this.context.setSelectedStudent(child);
-    this.props.history.push(`/parent/student/${child.ID}`);
+    this.props.history.push(`/parent/student/${child.ID}/marks`)
+    //this.props.history.push(`/parent/student/${child.ID}`);
   };
 
   render() {
-    return (
-      <div className="parent-container">
-        <h3 className="contentHeader">
-          <Icon name='braille' size="small" />
-          Select/Switch child
-        </h3>
-        {/* <h2 className="title">My children</h2> */}
-        <div className="children">
-          {this.state.children.map((child, index) => (
-            <StudentCard
-              key={index}
-              {...child}
-              onClick={() => this.selectChild(child)}
-            />
-          ))}
+    console.log(this.state.children.length);
+    console.log("BAMBUUU");
+    if(this.state.children.length){
+      return (
+        <div className="contentContainer parent-container">
+          <h3 className="contentHeader">
+            <Icon name='braille' size="small" />
+            Select/Switch child
+          </h3>
+          {/* <h2 className="title">My children</h2> */}
+          <div className="children">
+            {this.state.children.map((child, index) => (
+              <StudentCard
+                key={index}
+                {...child}
+                onClick={() => this.selectChild(child)}
+              />
+            ))}
+          </div>
+  
         </div>
-
+      );
+    }
+    return(
+      <div className="contentContainer">
+        <h3 className="contentHeader">
+              <Icon name='braille' size="small" />
+              Select/Switch child
+        </h3>
+        <NoData/>
       </div>
-    );
+    ); 
+    
   }
 }

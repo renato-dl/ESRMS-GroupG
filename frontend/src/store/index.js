@@ -8,7 +8,7 @@ const initialState = {
   parent: {
     ID: '9d64fa59c91d9109b11cd9e05162c675',
     children: [],
-    selectedStudent: null
+    selectedStudent: []
   }
 };
 

@@ -11,8 +11,8 @@ import { AdminMenu } from '../AdminMenu/AdminMenu';
 
 
 const Parent = false;
-const Teacher = false;
-const Admin = true;
+const Teacher = true;
+const Admin = false;
 
 export const AppSidebar = (props) => {
   return (
