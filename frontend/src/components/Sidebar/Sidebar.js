@@ -9,10 +9,7 @@ import { ParentMenu } from '../ParentMenu/ParentMenu';
 import { TeacherMenu } from '../TeacherMenu/TeacherMenu';
 import { AdminMenu } from '../AdminMenu/AdminMenu';
 
-
-const Parent = false;
-const Teacher = true;
-const Admin = false;
+const loc = window.location.pathname;
 
 export const AppSidebar = (props) => {
   return (
@@ -30,9 +27,9 @@ export const AppSidebar = (props) => {
     visible
     //width = "thin"
   >
-    {Parent && <ParentMenu />}
-    {Teacher && <TeacherMenu />}
-    {Admin && <AdminMenu />}
+    {loc=="/parent" && <ParentMenu />}
+    {loc=="/teacher" && <TeacherMenu />}
+    {loc=="/admin" && <AdminMenu />}
 
   </Sidebar>
 
