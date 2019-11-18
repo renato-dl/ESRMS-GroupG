@@ -86,6 +86,7 @@ class Parent extends Model {
     } catch(err) {
       connection.rollback();
       connection.release();
+      console.log(err);
       throw new Error('Operation failed');
     }    
     
