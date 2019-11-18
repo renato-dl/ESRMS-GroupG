@@ -52,7 +52,7 @@ export class Topic extends React.Component{
     };
 
     onTopicDetailClose = () => {
-      this.setState({isTopicDetailsOpen: false});
+      this.setState({editingTopic: null, isTopicDetailsOpen: false});
     };
 
     editTopic = (topic) => {

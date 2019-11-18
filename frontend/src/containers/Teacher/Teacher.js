@@ -5,23 +5,21 @@ import './Teacher.scss';
 import { NoData } from '../../components/NoData/NoData';
 
 export class Teacher extends React.Component{
-    state = {
-      subjectsList:[]
-    };
+  state = {
+    subjectsList:[]
+  };
 
-    async componentDidMount(){
-        //const response = await api.teacher.getTeacherSubjects(this.props.match.params.teacherID);
-        const response = await api.teacher.getTeacherSubjects('6e5c9976f5813e59816b40a814e29899');
+  async componentDidMount(){
+    const response = await api.teacher.getTeacherSubjects('6e5c9976f5813e59816b40a814e29899');
 
-        console.log(response);
-        if (response) {
-            this.setState({ subjectsList: response.data })
-        }
-    } 
+    if (response) {
+      this.setState({ subjectsList: response.data })
+    }
+  }
 
-    onSubjectClick = (subjectID) => {
-      this.props.history.push(`/teacher/6e5c9976f5813e59816b40a814e29899/subjects/${subjectID}/topics`);
-    };
+  onSubjectClick = (subjectID) => {
+    this.props.history.push(`/teacher/6e5c9976f5813e59816b40a814e29899/subjects/${subjectID}/topics`);
+  };
 
     render() {
       

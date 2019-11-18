@@ -1,21 +1,17 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import {render} from '@testing-library/react'
 import { StudentCard } from '../components/StudentCard/StudentCard';
 
 describe('Testing StudentCard component', () => {
   
-  test('Testing snapshot', () => {
-    const component = renderer.create(
+  test('Test if component is rendered', () => {
+    const component = render(
       <StudentCard 
         id="1"
         firstName="Name"
         lastName="Surname"
       />,
-    ); 
-
-    const tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    );
 
   });
-
-})
+});

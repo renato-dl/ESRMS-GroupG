@@ -1,13 +1,13 @@
 import React from 'react';
-import {Marks} from '../components/Marks/Marks';
+import {Teacher} from '../containers/Teacher/Teacher';
 import {render} from '@testing-library/react'
 import {getRouterPropsForTest} from '../utils';
 
-describe('Testing Marks component', () => {
+describe('Testing Subject component', () => {
   
   test('Test if component is rendered', () => {
     const component = render(
-      <Marks {...getRouterPropsForTest()} />
+      <Teacher {...getRouterPropsForTest()} />
     );
   });
 

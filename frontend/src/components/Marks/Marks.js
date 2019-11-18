@@ -15,9 +15,7 @@ export class Marks extends React.Component{
   }
     
   async componentDidMount(){
-    console.log(this.props.params);
     const response = await api.parent.getChildMarks('9d64fa59c91d9109b11cd9e05162c675', this.props.match.params.studentID);
-    console.log(response);
     if (response) {
       this.setState({ marks: response.data })
     }
