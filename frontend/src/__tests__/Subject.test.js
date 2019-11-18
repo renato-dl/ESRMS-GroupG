@@ -1,12 +1,12 @@
 import React from 'react';
 import {Teacher} from '../containers/Teacher/Teacher';
-import {render} from '@testing-library/react'
 import {getRouterPropsForTest} from '../utils';
+import {shallow} from 'enzyme';
 
 describe('Testing Subject component', () => {
   
   test('Test if component is rendered', () => {
-    const component = render(
+    shallow(
       <Teacher {...getRouterPropsForTest()} />
     );
   });

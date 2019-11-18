@@ -1,13 +1,13 @@
 import React from 'react';
-import {Topic} from '../components/Topic/Topic';
 import {getRouterPropsForTest} from '../utils';
 import {shallow} from 'enzyme';
+import TopicDetails from '../components/Topic/TopicDetail/TopicDetails';
 
-describe('Testing Topic component', () => {
+describe('Testing TopicDetails component', () => {
   
   test('Test if component is rendered', () => {
     shallow(
-      <Topic {...getRouterPropsForTest()} />
+      <TopicDetails {...getRouterPropsForTest()} />
     );
   });
 
