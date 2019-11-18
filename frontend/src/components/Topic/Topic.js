@@ -8,6 +8,7 @@ import {
 } from 'semantic-ui-react'
 import moment from 'moment';
 import TopicDetails from './TopicDetail/TopicDetails';
+import { NoData } from '../NoData/NoData';
 
 export class Topic extends React.Component{
     constructor(props) {
@@ -31,8 +32,8 @@ export class Topic extends React.Component{
       const response = await api.teacher.getTeacherTopics(params.teacherID, 1, params.subjectID);
       if (response) {
         this.setState({ topics: response.data, editingTopic: null })
-      }
-    };
+      } 
+    }; 
 
     fetchSubject = async () => {
       const {params} = this.props.match;
@@ -60,6 +61,8 @@ export class Topic extends React.Component{
     };
 
     render(){
+      if (this.state.topics.length){
+
       return (
         <div className="Topic-container contentContainer">
           <h3 className="contentHeader">
@@ -105,6 +108,34 @@ export class Topic extends React.Component{
             />
           }
         </div>
-      )
+      );
+
+      }
+
+      return(
+        <div className="Topic-container contentContainer">
+          <h3 className="contentHeader">
+            <Icon name='braille' size="small" />
+            {this.state.subject ? this.state.subject.subject : ''} topics:
+          </h3>
+          <Button className="ui vk button" onClick={this.addTopic}>
+            <Icon name="plus" />
+            Add topic
+          </Button>
+
+
+          <NoData/>
+          {this.state.isTopicDetailsOpen &&
+            <TopicDetails
+              topic={this.state.editingTopic}
+              onClose={this.onTopicDetailClose}
+              onSave={() => {
+                this.fetchTopics();
+                this.onTopicDetailClose();
+              }}
+            />
+          }
+        </div>
+      );
     }
 }

@@ -3,6 +3,7 @@ import { api } from '../../services/api';
 import {Table, Icon} from 'semantic-ui-react';
 import moment from 'moment';
 import ConfigParentDetails from "./ConfigParentDetails/ConfigParentDetails"
+import { NoData } from '../NoData/NoData';
 
 export class ConfigParent extends React.Component{
   constructor(props) {
@@ -36,6 +37,7 @@ export class ConfigParent extends React.Component{
   };
 
   render() {
+    if(this.state.authParents.length){
     return (
       <div className="contentContainer">
         <h3 className="contentHeader">
@@ -85,6 +87,30 @@ export class ConfigParent extends React.Component{
           />
         }
       </div>
-    )
+    );
+  }
+  return(
+    <div className="contentContainer">
+      <h3 className="contentHeader">
+          <Icon name='braille' size="small" />
+          Parents Accounts Configuration
+        </h3>
+
+        <button className="ui vk button" onClick={this.addParent}>
+          <i className="user plus icon"></i>
+           Add Parent
+        </button>
+      <NoData/>
+      {this.state.isConfigParentDetailsOpen &&
+          <ConfigParentDetails
+            onClose={this.onConfigPrentDetailsClose}
+            onSave={() => {
+              this.fetchParents();
+              this.onConfigPrentDetailsClose();
+            }}
+          />
+      }
+    </div>
+  );
   }
 }
