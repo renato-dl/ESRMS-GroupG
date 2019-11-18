@@ -9,16 +9,20 @@ export class Teacher extends React.Component{
     subjectsList:[]
   };
 
-  async componentDidMount(){
-    const response = await api.teacher.getTeacherSubjects('6e5c9976f5813e59816b40a814e29899');
+  async componentDidMount() {
+    const {params} = this.props.match;
+    const teacherID = window.location.href.substr(window.location.href.indexOf('/teacher/') + 9);
+    localStorage.setItem('teacherID', teacherID);
 
+    const response = await api.teacher.getTeacherSubjects(params.teacherID);
     if (response) {
       this.setState({ subjectsList: response.data })
     }
   }
 
   onSubjectClick = (subjectID) => {
-    this.props.history.push(`/teacher/6e5c9976f5813e59816b40a814e29899/subjects/${subjectID}/topics`);
+    const {params} = this.props.match;
+    this.props.history.push(`/teacher/${params.teacherID}/subjects/${subjectID}/topics`);
   };
 
     render() {
