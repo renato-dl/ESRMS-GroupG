@@ -37,11 +37,11 @@ export class Teacher extends React.Component{
                         <List.Icon name='book' size='large' verticalAlign='middle' />
                         <List.Content>
                             <List.Header as='div' className="subjectListName">
-                              {subject.subjectId}: {subject.subject.toUpperCase()}
+                              {subject.subject.toUpperCase()}
                             </List.Header>
 
                             <List.Description as='div' className="subjectListClass">
-                              Class {subject.classId}: {subject.class}
+                              Class: {subject.class}
                             </List.Description>
                         </List.Content>
                     </List.Item>

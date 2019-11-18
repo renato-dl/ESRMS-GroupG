@@ -25,6 +25,14 @@ export class Marks extends React.Component{
     console.log(studentID);
     this.props.history.push('/marks')
   };
+  
+  styleMarkColor(mark) {
+    if(mark<6){
+      return({backgroundColor: "#F8D2D3"});
+    }
+      return({backgroundColor: "#C6EDBA"});
+  };
+
 
   render(){
     console.log(this.props.match)
@@ -36,20 +44,21 @@ export class Marks extends React.Component{
             Grades of Student:&nbsp;&nbsp;&nbsp;&nbsp; {this.props.match.params.studentID} 
           </h3>
           {/* <h2 className="title">Student {this.props.match.params.studentID}'s score:</h2> */}
-          <Table celled>
+          <Table columns={3}>
           <Table.Header>
               <Table.Row>
                   <Table.HeaderCell>SUBJECT</Table.HeaderCell>
-                  <Table.HeaderCell>DATE</Table.HeaderCell>
                   <Table.HeaderCell>MARK</Table.HeaderCell>
+                  <Table.HeaderCell>DATE</Table.HeaderCell>
               </Table.Row>
           </Table.Header>
             <Table.Body>
             {this.state.marks.map((mark) =>
               <Table.Row>
+
                   <Table.Cell>{ mark.Name } </Table.Cell>
+                  <Table.Cell><span className="markField" style={this.styleMarkColor(mark.Grade)}>{ mark.Grade }</span></Table.Cell>
                   <Table.Cell>{ moment(mark.GradeDate).format('LL')}</Table.Cell>
-                  <Table.Cell>{ mark.Grade }</Table.Cell>
               </Table.Row>
             )} 
             </Table.Body>
