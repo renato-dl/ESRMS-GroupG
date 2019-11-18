@@ -1,7 +1,7 @@
 import {BaseController} from "./baseController";
 import Parent from "../database/models/parent";
 import nodemailer from 'nodemailer';
-import {config} from './../../config';
+import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
 
 class AdminController extends BaseController {
