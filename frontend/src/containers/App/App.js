@@ -34,11 +34,11 @@ export class App extends React.Component {
 
             <Switch>
 
-              <Route exact path="/parent" component={Parent} />
-              <Route exact path="/parent/student/:studentID" component={Student} />
-              <Route exact path="/parent/student/:studentID/marks/" component={Marks}/>
+              <Route exact path="/parent/:parentID" component={Parent} />
+              <Route exact path="/parent/:parentID/student/:studentID" component={Student} />
+              <Route exact path="/parent/:parentID/student/:studentID/marks/" component={Marks}/>
               
-              <Route exact path="/teacher" component={Teacher}/>
+              <Route exact path="/teacher/:teacherID" component={Teacher}/>
               <Route exact path="/teacher/:teacherID/subjects" component={Teacher}/>
               <Route exact path="/teacher/:teacherID/subjects/:subjectID/topics" component={Topic}/>
 

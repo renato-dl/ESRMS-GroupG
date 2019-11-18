@@ -67,7 +67,7 @@ export class Topic extends React.Component{
         <div className="Topic-container contentContainer">
           <h3 className="contentHeader">
             <Icon name='braille' size="small" />
-            {this.state.subject ? this.state.subject.subject : ''} topics:
+            {this.state.subject ? this.state.subject.subject : ''} topics
           </h3>
           <Button className="ui vk button" onClick={this.addTopic}>
             <Icon name="plus" />
@@ -116,7 +116,7 @@ export class Topic extends React.Component{
         <div className="Topic-container contentContainer">
           <h3 className="contentHeader">
             <Icon name='braille' size="small" />
-            {this.state.subject ? this.state.subject.subject : ''} topics:
+            {this.state.subject ? this.state.subject.subject : ''} topics
           </h3>
           <Button className="ui vk button" onClick={this.addTopic}>
             <Icon name="plus" />

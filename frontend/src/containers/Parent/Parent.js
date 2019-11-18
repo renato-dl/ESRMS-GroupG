@@ -14,29 +14,28 @@ export class Parent extends React.Component {
   };
 
   async componentDidMount() {
-    const response = await api.parent.getChilds(this.context.state.parent.ID);
+    const {params} = this.props.match;
+    localStorage.setItem('parentID', params.parentID);
+    const response = await api.parent.getChilds(params.parentID);
     if (response) {
       this.setState({children: response.data})
     }
   }
  
   selectChild = async (child) => {
-    this.context.setSelectedStudent(child);
-    this.props.history.push(`/parent/student/${child.ID}/marks`)
-    //this.props.history.push(`/parent/student/${child.ID}`);
+    const {params} = this.props.match;
+    localStorage.setItem('selectedChild', JSON.stringify(child));
+    this.props.history.push(`/parent/${params.parentID}/student/${child.ID}/marks`)
   };
 
   render() {
-    console.log(this.state.children.length);
-    console.log("BAMBUUU");
-    if(this.state.children.length){
+    if(this.state.children.length) {
       return (
         <div className="contentContainer parent-container">
           <h3 className="contentHeader">
             <Icon name='braille' size="small" />
             Select/Switch child
           </h3>
-          {/* <h2 className="title">My children</h2> */}
           <div className="children">
             {this.state.children.map((child, index) => (
               <StudentCard
@@ -53,8 +52,8 @@ export class Parent extends React.Component {
     return(
       <div className="contentContainer">
         <h3 className="contentHeader">
-              <Icon name='braille' size="small" />
-              Select/Switch child
+          <Icon name='braille' size="small" />
+          Select/Switch child
         </h3>
         <NoData/>
       </div>
