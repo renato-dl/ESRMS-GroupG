@@ -1,32 +1,37 @@
 import React from 'react';
-import {
-  Sidebar,
-  Menu,
-  Icon
-} from 'semantic-ui-react'
+import { Menu, Segment, Sidebar } from 'semantic-ui-react';
+import '../../assets/styles/global.scss';
 
-export const AppSidebar = ({ animation, direction, visible }) => (
-  <Sidebar
-    as={Menu}
-    animation={animation}
-    direction={direction}
-    icon='labeled'
-    inverted
-    vertical
-    visible={visible}
-    width='thin'
-  >
-    <Menu.Item as='a'>
-      <Icon name='home' />
-      Home
-    </Menu.Item>
-    <Menu.Item as='a'>
-      <Icon name='gamepad' />
-      Games
-    </Menu.Item>
-    <Menu.Item as='a'>
-      <Icon name='camera' />
-      Channels
-    </Menu.Item>
-  </Sidebar>
-);
+import { ParentMenu } from '../ParentMenu/ParentMenu';
+import { TeacherMenu } from '../TeacherMenu/TeacherMenu';
+import { AdminMenu } from '../AdminMenu/AdminMenu';
+
+const loc = window.location.pathname;
+
+export const AppSidebar = (props) => {
+  return (
+    <Sidebar.Pushable as={Segment} className="mySidebar">
+      <Sidebar
+        as={Menu}
+        animation='slide along'
+        inverted
+        vertical
+        sidebar = "true"
+        menu = "true"
+        visible
+      >
+
+        {loc.indexOf("/parent") !== -1 && <ParentMenu />}
+        {loc.indexOf("/teacher") !== -1 && <TeacherMenu />}
+        {loc.indexOf("/admin") !== -1 && <AdminMenu />}
+
+      </Sidebar>
+
+      <Sidebar.Pusher>
+        <Segment basic>
+          {props.children}
+        </Segment>
+      </Sidebar.Pusher>
+    </Sidebar.Pushable>
+  )
+}

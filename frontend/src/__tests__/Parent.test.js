@@ -1,18 +1,17 @@
 import React from 'react';
 import {Parent} from '../containers/Parent/Parent';
-import renderer from 'react-test-renderer';
+import {ApplicationStoreContext} from '../store';
+import {getRouterPropsForTest} from '../utils';
+import {shallow} from 'enzyme';
 
 describe('Testing Parent component', () => {
   
-  test('Testing snapshot', () => {
-    const component = renderer.create(
-      <Parent />
+  test('Test if component is rendered', () => {
+    shallow(
+      <ApplicationStoreContext.Provider value={{state: {parent: '9d64fa59c91d9109b11cd9e05162c675'}}}>
+        <Parent {...getRouterPropsForTest()} />
+      </ApplicationStoreContext.Provider>
     );
-  
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
-
-    
   });
 
-})
+});

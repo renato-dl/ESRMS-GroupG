@@ -1,10 +1,22 @@
-.student {
-  width: 200px !important;
+.ui.card.student {
+  width: 220px !important;
   margin: 0 !important;
   margin-right: 25px !important;
 
-
-  .image {
-    // width: 200px;
+  .studentCardHeader {
+    font-size: 22px!important;
+    color: #41648A!important;
+    font-variant: all-small-caps;
+    text-align: center;
   }
+
+  div.studentCardExtra {
+    float:left;
+    font-size:13px;
+    color:#009B8B;
+  }
+}
+
+.ui.card.student:hover{
+  border:1px solid #41648A;
 }

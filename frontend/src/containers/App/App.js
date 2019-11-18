@@ -1,33 +1,57 @@
 import React from 'react';
-import {Header} from '../../components/Header/Header';
-import {Footer} from '../../components/Footer/Footer';
 import '../../assets/styles/global.scss';
-import {Container} from 'semantic-ui-react';
+import 'toastr/toastr.scss';
+//import {Container} from 'semantic-ui-react';
+
 import {Switch, Route} from 'react-router-dom';
-import { Parent } from '../Parent/Parent';
-import { NotFound } from '../NotFound/NotFound';
-import { Student } from '../Student/Student';
+
+import {ApplicationStore, ApplicationStoreContext} from '../../store';
+
+import {Header}  from '../../components/Header/Header';
+import {NotFound} from '../NotFound/NotFound';
+import {AppSidebar} from '../../components/Sidebar/Sidebar';
+
+import {Parent} from '../Parent/Parent';
+import {Student} from '../Student/Student';
+import {Teacher} from '../Teacher/Teacher';
+import {Marks}  from '../../components/Marks/Marks';
+import {Topic}  from'../../components/Topic/Topic';
+import {Admin} from '../Admin/Admin';
+import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
+
+
 
 export class App extends React.Component {
+  static contextType = ApplicationStoreContext;
+
   render() {
     return (
-      <div className="app">
-        <Header />
+      <ApplicationStore>
+        <div className="app">
+          <Header />
 
-        <Container>
-          
-          <Switch>
-            
-            <Route exact path="/parent" component={Parent} />
-            <Route exact path="/student/:studentID" component={Student} />
-            <Route path="*" component={NotFound} />
+          <AppSidebar>
 
-          </Switch>
-          
-        </Container>
+            <Switch>
 
-        <Footer />
-      </div>
+              <Route exact path="/parent/:parentID" component={Parent} />
+              <Route exact path="/parent/:parentID/student/:studentID" component={Student} />
+              <Route exact path="/parent/:parentID/student/:studentID/marks/" component={Marks}/>
+              
+              <Route exact path="/teacher/:teacherID" component={Teacher}/>
+              <Route exact path="/teacher/:teacherID/subjects" component={Teacher}/>
+              <Route exact path="/teacher/:teacherID/subjects/:subjectID/topics" component={Topic}/>
+
+			        <Route exact path="/admin" component={Admin}/>
+              <Route exact path="/admin/configParent" component={ConfigParent}/>
+              <Route path="*" component={NotFound} />
+              
+
+            </Switch>
+
+          </AppSidebar>
+        </div>
+      </ApplicationStore>
     )
   }
 }

@@ -1,21 +1,17 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import { StudentCard } from '../components/StudentCard/StudentCard';
+import {shallow} from 'enzyme';
 
 describe('Testing StudentCard component', () => {
   
-  test('Testing snapshot', () => {
-    const component = renderer.create(
+  test('Test if component is rendered', () => {
+    shallow(
       <StudentCard 
         id="1"
         firstName="Name"
         lastName="Surname"
       />,
-    ); 
-
-    const tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    );
 
   });
-
-})
+});

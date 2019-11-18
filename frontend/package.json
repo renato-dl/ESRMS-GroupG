@@ -37,18 +37,23 @@
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.0",
     "mini-css-extract-plugin": "0.8.0",
+    "momentjs": "^2.0.0",
     "optimize-css-assets-webpack-plugin": "5.0.3",
+    "password-validator": "^5.0.3",
     "pnp-webpack-plugin": "1.5.0",
     "postcss-flexbugs-fixes": "4.1.0",
     "postcss-loader": "3.0.0",
     "postcss-normalize": "7.0.1",
     "postcss-preset-env": "6.7.0",
     "postcss-safe-parser": "4.0.1",
+    "query-string": "^6.9.0",
     "react": "^16.11.0",
     "react-app-polyfill": "^1.0.4",
+    "react-datepicker": "^2.10.0",
     "react-dev-utils": "^9.1.0",
     "react-dom": "^16.11.0",
     "react-router-dom": "^5.1.2",
+    "react-toastify": "^5.4.1",
     "resolve": "1.12.0",
     "resolve-url-loader": "3.1.0",
     "semantic-ui-css": "^2.4.1",
@@ -56,8 +61,10 @@
     "semver": "6.3.0",
     "style-loader": "1.0.0",
     "terser-webpack-plugin": "1.4.1",
+    "toastr": "^2.1.4",
     "ts-pnp": "1.1.4",
     "url-loader": "2.1.0",
+    "validator": "^12.0.0",
     "webpack": "4.41.0",
     "webpack-dev-server": "3.2.1",
     "webpack-manifest-plugin": "2.1.1",
@@ -94,7 +101,9 @@
     "setupFiles": [
       "react-app-polyfill/jsdom"
     ],
-    "setupFilesAfterEnv": [],
+    "setupFilesAfterEnv": [
+      "<rootDir>/test-setup.js"
+    ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
       "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
@@ -137,8 +146,11 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/react": "^9.3.2",
     "@types/react-router": "^5.1.2",
     "@types/react-router-dom": "^5.1.2",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.15.1",
     "node-sass": "^4.13.0",
     "sass-loader": "^7.2.0"
   }
