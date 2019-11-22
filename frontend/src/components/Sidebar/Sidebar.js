@@ -1,9 +1,6 @@
 import React from 'react';
 import { Menu, Segment, Sidebar } from 'semantic-ui-react';
-
 import '../../assets/styles/global.scss';
-
-import { ApplicationStoreContext } from '../../store';
 
 import { ParentMenu } from '../ParentMenu/ParentMenu';
 import { TeacherMenu } from '../TeacherMenu/TeacherMenu';
@@ -13,32 +10,28 @@ const loc = window.location.pathname;
 
 export const AppSidebar = (props) => {
   return (
-<Sidebar.Pushable as={Segment} 
-  className="mySidebar">
-  <Sidebar
-    as={Menu}
-    animation='slide along'
-    //icon='labeled'
-    inverted
-    //left
-    vertical
-    sidebar = "true"
-    menu = "true"
-    visible
-    //width = "thin"
-  >
-    {loc=="/parent" && <ParentMenu />}
-    {loc=="/teacher" && <TeacherMenu />}
-    {loc=="/admin" && <AdminMenu />}
+    <Sidebar.Pushable as={Segment} className="mySidebar">
+      <Sidebar
+        as={Menu}
+        animation='slide along'
+        inverted
+        vertical
+        sidebar = "true"
+        menu = "true"
+        visible
+      >
 
-  </Sidebar>
+        {loc.indexOf("/parent") !== -1 && <ParentMenu />}
+        {loc.indexOf("/teacher") !== -1 && <TeacherMenu />}
+        {loc.indexOf("/admin") !== -1 && <AdminMenu />}
 
-  <Sidebar.Pusher>
-    <Segment basic>
-      {/* <Header as='h3' className="contentHeader">Application Content Header</Header> */}
-      {props.children}
-    </Segment>
-  </Sidebar.Pusher>
-</Sidebar.Pushable>
+      </Sidebar>
+
+      <Sidebar.Pusher>
+        <Segment basic>
+          {props.children}
+        </Segment>
+      </Sidebar.Pusher>
+    </Sidebar.Pushable>
   )
 }

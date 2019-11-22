@@ -15,6 +15,7 @@ render(
       <Route exact path="/" render={() => <Redirect to="/parent" />} />
       <Route exact path="/login" component={LoginParent}/>
       <Route path="/" component={App} />
+
     </Switch>
   </BrowserRouter>,
   document.getElementById('root')

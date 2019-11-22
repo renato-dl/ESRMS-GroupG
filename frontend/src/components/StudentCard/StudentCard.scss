@@ -1,20 +1,16 @@
 .ui.card.student {
-  width: 200px !important;
+  width: 220px !important;
   margin: 0 !important;
   margin-right: 25px !important;
-  //border:1px solid #008272;
 
-  .image {
-    // width: 200px;
-  }
-  .studentCardHeader{
+  .studentCardHeader {
     font-size: 22px!important;
-  //color: #273037!important;
-  color: #41648A!important;
-  font-variant: all-small-caps;
-  text-align: center;
+    color: #41648A!important;
+    font-variant: all-small-caps;
+    text-align: center;
   }
-  div.studentCardExtra{
+
+  div.studentCardExtra {
     float:left;
     font-size:13px;
     color:#009B8B;

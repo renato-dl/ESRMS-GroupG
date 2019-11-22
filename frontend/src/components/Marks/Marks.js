@@ -10,14 +10,19 @@ export class Marks extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      marks: []
+      marks: [],
+      studentName: ''
     }
   }
     
   async componentDidMount(){
+    const student = JSON.parse(localStorage.getItem('selectedChild'));
     const response = await api.parent.getChildMarks('9d64fa59c91d9109b11cd9e05162c675', this.props.match.params.studentID);
     if (response) {
-      this.setState({ marks: response.data })
+      this.setState({ 
+        marks: response.data,
+        studentName: student.FirstName
+      })
     }
   }
 
@@ -25,6 +30,14 @@ export class Marks extends React.Component{
     console.log(studentID);
     this.props.history.push('/marks')
   };
+  
+  styleMarkColor(mark) {
+    if(mark<6){
+      return({backgroundColor: "#F8D2D3"});
+    }
+      return({backgroundColor: "#C6EDBA"});
+  };
+
 
   render(){
     console.log(this.props.match)
@@ -33,23 +46,24 @@ export class Marks extends React.Component{
         <div className="contentContainer">
           <h3 className="contentHeader"> 
             <Icon name='braille'/> 
-            Grades of Student:&nbsp;&nbsp;&nbsp;&nbsp; {this.props.match.params.studentID} 
+            {this.state.studentName ? this.state.studentName + "'s" : 'Student'} grades
           </h3>
           {/* <h2 className="title">Student {this.props.match.params.studentID}'s score:</h2> */}
-          <Table celled>
+          <Table columns={3}>
           <Table.Header>
               <Table.Row>
                   <Table.HeaderCell>SUBJECT</Table.HeaderCell>
-                  <Table.HeaderCell>DATE</Table.HeaderCell>
                   <Table.HeaderCell>MARK</Table.HeaderCell>
+                  <Table.HeaderCell>DATE</Table.HeaderCell>
               </Table.Row>
           </Table.Header>
             <Table.Body>
             {this.state.marks.map((mark) =>
               <Table.Row>
+
                   <Table.Cell>{ mark.Name } </Table.Cell>
+                  <Table.Cell><span className="markField" style={this.styleMarkColor(mark.Grade)}>{ mark.Grade }</span></Table.Cell>
                   <Table.Cell>{ moment(mark.GradeDate).format('LL')}</Table.Cell>
-                  <Table.Cell>{ mark.Grade }</Table.Cell>
               </Table.Row>
             )} 
             </Table.Body>

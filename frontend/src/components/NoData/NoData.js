@@ -5,7 +5,7 @@ import './NoData.scss'
 export const NoData = (props) => (
     <Container>
         <div className="noData">
-            <h3><Icon name='database'/>  nothing to see here</h3>
+            <h3><Icon name='database'/>  Nothing to see here</h3>
             <p>There are no records to show you right now.</p>
         </div>
     </Container>
