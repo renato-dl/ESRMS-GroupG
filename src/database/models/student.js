@@ -3,7 +3,7 @@ import {Model} from './base';
 class Student extends Model {
   constructor() {
     super('Students');
-    this.columns = 'ID, FirstName, LastName, SSN, BirthDate';
+    this.columns = 'ID, FirstName, LastName, Gender, SSN, BirthDate';
   }
   
   async findByParentId(parentId) {
