@@ -1,8 +1,6 @@
 import {BaseController} from "./baseController";
 import Student from "../database/models/student";
 import Grade from '../database/models/grade'
-import Parent from '../database/models/parent'
-import uuid from 'uuid';
 
 class ParentController extends BaseController {
 
