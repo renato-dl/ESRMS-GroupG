@@ -50,6 +50,8 @@ class Parent extends Model {
       
     const connection = await this.db.getConnection();
 
+    /*
+    NOT NEEDED ANYMORE WITH AUTHENTICATION
     //admin authorization
     const selectResult = await connection.query(
       `SELECT ID
@@ -61,6 +63,7 @@ class Parent extends Model {
     if(selectResult.length != 1) {
       throw new Error('Unauthorized');
     };
+    */
 
     //insert of data
     const parentId = crypto.createHash('sha256').update(eMail).digest('hex');
