@@ -36,6 +36,7 @@ describe('Parent tests 1', () => {
                             "ID": "7460aba98f7291ee69fcfdd17274c3a1",
                             "FirstName": "Martina",
                             "LastName": "Menzi",
+                            "Gender": "F",
                             "SSN": "MNZMTN05H41L219C",
                             "BirthDate": date
                         },
@@ -47,6 +48,7 @@ describe('Parent tests 1', () => {
                             "ID": "868d6ec1dfc8467f6d260c48b5620543",
                             "FirstName": "Gianluca",
                             "LastName": "Menzi",
+                            "Gender": "M",
                             "SSN": "MNZGLC05H01L219X",
                             "BirthDate": date
                         }
