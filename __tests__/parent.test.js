@@ -85,12 +85,14 @@ describe('Parent tests 2', () => {
                         {
                             "Name": "Mathematics",
                             "Grade": 9,
-                            "GradeDate": gradeDate1
+                            "GradeDate": gradeDate1,
+                            "Type" : "Written"
                         },
                         {
                             "Name": "English",
                             "Grade": 7,
-                            "GradeDate": gradeDate2
+                            "GradeDate": gradeDate2,
+                            "Type" : "Oral"
                         }
        )]));
     });
