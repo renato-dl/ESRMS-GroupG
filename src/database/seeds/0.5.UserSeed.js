@@ -32,7 +32,8 @@ exports.seed = function(knex) {
           ID: '205db8275d3c06e6ce3fe7a47b30e0fe', 
           eMail: 'admin@phonyschool.com', 
           Password:'EasyPassAdmin123',
-          IsTeacher: true
+          IsAdminOfficer: true,
+          IsSysAdmin: true
         }
     ]);
   });
