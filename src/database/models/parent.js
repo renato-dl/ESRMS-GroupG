@@ -72,8 +72,8 @@ class Parent extends Model {
     //begin transaction
     try {
       await connection.query(
-        `INSERT INTO Users (ID, eMail, Password, Role)
-        VALUES (?, ?, ?, 'parent');`,
+        `INSERT INTO Users (ID, eMail, Password, IsParent)
+        VALUES (?, ?, ?, true);`,
         [parentId, eMail, parentPassword]
       );
 
