@@ -11,8 +11,8 @@ exports.up = function(knex) {
     table.integer('ClassId').unsigned().notNullable();
     table.timestamp('CreatedOn').defaultTo(knex.fn.now()).notNullable();
 
-    table.foreign('Parent1').references('Parents.ID');
-    table.foreign('Parent2').references('Parents.ID');
+    table.foreign('Parent1').references('Users.ID');
+    table.foreign('Parent2').references('Users.ID');
     table.foreign('ClassId').references('Classes.ID');
   })
 };
