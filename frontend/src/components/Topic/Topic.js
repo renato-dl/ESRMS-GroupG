@@ -4,7 +4,8 @@ import './Topic.scss';
 import {
   Table,
   Button,
-  Icon
+  Icon,
+  Container
 } from 'semantic-ui-react'
 import moment from 'moment';
 import TopicDetails from './TopicDetail/TopicDetails';
@@ -64,7 +65,7 @@ export class Topic extends React.Component{
       if (this.state.topics.length){
 
       return (
-        <div className="Topic-container contentContainer">
+        <Container className="Topic-container contentContainer">
           <h3 className="contentHeader">
             <Icon name='braille' size="small" />
             {this.state.subject ? this.state.subject.subject : ''} topics
@@ -107,7 +108,7 @@ export class Topic extends React.Component{
               }}
             />
           }
-        </div>
+        </Container>
       );
 
       }
