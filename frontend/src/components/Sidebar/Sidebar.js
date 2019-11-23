@@ -29,7 +29,7 @@ export const AppSidebar = (props) => {
       </Sidebar>
 
       <Sidebar.Pusher>
-        <Segment basic>
+        <Segment basic className="customSegment">
           {props.children}
         </Segment>
       </Sidebar.Pusher>

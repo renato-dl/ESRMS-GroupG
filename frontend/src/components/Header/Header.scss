@@ -27,8 +27,7 @@
   width: 448px;
   //width: 150px;
   background-color: #008272;
-  border-bottom:2px solid #DBCA47;
-  //border-top-left-radius: 15px;
+  //border-bottom:2px solid #DBCA47;
   padding-left: 15px;
   .logoIcon{
   color:#DBCA47!important;
@@ -37,7 +36,7 @@
 .headerToolbarFiled{
   height: 100%;
   width: calc(100% - 150px);
-  background-color: #009B8B;
+  background-color: #008272;// #009B8B;
   padding-left:calc(100% - 400px);;
   display: flex;
   align-items: center;

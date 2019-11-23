@@ -38,7 +38,7 @@ export class App extends React.Component {
           
           <AppSidebar visibility={this.state.active}>
 
-            <Icon name = "bars" size="large" onClick={this.toggleSidebar}/>
+            <Icon name = "bars" size="big" onClick={this.toggleSidebar}/>
 
             <Switch>
               <Route exact path="/parent/:parentID" component={Parent} />
@@ -53,7 +53,6 @@ export class App extends React.Component {
               <Route exact path="/admin/configParent" component={ConfigParent}/>
               <Route path="*" component={NotFound} />
               
-
             </Switch>
 
           </AppSidebar>
