@@ -18,7 +18,8 @@ export const AppSidebar = (props) => {
         vertical
         sidebar = "true"
         menu = "true"
-        visible
+        visible = {props.visibility}
+        
       >
 
         {loc.indexOf("/parent") !== -1 && <ParentMenu />}
