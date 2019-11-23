@@ -2,7 +2,6 @@ import {Model} from './base';
 import crypto from 'crypto';
 import validator from 'validator';
 import {createSecurePassword} from '../../services/passwordGenerator';
-import {validatePassword} from '../../services/passwordValidator';
 
 class Parent extends Model {
   constructor() {
@@ -11,9 +10,9 @@ class Parent extends Model {
 
   async getParentData(pagination){
     const connection = await this.db.getConnection();
-    let query = `SELECT FirstName, LastName, SSN , eMail, Parents.CreatedOn
-    FROM Parents, Users
-    WHERE Parents.ID = Users.ID
+    let query = `SELECT FirstName, LastName, SSN , eMail, CreatedOn
+    FROM Users
+    WHERE IsParent = true
     ORDER BY LastName`;
 
     if (pagination) {
@@ -49,51 +48,63 @@ class Parent extends Model {
       }
       
     const connection = await this.db.getConnection();
-
-    /*
-    NOT NEEDED ANYMORE WITH AUTHENTICATION
-    //admin authorization
+    
+    
     const selectResult = await connection.query(
-      `SELECT ID
+      `SELECT *
       FROM Users
-      WHERE ID = ? AND Role='admin'`,
-      [adminId]
+      WHERE eMail = ?;`,
+      [eMail]
     );
 
-    if(selectResult.length != 1) {
-      throw new Error('Unauthorized');
-    };
-    */
+    if (selectResult.length != 0) {
+      if (selectResult[0].isParent) {
+        throw new Error('Parent already in db');
+      } else {
+          const updateResult = await connection.query(
+            `UPDATE Users
+            SET IsParent = true
+            WHERE ID = ?;`,
+            [selectResult[0].ID]
+          );
+          connection.release();
+          if (updateResult.affectedRows != 1) {
+            return {
+              "Success": false,
+              "Operation": 'UPDATE'
+            }
+          }
+          return {
+            "Success": true,
+            "Operation": 'UPDATE'
+          }
+              
+      }
+    }
 
     //insert of data
     const parentId = crypto.createHash('sha256').update(eMail).digest('hex');
     const parentPassword = createSecurePassword(password);
-    
-    //begin transaction
-    try {
-      await connection.query(
-        `INSERT INTO Users (ID, eMail, Password, IsParent)
-        VALUES (?, ?, ?, true);`,
-        [parentId, eMail, parentPassword]
-      );
 
-      await connection.query(
-        `INSERT INTO Parents (ID, FirstName, LastName, SSN)
-        VALUES (?, ?, ?, ?);`,
-        [parentId, firstName, lastName, SSN]
-      );
 
-      connection.commit();
-      connection.release();
-      
-    } catch(err) {
-      connection.rollback();
-      connection.release();
-      console.log(err);
-      throw new Error('Operation failed');
-    }    
+    const insertResult = await connection.query(
+      `INSERT INTO Users (ID, eMail, Password, IsParent, FirstName, LastName, SSN)
+      VALUES (?, ?, ?, true);`,
+      [parentId, eMail, parentPassword, firstName, lastName, SSN]
+    );
+    connection.release();
     
-    return {id: parentId};
+    if (updateResult.affectedRows != 1) {
+      return {
+        "Success": false,
+        "Operation": 'INSERT'
+      }
+    }
+    
+    return {
+      "Success": true,
+      "Operation": 'INSERT'
+    }
   }
 
   validateSSN(SSN){
