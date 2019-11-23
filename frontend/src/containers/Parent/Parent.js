@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon} from 'semantic-ui-react';
+import { Icon, Container} from 'semantic-ui-react';
 import { api } from '../../services/api';
 import { StudentCard } from '../../components/StudentCard/StudentCard';
 import './Parent.scss';
@@ -31,7 +31,7 @@ export class Parent extends React.Component {
   render() {
     if(this.state.children.length) {
       return (
-        <div className="contentContainer parent-container">
+        <Container className="contentContainer parent-container">
           <h3 className="contentHeader">
             <Icon name='braille' size="small" />
             Select/Switch child
@@ -45,8 +45,7 @@ export class Parent extends React.Component {
               />
             ))}
           </div>
-  
-        </div>
+        </Container>
       );
     }
     return(

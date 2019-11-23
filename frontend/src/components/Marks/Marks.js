@@ -1,7 +1,7 @@
 import React from 'react';
 import { api } from '../../services/api';
 import './Marks.scss';
-import {Table, Icon} from 'semantic-ui-react';
+import {Table, Icon, Container} from 'semantic-ui-react';
 
 import moment from 'moment';
 import { NoData } from '../NoData/NoData';
@@ -43,7 +43,7 @@ export class Marks extends React.Component{
     console.log(this.props.match)
     if(this.state.marks.length){
       return (
-        <div className="contentContainer">
+        <Container className="contentContainer">
           <h3 className="contentHeader"> 
             <Icon name='braille'/> 
             {this.state.studentName ? this.state.studentName + "'s" : 'Student'} grades
@@ -68,7 +68,7 @@ export class Marks extends React.Component{
             )} 
             </Table.Body>
             </Table>
-        </div>
+        </Container>
       );
     }
     return (
