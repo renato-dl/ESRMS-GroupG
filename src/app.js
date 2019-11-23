@@ -7,7 +7,9 @@ import teacherRouter from './routes/teacher';
 import adminRouter from './routes/admin';
 import {config} from './config';
 import cors from 'cors';
+import { AuthenticationService } from './services/authenticationService';
 
+const Authentication = AuthenticationService();
 
 export class Application {
   constructor() {
@@ -32,6 +34,7 @@ export class Application {
    */
   setMiddlewares() {
     this.app.use(cors());
+    this.app.use(Authentication.init());
     this.app.use(logger('dev'));
 
     // To serve static frontend files
@@ -47,9 +50,9 @@ export class Application {
 
   setRoutes() {
     this.app.use(`${config.env.api_prefix}/`, indexRouter);
-    this.app.use(`${config.env.api_prefix}/parent`, parentRouter);
-    this.app.use(`${config.env.api_prefix}/teacher`, teacherRouter);
-    this.app.use(`${config.env.api_prefix}/admin`, adminRouter);
+    this.app.use(`${config.env.api_prefix}/parent`, Authentication.authenticate(), parentRouter);
+    this.app.use(`${config.env.api_prefix}/teacher`, Authentication.authenticate(), teacherRouter);
+    this.app.use(`${config.env.api_prefix}/admin`, Authentication.authenticate(), adminRouter);
 
   }
 

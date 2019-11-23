@@ -17,5 +17,9 @@ export const config = {
     sender_email: process.env.SD_EMAIL,
     sender_psw: process.env.SD_PSW,
     service: process.env.E_SERVICE
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    expiresIn: process.env.JWT_TTL
   }
 }
