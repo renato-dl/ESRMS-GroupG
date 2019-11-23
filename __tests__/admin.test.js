@@ -200,6 +200,8 @@ describe('Tests about the insertion of parent data by admin', () => {
     }
   });
 
+  /*
+  NOT NEEDED ANYMORE WITH AUTHENTICATION
   test('It should throw Error with message \'Unauthorized\'', async () => {
 
     const testAdminId = '225db8275d3c06e6ce3fe7a47b30e0fe';
@@ -223,4 +225,5 @@ describe('Tests about the insertion of parent data by admin', () => {
         expect(error).toHaveProperty('message', 'Unauthorized');
     }
   });
+  */
 });

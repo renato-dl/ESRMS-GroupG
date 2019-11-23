@@ -7,7 +7,7 @@ class TeacherController extends BaseController {
 
   // GET /teacher/:teacherId/subjects
   async subjectsByTeacherId(req, res) {
-    const subjects = await Subject.findByTeacherId(req.params.teacherId);
+    const subjects = await Subject.findByTeacherId(req.user.ID);
     const response = []
     for(let i = 0; i < subjects.length; i++){
       const subject = subjects[i];
@@ -25,7 +25,7 @@ class TeacherController extends BaseController {
   // POST /teacher/:teacherId/topic
   // Body: classId, subjectId, topicTitle, topicDescription, topicDate
   async addTopic(req, res) {
-    const result = await Topic.insertNewTopic(req.params.teacherId, req.body.classId, req.body.subjectId, req.body.topicTitle, req.body.topicDescription, req.body.topicDate);
+    const result = await Topic.insertNewTopic(req.user.ID, req.body.classId, req.body.subjectId, req.body.topicTitle, req.body.topicDescription, req.body.topicDate);
     res.send(result);
   }
 
@@ -34,7 +34,7 @@ class TeacherController extends BaseController {
   // Teacher can't modify class or subject
   async patchTopic(req, res) {
     try{
-      const teacherId = req.params.teacherId;
+      const teacherId = req.user.ID;
       const topicId = req.body.topicId;
       const topicTitle = req.body.topicTitle;
       const topicDescription = req.body.topicDescription;
@@ -57,7 +57,7 @@ class TeacherController extends BaseController {
             &page=2&pageSize=10 [OPTIONAL]  */
   async topicsByTeacherClassSubject(req, res) {
     const result = await Topic.findByTeacherClassSubject(
-      req.params.teacherId,
+      req.user.ID,
       req.query.classId, 
       req.query.subjectId,
       {page: req.query.page,

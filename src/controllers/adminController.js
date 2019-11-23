@@ -21,7 +21,7 @@ class AdminController extends BaseController {
     const password = genRandomString(8);
 
     const parent = await Parent.insertParentData(
-      req.params.adminId,  
+      req.user.ID,  
       req.body.firstName, 
       req.body.lastName, 
       req.body.eMail, 

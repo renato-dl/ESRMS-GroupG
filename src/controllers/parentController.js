@@ -5,12 +5,12 @@ import Grade from '../database/models/grade'
 class ParentController extends BaseController {
 
   async studentsByParentId(req, res) {
-    const students = await Student.findByParentId(req.params.parentId);
+    const students = await Student.findByParentId(req.user.ID);
     res.send(students);
   }
 
   async gradesByStudentId(req, res) {
-    const grades = await Grade.findByStudentId(req.params.parentId, req.query.studentId, {page: req.query.page, pageSize: req.query.pageSize});
+    const grades = await Grade.findByStudentId(req.user.ID, req.query.studentId, {page: req.query.page, pageSize: req.query.pageSize});
     res.send(grades);
   }
 }
