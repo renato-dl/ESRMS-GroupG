@@ -49,13 +49,13 @@ export class Parent extends React.Component {
       );
     }
     return(
-      <div className="contentContainer">
+      <Container className="contentContainer">
         <h3 className="contentHeader">
           <Icon name='braille' size="small" />
           Select/Switch child
         </h3>
         <NoData/>
-      </div>
+      </Container>
     ); 
     
   }

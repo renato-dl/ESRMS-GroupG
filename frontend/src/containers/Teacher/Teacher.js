@@ -55,13 +55,13 @@ export class Teacher extends React.Component{
       );
     }
     return(
-      <div className="contentContainer">
+      <Container className="contentContainer">
         <h3 className="contentHeader">
           <Icon name='braille' size="small" />
           Teaching Plan
         </h3>
         <NoData/>
-      </div>
+      </Container>
     );
   }
 }
