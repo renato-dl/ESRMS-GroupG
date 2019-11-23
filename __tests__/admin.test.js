@@ -55,20 +55,18 @@ describe('Tests about the insertion of parent data by admin', () => {
     * 4. missing or invalid eMail
     * 5. missing or invalid SSN
     * 6. missing or invalid password
-    * 7. Unauthorized adminId 
+    * 7. Exsisting user
     */
 
   test('It should perform the insertion', async () => {
 
-    const testAdminId = '205db8275d3c06e6ce3fe7a47b30e0fe';
     const testFirstName = 'Joe';
     const testLastName = 'Kernel';
     const testEmail = 'joekernel@gmail.com';
     const testSSN = 'LRNMRC79A02L219A';
     const testPassword = 'EasYPass1';
 
-    const result = await Parent.insertParentData(
-        testAdminId,  
+    const result = await Parent.insertParentData( 
         testFirstName, 
         testLastName, 
         testEmail, 
@@ -78,17 +76,12 @@ describe('Tests about the insertion of parent data by admin', () => {
 
     const hashEmail = crypto.createHash('sha256').update(testEmail).digest('hex');
 
-    expect(result).toEqual({id: hashEmail});
+    expect(result).toEqual({
+      id: hashEmail
+    });
 
     //delete result for future tests
     const connection = await db.getConnection();
-    const deleteResultFromParent = await connection.query(
-        `DELETE
-        FROM Parents
-        WHERE ID = ?`,
-        [hashEmail]
-      );
-
     const deleteResultFromUsers = await connection.query(
       `DELETE
       FROM Users
@@ -96,7 +89,6 @@ describe('Tests about the insertion of parent data by admin', () => {
       [hashEmail]
     );
    
-    expect(deleteResultFromParent.affectedRows).toBe(1);
     expect(deleteResultFromUsers.affectedRows).toBe(1);
 
     connection.release();
@@ -105,7 +97,6 @@ describe('Tests about the insertion of parent data by admin', () => {
 
   test('It should throw Error with message \'Missing or invalid first name\'', async () => {
 
-    const testAdminId = '205db8275d3c06e6ce3fe7a47b30e0fe';
     const testFirstName = 'Joe2';
     const testLastName = 'Kernel';
     const testEmail = 'joekernel@gmail.com';
@@ -113,8 +104,7 @@ describe('Tests about the insertion of parent data by admin', () => {
     const testPassword = 'EasYPass1';
 
     try{
-    const result = await Parent.insertParentData(
-        testAdminId,  
+    const result = await Parent.insertParentData( 
         testFirstName, 
         testLastName, 
         testEmail, 
@@ -130,7 +120,6 @@ describe('Tests about the insertion of parent data by admin', () => {
   
   test('It should throw Error with message \'Missing or invalid last name\'', async () => {
 
-    const testAdminId = '205db8275d3c06e6ce3fe7a47b30e0fe';
     const testFirstName = 'Joe';
     const testLastName = 'Kernel2';
     const testEmail = 'joekernel@gmail.com';
@@ -139,7 +128,6 @@ describe('Tests about the insertion of parent data by admin', () => {
 
     try{
     const result = await Parent.insertParentData(
-        testAdminId,  
         testFirstName, 
         testLastName, 
         testEmail, 
@@ -154,7 +142,6 @@ describe('Tests about the insertion of parent data by admin', () => {
 
   test('It should throw Error with message \'Missing or invalid email\'', async () => {
 
-    const testAdminId = '205db8275d3c06e6ce3fe7a47b30e0fe';
     const testFirstName = 'Joe';
     const testLastName = 'Kernel';
     const testEmail = 'joekernelgmail.com';
@@ -162,8 +149,7 @@ describe('Tests about the insertion of parent data by admin', () => {
     const testPassword = 'EasYPass1';
 
     try{
-    const result = await Parent.insertParentData(
-        testAdminId,  
+    const result = await Parent.insertParentData(  
         testFirstName, 
         testLastName, 
         testEmail, 
@@ -178,7 +164,6 @@ describe('Tests about the insertion of parent data by admin', () => {
 
   test('It should throw Error with message \'Missing or invalid SSN\'', async () => {
 
-    const testAdminId = '205db8275d3c06e6ce3fe7a47b30e0fe';
     const testFirstName = 'Joe';
     const testLastName = 'Kernel';
     const testEmail = 'joekernel@gmail.com';
@@ -187,7 +172,6 @@ describe('Tests about the insertion of parent data by admin', () => {
 
     try{
     const result = await Parent.insertParentData(
-        testAdminId,  
         testFirstName, 
         testLastName, 
         testEmail, 
@@ -200,30 +184,50 @@ describe('Tests about the insertion of parent data by admin', () => {
     }
   });
 
-  /*
-  NOT NEEDED ANYMORE WITH AUTHENTICATION
-  test('It should throw Error with message \'Unauthorized\'', async () => {
+  test('It should throw Error with message \'User already in db\'', async () => {
 
-    const testAdminId = '225db8275d3c06e6ce3fe7a47b30e0fe';
-    const testFirstName = 'Joe';
+
+    const testFirstName = 'Nome';
     const testLastName = 'Kernel';
     const testEmail = 'joekernel@gmail.com';
     const testSSN = 'LRNMRC79A02L219A';
     const testPassword = 'EasYPass1';
 
-    try{
-    const result = await Parent.insertParentData(
-        testAdminId,  
+    await Parent.insertParentData(
         testFirstName, 
         testLastName, 
         testEmail, 
         testSSN, 
         testPassword
     );
-    }catch(error){
-        expect(error).toBeInstanceOf(Error);
-        expect(error).toHaveProperty('message', 'Unauthorized');
+
+    try{
+      const result = await Parent.insertParentData(
+          testFirstName, 
+          testLastName, 
+          testEmail, 
+          testSSN, 
+          testPassword
+      );
+    } catch(error){
+      expect(error).toBeInstanceOf(Error);
+       expect(error).toHaveProperty('message', 'User already in db');
     }
+
+    const hashEmail = crypto.createHash('sha256').update(testEmail).digest('hex');
+
+    //delete result for future tests
+    const connection = await db.getConnection();
+    const deleteResultFromUsers = await connection.query(
+      `DELETE
+      FROM Users
+      WHERE ID = ?`,
+      [hashEmail]
+    );
+
+    expect(deleteResultFromUsers.affectedRows).toBe(1);
+
+    connection.release();
   });
-  */
+
 });
