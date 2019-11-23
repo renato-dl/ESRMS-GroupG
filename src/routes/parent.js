@@ -4,7 +4,7 @@ import { Authorization } from '../middlewares/authorization';
 
 const router = express.Router();
 
-router.get('/:parentId/students', Authorization(['isAdmin', 'isParent']), ParentController.processRequest.bind(ParentController, 'studentsByParentId'));
-router.get('/:parentId/grades', ParentController.processRequest.bind(ParentController, 'gradesByStudentId'));
+router.get('/students', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'studentsByParentId'));
+router.get('/grades', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'gradesByStudentId'));
 
 export default router;
