@@ -56,10 +56,34 @@ class Topic extends Model {
     return {id: insertResult.insertId};
   }
 
-  async deleteTopic(teacherId, topicId){
-    //todo
+  async deleteTopic(teacherId, classId, subjectId, topicId){
+    const connection = await this.db.getConnection();
+    
+    //check if the teacher can remove it
+    const selectResult = await connection.query(
+      `SELECT ID AS id
+      FROM TeacherSubjectClassRelation
+      WHERE SubjectId = ? AND TeacherId = ? AND ClassId = ?;`,
+      [subjectId, teacherId, classId]
+    );
 
+    if(selectResult.length != 1) {
+      throw new Error('Unauthorized');
+    };
+    
+    //delete topic
+    const deleteResult = await connection.query(
+      `DELETE *
+      FROM Topics
+      WHERE ID = ? AND TeacherSubjectClassRelationId = ?`,
+      [topicId, selectResult[0].id]
+    );
 
+    connection.release();
+
+    if (deleteResult.affectedRows != 1) {
+      throw new Error('Operation failed');
+    }
   }
   
   async editTopic(teacherId, topicId, topicTitle, topicDescription, topicDate) {
