@@ -51,7 +51,7 @@ export class Application {
   setRoutes() {
     this.app.use(`${config.env.api_prefix}/`, indexRouter);
     this.app.use(`${config.env.api_prefix}/parent`, Authentication.authenticate(), parentRouter);
-    this.app.use(`${config.env.api_prefix}/teacher`,Authentication.authenticate(), teacherRouter);
+    this.app.use(`${config.env.api_prefix}/teacher`, Authentication.authenticate(), teacherRouter);
     this.app.use(`${config.env.api_prefix}/admin`, Authentication.authenticate(), adminRouter);
 
   }
