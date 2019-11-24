@@ -4,11 +4,9 @@ import Topic from '../database/models/topic';
 import Class from '../database/models/class';
 import {signToken} from '../services/tokenService';
 
-//const id = "6e5c9976f5813e59816b40a814e29899";
-//console.log(signToken({id}));
 
 
-class TeacherController extends BaseController { 
+class TeacherController extends BaseController {
 
   // GET /teacher/subjects
   async subjectsByTeacherId(req, res) {
@@ -34,11 +32,12 @@ class TeacherController extends BaseController {
     res.send(result);
   }
 
-  //DELETE /teacher/:teacherId/topic
+  //DELETE /teacher/topic
   //Body:classId, subjectId, topicID
   async deleteTopic(req, res) {
+    const idTeacher = "6e5c9976f5813e59816b40a814e29899";
     const result = await Topic.deleteTopic(
-      req.user.ID, 
+      idTeacher, 
       req.body.classId, 
       req.body.subjectId, 
       req.body.topicId

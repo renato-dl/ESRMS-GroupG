@@ -57,9 +57,10 @@ class Topic extends Model {
   }
 
   async deleteTopic(teacherId, classId, subjectId, topicId){
+    console.log(topicId);
     const connection = await this.db.getConnection();
     
-    //check if the teacher can remove it
+    //check if the topic is of that teacher
     const selectResult = await connection.query(
       `SELECT ID AS id
       FROM TeacherSubjectClassRelation
@@ -73,8 +74,7 @@ class Topic extends Model {
     
     //delete topic
     const deleteResult = await connection.query(
-      `DELETE *
-      FROM Topics
+      `DELETE FROM Topics
       WHERE ID = ? AND TeacherSubjectClassRelationId = ?`,
       [topicId, selectResult[0].id]
     );
