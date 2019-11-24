@@ -68,6 +68,7 @@ class Topic extends Model {
       [subjectId, teacherId, classId]
     );
 
+    console.log(selectResult.length);
     if(selectResult.length != 1) {
       throw new Error('Unauthorized');
     };

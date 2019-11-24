@@ -44,7 +44,7 @@ class TeacherController extends BaseController {
   //DELETE /teacher/topic
   //Body:classId, subjectId, topicID
   async deleteTopic(req, res) {
-    const idTeacher = "6e5c9976f5813e59816b40a814e29899";
+    const idTeacher = "6d5c9976f5813e59816b40a814e29899";
     const result = await Topic.deleteTopic(
       idTeacher, 
       req.body.classId, 
