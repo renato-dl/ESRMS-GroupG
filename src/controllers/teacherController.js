@@ -2,10 +2,15 @@ import {BaseController} from "./baseController";
 import Subject from "../database/models/subject";
 import Topic from '../database/models/topic';
 import Class from '../database/models/class';
+import {signToken} from '../services/tokenService';
 
-class TeacherController extends BaseController {
+//const id = "6e5c9976f5813e59816b40a814e29899";
+//console.log(signToken({id}));
 
-  // GET /teacher/:teacherId/subjects
+
+class TeacherController extends BaseController { 
+
+  // GET /teacher/subjects
   async subjectsByTeacherId(req, res) {
     const subjects = await Subject.findByTeacherId(req.user.ID);
     const response = []
