@@ -56,6 +56,12 @@ class Topic extends Model {
     return {id: insertResult.insertId};
   }
 
+  async deleteTopic(teacherId, topicId){
+    //todo
+
+
+  }
+  
   async editTopic(teacherId, topicId, topicTitle, topicDescription, topicDate) {
     const editTopicResult = {};
     try{      

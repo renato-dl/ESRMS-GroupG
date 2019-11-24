@@ -29,6 +29,13 @@ class TeacherController extends BaseController {
     res.send(result);
   }
 
+  //DELETE /teacher/:teacherId/topic
+  //Body: topicID
+  async deleteTopic(req, res) {
+    const result = await Topic.deleteTopic(req.user.ID, req.body.ID);
+    res.send(result);
+  }
+
   // PATCH /teacher/:teacherId/topic
   // Body: topicID, topicTitle, topicDescription, topicDate
   // Teacher can't modify class or subject
