@@ -3,6 +3,7 @@ import validator from 'validator';
 import {validateSSN} from '../../services/ssnValidator';
 import User from './user';
 import uuid from 'uuid/v4';
+import moment from 'moment';
 
 class Student extends Model {
   constructor() {
@@ -39,7 +40,7 @@ class Student extends Model {
     if (!SSN || !validateSSN(SSN)) {
       throw new Error('Missing or invalid SSN');
     }
-    if (gender != 'M' || gender != 'F') {
+    if (gender != 'M' && gender != 'F') {
       throw new Error('Missing or invalid gender');
     }
 
@@ -55,13 +56,21 @@ class Student extends Model {
       throw new Error('Invalid parent1 id');
     }
 
-    if (parent2 && !await User.isValidParent(parent2)) {
-      throw new Error('Invalid parent2 id');
+    if (parent2) {
+      if (!await User.isValidParent(parent2)) {
+        throw new Error('Invalid parent2 id');
+      }
     } else {
       parent2 = null;
     }
 
+    if (parent1 == parent2) {
+      throw new Error('Parents id must be different');
+    }
+
     const id = uuid();
+
+    const connection = await this.db.getConnection();
 
     try {
       
