@@ -36,9 +36,6 @@ class Student extends Model {
     if (!validator.matches(lastName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
       throw new Error('Missing or invalid last name');
     }
-    if (!validator.isEmail(eMail)) {
-      throw new Error('Missing or invalid email');
-    }
     if (!SSN || !validateSSN(SSN)) {
       throw new Error('Missing or invalid SSN');
     }
