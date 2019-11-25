@@ -74,13 +74,13 @@ class User extends Model {
 
     try {
       const selectResult = await connection.query(
-        `SELECT *
+        `SELECT COUNT(*) AS count
         FROM Users
         WHERE SSN = ? OR eMail = ?;`,
         [SSN, eMail]
       );
 
-      if (selectResult.length != 0) {
+      if (selectResult[0].count != 0) {
         connection.release();
         throw new Error('User already in db')
       }
