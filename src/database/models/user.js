@@ -13,6 +13,23 @@ class User extends Model {
       [userId]
     )
   }
+  
+  async isValidParent(userId) {
+    const connection = await this.db.getConnection();
+
+    const selectResult = await connection.query(
+      `SELECT *
+      FROM Users
+      WHERE ID = ? AND IsParent = true;`,
+      [userId]
+    );
+    connection.release();
+    if (selectResult.length != 1) {
+      return false;
+    }
+    return true;
+  }
+
 }
 
 export default new User();
