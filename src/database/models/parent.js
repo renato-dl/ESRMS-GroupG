@@ -2,6 +2,7 @@ import {Model} from './base';
 import crypto from 'crypto';
 import validator from 'validator';
 import {createSecurePassword} from '../../services/passwordGenerator';
+import {validateSSN} from '../../services/ssnValidator'
 
 class Parent extends Model {
   constructor() {
@@ -30,19 +31,19 @@ class Parent extends Model {
 
   async insertParentData(firstName, lastName, eMail, SSN, password) {
 
-      //input data validation
-      if (!validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
-        throw new Error('Missing or invalid first name');
-      }
-      if (!validator.matches(lastName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
-        throw new Error('Missing or invalid last name');
-      }
-      if (!validator.isEmail(eMail)) {
-        throw new Error('Missing or invalid email');
-      }
-      if (!SSN || !this.validateSSN(SSN)) {
-        throw new Error('Missing or invalid SSN');
-      }
+    //input data validation
+    if (!validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
+      throw new Error('Missing or invalid first name');
+    }
+    if (!validator.matches(lastName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
+      throw new Error('Missing or invalid last name');
+    }
+    if (!validator.isEmail(eMail)) {
+      throw new Error('Missing or invalid email');
+    }
+    if (!SSN || !validateSSN(SSN)) {
+      throw new Error('Missing or invalid SSN');
+    }
       
     const connection = await this.db.getConnection();
 
@@ -84,15 +85,6 @@ class Parent extends Model {
       throw(err);
     }
   }
-
-  validateSSN(SSN){
-    const SSNRegexp = /^[a-zA-Z]{6}[0-9]{2}[abcdehlmprstABCDEHLMPRST]{1}[0-9]{2}([a-zA-Z]{1}[0-9]{3})[a-zA-Z]{1}$/;
-    return SSNRegexp.test(SSN);
-  }
-
-
-
-
 
 }
 
