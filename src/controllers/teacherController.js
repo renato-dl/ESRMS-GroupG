@@ -38,9 +38,7 @@ class TeacherController extends BaseController {
     const idTeacher = "6e5c9976f5813e59816b40a814e29899";
     const result = await Topic.deleteTopic(
       idTeacher, 
-      req.body.classId, 
-      req.body.subjectId, 
-      req.body.topicId
+      req.query.topicId
       );
     res.send(result);
   }
