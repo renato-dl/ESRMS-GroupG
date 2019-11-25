@@ -38,7 +38,7 @@ export class App extends React.Component {
           
           <AppSidebar visibility={this.state.active}>
 
-            <Icon name = "bars" size="big" onClick={this.toggleSidebar}/>
+            <Icon className="toggleIcon" name = "bars" size="big" onClick={this.toggleSidebar}/>
 
             <Switch>
               <Route exact path="/parent/:parentID" component={Parent} />

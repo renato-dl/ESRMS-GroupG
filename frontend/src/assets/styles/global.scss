@@ -11,6 +11,7 @@
     margin:0!important;
     border: 0!important;
     border-radius: 0;
+    background-color:#f1f1f1 ;
 
     div.sidebar{background:  #273037;
         border-top:3px solid #DBCA47;
@@ -24,10 +25,13 @@
     float:right;
 }
 
+.bars.icon.toggleIcon{
+    margin-bottom:5px;
+}
  //.ui.segment{padding:0}
- .contentContainer{
+ /* .contentContainer{
   width: calc(100% - 260px);
- }
+ } */
 
 .contentHeader{    
     height: auto;
