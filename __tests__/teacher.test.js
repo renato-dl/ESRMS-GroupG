@@ -812,38 +812,86 @@ describe('Tests about deletion of a topic by a teacher', () => {
     connection.release();
   });
 
-    test('it should throw Error with message \'Unauthorized\' when the passed teacherId does not exist', async () => {
+  test('it should throw Error with message \'Unauthorized\' when the passed teacherId does not exist', async () => {
 
-      const testTeacherId = 'wrong teacher id';
-      const topicId = 1; 
-      
-      try{   
-        const resultDeletion = await Topic.deleteTopic(
-          testTeacherId,
-          topicId
-        );
-      }
-      catch(error){
+      let testTeacherId = '6e5c9976f5813e59816b40a814e29899';
+      const testClassId = 1;
+      const testSubjectId = 1;
+      const testTitle = 'Test deletion topic';
+      const testTopicDescription = 'Test deletion topic';
+      const testTopicDate = moment().utc(); //today
+
+      const resultInsertion = await Topic.insertNewTopic(
+        testTeacherId,
+        testClassId,
+        testSubjectId,
+        testTitle,
+        testTopicDescription,
+        testTopicDate
+    );
+
+    expect(resultInsertion.id).not.toBeNaN();
+    const testTopicId = resultInsertion.id;
+    testTeacherId = "wrong teacher id";
+      try{
+          const resultDeletion = await Topic.deleteTopic(
+              testTeacherId,
+              testTopicId
+          );
+
+     }catch(error){
           expect(error).toBeInstanceOf(Error);
           expect(error).toHaveProperty('message', 'Unauthorized');
+          const connection = await db.getConnection();
+          const deleteResult = await connection.query(
+            `DELETE
+            FROM Topics
+            WHERE ID = ?;`,
+            [testTopicId]
+          );
+          connection.release();
       }
     });
-      test('it should throw Error with message \'Unauthorized\' when the passed topicId does not exist', async () => {
 
-        const testTeacherId = '6e5c9976f5813e59816b40a814e29899';
-        const topicId = 100000000;
-        
-        try{   
+      test('it should throw Error with message \'The topic does not exist\' when the passed topicId does not exist', async () => {
+
+      let testTeacherId = '6e5c9976f5813e59816b40a814e29899';
+      const testClassId = 1;
+      const testSubjectId = 1;
+      const testTitle = 'Test deletion topic';
+      const testTopicDescription = 'Test deletion topic';
+      const testTopicDate = moment().utc(); //today
+  
+      const resultInsertion = await Topic.insertNewTopic(
+        testTeacherId,
+        testClassId,
+        testSubjectId,
+        testTitle,
+        testTopicDescription,
+        testTopicDate
+    );
+
+    expect(resultInsertion.id).not.toBeNaN();
+    const addedTopicId = resultInsertion.id;
+    const testTopicId = 1000000000;
+      try{
           const resultDeletion = await Topic.deleteTopic(
-            testTeacherId,
-            topicId
+              testTeacherId,
+              testTopicId
           );
-        }
-        catch(error){
-            expect(error).toBeInstanceOf(Error);
-            expect(error).toHaveProperty('message', 'Unauthorized');
-        }
-      });
 
+     }catch(error){
+          expect(error).toBeInstanceOf(Error);
+          expect(error).toHaveProperty('message', 'The topic does not exist');
+          const connection = await db.getConnection();
+          const deleteResult = await connection.query(
+            `DELETE *
+            FROM Topics
+            WHERE ID = ?`,
+            [addedTopicId]
+          );
+          connection.release();
+      }
+      });
 });
 
