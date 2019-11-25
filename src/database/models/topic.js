@@ -68,7 +68,7 @@ class Topic extends Model {
     );
 
     if(checkTopic.length != 1) {
-      throw new Error('The topic does not exists!');
+      throw new Error('The topic does not exist!');
     };
 
     //check if the topic is of that teacher
