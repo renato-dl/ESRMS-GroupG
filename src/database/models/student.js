@@ -44,7 +44,7 @@ class Student extends Model {
       throw new Error('Missing or invalid gender');
     }
 
-    const date = moment().utc(birthDate);
+    const date = moment.utc(birthDate);
     if (!date.isValid()) {
       throw new Error('Invalid birth date');
     }
@@ -81,7 +81,7 @@ class Student extends Model {
       const insertResult = await connection.query(
         `INSERT INTO Students(ID, FirstName, LastName, SSN, BirthDate, Parent1, Parent2, Gender)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
-        [id, firstName, lastName, SSN, birthDate.format(this.db.getDateFormatString()), parent1, parent2, gender]
+        [id, firstName, lastName, SSN, date.format(this.db.getDateFormatString()), parent1, parent2, gender]
       );
       connection.release();
 
