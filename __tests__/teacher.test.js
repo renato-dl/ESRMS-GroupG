@@ -796,8 +796,6 @@ describe('Tests about deletion of a topic by a teacher', () => {
 
     const resultDeletion = await Topic.deleteTopic(
       testTeacherId,
-      testClassId,
-      testSubjectId,
       resultInsertion.id
     );
 
@@ -817,14 +815,12 @@ describe('Tests about deletion of a topic by a teacher', () => {
     test('it should throw Error with message \'Unauthorized\' when the passed teacherId does not exist', async () => {
 
       const testTeacherId = 'wrong teacher id';
-      const testClassId = 1;
-      const testSubjectId = 1;
+      const topicId = 1; 
       
       try{   
         const resultDeletion = await Topic.deleteTopic(
           testTeacherId,
-          testClassId,
-          testSubjectId,
+          topicId
         );
       }
       catch(error){
@@ -832,17 +828,15 @@ describe('Tests about deletion of a topic by a teacher', () => {
           expect(error).toHaveProperty('message', 'Unauthorized');
       }
     });
-      test('it should throw Error with message \'Unauthorized\' when the passed subjectId does not exist', async () => {
+      test('it should throw Error with message \'Unauthorized\' when the passed topicId does not exist', async () => {
 
         const testTeacherId = '6e5c9976f5813e59816b40a814e29899';
-        const testClassId = 1;
-        const testSubjectId = 200;
+        const topicId = 100000000;
         
         try{   
           const resultDeletion = await Topic.deleteTopic(
             testTeacherId,
-            testClassId,
-            testSubjectId,
+            topicId
           );
         }
         catch(error){
@@ -850,26 +844,6 @@ describe('Tests about deletion of a topic by a teacher', () => {
             expect(error).toHaveProperty('message', 'Unauthorized');
         }
       });
-
-      test('it should throw Error with message \'Unauthorized\' when the passed classId does not exist', async () => {
-
-        const testTeacherId = '6e5c9976f5813e59816b40a814e29899';
-        const testClassId = 200;
-        const testSubjectId = 1;
-        
-        try{   
-          const resultDeletion = await Topic.deleteTopic(
-            testTeacherId,
-            testClassId,
-            testSubjectId,
-          );
-        }
-        catch(error){
-            expect(error).toBeInstanceOf(Error);
-            expect(error).toHaveProperty('message', 'Unauthorized');
-        }
-      });
-
 
 });
 
