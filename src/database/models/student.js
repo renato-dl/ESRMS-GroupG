@@ -44,9 +44,13 @@ class Student extends Model {
       throw new Error('Missing or invalid gender');
     }
 
-    const date = moment.utc(birthDate);
+    const date = moment().utc(birthDate);
     if (!date.isValid()) {
-      throw new Error('Invalid topic date');
+      throw new Error('Invalid birth date');
+    }
+
+    if (date.isAfter(moment().utc(), 'day')) {
+      throw new Error('Future birth date');
     }
 
     if (!parent1) {
