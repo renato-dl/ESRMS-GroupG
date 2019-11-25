@@ -59,6 +59,18 @@ class Topic extends Model {
   async deleteTopic(teacherId, topicId){
     const connection = await this.db.getConnection();
     
+    //check if the topic exists
+    const checkTopic = await connection.query(
+      `SELECT TeacherSubjectClassRelationId as id
+      FROM Topics 
+      WHERE ID = ?`,
+      [topicId]
+    );
+
+    if(checkTopic.length != 1) {
+      throw new Error('The topic does not exists!');
+    };
+
     //check if the topic is of that teacher
     const selectResult = await connection.query(
       `SELECT tscr.ID
