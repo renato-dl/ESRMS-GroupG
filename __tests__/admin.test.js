@@ -1,4 +1,4 @@
-import Parent from '../src/database/models/parent';
+import User from '../src/database/models/user';
 import crypto from 'crypto';
 import db from '../src/database';
 
@@ -8,7 +8,7 @@ describe('Tests about the visualization of inserted parents', () =>{
 
   test('It should show the inserted parent data', async () => {
 
-    const parents = await Parent.getParentData();
+    const parents = await User.getParentData();
 
     expect(parents).not.toBeNull();
     expect(parents.length).toBeGreaterThan(0);
@@ -66,7 +66,7 @@ describe('Tests about the insertion of parent data by admin', () => {
     const testSSN = 'LRNMRC79A02L219A';
     const testPassword = 'EasYPass1';
 
-    const result = await Parent.insertParentData( 
+    const result = await User.insertParentData( 
         testFirstName, 
         testLastName, 
         testEmail, 
@@ -104,7 +104,7 @@ describe('Tests about the insertion of parent data by admin', () => {
     const testPassword = 'EasYPass1';
 
     try{
-    const result = await Parent.insertParentData( 
+    const result = await User.insertParentData( 
         testFirstName, 
         testLastName, 
         testEmail, 
@@ -127,7 +127,7 @@ describe('Tests about the insertion of parent data by admin', () => {
     const testPassword = 'EasYPass1';
 
     try{
-    const result = await Parent.insertParentData(
+    const result = await User.insertParentData(
         testFirstName, 
         testLastName, 
         testEmail, 
@@ -149,7 +149,7 @@ describe('Tests about the insertion of parent data by admin', () => {
     const testPassword = 'EasYPass1';
 
     try{
-    const result = await Parent.insertParentData(  
+    const result = await User.insertParentData(  
         testFirstName, 
         testLastName, 
         testEmail, 
@@ -171,7 +171,7 @@ describe('Tests about the insertion of parent data by admin', () => {
     const testPassword = 'EasYPass1';
 
     try{
-    const result = await Parent.insertParentData(
+    const result = await User.insertParentData(
         testFirstName, 
         testLastName, 
         testEmail, 
@@ -193,7 +193,7 @@ describe('Tests about the insertion of parent data by admin', () => {
     const testSSN = 'LRNMRC79A02L219A';
     const testPassword = 'EasYPass1';
 
-    await Parent.insertParentData(
+    await User.insertParentData(
         testFirstName, 
         testLastName, 
         testEmail, 
@@ -202,7 +202,7 @@ describe('Tests about the insertion of parent data by admin', () => {
     );
 
     try{
-      const result = await Parent.insertParentData(
+      const result = await User.insertParentData(
           testFirstName, 
           testLastName, 
           testEmail, 

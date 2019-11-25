@@ -1,5 +1,5 @@
 import {BaseController} from "./baseController";
-import Parent from "../database/models/parent";
+import User from "../database/models/user";
 import nodemailer from 'nodemailer';
 import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
@@ -8,7 +8,7 @@ class AdminController extends BaseController {
 
 
   async getParentData(req, res){
-    const parents = await Parent.getParentData(
+    const parents = await User.getParentData(
       {
         page: req.query.page,
         pageSize: req.query.pageSize
@@ -20,7 +20,7 @@ class AdminController extends BaseController {
   async insertParentData(req, res) {
     const password = genRandomString(8);
 
-    const parent = await Parent.insertParentData(
+    const parent = await User.insertParentData(
       req.user.ID,  
       req.body.firstName, 
       req.body.lastName, 
