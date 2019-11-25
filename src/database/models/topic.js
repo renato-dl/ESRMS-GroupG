@@ -44,7 +44,7 @@ class Topic extends Model {
     const insertResult = await connection.query(
       `INSERT INTO ${this.tableName} (TeacherSubjectClassRelationId, Title, TopicDescription, TopicDate)
       VALUES (?, ?, ?, ?);`,
-      [selectResult[0].id, topicTitle, topicDescription, date.format(this.db.getDateTimeFormatString())]
+      [selectResult[0].id, topicTitle, topicDescription, date.format(this.db.getDateFormatString())]
     );
 
     connection.release();
@@ -84,7 +84,7 @@ class Topic extends Model {
         `update ${this.tableName} 
         set Title = ?, TopicDescription = ?, TopicDate = ?
         where id = ?;`,
-        [topicTitle, topicDescription, date.format(this.db.getDateTimeFormatString()), topicId]
+        [topicTitle, topicDescription, date.format(this.db.getDateFormatString()), topicId]
       );
       connection.release();
       if (updateResult.affectedRows != 1) {

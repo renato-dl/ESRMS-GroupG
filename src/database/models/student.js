@@ -81,7 +81,7 @@ class Student extends Model {
       const insertResult = await connection.query(
         `INSERT INTO Students(ID, FirstName, LastName, SSN, BirthDate, Parent1, Parent2, Gender)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
-        [id, firstName, lastName, SSN, birthDate.format(this.db.getDateTimeFormatString()), parent1, parent2, gender]
+        [id, firstName, lastName, SSN, birthDate.format(this.db.getDateFormatString()), parent1, parent2, gender]
       );
       connection.release();
 
