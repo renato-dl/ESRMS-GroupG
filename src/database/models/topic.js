@@ -56,16 +56,16 @@ class Topic extends Model {
     return {id: insertResult.insertId};
   }
 
-  async deleteTopic(teacherId, classId, subjectId, topicId){
-    console.log(topicId);
+  async deleteTopic(teacherId, topicId){
     const connection = await this.db.getConnection();
     
     //check if the topic is of that teacher
     const selectResult = await connection.query(
-      `SELECT ID AS id
-      FROM TeacherSubjectClassRelation
-      WHERE SubjectId = ? AND TeacherId = ? AND ClassId = ?;`,
-      [subjectId, teacherId, classId]
+      `SELECT tscr.ID
+      FROM TeacherSubjectClassRelation tscr, Topics t
+      WHERE tscr.ID = t.TeacherSubjectClassRelationId AND
+      t.ID = ? AND tscr.TeacherId = ?`,
+      [topicId, teacherId]
     );
 
     console.log(selectResult.length);
@@ -76,8 +76,8 @@ class Topic extends Model {
     //delete topic
     const deleteResult = await connection.query(
       `DELETE FROM Topics
-      WHERE ID = ? AND TeacherSubjectClassRelationId = ?`,
-      [topicId, selectResult[0].id]
+      WHERE ID = ?`,
+      [topicId]
     );
 
     connection.release();
