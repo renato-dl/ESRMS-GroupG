@@ -6,7 +6,7 @@ import {validateSSN} from '../../services/ssnValidator'
 
 class User extends Model {
   constructor() {
-    super('users');
+    super('Users');
   }
   async getUserRolesById(userId) {
     const connection = await this.db.getConnection();
