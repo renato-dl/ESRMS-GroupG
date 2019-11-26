@@ -17,6 +17,9 @@
   }
 }
 
+.ui.card>.image, .ui.cards>.card>.image{
+  background-color:#fff;
+}
 .ui.card.student:hover{
   border:1px solid #41648A;
 }
