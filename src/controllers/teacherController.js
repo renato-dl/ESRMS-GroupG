@@ -25,7 +25,14 @@ class TeacherController extends BaseController {
   // POST /teacher/:teacherId/topic
   // Body: classId, subjectId, topicTitle, topicDescription, topicDate
   async addTopic(req, res) {
-    const result = await Topic.insertNewTopic(req.user.ID, req.body.classId, req.body.subjectId, req.body.topicTitle, req.body.topicDescription, req.body.topicDate);
+    const result = await Topic.insertNewTopic(
+      req.user.ID, 
+      req.body.classId, 
+      req.body.subjectId, 
+      req.body.topicTitle, 
+      req.body.topicDescription, 
+      req.body.topicDate
+      );
     res.send(result);
   }
 
