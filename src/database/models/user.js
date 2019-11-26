@@ -55,12 +55,21 @@ class User extends Model {
   }
 
 
-  async getStudentsData(pagination){
+  async getStudentsData(isAssigned, pagination){
     const connection = await this.db.getConnection();
-    let query = `SELECT FirstName, LastName, SSN , eMail, CreatedOn
-    FROM Users
-    WHERE IsParent = true
-    ORDER BY LastName`;
+    let query;
+    if(isAssigned){
+      query = `SELECT FirstName, LastName, Parent1, Parent2, Gender
+      FROM Students
+      WHERE ClassId IS NOT NULL
+      ORDER BY LastName`
+    }
+    else{
+      query = `SELECT FirstName, LastName, Parent1, Parent2, Gender
+      FROM Students
+      WHERE ClassId IS NULL
+      ORDER BY LastName`;
+    }
 
     if (pagination) {
       query += ` ${this.db.getPaginationQuery(pagination)}`

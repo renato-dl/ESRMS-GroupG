@@ -106,7 +106,7 @@ class AdminController extends BaseController {
   }
 
   async getStudentsData(req, res){
-    const students = await User.getStudentsData(
+    const students = await User.getStudentsData(req.query.isAssigned, 
       {
         page: req.query.page,
         pageSize: req.query.pageSize
