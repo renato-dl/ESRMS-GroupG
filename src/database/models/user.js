@@ -8,6 +8,12 @@ class User extends Model {
   constructor() {
     super('Users');
   }
+
+  findOne(params) {
+    const columns = "ID, eMail, FirstName, LastName, SSN, IsParent, IsTeacher, IsPrincipal, IsAdminOfficer, IsSysAdmin"
+    return super.findOne(params, columns);
+  }
+
   async getUserRolesById(userId) {
     const connection = await this.db.getConnection();
     return connection.query(
