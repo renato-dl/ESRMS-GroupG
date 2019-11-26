@@ -5,6 +5,10 @@ import nodemailer from 'nodemailer';
 import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
 
+import {signToken} from '../services/tokenService'
+
+console.log(signToken({id: '205db8275d3c06e6ce3fe7a47b30e0fe'}));
+
 class AdminController extends BaseController {
 
 
@@ -39,30 +43,39 @@ class AdminController extends BaseController {
         
     let parent1;
     let parent2;
+    let parent1Insert = false;
+    let parent2Insert = false;
 
-    if (!req.body.firstParent.hasOwnProperty('ID')) {
-      const password = genRandomString(8);
-      parent1 = await User.insertParentData(
-        req.body.firstParent.FirstName,
-        req.body.firstParent.LastName,
-        req.body.firstParent.Email,
-        req.body.firstParent.SSN,
-        password
-      ).id;
-      this.sendEmailToParent(req.body.firstParent.Email, password, req.body.firstParent.FirstName, req.body.firstParent.LastName);
+    if (!req.body.hasOwnProperty('firstParent')) {
+      res.status(422).send({ error: 'Missing first parent' });
+      return;
     } else {
-      parent1 = req.body.firstParent.ID;
+      if (!req.body.firstParent.hasOwnProperty('ID')) {
+        const password = genRandomString(8);
+        parent1 = (await User.insertParentData(
+          req.body.firstParent.FirstName,
+          req.body.firstParent.LastName,
+          req.body.firstParent.Email,
+          req.body.firstParent.SSN,
+          password
+        )).id;
+        parent1Insert = true;
+        this.sendEmailToParent(req.body.firstParent.Email, password, req.body.firstParent.FirstName, req.body.firstParent.LastName);
+      } else {
+        parent1 = req.body.firstParent.ID;
+      }
     }
     if (req.body.hasOwnProperty('secondParent')) {
       if (!req.body.secondParent.hasOwnProperty('ID')) {
         const password = genRandomString(8);
-        parent2 = await User.insertParentData(
+        parent2 = (await User.insertParentData(
           req.body.secondParent.FirstName,
           req.body.secondParent.LastName,
           req.body.secondParent.Email,
           req.body.secondParent.SSN,
           password
-        ).id;
+        )).id;
+        parent2Insert = true;
         this.sendEmailToParent(req.body.secondParent.Email, password, req.body.secondParent.FirstName, req.body.secondParent.LastName);
       } else {
         parent2 = req.body.secondParent.ID;
@@ -70,16 +83,25 @@ class AdminController extends BaseController {
     } else {
       parent2 = null;
     }
-
-    res.send(await Student.insertStudent(
-      req.body.studentInfo.FirstName,
-      req.body.studentInfo.LastName,
-      req.body.studentInfo.SSN,
-      req.body.studentInfo.Gender,
-      req.body.studentInfo.BirthDate,
-      parent1,
-      parent2
-    ));
+    try {
+      res.send(await Student.insertStudent(
+        req.body.studentInfo.FirstName,
+        req.body.studentInfo.LastName,
+        req.body.studentInfo.SSN,
+        req.body.studentInfo.Gender,
+        req.body.studentInfo.BirthDate,
+        parent1,
+        parent2
+      ));
+    } catch(error) {
+      if (parent1Insert) {
+        User.remove(parent1);
+      }
+      if (parent2Insert) {
+        User.remove(parent2);
+      }
+      throw(error);
+    }
 
   }
 
