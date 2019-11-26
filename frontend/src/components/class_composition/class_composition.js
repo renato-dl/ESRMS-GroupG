@@ -1,18 +1,15 @@
 import React from 'react';
 import { api } from '../../services/api';
-import './class_compositon.scss';
 import {Table, Icon} from 'semantic-ui-react';
-
-import moment from 'moment';
 import { NoData } from '../NoData/NoData';
 
-export class class_compositon extends React.Component{
+export class Class_composition extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
       // marks: [],
       // studentName: ''
-      class_compositon:[
+      Class_composition:[
       {ID:1,Creation_Year:9,Name:'A',CoordinatorName:'c1'},
       {ID:2,Creation_Year:9,Name:'B',CoordinatorName:'c2'},
       {ID:3,Creation_Year:9,Name:'C',CoordinatorName:'c3'}
@@ -34,7 +31,7 @@ export class class_compositon extends React.Component{
      Class Composition
    </h3>
    {/* <h2 className="title">Student {this.props.match.params.studentID}'s score:</h2> */}
-   <Table columns={3}>
+   <Table columns={4}>
    <Table.Header>
        <Table.Row>
            <Table.HeaderCell>ID</Table.HeaderCell>
@@ -44,7 +41,7 @@ export class class_compositon extends React.Component{
        </Table.Row>
    </Table.Header>
      <Table.Body>
-     {this.state.class_compositon.map((data) =>
+     {this.state.Class_composition.map((data) =>
        <Table.Row>
            <Table.Cell>{ data.ID } </Table.Cell>
            <Table.Cell>{ data.Name } </Table.Cell>
