@@ -10,7 +10,7 @@ export const Authorization = (roles) => {
       }
     })
 
-    if (!isAuthorized) {
+    if (isAuthorized) {
       return next();
     }
     
