@@ -4,8 +4,7 @@ export class AuthAPIService extends BaseAPIService {
   test() {
     return this.get('/test');
   }
-//?????????????????
-  /* login(data) {
+  login(data) {
     return this.post(`/login`, data);
-  } */
+  } 
 }

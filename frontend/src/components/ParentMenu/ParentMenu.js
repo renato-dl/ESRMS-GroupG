@@ -10,7 +10,7 @@ export const ParentMenu = (props) => {
 
   return (
     <>
-      <Menu.Item as={Link} to={`/parent/${id}`}>
+      <Menu.Item as={Link} to={`/parent`}>
         <span>
           <br/>
           <Icon name='child' size="big" /> Children
@@ -18,7 +18,7 @@ export const ParentMenu = (props) => {
         </span>
       </Menu.Item>
 
-      {/* <Menu.Item as={Link} to='/parent/student/:studentID/marks'>
+      {/* <Menu.Item as={Link} to='/parent/student/marks'>
         <Icon name='sort numeric up' />
         Grades
       </Menu.Item> */}

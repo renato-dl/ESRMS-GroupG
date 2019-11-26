@@ -1,5 +1,6 @@
 import React from 'react';
 import './Login.scss';
+import { api } from '../../services/api';
 import { Button, Form, Grid, Header, Icon, Image, Segment, Container } from 'semantic-ui-react'
 import validator from 'validator';
 
@@ -40,7 +41,14 @@ export class Login extends React.Component {
             email:this.state.email,
             password: this.state.password,
         };
-    
+
+        console.log(loginData);
+        const response = await api.auth.login(loginData);
+        // check for error response
+        localStorage.setItem("token", JSON.stringify(response.data.token));
+        // redirect based on the role
+        this.props.history.push('/parent');
+        console.log(response);
         /* await api.auth.login(
             loginData
         ); */

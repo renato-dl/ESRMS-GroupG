@@ -3,18 +3,18 @@ import {BaseAPIService} from './base';
 export class TeacherAPIService extends BaseAPIService {
 
   getTeacherSubjects(teacherId) {
-    return this.get(`/teacher/${teacherId}/subjects`);
+    return this.get(`/teacher/subjects`);
   }
 
-  getTeacherTopics(teacherId, classId, subjectId) {
-    return this.get(`/teacher/${teacherId}/topics?classId=${classId}&subjectId=${subjectId}`);
+  getTeacherTopics(classId, subjectId) {
+    return this.get(`/teacher/topics?classId=${classId}&subjectId=${subjectId}`);
   }
 
-  saveTopic(teacherId, data) {
-    return this.post(`/teacher/${teacherId}/topic`, data);
+  saveTopic(data) {
+    return this.post(`/teacher/topic`, data);
   }
 
-  updateTopic(teacherId, data) {
-    return this.patch(`/teacher/${teacherId}/topic`, data);
+  updateTopic(data) {
+    return this.patch(`/teacher/topic`, data);
   }
 }
