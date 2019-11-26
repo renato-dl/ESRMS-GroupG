@@ -1,5 +1,7 @@
 import React from 'react';
-import {Header as SemanticHeader, Icon, Dropdown} from 'semantic-ui-react';
+import {Header as SemanticHeader, Icon,Image, Dropdown} from 'semantic-ui-react';
+
+import logoImage from '../../assets/images/logo.png';
 import './Header.scss';
 
 const trigger = (
@@ -21,7 +23,14 @@ const options = [
 
 export const Header = (props) => (
   <SemanticHeader className="app-header">
-    <div className="headerlogoField"><Icon name="leaf" className="logoIcon"/>ESRMS-G</div>
+    <div className="headerlogoField">
+       
+      <Icon name="leaf" className="logoIcon"/>
+       
+        {/* 
+       <Image src={logoImage} size="tiny"  verticalAlign="bottom"/>&nbsp; 
+        */}
+       ESRMS-G</div>
     <div className="headerToolbarFiled">
      {/* <Dropdown trigger={trigger} options={options} /> */}
     </div>
