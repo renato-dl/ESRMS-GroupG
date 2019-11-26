@@ -1,12 +1,13 @@
 import express from 'express';
 import TeacherController from '../controllers/teacherController';
+import { Authorization } from '../middlewares/authorization';
 
 const router = express.Router();
 
-router.get('/:teacherId/subjects', TeacherController.processRequest.bind(TeacherController, 'subjectsByTeacherId'));
-router.post('/:teacherId/topic', TeacherController.processRequest.bind(TeacherController, 'addTopic'));
-router.delete('/:teacherId/topic', TeacherController.processRequest.bind(TeacherController, 'deleteTopic'));
-router.patch('/:teacherId/topic', TeacherController.processRequest.bind(TeacherController, 'patchTopic'));
-router.get('/:teacherId/topics', TeacherController.processRequest.bind(TeacherController, 'topicsByTeacherClassSubject'));
+router.get('/subjects',  Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'subjectsByTeacherId'));
+router.post('/topic', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'addTopic'));
+router.delete('/topic',Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'deleteTopic'));
+router.patch('/topic', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'patchTopic'));
+router.get('/topics', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'topicsByTeacherClassSubject'));
 
 export default router;

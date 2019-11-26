@@ -7,7 +7,7 @@ class Grade extends Model {
   async findByStudentId(parentId, studentId, pagination) {
     const connection = await this.db.getConnection();
     let query =
-        `SELECT Subjects.Name, Grade, GradeDate
+        `SELECT Subjects.Name, Grade, GradeDate, Type
         FROM ${this.tableName}, Subjects, Students
         WHERE
           ${this.tableName}.SubjectId = Subjects.ID AND
