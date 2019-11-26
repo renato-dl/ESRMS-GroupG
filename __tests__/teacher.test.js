@@ -425,20 +425,14 @@ describe("Teacher tests about editing of the inserted topics", () =>{
       where ID = ?;`,
       [topicId]
     );
+    connection.release();
     const updatedTopic = updateResult[0];
     expect(updatedTopic.Title).toEqual(topicTitleUpdate);
     expect(updatedTopic.TopicDescription).toEqual(topicDescriptionUpdate);
     expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateUpdateStr + "T00:00:00.000Z"));
 
     // clean db
-    const deleteResult = await connection.query(
-      `DELETE
-      FROM Topics
-      WHERE ID = ?;`,
-      [topicId]
-    );
-
-    connection.release();
+    Topic.remove(topicId);
   });
 
   test("It should not update the topic given unauthorized teacher id", async() =>{
@@ -479,20 +473,15 @@ describe("Teacher tests about editing of the inserted topics", () =>{
       where ID = ?;`,
       [topicId]
     );
+    connection.release();
     const updatedTopic = updateResult[0];
     expect(updatedTopic.Title).toEqual(topicTitle);
     expect(updatedTopic.TopicDescription).toEqual(topicDescription);
     expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
 
     // clean db
-    const deleteResult = await connection.query(
-      `DELETE
-      FROM Topics
-      WHERE ID = ?;`,
-      [topicId]
-    );
-
-    connection.release();
+    Topic.remove(topicId);
+    
   });
   
   test("It should not update the topic given unauthorized topic id", async() =>{
@@ -533,20 +522,15 @@ describe("Teacher tests about editing of the inserted topics", () =>{
       where ID = ?;`,
       [topicId]
     );
+    connection.release();
     const updatedTopic = updateResult[0];
     expect(updatedTopic.Title).toEqual(topicTitle);
     expect(updatedTopic.TopicDescription).toEqual(topicDescription);
     expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
 
     // clean db
-    const deleteResult = await connection.query(
-      `DELETE
-      FROM Topics
-      WHERE ID = ?;`,
-      [topicId]
-    );
+    Topic.remove(topicId);
 
-    connection.release();
   });
 
   test("It should not update the topic given null topic id", async() =>{
@@ -587,20 +571,14 @@ describe("Teacher tests about editing of the inserted topics", () =>{
       where ID = ?;`,
       [topicId]
     );
+    connection.release();
     const updatedTopic = updateResult[0];
     expect(updatedTopic.Title).toEqual(topicTitle);
     expect(updatedTopic.TopicDescription).toEqual(topicDescription);
     expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
 
     // clean db
-    const deleteResult = await connection.query(
-      `DELETE
-      FROM Topics
-      WHERE ID = ?;`,
-      [topicId]
-    );
-
-    connection.release();
+    Topic.remove(topicId);
   });
 
   test("It should not update the topic given null topic title", async() =>{
@@ -641,20 +619,14 @@ describe("Teacher tests about editing of the inserted topics", () =>{
       where ID = ?;`,
       [topicId]
     );
+    connection.release();
     const updatedTopic = updateResult[0];
     expect(updatedTopic.Title).toEqual(topicTitle);
     expect(updatedTopic.TopicDescription).toEqual(topicDescription);
     expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
 
     // clean db
-    const deleteResult = await connection.query(
-      `DELETE
-      FROM Topics
-      WHERE ID = ?;`,
-      [topicId]
-    );
-
-    connection.release();
+    Topic.remove(topicId);
   });
 
   test("It should not update the topic given invalid topic date", async() =>{
@@ -693,20 +665,14 @@ describe("Teacher tests about editing of the inserted topics", () =>{
       where ID = ?;`,
       [topicId]
     );
+    connection.release();
     const updatedTopic = updateResult[0];
     expect(updatedTopic.Title).toEqual(topicTitle);
     expect(updatedTopic.TopicDescription).toEqual(topicDescription);
     expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
 
     // clean db
-    const deleteResult = await connection.query(
-      `DELETE
-      FROM Topics
-      WHERE ID = ?;`,
-      [topicId]
-    );
-
-    connection.release();
+    Topic.remove(topicId);
   });
 
   test("It should not update the topic given null topic date", async() =>{
@@ -747,22 +713,124 @@ describe("Teacher tests about editing of the inserted topics", () =>{
       where ID = ?;`,
       [topicId]
     );
+    connection.release();
     const updatedTopic = updateResult[0];
     expect(updatedTopic.Title).toEqual(topicTitle);
     expect(updatedTopic.TopicDescription).toEqual(topicDescription);
     expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
 
     // clean db
-    const deleteResult = await connection.query(
-      `DELETE
-      FROM Topics
-      WHERE ID = ?;`,
-      [topicId]
-    );
-
-    connection.release();
+    Topic.remove(topicId);
   });
 
 });
 
+
+describe('Tests about deletion of a topic by a teacher', () => {
+
+  test("It should remove corretly a topic", async() =>{
+    const testTeacherId = '6e5c9976f5813e59816b40a814e29899';
+    const testClassId = 1;
+    const testSubjectId = 1;
+    const testTitle = 'Test deletion topic';
+    const testTopicDescription = 'Test deletion topic';
+    const testTopicDate = moment().utc(); //today
+
+    const resultInsertion = await Topic.insertNewTopic(
+      testTeacherId,
+      testClassId,
+      testSubjectId,
+      testTitle,
+      testTopicDescription,
+      testTopicDate
+    );
+
+    expect(resultInsertion.id).not.toBeNaN();
+
+    const resultDeletion = await Topic.deleteTopic(
+      testTeacherId,
+      resultInsertion.id
+    );
+
+    const connection = await db.getConnection();
+
+    const testResult = await connection.query(
+      `SELECT COUNT(*) AS count
+      FROM Topics
+      WHERE ID = ?`,
+      [resultInsertion.id]
+    );
+
+    expect(testResult[0].count).toBe(0);
+    connection.release();
+  });
+
+  test('it should throw Error with message \'Unauthorized\' when the passed teacherId does not exist', async () => {
+
+      let testTeacherId = '6e5c9976f5813e59816b40a814e29899';
+      const testClassId = 1;
+      const testSubjectId = 1;
+      const testTitle = 'Test deletion topic';
+      const testTopicDescription = 'Test deletion topic';
+      const testTopicDate = moment().utc(); //today
+
+      const resultInsertion = await Topic.insertNewTopic(
+        testTeacherId,
+        testClassId,
+        testSubjectId,
+        testTitle,
+        testTopicDescription,
+        testTopicDate
+    );
+
+    expect(resultInsertion.id).not.toBeNaN();
+    const testTopicId = resultInsertion.id;
+    testTeacherId = "wrong teacher id";
+      try{
+          const resultDeletion = await Topic.deleteTopic(
+              testTeacherId,
+              testTopicId
+          );
+
+     }catch(error){
+          expect(error).toBeInstanceOf(Error);
+          expect(error).toHaveProperty('message', 'Unauthorized');
+          Topic.remove(testTopicId);
+      }
+    });
+
+      test('it should throw Error with message \'The topic does not exist\' when the passed topicId does not exist', async () => {
+
+      let testTeacherId = '6e5c9976f5813e59816b40a814e29899';
+      const testClassId = 1;
+      const testSubjectId = 1;
+      const testTitle = 'Test deletion topic';
+      const testTopicDescription = 'Test deletion topic';
+      const testTopicDate = moment().utc(); //today
+  
+      const resultInsertion = await Topic.insertNewTopic(
+        testTeacherId,
+        testClassId,
+        testSubjectId,
+        testTitle,
+        testTopicDescription,
+        testTopicDate
+    );
+
+    expect(resultInsertion.id).not.toBeNaN();
+    const addedTopicId = resultInsertion.id;
+    const testTopicId = 1000000000;
+      try{
+          const resultDeletion = await Topic.deleteTopic(
+              testTeacherId,
+              testTopicId
+          );
+
+     }catch(error){
+          expect(error).toBeInstanceOf(Error);
+          expect(error).toHaveProperty('message', 'The topic does not exist!');
+          Topic.remove(resultInsertion.id);
+      }
+    });
+});
 
