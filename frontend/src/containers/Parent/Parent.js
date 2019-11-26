@@ -33,7 +33,7 @@ export class Parent extends React.Component {
       return (
         <Container className="contentContainer parent-container">
           <h3 className="contentHeader">
-            <Icon name='braille' size="small" />
+            <Icon name='braille'/>
             Select/Switch child
           </h3>
           <div className="children">
@@ -51,7 +51,7 @@ export class Parent extends React.Component {
     return(
       <Container className="contentContainer">
         <h3 className="contentHeader">
-          <Icon name='braille' size="small" />
+          <Icon name='braille'/>
           Select/Switch child
         </h3>
         <NoData/>

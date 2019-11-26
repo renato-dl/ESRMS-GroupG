@@ -3,7 +3,7 @@ import { Icon, Menu } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 
 
-import {Marks}  from '../../components/Marks/Marks';
+import {Marks}  from '../../Marks/Marks';
 
 export const ParentMenu = (props) => {  
   const id = localStorage.getItem('parentID');
@@ -18,7 +18,7 @@ export const ParentMenu = (props) => {
         </span>
       </Menu.Item>
 
-      {/* <Menu.Item as={Link} to='/parent/student/marks'>
+      {/* <Menu.Item as={Link} to='/parent/student/:studentID/marks'>
         <Icon name='sort numeric up' />
         Grades
       </Menu.Item> */}
