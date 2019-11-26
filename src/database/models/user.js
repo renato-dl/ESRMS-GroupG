@@ -59,13 +59,13 @@ class User extends Model {
     const connection = await this.db.getConnection();
     let query;
     if(isAssigned){
-      query = `SELECT FirstName, LastName, Parent1, Parent2, Gender
+      query = `SELECT ID, FirstName, LastName, Gender
       FROM Students
       WHERE ClassId IS NOT NULL
       ORDER BY LastName`
     }
     else{
-      query = `SELECT FirstName, LastName, Parent1, Parent2, Gender
+      query = `SELECT ID, FirstName, LastName, Gender
       FROM Students
       WHERE ClassId IS NULL
       ORDER BY LastName`;
