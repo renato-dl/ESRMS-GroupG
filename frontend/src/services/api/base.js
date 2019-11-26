@@ -16,9 +16,18 @@ export class BaseAPIService {
 
   addRequestInterceptors() {
     this.instance.interceptors.request.use((data) => {
-      // TODO: not useful for now, useful when we will require auth
-      const token = 'test_token';
-      data.headers.Authorization = 'Bearer ' + token;
+      let token = '';
+
+      try {
+        token = JSON.parse(localStorage.getItem("token"));
+      } catch(e) {
+        console.log(e);
+      }
+
+      if (token) {
+        data.headers.Authorization = 'Bearer ' + token;
+      }
+
       return data;
     })
   }

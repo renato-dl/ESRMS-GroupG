@@ -7,8 +7,8 @@ export class AdminAPIService extends BaseAPIService {
     return this.get(`/admin/parents`);
   }
 
-  saveNewParent(adminId, data) {
-    return this.post(`/admin/${adminId}/parent`, data);
+  saveNewParent(data) {
+    return this.post(`/admin/parent`, data);
   }
 
 }

@@ -42,7 +42,12 @@ export class Login extends React.Component {
             password: this.state.password,
         };
 
+        console.log(loginData);
         const response = await api.auth.login(loginData);
+        // check for error response
+        localStorage.setItem("token", JSON.stringify(response.data.token));
+        // redirect based on the role
+        this.props.history.push('/parent');
         console.log(response);
         /* await api.auth.login(
             loginData

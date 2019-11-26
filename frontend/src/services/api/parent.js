@@ -3,15 +3,15 @@ import {BaseAPIService} from './base';
 export class ParentAPIService extends BaseAPIService {
   
   getChilds(parentID) {
-    return this.get(`/parent/${parentID}/students`);
+    return this.get(`/parent/students`);
   }
 
-  selectChid(parentID, studentID) {
-    return this.get(`/parent/${parentID}/students/${studentID}`);
+  selectChid( studentID) {
+    return this.get(`/parent/students/${studentID}`);
   }
 
-  getChildMarks(parentID, studentID) {
-    return this.get(`/parent/${parentID}/grades?studentId=${studentID}`);
+  getChildMarks(studentID) {
+    return this.get(`/parent/grades?studentId=${studentID}`);
   }
 
 }

@@ -16,7 +16,7 @@ export class Parent extends React.Component {
   async componentDidMount() {
     const {params} = this.props.match;
     localStorage.setItem('parentID', params.parentID);
-    const response = await api.parent.getChilds(params.parentID);
+    const response = await api.parent.getChilds();
     if (response) {
       this.setState({children: response.data})
     }
@@ -25,7 +25,7 @@ export class Parent extends React.Component {
   selectChild = async (child) => {
     const {params} = this.props.match;
     localStorage.setItem('selectedChild', JSON.stringify(child));
-    this.props.history.push(`/parent/${params.parentID}/student/${child.ID}/marks`)
+    this.props.history.push(`/parent/student/${child.ID}/marks`)
   };
 
   render() {
