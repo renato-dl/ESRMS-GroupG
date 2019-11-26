@@ -43,6 +43,8 @@ class AdminController extends BaseController {
         
     let parent1;
     let parent2;
+    let parent1Insert = false;
+    let parent2Insert = false;
 
     if (!req.body.hasOwnProperty('firstParent')) {
       res.status(422).send({ error: 'Missing first parent' });
@@ -57,13 +59,10 @@ class AdminController extends BaseController {
           req.body.firstParent.SSN,
           password
         )).id;
-        //this.sendEmailToParent(req.body.firstParent.Email, password, req.body.firstParent.FirstName, req.body.firstParent.LastName);
+        parent1Insert = true;
+        this.sendEmailToParent(req.body.firstParent.Email, password, req.body.firstParent.FirstName, req.body.firstParent.LastName);
       } else {
         parent1 = req.body.firstParent.ID;
-        if (!await User.isValidParent(parent1)) {
-          res.status(422).send({ error: 'Invalid first parent id' });
-          return;
-        }
       }
     }
     if (req.body.hasOwnProperty('secondParent')) {
@@ -76,27 +75,33 @@ class AdminController extends BaseController {
           req.body.secondParent.SSN,
           password
         )).id;
-        //this.sendEmailToParent(req.body.secondParent.Email, password, req.body.secondParent.FirstName, req.body.secondParent.LastName);
+        parent2Insert = true;
+        this.sendEmailToParent(req.body.secondParent.Email, password, req.body.secondParent.FirstName, req.body.secondParent.LastName);
       } else {
         parent2 = req.body.secondParent.ID;
-        if (!await User.isValidParent(parent2)) {
-          res.status(422).send({ error: 'Invalid second parent id' });
-          return;
-        }
       }
     } else {
       parent2 = null;
     }
-
-    res.send(await Student.insertStudent(
-      req.body.studentInfo.FirstName,
-      req.body.studentInfo.LastName,
-      req.body.studentInfo.SSN,
-      req.body.studentInfo.Gender,
-      req.body.studentInfo.BirthDate,
-      parent1,
-      parent2
-    ));
+    try {
+      res.send(await Student.insertStudent(
+        req.body.studentInfo.FirstName,
+        req.body.studentInfo.LastName,
+        req.body.studentInfo.SSN,
+        req.body.studentInfo.Gender,
+        req.body.studentInfo.BirthDate,
+        parent1,
+        parent2
+      ));
+    } catch(error) {
+      if (parent1Insert) {
+        User.remove(parent1);
+      }
+      if (parent2Insert) {
+        User.remove(parent2);
+      }
+      throw(error);
+    }
 
   }
 
