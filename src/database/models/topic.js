@@ -56,6 +56,48 @@ class Topic extends Model {
     return {id: insertResult.insertId};
   }
 
+  async deleteTopic(teacherId, topicId){
+    const connection = await this.db.getConnection();
+    
+    //check if the topic exists
+    const checkTopic = await connection.query(
+      `SELECT TeacherSubjectClassRelationId as id
+      FROM Topics 
+      WHERE ID = ?`,
+      [topicId]
+    );
+
+    if(checkTopic.length != 1) {
+      throw new Error('The topic does not exist!');
+    };
+
+    //check if the topic is of that teacher
+    const selectResult = await connection.query(
+      `SELECT tscr.ID
+      FROM TeacherSubjectClassRelation tscr, Topics t
+      WHERE tscr.ID = t.TeacherSubjectClassRelationId AND
+      t.ID = ? AND tscr.TeacherId = ?`,
+      [topicId, teacherId]
+    );
+
+    if(selectResult.length != 1) {
+      throw new Error('Unauthorized');
+    };
+    
+    //delete topic
+    const deleteResult = await connection.query(
+      `DELETE FROM Topics
+      WHERE ID = ?`,
+      [topicId]
+    );
+
+    connection.release();
+
+    if (deleteResult.affectedRows != 1) {
+      throw new Error('Operation failed');
+    }
+  }
+  
   async editTopic(teacherId, topicId, topicTitle, topicDescription, topicDate) {
     const editTopicResult = {};
     try{      
