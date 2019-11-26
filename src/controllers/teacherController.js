@@ -5,7 +5,7 @@ import Class from '../database/models/class';
 
 class TeacherController extends BaseController {
 
-  // GET /teacher/:teacherId/subjects
+  // GET /teacher/subjects
   async subjectsByTeacherId(req, res) {
     const subjects = await Subject.findByTeacherId(req.user.ID);
     const response = []
@@ -26,6 +26,16 @@ class TeacherController extends BaseController {
   // Body: classId, subjectId, topicTitle, topicDescription, topicDate
   async addTopic(req, res) {
     const result = await Topic.insertNewTopic(req.user.ID, req.body.classId, req.body.subjectId, req.body.topicTitle, req.body.topicDescription, req.body.topicDate);
+    res.send(result);
+  }
+
+  //DELETE /teacher/topic
+  //Body:classId, subjectId, topicID
+  async deleteTopic(req, res) {
+    const result = await Topic.deleteTopic(
+      req.user.ID, 
+      req.query.topicId
+      );
     res.send(result);
   }
 
