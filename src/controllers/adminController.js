@@ -105,6 +105,16 @@ class AdminController extends BaseController {
 
   }
 
+  async getStudentsData(req, res){
+    const students = await User.getStudentsData(
+      {
+        page: req.query.page,
+        pageSize: req.query.pageSize
+      });
+
+    res.send(students);
+  }
+
   sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){
     try{
       const emailService =  `${config.email.service}`;

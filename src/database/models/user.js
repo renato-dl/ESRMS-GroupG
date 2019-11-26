@@ -54,6 +54,27 @@ class User extends Model {
     return results;
   }
 
+
+  async getStudentsData(pagination){
+    const connection = await this.db.getConnection();
+    let query = `SELECT FirstName, LastName, SSN , eMail, CreatedOn
+    FROM Users
+    WHERE IsParent = true
+    ORDER BY LastName`;
+
+    if (pagination) {
+      query += ` ${this.db.getPaginationQuery(pagination)}`
+    }
+
+    const results = await connection.query(query);    
+    connection.release();
+
+    if (!results.length) {
+      throw new Error('No students registered in the system');
+    }
+    return results;
+  }
+
   async insertParentData(firstName, lastName, eMail, SSN, password) {
 
     //input data validation
