@@ -882,10 +882,10 @@ describe('Tests about deletion of a topic by a teacher', () => {
 
      }catch(error){
           expect(error).toBeInstanceOf(Error);
-          expect(error).toHaveProperty('message', 'The topic does not exist');
+          expect(error).toHaveProperty('message', 'The topic does not exist!');
           const connection = await db.getConnection();
           const deleteResult = await connection.query(
-            `DELETE *
+            `DELETE 
             FROM Topics
             WHERE ID = ?`,
             [addedTopicId]
