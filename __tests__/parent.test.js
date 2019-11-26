@@ -84,13 +84,13 @@ describe('Parent tests 2', () => {
                     expect.objectContaining(
                         {
                             "Name": "Mathematics",
-                            "Grade": 9,
+                            "Grade": 8.5,
                             "GradeDate": gradeDate1,
                             "Type" : "Written"
                         },
                         {
                             "Name": "English",
-                            "Grade": 7,
+                            "Grade": 6.75,
                             "GradeDate": gradeDate2,
                             "Type" : "Oral"
                         }
