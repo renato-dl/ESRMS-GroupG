@@ -25,11 +25,9 @@ export const Header = (props) => (
   <SemanticHeader className="app-header">
     <div className="headerlogoField">
        
-      <Icon name="leaf" className="logoIcon"/>
-       
-        {/* 
-       <Image src={logoImage} size="tiny"  verticalAlign="bottom"/>&nbsp; 
-        */}
+      {/* <Icon name="leaf" className="logoIcon"/> */}
+       <Image src={logoImage} size="tiny"  verticalAlign="bottom"/> 
+        
        ESRMS-G</div>
     <div className="headerToolbarFiled">
      {/* <Dropdown trigger={trigger} options={options} /> */}

@@ -5,7 +5,6 @@ import { Button, Form, Grid, Header, Icon, Image, Segment, Container } from 'sem
 import validator from 'validator';
 
 import logoImage from '../../assets/images/logo.png';
-//import logoImage from '../../assets/images/school-icon-yellow.png';
 
 export class Login extends React.Component {
     state = {
@@ -62,19 +61,10 @@ export class Login extends React.Component {
                 <Container>
                     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
                         <Grid.Column className="loginContainer" >
-                         {/*          
-                        <Image src={logoImage} size="small" centered  verticalAlign="bottom"/> 
-                        */}
-                        {/*        
-                        <Icon aria-hidden="true" style={{marginTop:'0', color:"#DBFDFC"}} name="users icon" size="huge"/>
-                           */}                                   
-                        <Header as='h2'  textAlign='center' style={{marginTop:'5px', color:"#DBFDFC"}}>
-                            <Icon name='leaf' className="logoIcon"/> 
-                            {/* Log-in to your account */}
+                        <Image src={logoImage} size="small" centered disabled verticalAlign="bottom"/>                       
+                        <Header as='h2'  textAlign='center' className="loginHeader">
                             Welcome to ESRMS-G
                         </Header>
-
-
                         
                         <Form size='large'>
                             <Segment stacked>
@@ -101,7 +91,7 @@ export class Login extends React.Component {
                             />
 
                             <Button fluid size='large' className = "loginBtn" onClick={this.submitLogin}>
-                                Login
+                                Sign in 
                             </Button>
                             </Segment>
                         </Form>
