@@ -33,8 +33,8 @@ class Database {
     return `LIMIT ${pageSize} OFFSET ${page * pageSize}`;
   }
 
-  getDateTimeFormatString() {
-    return 'YYYY-MM-DD HH:mm:ss';
+  getDateFormatString() {
+    return 'YYYY-MM-DD 00:00:00';
   }
 }
 

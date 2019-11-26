@@ -46,21 +46,14 @@ describe('Tests about topic insertion by teacher', () => {
       `SELECT COUNT(*) AS count
       FROM Topics
       WHERE ID = ? AND Title = ? AND TopicDescription = ? AND TopicDate = ?;`,
-      [result.id, testTitle, testTopicDescription, testTopicDate.format(db.getDateTimeFormatString())]
-    );
-
-    expect(testResult[0].count).toBe(1);
-    
-    const deleteResult = await connection.query(
-      `DELETE
-      FROM Topics
-      WHERE ID = ?;`,
-      [result.id]
+      [result.id, testTitle, testTopicDescription, testTopicDate.format(db.getDateFormatString())]
     );
 
     connection.release();
 
-    expect(deleteResult.affectedRows).toBe(1)
+    expect(testResult[0].count).toBe(1);
+        
+    Topic.remove(result.id);
 
     
   });
@@ -212,7 +205,7 @@ describe('Tests about topic insertion by teacher', () => {
     const testClassId = 1;
     const testTopicTitle = 'Boring topic';
     const testTopicDescription = 'Lots and lots of useless and boring stuff';
-    const testTopicDate = moment().utc().day(-10);
+    const testTopicDate = moment().utc().subtract(10, 'days');
 
     try {
       const result = await Topic.insertNewTopic(
@@ -236,7 +229,7 @@ describe('Tests about topic insertion by teacher', () => {
     const testClassId = 1;
     const testTopicTitle = 'Boring topic';
     const testTopicDescription = 'Lots and lots of useless and boring stuff';
-    const testTopicDate = moment().utc().day(+1);
+    const testTopicDate = moment().utc().add(1, 'days');
 
     try {
       const result = await Topic.insertNewTopic(
