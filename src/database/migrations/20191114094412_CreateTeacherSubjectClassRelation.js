@@ -9,7 +9,7 @@ exports.up = function(knex) {
     table.unique(['SubjectId', 'ClassId', 'TeacherId']);
     table.foreign('SubjectId').references('Subjects.ID');
     table.foreign('ClassId').references('Classes.ID');
-    table.foreign('TeacherId').references('Teachers.ID');
+    table.foreign('TeacherId').references('Users.ID');
   })
 };
 

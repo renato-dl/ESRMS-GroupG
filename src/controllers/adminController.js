@@ -1,14 +1,19 @@
 import {BaseController} from "./baseController";
-import Parent from "../database/models/parent";
+import User from "../database/models/user";
+import Student from "../database/models/student";
 import nodemailer from 'nodemailer';
 import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
+
+import {signToken} from '../services/tokenService'
+
+console.log(signToken({id: '205db8275d3c06e6ce3fe7a47b30e0fe'}));
 
 class AdminController extends BaseController {
 
 
   async getParentData(req, res){
-    const parents = await Parent.getParentData(
+    const parents = await User.getParentData(
       {
         page: req.query.page,
         pageSize: req.query.pageSize
@@ -17,10 +22,11 @@ class AdminController extends BaseController {
     res.send(parents);
   }
 
+  /* DEPRECATED
   async insertParentData(req, res) {
     const password = genRandomString(8);
 
-    const parent = await Parent.insertParentData(
+    const parent = await User.insertParentData(
       req.user.ID,  
       req.body.firstName, 
       req.body.lastName, 
@@ -30,6 +36,73 @@ class AdminController extends BaseController {
     );
     this.sendEmailToParent(req.body.eMail, password, req.body.firstName, req.body.lastName);
     res.send(parent); 
+  }
+  */
+
+  async addStudent(req, res) {
+        
+    let parent1;
+    let parent2;
+    let parent1Insert = false;
+    let parent2Insert = false;
+
+    if (!req.body.hasOwnProperty('firstParent')) {
+      res.status(422).send({ error: 'Missing first parent' });
+      return;
+    } else {
+      if (!req.body.firstParent.hasOwnProperty('ID')) {
+        const password = genRandomString(8);
+        parent1 = (await User.insertParentData(
+          req.body.firstParent.FirstName,
+          req.body.firstParent.LastName,
+          req.body.firstParent.Email,
+          req.body.firstParent.SSN,
+          password
+        )).id;
+        parent1Insert = true;
+        this.sendEmailToParent(req.body.firstParent.Email, password, req.body.firstParent.FirstName, req.body.firstParent.LastName);
+      } else {
+        parent1 = req.body.firstParent.ID;
+      }
+    }
+    if (req.body.hasOwnProperty('secondParent')) {
+      if (!req.body.secondParent.hasOwnProperty('ID')) {
+        const password = genRandomString(8);
+        parent2 = (await User.insertParentData(
+          req.body.secondParent.FirstName,
+          req.body.secondParent.LastName,
+          req.body.secondParent.Email,
+          req.body.secondParent.SSN,
+          password
+        )).id;
+        parent2Insert = true;
+        this.sendEmailToParent(req.body.secondParent.Email, password, req.body.secondParent.FirstName, req.body.secondParent.LastName);
+      } else {
+        parent2 = req.body.secondParent.ID;
+      }
+    } else {
+      parent2 = null;
+    }
+    try {
+      res.send(await Student.insertStudent(
+        req.body.studentInfo.FirstName,
+        req.body.studentInfo.LastName,
+        req.body.studentInfo.SSN,
+        req.body.studentInfo.Gender,
+        req.body.studentInfo.BirthDate,
+        parent1,
+        parent2
+      ));
+    } catch(error) {
+      if (parent1Insert) {
+        User.remove(parent1);
+      }
+      if (parent2Insert) {
+        User.remove(parent2);
+      }
+      throw(error);
+    }
+
   }
 
   sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){
