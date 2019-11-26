@@ -42,6 +42,26 @@ export class Model {
     return result;
   }
 
+  async findOne(params, select = '*') {
+    const connection = await this.db.getConnection();
+    const keys = Object.keys(params);
+    const values = Object.values(params);
+
+    let keysSQL = `WHERE ${keys[0]} = ?`;
+    if (keys.length > 1) {
+      keys.slice(1).forEach((key) => {
+        keysSQL += ` AND ${key} = ?` ;
+      });
+    }
+
+    let query = `SELECT ${select} FROM ${this.tableName} ${keysSQL} LIMIT 1`;
+    
+    const result = await connection.query(query, values);
+    connection.release();
+    
+    return result[0] || {};
+  }
+
   /**
    * Creates a new record in the table
    * return the new record id
