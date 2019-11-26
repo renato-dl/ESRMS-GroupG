@@ -6,6 +6,7 @@ import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
 
 import {signToken} from '../services/tokenService'
+import { resolveNaptr } from "dns";
 
 console.log(signToken({id: '205db8275d3c06e6ce3fe7a47b30e0fe'}));
 
@@ -19,6 +20,13 @@ class AdminController extends BaseController {
         pageSize: req.query.pageSize
       });
       
+    res.send(parents);
+  }
+
+  async getParentsBySSN(req, res) {
+    const ssn = req.query.ssn || '';
+    const parents = await User.searchParentsBySSN(ssn);
+
     res.send(parents);
   }
 
