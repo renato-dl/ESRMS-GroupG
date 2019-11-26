@@ -6,14 +6,14 @@ import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 
 import 'semantic-ui-css/semantic.min.css';
 import {App} from './containers/App/App';
-import { LoginParent } from './containers/Login/LoginParent';
+import { Login } from './containers/Login/Login';
 
 render(
   <BrowserRouter>
     <Switch>
 
       <Route exact path="/" render={() => <Redirect to="/parent" />} />
-      <Route exact path="/login" component={LoginParent}/>
+      <Route exact path="/login" component={Login}/>
       <Route path="/" component={App} />
 
     </Switch>

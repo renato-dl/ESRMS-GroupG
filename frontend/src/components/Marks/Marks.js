@@ -72,13 +72,13 @@ export class Marks extends React.Component{
       );
     }
     return (
-      <div className="contentContainer">
+      <Container className="contentContainer">
         <h3 className="contentHeader"> 
           <Icon name='braille' /> 
-          Grades of Student:&nbsp;&nbsp;&nbsp;&nbsp; {this.props.match.params.studentID} 
+            {this.state.studentName ? this.state.studentName + "'s" : 'Student'} grades
         </h3>
         <NoData/>
-      </div>
+      </Container>
     );
   }
 }
