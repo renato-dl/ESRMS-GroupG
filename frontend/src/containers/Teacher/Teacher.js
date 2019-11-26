@@ -22,7 +22,7 @@ export class Teacher extends React.Component{
 
   onSubjectClick = (subjectID) => {
     const {params} = this.props.match;
-    this.props.history.push(`/teacher/${params.teacherID}/subjects/${subjectID}/topics`);
+    this.props.history.push(`/teacher/subjects/${subjectID}/topics`);
   };
 
     render() {
