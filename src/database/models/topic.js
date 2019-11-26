@@ -74,29 +74,16 @@ class Topic extends Model {
     //check if the topic is of that teacher
     const selectResult = await connection.query(
       `SELECT tscr.ID
-      FROM TeacherSubjectClassRelation tscr, Topics t
-      WHERE tscr.ID = t.TeacherSubjectClassRelationId AND
-      t.ID = ? AND tscr.TeacherId = ?`,
-      [topicId, teacherId]
-    );
-
-    console.log(selectResult.length);
-    if(selectResult.length != 1) {
-      throw new Error('Unauthorized');
-    };
-    
-    //delete topic
-    const deleteResult = await connection.query(
-      `DELETE FROM Topics
-      WHERE ID = ?`,
-      [topicId]
+      FROM TeacherSubjectClassRelation tscr
+      WHERE tscr.ID = ? AND tscr.TeacherId = ?`,
+      [checkTopic[0].id, teacherId]
     );
 
     connection.release();
-
-    if (deleteResult.affectedRows != 1) {
-      throw new Error('Operation failed');
-    }
+    if(selectResult.length != 1) {
+      throw new Error('Unauthorized');
+    };
+    this.remove(topicId);
   }
   
   async editTopic(teacherId, topicId, topicTitle, topicDescription, topicDate) {
