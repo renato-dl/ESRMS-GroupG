@@ -6,7 +6,7 @@ exports.up = function(knex) {
     table.string('Name', 1).notNullable();
     table.string('CoordinatorId', 50).notNullable();
 
-    table.foreign('CoordinatorId').references('Teachers.ID');
+    table.foreign('CoordinatorId').references('Users.ID');
   })
 };
 
