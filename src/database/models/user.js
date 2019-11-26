@@ -1,5 +1,5 @@
 import {Model} from './base';
-import crypto from 'crypto';
+import uuid from 'uuid/v4';
 import validator from 'validator';
 import {createSecurePassword} from '../../services/passwordGenerator';
 import {validateSSN} from '../../services/ssnValidator'
@@ -82,11 +82,11 @@ class User extends Model {
 
       if (selectResult[0].count != 0) {
         connection.release();
-        throw new Error('User already in db')
+        throw new Error('Parent already in db')
       }
 
       //insert of data
-      const parentId = crypto.createHash('sha256').update(eMail).digest('hex');
+      const parentId = uuid();
       const parentPassword = createSecurePassword(password);
 
       const insertResult = await connection.query(
