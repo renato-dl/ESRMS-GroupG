@@ -1,5 +1,6 @@
 import React from 'react';
 import './Login.scss';
+import { api } from '../../services/api';
 import { Button, Form, Grid, Header, Icon, Image, Segment, Container } from 'semantic-ui-react'
 import validator from 'validator';
 
@@ -40,7 +41,9 @@ export class Login extends React.Component {
             email:this.state.email,
             password: this.state.password,
         };
-    
+
+        const response = await api.auth.login(loginData);
+        console.log(response);
         /* await api.auth.login(
             loginData
         ); */
