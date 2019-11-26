@@ -4,7 +4,7 @@ exports.up = function(knex) {
     table.increments('ID').unsigned().primary();
     table.integer('SubjectId').unsigned().notNullable();
     table.string('StudentId').notNullable();
-    table.decimal('Grade', 10, 0).notNullable();
+    table.decimal('Grade', 10, 2).notNullable();
     table.timestamp('GradeDate').notNullable();
 
     table.foreign('SubjectId').references('Subjects.ID');
