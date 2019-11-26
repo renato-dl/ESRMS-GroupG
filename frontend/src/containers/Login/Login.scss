@@ -1,0 +1,40 @@
+.loginContainer{
+    //background-color:#f7f7f7;
+    background-color:#008272;
+    //background-color: #fff;
+    //background: rgba(0,0,0,0.6);
+    max-width: 450px;
+    margin: 0 15px 0 15px;
+}
+
+.ui.fluid.button.loginBtn{
+    background-color:#008272; 
+    color: #DBFDFC
+}
+.ui.fluid.button.loginBtn:hover {opacity:0.8}
+.ui.fluid.button.loginBtn:active {opacity:0.6}
+
+.loginBackground:before{
+    content: '';
+    position:fixed;
+    width:100vw;
+    height:100vh;
+    background-color:#f7f7f7;
+    
+    //background: #fff url(../../assets/images/bkgr.jpg) no-repeat top center;
+    //background: #fff url(../../assets/images/blurAbstr2.jpg) no-repeat top center;
+    filter: blur(10px);
+    -webkit-filter: blur(10px);
+    background-size: cover;
+}
+
+
+.ui.stacked.segment:after, .ui.stacked.segment:before, .ui.stacked.segments:after, .ui.stacked.segments:before{
+    width:0!important
+}
+
+//.flip_H{ transform: scale(-1, 1);}
+.logoIcon{
+    
+  color:#DBCA47!important;
+}

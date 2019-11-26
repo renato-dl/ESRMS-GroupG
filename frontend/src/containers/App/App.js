@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../assets/styles/global.scss';
 import 'toastr/toastr.scss';
-//import {Container} from 'semantic-ui-react';
+import {Container, Icon} from 'semantic-ui-react';
 
 import {Switch, Route} from 'react-router-dom';
 
@@ -24,16 +24,23 @@ import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
 export class App extends React.Component {
   static contextType = ApplicationStoreContext;
 
+  state = {active:true}
+  toggleSidebar = () =>
+    this.setState((prevState) => ({ active: !prevState.active }))
+
+
   render() {
+
     return (
       <ApplicationStore>
         <div className="app">
           <Header />
+          
+          <AppSidebar visibility={this.state.active}>
 
-          <AppSidebar>
+            <Icon className="toggleIcon" name = "bars" size="big" onClick={this.toggleSidebar}/>
 
             <Switch>
-
               <Route exact path="/parent/:parentID" component={Parent} />
               <Route exact path="/parent/:parentID/student/:studentID" component={Student} />
               <Route exact path="/parent/:parentID/student/:studentID/marks/" component={Marks}/>
@@ -46,7 +53,6 @@ export class App extends React.Component {
               <Route exact path="/admin/configParent" component={ConfigParent}/>
               <Route path="*" component={NotFound} />
               
-
             </Switch>
 
           </AppSidebar>

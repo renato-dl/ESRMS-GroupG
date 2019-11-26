@@ -9,6 +9,16 @@ import { AdminMenu } from '../AdminMenu/AdminMenu';
 const loc = window.location.pathname;
 
 export const AppSidebar = (props) => {
+
+  const StyleClosed = {
+      width: "100%",
+      transition: "width 0.5s"
+  }
+  const StyleOpen = {
+    width: "85%",
+    transition: "width 0.5s"
+  }
+
   return (
     <Sidebar.Pushable as={Segment} className="mySidebar">
       <Sidebar
@@ -18,7 +28,9 @@ export const AppSidebar = (props) => {
         vertical
         sidebar = "true"
         menu = "true"
-        visible
+        visible = {props.visibility}
+        //onHide = 
+        //onVisible
       >
 
         {loc.indexOf("/parent") !== -1 && <ParentMenu />}
@@ -28,7 +40,7 @@ export const AppSidebar = (props) => {
       </Sidebar>
 
       <Sidebar.Pusher>
-        <Segment basic>
+        <Segment basic className="customSegment" style = {props.visibility ? StyleOpen : StyleClosed}>
           {props.children}
         </Segment>
       </Sidebar.Pusher>
