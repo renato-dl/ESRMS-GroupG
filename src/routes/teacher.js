@@ -1,5 +1,6 @@
 import express from 'express';
 import TeacherController from '../controllers/teacherController';
+import { Authorization } from '../middlewares/authorization';
 
 const router = express.Router();
 

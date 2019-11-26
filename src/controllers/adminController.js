@@ -1,5 +1,6 @@
 import {BaseController} from "./baseController";
 import User from "../database/models/user";
+import Student from "../database/models/student";
 import nodemailer from 'nodemailer';
 import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
@@ -17,6 +18,7 @@ class AdminController extends BaseController {
     res.send(parents);
   }
 
+  /* DEPRECATED
   async insertParentData(req, res) {
     const password = genRandomString(8);
 
@@ -30,6 +32,55 @@ class AdminController extends BaseController {
     );
     this.sendEmailToParent(req.body.eMail, password, req.body.firstName, req.body.lastName);
     res.send(parent); 
+  }
+  */
+
+  async addStudent(req, res) {
+        
+    let parent1;
+    let parent2;
+
+    if (!req.body.firstParent.hasOwnProperty('ID')) {
+      const password = genRandomString(8);
+      parent1 = await User.insertParentData(
+        req.body.firstParent.FirstName,
+        req.body.firstParent.LastName,
+        req.body.firstParent.Email,
+        req.body.firstParent.SSN,
+        password
+      ).id;
+      this.sendEmailToParent(req.body.firstParent.Email, password, req.body.firstParent.FirstName, req.body.firstParent.LastName);
+    } else {
+      parent1 = req.body.firstParent.ID;
+    }
+    if (req.body.hasOwnProperty('secondParent')) {
+      if (!req.body.secondParent.hasOwnProperty('ID')) {
+        const password = genRandomString(8);
+        parent2 = await User.insertParentData(
+          req.body.secondParent.FirstName,
+          req.body.secondParent.LastName,
+          req.body.secondParent.Email,
+          req.body.secondParent.SSN,
+          password
+        ).id;
+        this.sendEmailToParent(req.body.secondParent.Email, password, req.body.secondParent.FirstName, req.body.secondParent.LastName);
+      } else {
+        parent2 = req.body.secondParent.ID;
+      }
+    } else {
+      parent2 = null;
+    }
+
+    res.send(await Student.insertStudent(
+      req.body.studentInfo.FirstName,
+      req.body.studentInfo.LastName,
+      req.body.studentInfo.SSN,
+      req.body.studentInfo.Gender,
+      req.body.studentInfo.BirthDate,
+      parent1,
+      parent2
+    ));
+
   }
 
   sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){
