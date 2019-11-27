@@ -1,3 +1,4 @@
+import {Model} from './base';
 
 class TCSR extends Model {
   constructor() {
