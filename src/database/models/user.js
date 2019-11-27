@@ -87,7 +87,6 @@ class User extends Model {
       WHERE ClassId IS NULL
       ORDER BY LastName`;
     }
-    console.log(query);
     if (pagination) {
       query += ` ${this.db.getPaginationQuery(pagination)}`
     }
