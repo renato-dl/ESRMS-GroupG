@@ -1,3 +1,9 @@
+const bcrypt = require('bcrypt');
+
+const createSecurePassword = (password) => {
+  return bcrypt.hashSync(password, 12);
+}
+
 exports.seed = function(knex) {
   // Deletes ALL existing entries
   return knex('Users').del()
@@ -7,7 +13,7 @@ exports.seed = function(knex) {
         {
           ID: '32d905eaa2770b66baf20282dff09191',
           eMail: 'lucia.verdi@gmail.com',
-          Password: 'easypass',
+          Password: createSecurePassword('easypass'), // 'easypass',
           IsParent: true,
           FirstName: 'Lucia',
           LastName: 'Verdi',
@@ -16,7 +22,7 @@ exports.seed = function(knex) {
         {
           ID: '202db8275d3c06e6ce3fe7a47b30e0fe',
           eMail: 'marco.lorenzini@gmail.com',
-          Password: 'easypass',
+          Password: createSecurePassword('easypass'), //'easypass',
           IsParent: true,
           FirstName: 'Marco',
           LastName: 'Lorenzini',
@@ -25,7 +31,7 @@ exports.seed = function(knex) {
         {
           ID: '9d64fa59c91d9109b11cd9e05162c675',
           eMail: 'nadia.rossi@gmail.com',
-          Password: 'easypass',
+          Password: createSecurePassword('easypass'), //'easypass',
           IsParent: true,
           FirstName: 'Nadia',
           LastName: 'Rossi',
@@ -34,7 +40,7 @@ exports.seed = function(knex) {
         {
           ID: '6e5c9976f5813e59816b40a814e29899',
           eMail: 'giulia.tesori@gmail.com',
-          Password: 'easypass',
+          Password: createSecurePassword('easypass'), //'easypass',
           IsTeacher: true,
           FirstName: 'Giulia',
           LastName: 'Tesori',
@@ -43,7 +49,7 @@ exports.seed = function(knex) {
         {
           ID: '205db8275d3c06e6ce3fe7a47b30e0fe', 
           eMail: 'admin@phonyschool.com', 
-          Password:'EasyPassAdmin123',
+          Password: createSecurePassword('EasyPassAdmin123'), //'EasyPassAdmin123',
           IsAdminOfficer: true,
           IsSysAdmin: true,
           FirstName: 'Marta',
@@ -53,7 +59,7 @@ exports.seed = function(knex) {
         {
           ID: '26ce21c0-8d32-41d1-8d07-b4994fa53edf',
           eMail: 'paola.depaola@phonyschool.com',
-          Password: 'easypass',
+          Password: createSecurePassword('easypass'), //'easypass',
           IsTeacher: true,
           FirstName: 'Paola',
           LastName: 'De Paola',
@@ -62,7 +68,7 @@ exports.seed = function(knex) {
         {
           ID: 'd5799583-42e3-4818-a073-449fc8f1b7e8',
           eMail: 'luca.deluca@phonyschool.com',
-          Password: 'easypass',
+          Password: createSecurePassword('easypass'), //'easypass',
           IsTeacher: true,
           FirstName: 'Luca',
           LastName: 'De Luca',
@@ -71,7 +77,7 @@ exports.seed = function(knex) {
         {
           ID: '6d361d43-1308-4ac6-95ab-580138de9141',
           eMail: 'giorgio.digiorgio@parentsunited.com',
-          Password: 'easypass',
+          Password: createSecurePassword('easypass'), //'easypass',
           IsParent: true,
           FirstName: 'Giorgio',
           LastName: 'Di Giorgio',
@@ -80,7 +86,7 @@ exports.seed = function(knex) {
         {
           ID: '9e412480-4287-4b62-a1ba-a8dcb03cdd41',
           eMail: 'maria.demaria@parentsunited.com',
-          Password: 'easypass',
+          Password: createSecurePassword('easypass'), //'easypass',
           IsParent: true,
           FirstName: 'Maria',
           LastName: 'De Maria',
@@ -89,5 +95,3 @@ exports.seed = function(knex) {
     ]);
   });
 };
-
-  

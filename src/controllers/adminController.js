@@ -6,12 +6,9 @@ import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
 import {signToken} from '../services/tokenService'
 
-import { resolveNaptr } from "dns";
-
 console.log(signToken({id: '205db8275d3c06e6ce3fe7a47b30e0fe'}));
 
 class AdminController extends BaseController {
-
 
   async getParentData(req, res){
     const parents = await User.getParentData(
