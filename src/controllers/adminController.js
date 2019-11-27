@@ -146,6 +146,15 @@ class AdminController extends BaseController {
     res.send({success: result.success})
   }
   
+  async getStudentsData(req, res){
+    const students = await User.getStudentsData(req.query.isAssigned, 
+      {
+        page: req.query.page,
+        pageSize: req.query.pageSize
+      });
+
+    res.send(students);
+  }
 
   sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){
     try{
