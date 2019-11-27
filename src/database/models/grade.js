@@ -31,9 +31,10 @@ class Grade extends Model {
   }
   async addGrade(classId, subjectId, studentId, grade, type){
 
-    if (!classId) {
+    /*if (!classId) {
       throw new Error('Missing or invalid class id');
-    }
+    }*/
+
     if (!subjectId) {
       throw new Error('Missing or invalid subject id');
     }
@@ -52,7 +53,7 @@ class Grade extends Model {
 
     //add grade
     const result = await this.create({
-      ClassId: classId,
+     // ClassId: classId,
       SubjectId: subjectId,
       StudentId: studentId,
       Grade: grade,
@@ -60,7 +61,7 @@ class Grade extends Model {
     });
 
     return {
-      id: result.id
+      id: result
     }
   }
 }
