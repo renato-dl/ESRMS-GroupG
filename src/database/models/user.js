@@ -83,6 +83,25 @@ class User extends Model {
     }
   }
 
+  async updateParentData(parentId, firstName, lastName, eMail, SSN) {
+
+    await this.validateParentData(firstName, lastName, eMail, SSN);
+
+    //update of data
+    
+    const affectedRows = await this.update(parentId, {
+      eMail: eMail,
+      IsParent: true,
+      FirstName: firstName,
+      LastName: lastName,
+      SSN: SSN
+    });
+
+    return {
+      id: affectedRows
+    }
+  }
+
   async validateParentData(firstName, lastName, eMail, SSN) {
     //input data validation
     if (!validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
