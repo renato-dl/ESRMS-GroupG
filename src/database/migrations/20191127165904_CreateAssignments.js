@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-  return knex.schema.createTable('Assigments', function (table) {
+  return knex.schema.createTable('Assignments', function (table) {
       table.increments('ID').unsigned().primary();
       table.integer('SubjectId').unsigned().notNullable();
       table.integer('ClassId').unsigned().notNullable();
