@@ -93,6 +93,7 @@ class TeacherController extends BaseController {
       req.query.classId
     )) {
       res.send(401);
+      return;
     }
     res.send(await Grade.findByClassAndSubject(req.query.classId, req.query.subjectId))
   }
@@ -101,6 +102,13 @@ class TeacherController extends BaseController {
   // POST /teacher/grade
   // Body: classId, subjectId, studentId, grade, type
   async addGrade(req, res) {
+    if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
+      req.user.ID,
+      req.body.subjectId, 
+      req.body.classId)){
+        res.send(401);
+        return;
+    } 
     const result = await Grade.addGrade(
       req.body.subjectId,
       req.body.studentId,
