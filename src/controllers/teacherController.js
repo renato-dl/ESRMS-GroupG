@@ -2,6 +2,7 @@ import {BaseController} from "./baseController";
 import Subject from "../database/models/subject";
 import Topic from '../database/models/topic';
 import Class from '../database/models/class';
+import TCSR from '../database/models/teacherClassSubject';
 import Grade from '../database/models/grade';
 
 class TeacherController extends BaseController {
@@ -84,6 +85,18 @@ class TeacherController extends BaseController {
       );
     res.send(result);
   }
+
+  async gradesByClassAndSubject(req, res) {
+    if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
+      req.user.ID,
+      req.query.subjectId,
+      req.query.classId
+    )) {
+      res.send(401);
+    }
+    res.send(await Grade.findByClassAndSubject(req.query.classId, req.query.subjectId))
+  }
+
 
   // POST /teacher/grade
   // Body: classId, subjectId, studentId, grade, type

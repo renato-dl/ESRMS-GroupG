@@ -118,6 +118,22 @@ class Student extends Model {
       throw new Error('Parents id must be different');
     }
   }
+
+  async checkIfRelated(studentId, parentId) {
+    const connenction = await this.db.getConnection();
+    const result = await connenction.query(
+      `SELECT COUNT(*) AS count
+      FROM Students
+      WHERE ID = ? AND (Parent1 = ? OR Parent2 = ?);`,
+      [studentId, parentId, parentId]
+    );
+    connenction.release();
+    if (result[0].count == 1) {
+      return true;
+    }
+    return false;
+
+  }
 }
 
 export default new Student();
