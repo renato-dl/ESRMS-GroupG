@@ -52,7 +52,7 @@ class AdminController extends BaseController {
     let parent2Insert = false;
 
     if (!req.body.hasOwnProperty('firstParent')) {
-      res.status(422).send({ error: 'Missing first parent' });
+      res.status(422).send({ success: false, error: 'Missing first parent' });
       return;
     } else {
       if (!req.body.firstParent.hasOwnProperty('ID')) {
@@ -89,15 +89,18 @@ class AdminController extends BaseController {
       parent2 = null;
     }
     try {
-      res.send(await Student.insertStudent(
-        req.body.studentInfo.FirstName, 
+      const result = await Student.insertStudent(
+        req.body.studentInfo.FirstName,
         req.body.studentInfo.LastName,
         req.body.studentInfo.SSN,
         req.body.studentInfo.Gender,
         req.body.studentInfo.BirthDate,
         parent1,
         parent2
-      ));
+      );
+
+      res.send({success:true, id: result.id});
+
     } catch(error) {
       if (parent1Insert) {
         await User.remove(parent1);
@@ -109,8 +112,40 @@ class AdminController extends BaseController {
       }
       throw(error);
     }
-
   }
+
+  async updateParent(req, res) {
+    console.log(req.body);
+    const result = await User.updateParentData(
+      req.body.Id,
+      req.body.FirstName,
+      req.body.LastName,
+      req.body.Email,
+      req.body.SSN
+    );
+    res.send({success: result.success});
+  }
+
+  async updateStudent(req, res) {
+    let parent2;
+    if(!req.body.hasOwnProperty('Parent2Id')){
+      parent2 = null;
+    }else{
+      parent2 = req.body.Parent2Id;
+    }
+    const result = await Student.updateStudentData(
+      req.body.Id,
+      req.body.FirstName,
+      req.body.LastName,
+      req.body.SSN,
+      req.body.Gender,
+      req.body.BirthDate,
+      req.body.Parent1Id,
+      parent2
+    );
+    res.send({success: result.success})
+  }
+  
 
   sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){
     try{
