@@ -85,6 +85,33 @@ class Grade extends Model {
     
     return results;
   }
+
+  async checkIfGradeIsFromTeacher(gradeId, teacherId) {
+    if (!gradeId) throw new Error('Missing or invalid grade id');
+    if (!teacherId) throw new Error('Missing or invalid teacher id');
+
+    const connenction = await this.db.getConnection();
+    const result = await connenction.query(
+      `SELECT COUNT(*) AS count
+      FROM Grades g, TeacherSubjectClassRelation tscr, Students s
+      WHERE s.ClassId = tscr.ClassId
+      AND tscr.SubjectId = g.SubjectId
+      AND g.StudentId = s.ID
+      AND tscr.TeacherId = ?
+      AND g.ID = ?`,
+      [teacherId, gradeId]
+    );
+    connenction.release();
+    if (result[0].count == 1) {
+      return true;
+    }
+    return false;
+
+
+
+
+
+  }
 }
 
 export default new Grade();

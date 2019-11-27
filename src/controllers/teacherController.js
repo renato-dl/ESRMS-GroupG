@@ -117,6 +117,17 @@ class TeacherController extends BaseController {
      );
     res.send({success: true, id: result.id});
   }
+
+  async deleteGrade(req, res) {
+    if(!await Grade.checkIfGradeIsFromTeacher(req.body.ID, req.user.ID)){
+        res.send(401);
+        return;
+    } 
+    const result = await Grade.remove(
+      req.body.ID
+     );
+    res.send({success: true});
+  }
 }
 
 export default new TeacherController();
