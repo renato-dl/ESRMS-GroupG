@@ -10,18 +10,19 @@ class Assignment extends Model {
 
     const connection = await this.db.getConnection();
     let query;
-    if(dateRange){
-        query =`SELECT SU.Name, A.Title, A.Description, A.DueData  
+    console.log(dateRange);
+    if(dateRange.from && dateRange.to){
+        query =`SELECT SU.Name, A.Title, A.Description, A.DueDate  
         FROM Assignments A, Students ST, Subjects SU
-        WHERE A.ClassId = ST.ClassId AND A.SubjectId = SU.ID AND ST.StudentId = ?
+        WHERE A.ClassId = ST.ClassId AND A.SubjectId = SU.ID AND ST.ID = ?
         AND A.DueDate >= ? AND A.DueDate <= ?
         ORDER BY A.DueDate`,
         [studentId, dateRange.from, dateRange.to]
     }
     else{
-        query =`SELECT SU.Name, A.Title, A.Description, A.DueData  
+        query =`SELECT SU.Name, A.Title, A.Description, A.DueDate  
             FROM Assignments A, Students ST, Subjects SU
-            WHERE A.ClassId = ST.ClassId AND A.SubjectId = SU.ID AND ST.StudentId = ?
+            WHERE A.ClassId = ST.ClassId AND A.SubjectId = SU.ID AND ST.ID = ?
             ORDER BY A.DueDate`,
             [studentId]
     }
