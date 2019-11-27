@@ -4,8 +4,9 @@ import Student from "../database/models/student";
 import nodemailer from 'nodemailer';
 import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
-
 import {signToken} from '../services/tokenService'
+
+import { resolveNaptr } from "dns";
 
 console.log(signToken({id: '205db8275d3c06e6ce3fe7a47b30e0fe'}));
 
@@ -19,6 +20,13 @@ class AdminController extends BaseController {
         pageSize: req.query.pageSize
       });
       
+    res.send(parents);
+  }
+
+  async getParentsBySSN(req, res) {
+    const ssn = req.query.ssn || '';
+    const parents = await User.searchParentsBySSN(ssn);
+
     res.send(parents);
   }
 
@@ -47,7 +55,7 @@ class AdminController extends BaseController {
     let parent2Insert = false;
 
     if (!req.body.hasOwnProperty('firstParent')) {
-      res.status(422).send({ error: 'Missing first parent' });
+      res.status(422).send({ success: false, error: 'Missing first parent' });
       return;
     } else {
       if (!req.body.firstParent.hasOwnProperty('ID')) {
@@ -84,7 +92,7 @@ class AdminController extends BaseController {
       parent2 = null;
     }
     try {
-      res.send(await Student.insertStudent(
+      const result = await Student.insertStudent(
         req.body.studentInfo.FirstName,
         req.body.studentInfo.LastName,
         req.body.studentInfo.SSN,
@@ -92,18 +100,55 @@ class AdminController extends BaseController {
         req.body.studentInfo.BirthDate,
         parent1,
         parent2
-      ));
+      );
+
+      res.send({success:true, id: result.id});
+
     } catch(error) {
       if (parent1Insert) {
-        User.remove(parent1);
+        await User.remove(parent1);
+        throw(error);
       }
       if (parent2Insert) {
-        User.remove(parent2);
+        await User.remove(parent2);
+        throw(error);
       }
       throw(error);
     }
-
   }
+
+  async updateParent(req, res) {
+    console.log(req.body);
+    const result = await User.updateParentData(
+      req.body.Id,
+      req.body.FirstName,
+      req.body.LastName,
+      req.body.Email,
+      req.body.SSN
+    );
+    res.send({success: result.success});
+  }
+
+  async updateStudent(req, res) {
+    let parent2;
+    if(!req.body.hasOwnProperty('Parent2Id')){
+      parent2 = null;
+    }else{
+      parent2 = req.body.Parent2Id;
+    }
+    const result = await Student.updateStudentData(
+      req.body.Id,
+      req.body.FirstName,
+      req.body.LastName,
+      req.body.SSN,
+      req.body.Gender,
+      req.body.BirthDate,
+      req.body.Parent1Id,
+      parent2
+    );
+    res.send({success: result.success})
+  }
+  
 
   async getStudentsData(req, res){
     const students = await User.getStudentsData(req.query.isAssigned, 

@@ -49,6 +49,42 @@ exports.seed = function(knex) {
           FirstName: 'Marta',
           LastName: 'Peradotto',
           SSN: 'PRDMRT71D51L219E'
+        },
+        {
+          ID: '26ce21c0-8d32-41d1-8d07-b4994fa53edf',
+          eMail: 'paola.depaola@phonyschool.com',
+          Password: 'easypass',
+          IsTeacher: true,
+          FirstName: 'Paola',
+          LastName: 'De Paola',
+          SSN: 'TXCRDF77T22B735U'
+        },
+        {
+          ID: 'd5799583-42e3-4818-a073-449fc8f1b7e8',
+          eMail: 'luca.deluca@phonyschool.com',
+          Password: 'easypass',
+          IsTeacher: true,
+          FirstName: 'Luca',
+          LastName: 'De Luca',
+          SSN: 'WRVKBU59R17L237H'
+        },
+        {
+          ID: '6d361d43-1308-4ac6-95ab-580138de9141',
+          eMail: 'giorgio.digiorgio@parentsunited.com',
+          Password: 'easypass',
+          IsParent: true,
+          FirstName: 'Giorgio',
+          LastName: 'Di Giorgio',
+          SSN: 'PVDZRN27M04G189V'
+        },
+        {
+          ID: '9e412480-4287-4b62-a1ba-a8dcb03cdd41',
+          eMail: 'maria.demaria@parentsunited.com',
+          Password: 'easypass',
+          IsParent: true,
+          FirstName: 'Maria',
+          LastName: 'De Maria',
+          SSN: 'FGTHCF68M46G424G'
         }
     ]);
   });

@@ -58,7 +58,7 @@ class Topic extends Model {
 
   async deleteTopic(teacherId, topicId){
     const connection = await this.db.getConnection();
-    
+    console.log('bbb')
     //check if the topic exists
     const checkTopic = await connection.query(
       `SELECT TeacherSubjectClassRelationId as id
@@ -83,7 +83,7 @@ class Topic extends Model {
     if(selectResult.length != 1) {
       throw new Error('Unauthorized');
     };
-    this.remove(topicId);
+    await this.remove(topicId);
   }
   
   async editTopic(teacherId, topicId, topicTitle, topicDescription, topicDate) {

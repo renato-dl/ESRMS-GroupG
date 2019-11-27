@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Image } from 'semantic-ui-react'
 //import studentStubImage from '../../assets/images/stud5.jpg'
 import studentStubImage from '../../assets/images/student-stub.png'
+import studentStudFemaleImage from'../../assets/images/student-stub-female.jpg'
 
 import './StudentCard.scss';
 import moment from 'moment';
@@ -12,7 +13,7 @@ export const StudentCard = (props) => (
     key={props.id} 
     onClick={props.onClick ? props.onClick : null}
   >
-    <Image src={studentStubImage} wrapped ui={false} />
+    <Image src={props.Gender==='M'?studentStubImage:studentStudFemaleImage} wrapped ui={false} />
     <Card.Content>
       <Card.Header className="studentCardHeader">{props.FirstName} {props.LastName}</Card.Header>
     </Card.Content>

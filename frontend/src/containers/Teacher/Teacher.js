@@ -1,6 +1,6 @@
 import React from 'react';
 import { api } from '../../services/api';
-import {Icon,List} from 'semantic-ui-react';
+import {Icon,List, Container} from 'semantic-ui-react';
 import './Teacher.scss';
 import { NoData } from '../../components/NoData/NoData';
 
@@ -21,21 +21,21 @@ export class Teacher extends React.Component{
   }
 
   onSubjectClick = (subjectID) => {
-    const {params} = this.props.match;
-    this.props.history.push(`/teacher/${params.teacherID}/subjects/${subjectID}/topics`);
+    //const {params} = this.props.match;
+    this.props.history.push(`/teacher/subjects/${subjectID}/topics`);
   };
 
     render() {
       
     if(this.state.subjectsList.length){
       return (
-          <div className="contentContainer">
+          <Container className="contentContainer">
               <h3 className="contentHeader">
-                <Icon name='braille' size="small" />
+                <Icon name='braille'/>
                 Teaching Plan
               </h3>
 
-              <List relaxed className="subjectList">
+              <List relaxed>
                   {this.state.subjectsList.map((subject, index) =>
                     <List.Item className="myListItem" key={index} onClick={() => this.onSubjectClick(subject.subjectId)}>
                         <List.Icon name='book' size='large' verticalAlign='middle' />
@@ -51,17 +51,17 @@ export class Teacher extends React.Component{
                     </List.Item>
                   )}
               </List>
-          </div>
+          </Container>
       );
     }
     return(
-      <div className="contentContainer">
+      <Container className="contentContainer">
         <h3 className="contentHeader">
-          <Icon name='braille' size="small" />
+          <Icon name='braille'/>
           Teaching Plan
         </h3>
         <NoData/>
-      </div>
+      </Container>
     );
   }
 }

@@ -73,24 +73,27 @@ describe('Tests about the insertion of parent data by admin', () => {
         testPassword
     );
 
-    const hashEmail = crypto.createHash('sha256').update(testEmail).digest('hex');
-
     expect(result).toEqual({
-      id: hashEmail
+      id: expect.anything()
     });
 
-    //delete result for future tests
     const connection = await db.getConnection();
-    const deleteResultFromUsers = await connection.query(
-      `DELETE
+
+    const queryResult = await connection.query(
+      `SELECT *
       FROM Users
       WHERE ID = ?`,
-      [hashEmail]
+      [result.id]
     );
-   
-    expect(deleteResultFromUsers.affectedRows).toBe(1);
 
-    connection.release();
+    expect(queryResult.length).toBe(1);
+    expect(queryResult[0].FirstName).toEqual(testFirstName);
+    expect(queryResult[0].LastName).toEqual(testLastName);
+    expect(queryResult[0].SSN).toEqual(testSSN);
+    expect(queryResult[0].eMail).toEqual(testEmail);
+
+    //delete result for future tests
+    await User.remove(result.id);
   }); 
   
 
@@ -183,7 +186,7 @@ describe('Tests about the insertion of parent data by admin', () => {
     }
   });
 
-  test('It should throw Error with message \'User already in db\'', async () => {
+  test('It should throw Error with message \'Parent already in db\'', async () => {
 
 
     const testFirstName = 'Nome';
@@ -192,7 +195,7 @@ describe('Tests about the insertion of parent data by admin', () => {
     const testSSN = 'LRNMRC79A02L219A';
     const testPassword = 'EasYPass1';
 
-    await User.insertParentData(
+    const result = await User.insertParentData(
         testFirstName, 
         testLastName, 
         testEmail, 
@@ -210,10 +213,9 @@ describe('Tests about the insertion of parent data by admin', () => {
       );
     } catch(error){
       expect(error).toBeInstanceOf(Error);
-       expect(error).toHaveProperty('message', 'User already in db');
+      expect(error).toHaveProperty('message', 'Parent already in db');
     }
 
-    const hashEmail = crypto.createHash('sha256').update(testEmail).digest('hex');
 
     //delete result for future tests
     const connection = await db.getConnection();
@@ -221,7 +223,7 @@ describe('Tests about the insertion of parent data by admin', () => {
       `DELETE
       FROM Users
       WHERE ID = ?`,
-      [hashEmail]
+      [result.id]
     );
 
     expect(deleteResultFromUsers.affectedRows).toBe(1);

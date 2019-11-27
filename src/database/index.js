@@ -9,7 +9,9 @@ class Database {
       database: config.db.database,
       user: config.db.username,
       password: config.db.password,
-      timezone: 'utc'
+      timezone: 'utc',
+      charset: 'UTF8MB4',
+      collation: 'UTF8MB4_UNICODE_CI'
     });
   }
 
