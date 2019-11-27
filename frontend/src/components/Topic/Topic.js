@@ -43,7 +43,7 @@ export class Topic extends React.Component{
       const response = await api.teacher.getTeacherSubjects(params.teacherID);
       if (response) {
         response.data.forEach((subject) => {
-          if (subject.subjectId == params.subjectID) {
+          if (subject.subjectId === params.subjectID) {
             this.setState({subject});
           }
         });
@@ -62,20 +62,29 @@ export class Topic extends React.Component{
       this.setState({editingTopic: topic, isTopicDetailsOpen: true});
     };
 
+    async deleteTopic (topic) {
+     const response=await api.teacher.deleteTopic(topic)
+     if (response) {
+      this.fetchTopics();
+     } 
+    
+    };
+
+
     render(){
       if (this.state.topics.length){
 
       return (
         <Container className="Topic-container contentContainer">
           <h3 className="contentHeader">
-            <Icon name='braille' size="small" />
+            <Icon name='braille'/>
             {this.state.subject ? this.state.subject.subject : ''} topics
           </h3>
           <Button className="ui vk button" onClick={this.addTopic}>
             <Icon name="plus" />
             Add topic
           </Button>
-          <Table celled>
+          <Table celled columns={4}>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell textAlign="left">#</Table.HeaderCell>
@@ -92,8 +101,10 @@ export class Topic extends React.Component{
                   <Table.Cell textAlign="left">{ topic.Title }</Table.Cell>
                   <Table.Cell textAlign="left">{ topic.TopicDescription }</Table.Cell>
                   <Table.Cell textAlign="left" width={2}>{ moment(topic.TopicDate).format('LL') }</Table.Cell>
-                  <Table.Cell textAlign="left" className="edit-cell" onClick={() => this.editTopic(topic)} width={1}>
-                    <Icon name="edit"/> Edit
+                  <Table.Cell textAlign="left" className="edit-cell" width={1}>
+                    <Icon name="edit" onClick={() =>this.editTopic(topic)}/> Edit
+                    <br/>
+                    <Icon name="delete" onClick={()=>this.deleteTopic(topic)}/> Delete
                   </Table.Cell>
                 </Table.Row>
               )}
@@ -115,9 +126,9 @@ export class Topic extends React.Component{
       }
 
       return(
-        <div className="Topic-container contentContainer">
+        <Container className="Topic-container contentContainer">
           <h3 className="contentHeader">
-            <Icon name='braille' size="small" />
+            <Icon name='braille'/>
             {this.state.subject ? this.state.subject.subject : ''} topics
           </h3>
           <Button className="ui vk button" onClick={this.addTopic}>
@@ -137,7 +148,7 @@ export class Topic extends React.Component{
               }}
             />
           }
-        </div>
+        </Container>
       );
     }
 }

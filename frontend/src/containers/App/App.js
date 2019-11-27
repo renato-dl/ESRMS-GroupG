@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../assets/styles/global.scss';
 import 'toastr/toastr.scss';
-import {Container, Icon} from 'semantic-ui-react';
+import {Icon} from 'semantic-ui-react';
 
 import {Switch, Route} from 'react-router-dom';
 
@@ -18,6 +18,7 @@ import {Marks}  from '../../components/Marks/Marks';
 import {Topic}  from'../../components/Topic/Topic';
 import {Admin} from '../Admin/Admin';
 import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
+import {Class_composition} from '../../components/class_composition/class_composition';
 
 
 
@@ -51,6 +52,7 @@ export class App extends React.Component {
 
 			        <Route exact path="/admin" component={Admin}/>
               <Route exact path="/admin/configParent" component={ConfigParent}/>
+              <Route exact path="/admin/Class_composition" component={Class_composition}/>
               <Route path="*" component={NotFound} />
               
             </Switch>

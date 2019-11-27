@@ -23,7 +23,7 @@ export class Parent extends React.Component {
   }
  
   selectChild = async (child) => {
-    const {params} = this.props.match;
+    //const {params} = this.props.match;
     localStorage.setItem('selectedChild', JSON.stringify(child));
     this.props.history.push(`/parent/student/${child.ID}/marks`)
   };
@@ -33,7 +33,7 @@ export class Parent extends React.Component {
       return (
         <Container className="contentContainer parent-container">
           <h3 className="contentHeader">
-            <Icon name='braille' size="small" />
+            <Icon name='braille'/>
             Select/Switch child
           </h3>
           <div className="children">
@@ -51,7 +51,7 @@ export class Parent extends React.Component {
     return(
       <Container className="contentContainer">
         <h3 className="contentHeader">
-          <Icon name='braille' size="small" />
+          <Icon name='braille'/>
           Select/Switch child
         </h3>
         <NoData/>

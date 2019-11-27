@@ -58,7 +58,7 @@ class Topic extends Model {
 
   async deleteTopic(teacherId, topicId){
     const connection = await this.db.getConnection();
-    
+    console.log('bbb')
     //check if the topic exists
     const checkTopic = await connection.query(
       `SELECT TeacherSubjectClassRelationId as id

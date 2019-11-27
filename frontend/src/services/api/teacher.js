@@ -17,4 +17,8 @@ export class TeacherAPIService extends BaseAPIService {
   updateTopic(data) {
     return this.patch(`/teacher/topic`, data);
   }
+
+  deleteTopic(data){
+    return this.delete(`/teacher/topic`, data);
+  }
 }
