@@ -11,5 +11,5 @@ router.patch('/topic', Authorization(['IsTeacher']), TeacherController.processRe
 router.get('/topics', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'topicsByTeacherClassSubject'));
 router.post('/grade', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'addGrade'));
 router.get('/grades', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'gradesByClassAndSubject'));
-
+router.delete('/grade', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'deleteGrade'));
 export default router;
