@@ -70,7 +70,7 @@ class Student extends Model {
     });
 
     return {
-      id: affectedRows
+      affectedRows: affectedRows
     }  
 
   }

@@ -98,7 +98,7 @@ class User extends Model {
     });
 
     return {
-      id: affectedRows
+      affectedRows: affectedRows
     }
   }
 
