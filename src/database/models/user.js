@@ -117,6 +117,23 @@ class User extends Model {
     }
   }
 
+  async searchParentsBySSN(ssn) {
+    const connection = await this.db.getConnection();
+    
+    let query = `
+      SELECT *
+      FROM Users
+      WHERE IsParent = true
+      AND SSN LIKE '%${ssn}%'
+      ORDER BY LastName
+    `;
+
+    const results = await connection.query(query);    
+    connection.release();
+
+    return results;
+  }
+
 }
 
 export default new User();
