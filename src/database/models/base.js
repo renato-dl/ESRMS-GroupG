@@ -56,10 +56,14 @@ export class Model {
 
     let query = `SELECT ${select} FROM ${this.tableName} ${keysSQL} LIMIT 1`;
     
-    const result = await connection.query(query, values);
+    const results = await connection.query(query, values);
     connection.release();
+
+    if (!results.length) {
+      throw new Error('Entity not found');
+    }
     
-    return result[0] || {};
+    return results[0];
   }
 
   /**
