@@ -122,7 +122,7 @@ class Student extends Model {
   async checkIfRelated(studentId, parentId) {
     const connenction = await this.db.getConnection();
     const result = await connenction.query(
-      `SELECT COUNT(*) INTO count
+      `SELECT COUNT(*) AS count
       FROM Students
       WHERE ID = ? AND (Parent1 = ? OR Parent2 = ?);`,
       [studentId, parentId, parentId]
