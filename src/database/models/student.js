@@ -53,6 +53,28 @@ class Student extends Model {
 
   }
 
+  async updateStudentData(studentId, firstName, lastName, SSN, gender, birthDate, parent1, parent2) {
+    
+    await this.validateStudentData(firstName, lastName, SSN, gender, birthDate, parent1, parent2);
+
+    const date = moment.utc(birthDate);
+
+    const result = await this.update(studentId, {
+      FirstName: firstName,
+      LastName: lastName,
+      SSN: SSN,
+      BirthDate: date.format(this.db.getDateFormatString()),
+      Parent1: parent1,
+      Parent2: parent2,
+      Gender: gender
+    });
+
+    return {
+      success: result
+    }  
+
+  }
+
   async validateStudentData(firstName, lastName, SSN, gender, birthDate, parent1, parent2) {
     //input data validation
     if (!validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
