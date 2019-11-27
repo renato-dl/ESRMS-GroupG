@@ -41,7 +41,8 @@ class TeacherController extends BaseController {
   async deleteTopic(req, res) {
     const result = await Topic.deleteTopic(
       req.user.ID, 
-      req.query.topicId
+      req.body.ID
+      //req.query.topicId
       );
     res.send(result);
   }
