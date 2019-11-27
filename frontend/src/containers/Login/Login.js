@@ -1,16 +1,18 @@
 import React from 'react';
 import './Login.scss';
+import { api } from '../../services/api';
 import { Button, Form, Grid, Header, Icon, Image, Segment, Container } from 'semantic-ui-react'
 import validator from 'validator';
 
+
 import logoImage from '../../assets/images/logo.png';
-//import logoImage from '../../assets/images/school-icon-yellow.png';
 
 export class Login extends React.Component {
     state = {
         email:'',
         password:'',
-        errors: {}
+        errors: {},
+        showErrMsg: false
     };
     
     
@@ -22,28 +24,47 @@ export class Login extends React.Component {
         let errors = this.state.errors;
     
         errors['email'] = !validator.isEmail(this.state.email);
+        errors['password'] = !this.state.password.length;
         //TODO:Add password validation
+        
         const hasErrors = !!Object.keys(errors).filter((e) => errors[e]).length;
         return [hasErrors, errors];
     };
 
 
     submitLogin = async () => {
+        this.setState({
+            showErrMsg:false,
+            errors:{}
+        });
+
         const [hasErrors, errors] = this.validateFields();
-        console.log(hasErrors, errors);
+        //console.log(hasErrors, errors);
         if (hasErrors) {
             this.setState({errors});
             return;
         }
 
-        const loginData = {
-            email:this.state.email,
-            password: this.state.password,
-        };
-    
-        /* await api.auth.login(
-            loginData
-        ); */
+        try{
+            const loginData = {
+                email:this.state.email,
+                password: this.state.password,
+            };
+
+            const response = await api.auth.login(loginData);
+            // check for error response
+            if (response.data.token) {
+                localStorage.setItem("token", JSON.stringify(response.data.token));
+                // redirect based on the role
+                //props.userHasAuthenticated(true);
+                this.props.history.push('/parent');
+            }
+
+        }catch (e) {
+            this.setState({showErrMsg: true});
+            console.log("Login: " + e);
+            return;
+        }
     };
 
 
@@ -54,19 +75,10 @@ export class Login extends React.Component {
                 <Container>
                     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
                         <Grid.Column className="loginContainer" >
-                         {/*          
-                        <Image src={logoImage} size="small" centered  verticalAlign="bottom"/> 
-                        */}
-                        {/*        
-                        <Icon aria-hidden="true" style={{marginTop:'0', color:"#DBFDFC"}} name="users icon" size="huge"/>
-                           */}                                   
-                        <Header as='h2'  textAlign='center' style={{marginTop:'5px', color:"#DBFDFC"}}>
-                            <Icon name='leaf' className="logoIcon"/> 
-                            {/* Log-in to your account */}
+                        <Image src={logoImage} size="small" centered disabled verticalAlign="bottom"/>                       
+                        <Header as='h2'  textAlign='center' className="loginHeader">
                             Welcome to ESRMS-G
                         </Header>
-
-
                         
                         <Form size='large'>
                             <Segment stacked>
@@ -91,13 +103,21 @@ export class Login extends React.Component {
                                 value={this.state.password}
                                 onChange={this.handleInputChange}
                             />
+                            
+                            {this.state.showErrMsg && 
+                            <p className="errMsg">
+                                <Icon name="exclamation triangle"/>
+                                Your login credentials could not be verified, please try again.
+                            </p>}
 
                             <Button fluid size='large' className = "loginBtn" onClick={this.submitLogin}>
-                                Login
+                                Sign in 
                             </Button>
                             </Segment>
                         </Form>
+                        
                         </Grid.Column>
+                        
                     </Grid>
                 </Container>
             </>

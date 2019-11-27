@@ -11,7 +11,8 @@
     margin:0!important;
     border: 0!important;
     border-radius: 0;
-    background-color:#f1f1f1 ;
+    //background-color:#f1f1f1 ;
+    background-color: #F3F2F0;
 
     div.sidebar{background:  #273037;
         border-top:3px solid #DBCA47;
@@ -42,6 +43,8 @@
     margin-bottom:30px;
     padding: 19px !important;
     font-size: 24px;
+    //border-bottom: 2px solid #41648A;
+    box-shadow: 4px 3px 6px #888888;
     i{
         margin-right:20px
     }

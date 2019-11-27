@@ -2,9 +2,9 @@ import React from 'react';
 import { Menu, Segment, Sidebar } from 'semantic-ui-react';
 import '../../assets/styles/global.scss';
 
-import { ParentMenu } from '../ParentMenu/ParentMenu';
-import { TeacherMenu } from '../TeacherMenu/TeacherMenu';
-import { AdminMenu } from '../AdminMenu/AdminMenu';
+import { ParentMenu } from './Menus/ParentMenu';
+import { TeacherMenu } from './Menus/TeacherMenu';
+import { AdminMenu } from './Menus/AdminMenu';
 
 const loc = window.location.pathname;
 

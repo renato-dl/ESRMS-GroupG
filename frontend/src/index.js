@@ -12,7 +12,7 @@ render(
   <BrowserRouter>
     <Switch>
 
-      <Route exact path="/" render={() => <Redirect to="/parent" />} />
+      <Route exact path="/" render={() => <Redirect to="/login" />} />
       <Route exact path="/login" component={Login}/>
       <Route path="/" component={App} />
 

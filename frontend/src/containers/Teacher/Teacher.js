@@ -21,8 +21,8 @@ export class Teacher extends React.Component{
   }
 
   onSubjectClick = (subjectID) => {
-    const {params} = this.props.match;
-    this.props.history.push(`/teacher/${params.teacherID}/subjects/${subjectID}/topics`);
+    //const {params} = this.props.match;
+    this.props.history.push(`/teacher/subjects/${subjectID}/topics`);
   };
 
     render() {
@@ -31,7 +31,7 @@ export class Teacher extends React.Component{
       return (
           <Container className="contentContainer">
               <h3 className="contentHeader">
-                <Icon name='braille' size="small" />
+                <Icon name='braille'/>
                 Teaching Plan
               </h3>
 
@@ -57,7 +57,7 @@ export class Teacher extends React.Component{
     return(
       <Container className="contentContainer">
         <h3 className="contentHeader">
-          <Icon name='braille' size="small" />
+          <Icon name='braille'/>
           Teaching Plan
         </h3>
         <NoData/>

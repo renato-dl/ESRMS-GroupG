@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../assets/styles/global.scss';
 import 'toastr/toastr.scss';
-import {Container, Icon} from 'semantic-ui-react';
+import {Icon} from 'semantic-ui-react';
 
 import {Switch, Route} from 'react-router-dom';
 
@@ -18,6 +18,7 @@ import {Marks}  from '../../components/Marks/Marks';
 import {Topic}  from'../../components/Topic/Topic';
 import {Admin} from '../Admin/Admin';
 import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
+import {Class_composition} from '../../components/class_composition/class_composition';
 
 
 
@@ -41,16 +42,17 @@ export class App extends React.Component {
             <Icon className="toggleIcon" name = "bars" size="big" onClick={this.toggleSidebar}/>
 
             <Switch>
-              <Route exact path="/parent/:parentID" component={Parent} />
-              <Route exact path="/parent/:parentID/student/:studentID" component={Student} />
-              <Route exact path="/parent/:parentID/student/:studentID/marks/" component={Marks}/>
+              <Route exact path="/parent" component={Parent} />
+              <Route exact path="/parent/student/:studentID" component={Student} />
+              <Route exact path="/parent/student/:studentID/marks/" component={Marks}/>
               
-              <Route exact path="/teacher/:teacherID" component={Teacher}/>
-              <Route exact path="/teacher/:teacherID/subjects" component={Teacher}/>
-              <Route exact path="/teacher/:teacherID/subjects/:subjectID/topics" component={Topic}/>
+              <Route exact path="/teacher" component={Teacher}/>
+              <Route exact path="/teacher/subjects" component={Teacher}/>
+              <Route exact path="/teacher/subjects/:subjectID/topics" component={Topic}/>
 
 			        <Route exact path="/admin" component={Admin}/>
               <Route exact path="/admin/configParent" component={ConfigParent}/>
+              <Route exact path="/admin/Class_composition" component={Class_composition}/>
               <Route path="*" component={NotFound} />
               
             </Switch>

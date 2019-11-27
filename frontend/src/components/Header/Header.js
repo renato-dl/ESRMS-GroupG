@@ -5,35 +5,47 @@ import logoImage from '../../assets/images/logo.png';
 import './Header.scss';
 
 const trigger = (
-  <span><Icon name='user' /></span>
+  <span style={{color:"#DBFDFC"}}><Icon name='user' />
+  {/* Hi Bob &nbsp; */}
+  </span>
 )
 
 const options = [
   {
     key: 'user',
-    text: (
-      <span>
-        Signed in as <strong>Bob Smith</strong>
-      </span>
-    ),
+    text: (<span>Signed in as <strong>Name Surname</strong></span>),
     disabled: true,
   },
-  { key: 'sign-out', text: 'Sign Out' }
+  { key: 'signOut', text: 'Sign Out' }
 ]
 
-export const Header = (props) => (
-  <SemanticHeader className="app-header">
-    <div className="headerlogoField">
-       
-      <Icon name="leaf" className="logoIcon"/>
-       
-        {/* 
-       <Image src={logoImage} size="tiny"  verticalAlign="bottom"/>&nbsp; 
-        */}
-       ESRMS-G</div>
-    <div className="headerToolbarFiled">
-     {/* <Dropdown trigger={trigger} options={options} /> */}
-    </div>
+//let handleClick = (e, value, idx) => this.setState();
+let logOut = (e) => {
+  localStorage.removeItem("token");
+  window.location.replace("/login")
+  
+  //this.props.history.push('/login');
+  //props.userHasAuthenticated(false);
+  
+};
 
-  </SemanticHeader>
-);
+export const Header = (props) => {
+  return (
+    <SemanticHeader className="app-header">
+      <div className="headerlogoField">
+        
+        {/* <Icon name="leaf" className="logoIcon"/> */}
+        <Image src={logoImage} size="tiny"  verticalAlign="bottom"/> 
+          
+        ESRMS-G</div>
+      <div className="headerToolbarFiled">
+        <Dropdown 
+          trigger={trigger} 
+          options={options} 
+          onChange={logOut}
+        />
+      </div>
+
+    </SemanticHeader>
+  );
+};
