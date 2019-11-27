@@ -62,9 +62,20 @@ class User extends Model {
 
 
   async getStudentsData(isAssigned, pagination){
+    let result;
+    if(isAssigned == 'true'){
+      result = true;
+    }
+    else if(isAssigned == 'false'){
+      result = false;
+    }
+    else{
+      throw new Error('Invalid parameter isAssigned!');
+    }
+
     const connection = await this.db.getConnection();
     let query;
-    if(isAssigned){
+    if(result){
       query = `SELECT ID, FirstName, LastName, Gender
       FROM Students
       WHERE ClassId IS NOT NULL
@@ -76,7 +87,7 @@ class User extends Model {
       WHERE ClassId IS NULL
       ORDER BY LastName`;
     }
-
+    console.log(query);
     if (pagination) {
       query += ` ${this.db.getPaginationQuery(pagination)}`
     }
