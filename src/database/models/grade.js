@@ -39,7 +39,7 @@ class Grade extends Model {
 
     const connection = await this.db.getConnection();
     let query =
-        `SELECT Name, Grade, GradeDate, Type
+        `SELECT FirstName, LastName, Grade, GradeDate, Type
         FROM ${this.tableName}, Students
         WHERE
           ${this.tableName}.StudentId = Students.ID AND

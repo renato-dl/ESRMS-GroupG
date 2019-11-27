@@ -15,7 +15,7 @@ class TCSR extends Model {
     const result = await connenction.query(
       `SELECT COUNT(*) AS count
       FROM ${this.tableName}
-      WHERE TeacherId = ? AND SubjectId = ? AND ClassId = ?;`
+      WHERE TeacherId = ? AND SubjectId = ? AND ClassId = ?`,
       [teacherId, subjectId, classId]
     );
     connenction.release();

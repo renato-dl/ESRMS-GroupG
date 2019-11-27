@@ -89,12 +89,12 @@ class TeacherController extends BaseController {
   async gradesByClassAndSubject(req, res) {
     if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
       req.user.ID,
-      req.params.SubjectId,
-      req.params.ClassId
+      req.query.subjectId,
+      req.query.classId
     )) {
       res.send(401);
     }
-    res.send(await Grade.findByClassAndSubject(req.params.ClassId, req.params.SubjectId))
+    res.send(await Grade.findByClassAndSubject(req.query.classId, req.query.subjectId))
   }
 }
 
