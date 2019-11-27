@@ -27,8 +27,41 @@ class Grade extends Model {
     if (!results.length) {
       throw new Error('Entity not found');
     }
-
     return results;
+  }
+  async addGrade(classId, subjectId, studentId, grade, type){
+
+    if (!classId) {
+      throw new Error('Missing or invalid class id');
+    }
+    if (!subjectId) {
+      throw new Error('Missing or invalid subject id');
+    }
+
+    if (!studentId) {
+      throw new Error('Missing or invalid student id');
+    }
+
+    if (!grade) {
+      throw new Error('Missing or invalid grade');
+    }
+
+    if (!type) {
+      throw new Error('Missing or invalid type');
+    }
+
+    //add grade
+    const result = await this.create({
+      ClassId: classId,
+      SubjectId: subjectId,
+      StudentId: studentId,
+      Grade: grade,
+      Type: type
+    });
+
+    return {
+      id: result.id
+    }
   }
 }
 

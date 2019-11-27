@@ -2,6 +2,7 @@ import {BaseController} from "./baseController";
 import Subject from "../database/models/subject";
 import Topic from '../database/models/topic';
 import Class from '../database/models/class';
+import Grade from '../database/models/grade';
 
 class TeacherController extends BaseController {
 
@@ -83,7 +84,19 @@ class TeacherController extends BaseController {
       );
     res.send(result);
   }
-}
 
+  // POST /teacher/grade
+  // Body: classId, subjectId, studentId, grade, type
+  async addGrade(req, res) {
+    const result = await Grade.addGrade(
+      req.body.classId, 
+      req.body.subjectId,
+      req.body.studentId,
+      req.body.grade,
+      req.body.type
+     );
+    res.send({success: true, id: result.id});
+  }
+}
 
 export default new TeacherController();
