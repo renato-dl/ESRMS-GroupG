@@ -10,13 +10,12 @@ class Assignment extends Model {
 
     const connection = await this.db.getConnection();
     let query =
-        `SELECT Subjects.Name, Grade, GradeDate, Type
-        FROM ${this.tableName}, Subjects, Students
+        `SELECT *
+        FROM ${this.tableName}, Students
         WHERE
-          ${this.tableName}.SubjectId = Subjects.ID AND
-          ${this.tableName}.StudentId = Students.ID AND
-          StudentId = ?
-        ORDER BY GradeDate DESC`;
+          ${this.tableName}.ClassId = Students.ClassId AND
+          AND StudentId = ?
+        ORDER BY DueDate`;
 
     if (pagination) {
       query += ` ${this.db.getPaginationQuery(pagination)}`
