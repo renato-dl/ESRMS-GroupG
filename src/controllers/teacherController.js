@@ -89,7 +89,6 @@ class TeacherController extends BaseController {
   // Body: classId, subjectId, studentId, grade, type
   async addGrade(req, res) {
     const result = await Grade.addGrade(
-      req.body.classId, 
       req.body.subjectId,
       req.body.studentId,
       req.body.grade,
