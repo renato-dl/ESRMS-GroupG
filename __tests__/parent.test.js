@@ -71,7 +71,12 @@ describe('Parent tests 1', () => {
 describe('Parent tests 2', () => {
 
     test('It should retrive the grades of a given student', async () => {
-        const grades = await Grade.findByStudentId("9d64fa59c91d9109b11cd9e05162c675", "266667153e975bbf735b89d4b03d9f93"); 
+        const testStudent = '266667153e975bbf735b89d4b03d9f93';
+        const testParent = '9d64fa59c91d9109b11cd9e05162c675';
+        const related = await Student.checkIfRelated(testStudent, testParent);
+        expect(related).toBe(true);
+          
+        const grades = await Grade.findByStudentId(testStudent); 
         expect(grades).not.toBeNull();
         expect(grades).toHaveLength(2);
 
