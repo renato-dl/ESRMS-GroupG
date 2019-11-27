@@ -2,6 +2,8 @@ import {BaseController} from "./baseController";
 import Subject from "../database/models/subject";
 import Topic from '../database/models/topic';
 import Class from '../database/models/class';
+import TCSR from '../database/models/teacherClassSubject';
+import Grade from '../database/models/grade';
 
 class TeacherController extends BaseController {
 
@@ -41,7 +43,8 @@ class TeacherController extends BaseController {
   async deleteTopic(req, res) {
     const result = await Topic.deleteTopic(
       req.user.ID, 
-      req.query.topicId
+      req.body.ID
+      //req.query.topicId
       );
     res.send(result);
   }
@@ -82,7 +85,38 @@ class TeacherController extends BaseController {
       );
     res.send(result);
   }
-}
 
+  async gradesByClassAndSubject(req, res) {
+    if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
+      req.user.ID,
+      req.query.subjectId,
+      req.query.classId
+    )) {
+      res.send(401);
+      return;
+    }
+    res.send(await Grade.findByClassAndSubject(req.query.classId, req.query.subjectId))
+  }
+
+
+  // POST /teacher/grade
+  // Body: classId, subjectId, studentId, grade, type
+  async addGrade(req, res) {
+    if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
+      req.user.ID,
+      req.body.subjectId, 
+      req.body.classId)){
+        res.send(401);
+        return;
+    } 
+    const result = await Grade.addGrade(
+      req.body.subjectId,
+      req.body.studentId,
+      req.body.grade,
+      req.body.type
+     );
+    res.send({success: true, id: result.id});
+  }
+}
 
 export default new TeacherController();

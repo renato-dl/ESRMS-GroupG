@@ -3,11 +3,11 @@ import { Icon, Menu } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 
 export const ParentMenu = (props) => {  
-  const id = localStorage.getItem('parentID');
+  //const id = localStorage.getItem('parentID');
 
   return (
     <>
-      <Menu.Item as={Link} to={`/parent/${id}`}>
+      <Menu.Item as={Link} to={`/parent`}>
         <span>
           <br/>
           <Icon name='child' size="big" /> Children
