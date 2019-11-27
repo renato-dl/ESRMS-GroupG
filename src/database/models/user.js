@@ -64,6 +64,22 @@ class User extends Model {
 
     await this.validateParentData(firstName, lastName, eMail, SSN);
 
+    const connection = await this.db.getConnection();
+
+    const selectResult = await connection.query(
+      `SELECT COUNT(*) AS count
+      FROM Users
+      WHERE SSN = ? OR eMail = ?;`,
+      [SSN, eMail]
+    );
+
+    connection.release();
+
+    if (selectResult[0].count != 0) {
+      connection.release();
+      throw new Error('Parent already in db')
+    }
+
     //insert of data
     const parentId = uuid();
     const parentPassword = createSecurePassword(password);
@@ -89,7 +105,7 @@ class User extends Model {
 
     //update of data
     
-    const affectedRows = await this.update(parentId, {
+    const result = await this.update(parentId, {
       eMail: eMail,
       IsParent: true,
       FirstName: firstName,
@@ -98,7 +114,7 @@ class User extends Model {
     });
 
     return {
-      affectedRows: affectedRows
+      success: result
     }
   }
 
@@ -115,22 +131,6 @@ class User extends Model {
     }
     if (!SSN || !validateSSN(SSN)) {
       throw new Error('Missing or invalid SSN');
-    }
-
-    const connection = await this.db.getConnection();
-
-    const selectResult = await connection.query(
-      `SELECT COUNT(*) AS count
-      FROM Users
-      WHERE SSN = ? OR eMail = ?;`,
-      [SSN, eMail]
-    );
-
-    connection.release();
-
-    if (selectResult[0].count != 0) {
-      connection.release();
-      throw new Error('Parent already in db')
     }
   }
 

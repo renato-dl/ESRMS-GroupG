@@ -4,8 +4,8 @@ import Student from "../database/models/student";
 import nodemailer from 'nodemailer';
 import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
-
 import {signToken} from '../services/tokenService'
+
 import { resolveNaptr } from "dns";
 
 console.log(signToken({id: '205db8275d3c06e6ce3fe7a47b30e0fe'}));
@@ -118,6 +118,7 @@ class AdminController extends BaseController {
   }
 
   async updateParent(req, res) {
+    console.log(req.body);
     const result = await User.updateParentData(
       req.body.Id,
       req.body.FirstName,
@@ -125,12 +126,12 @@ class AdminController extends BaseController {
       req.body.Email,
       req.body.SSN
     );
-    res.send({success: true, affectedRows:result.affectedRows});
+    res.send({success: result.success});
   }
 
   async updateStudent(req, res) {
     let parent2;
-    if(!req.body.hasOwnProperty("Parent2Id")){
+    if(!req.body.hasOwnProperty('Parent2Id')){
       parent2 = null;
     }else{
       parent2 = req.body.Parent2Id;
@@ -145,7 +146,7 @@ class AdminController extends BaseController {
       req.body.Parent1Id,
       parent2
     );
-    res.send({success: true, affectedRows:result.affectedRows})
+    res.send({success: result.success})
   }
   
 

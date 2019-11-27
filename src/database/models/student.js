@@ -59,7 +59,7 @@ class Student extends Model {
 
     const date = moment.utc(birthDate);
 
-    const affectedRows = await this.update(studentId, {
+    const result = await this.update(studentId, {
       FirstName: firstName,
       LastName: lastName,
       SSN: SSN,
@@ -70,7 +70,7 @@ class Student extends Model {
     });
 
     return {
-      affectedRows: affectedRows
+      success: result
     }  
 
   }
