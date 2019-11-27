@@ -6,7 +6,12 @@ class TCSR extends Model {
   }
 
   async checkIfTeacherTeachesSubjectInClass(teacherId, subjectId, classId) {
-  const connenction = await this.db.getConnection();
+
+    if (!teacherId) throw new Error('Missing or invalid teacher id');
+    if (!subjectId) throw new Error('Missing or invalid subject id');
+    if (!classId) throw new Error('Missing or invalid class id');
+
+    const connenction = await this.db.getConnection();
     const result = await connenction.query(
       `SELECT COUNT(*) AS count
       FROM ${this.tableName}

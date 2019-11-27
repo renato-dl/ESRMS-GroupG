@@ -133,6 +133,11 @@ class Topic extends Model {
   }
 
   async findByTeacherClassSubject(teacherId, classId, subjectId, pagination) {
+
+    if (!teacherId) throw new Error('Missing or invalid teacher id');
+    if (!classId) throw new Error('Missing or invalid class id');
+    if (!subjectId) throw new Error('Missing or invalid subject id');
+
     const connection = await this.db.getConnection();
     let sql_query = `SELECT t.ID, t.Title, t.TopicDescription, t.TopicDate 
     FROM TeacherSubjectClassRelation tscr, Topics t

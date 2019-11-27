@@ -5,6 +5,8 @@ class Grade extends Model {
     super('Grades');
   }
   async findByStudentId(studentId, pagination) {
+    if (!studentId) throw new Error('Missing or invalid student id');
+
     const connection = await this.db.getConnection();
     let query =
         `SELECT Subjects.Name, Grade, GradeDate, Type
@@ -31,6 +33,10 @@ class Grade extends Model {
   }
 
   async findByClassAndSubject(classId, subjectId, pagination) {
+
+    if (!classId) throw new Error('Missing or invalid class id');
+    if (!subjectId) throw new Error('Missing or invalid subject id');
+
     const connection = await this.db.getConnection();
     let query =
         `SELECT Name, Grade, GradeDate, Type
