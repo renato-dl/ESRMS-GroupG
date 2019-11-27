@@ -29,6 +29,27 @@ class Grade extends Model {
 
     return results;
   }
+
+  async findByClassAndSubject(classId, subjectId, pagination) {
+    const connection = await this.db.getConnection();
+    let query =
+        `SELECT Name, Grade, GradeDate, Type
+        FROM ${this.tableName}, Students
+        WHERE
+          ${this.tableName}.StudentId = Students.ID AND
+          ClassId = ? AND SubjectId = ?
+        ORDER BY GradeDate DESC`;
+
+    if (pagination) {
+      query += ` ${this.db.getPaginationQuery(pagination)}`
+    }
+
+    const results = await connection.query(query, [classId, subjectId]);
+
+    connection.release();
+    
+    return results;
+  }
 }
 
 export default new Grade();
