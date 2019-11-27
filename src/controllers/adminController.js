@@ -112,74 +112,37 @@ class AdminController extends BaseController {
       }
       throw(error);
     }
-
   }
 
+  async updateParent(req, res) {
+    res.send(await User.updateParentData(
+      req.body.Id,
+      req.body.FirstName,
+      req.body.LastName,
+      req.body.Email,
+      req.body.SSN
+    ));
+  }
+  
   async updateStudent(req, res) {
-        
-    let parent1;
     let parent2;
-    let parent1Insert = false;
-    let parent2Insert = false;
-
-    if (req.body.hasOwnProperty('firstParent')) {
-      if (!req.body.firstParent.hasOwnProperty('ID')) {
-        parent1 = (await User.insertParentData(
-          req.body.firstParent.FirstName,
-          req.body.firstParent.LastName,
-          req.body.firstParent.Email,
-          req.body.firstParent.SSN,
-          password
-        )).id;
-        parent1Insert = true;
-      } else {
-        parent1 = req.body.firstParent.ID;
-      }
-
-    } else {
-      
-    }
-    if (req.body.hasOwnProperty('secondParent')) {
-      if (!req.body.secondParent.hasOwnProperty('ID')) {
-        parent2 = (await User.insertParentData(
-          req.body.secondParent.FirstName,
-          req.body.secondParent.LastName,
-          req.body.secondParent.Email,
-          req.body.secondParent.SSN,
-          password
-        )).id;
-        parent2Insert = true;
-      } else {
-        parent2 = req.body.secondParent.ID;
-      }
-    } else {
+    if(!req.body.hasOwnProperty("Parent2Id")){
       parent2 = null;
+    }else{
+      parent2 = req.body.Parent2Id;
     }
-    try {
-      res.send(await Student.insertStudent(
-        req.body.studentInfo.FirstName,
-        req.body.studentInfo.LastName,
-        req.body.studentInfo.SSN,
-        req.body.studentInfo.Gender,
-        req.body.studentInfo.BirthDate,
-        parent1,
-        parent2
-      ));
-    } catch(error) {
-      if (parent1Insert) {
-        await User.remove(parent1);
-        throw(error);
-      }
-      if (parent2Insert) {
-        await User.remove(parent2);
-        throw(error);
-      }
-      throw(error);
-    }
-
+    res.send(await Student.updateStudentData(
+      req.body.Id,
+      req.body.FirstName,
+      req.body.LastName,
+      req.body.SSN,
+      req.body.Gender,
+      req.body.BirthDate,
+      req.body.Parent1Id,
+      parent2
+    ));
   }
-
-
+  
 
   sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){
     try{

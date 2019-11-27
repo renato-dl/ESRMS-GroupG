@@ -53,7 +53,7 @@ class Student extends Model {
 
   }
 
-  async updateStudent(studentId, firstName, lastName, SSN, gender, birthDate, parent1, parent2) {
+  async updateStudentData(studentId, firstName, lastName, SSN, gender, birthDate, parent1, parent2) {
     
     await this.validateStudentData(firstName, lastName, SSN, gender, birthDate, parent1, parent2);
 
