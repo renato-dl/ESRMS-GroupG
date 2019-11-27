@@ -17,7 +17,7 @@ export const AdminMenu = (props) => (
       <Icon name='users' />
       Parents of Students
     </Menu.Item>
-    <Menu.Item as={Link} to='/enrollment'>
+    <Menu.Item as={Link} to='/admin/enrollStudents'>
       <Icon name='child' />
       Students Enrollment
     </Menu.Item>
