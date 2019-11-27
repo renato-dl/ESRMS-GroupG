@@ -62,6 +62,28 @@ class User extends Model {
 
   async insertParentData(firstName, lastName, eMail, SSN, password) {
 
+    await this.validateParentData(firstName, lastName, eMail, SSN);
+
+    //insert of data
+    const parentId = uuid();
+    const parentPassword = createSecurePassword(password);
+
+    await this.create({
+      ID: parentId,
+      eMail: eMail,
+      Password: parentPassword,
+      IsParent: true,
+      FirstName: firstName,
+      LastName: lastName,
+      SSN: SSN
+    });
+
+    return {
+      id: parentId
+    }
+  }
+
+  async validateParentData(firstName, lastName, eMail, SSN) {
     //input data validation
     if (!validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
       throw new Error('Missing or invalid first name');
@@ -78,42 +100,18 @@ class User extends Model {
 
     const connection = await this.db.getConnection();
 
-    try {
-      const selectResult = await connection.query(
-        `SELECT COUNT(*) AS count
-        FROM Users
-        WHERE SSN = ? OR eMail = ?;`,
-        [SSN, eMail]
-      );
+    const selectResult = await connection.query(
+      `SELECT COUNT(*) AS count
+      FROM Users
+      WHERE SSN = ? OR eMail = ?;`,
+      [SSN, eMail]
+    );
 
-      if (selectResult[0].count != 0) {
-        connection.release();
-        throw new Error('Parent already in db')
-      }
+    connection.release();
 
-      //insert of data
-      const parentId = uuid();
-      const parentPassword = createSecurePassword(password);
-
-      const insertResult = await connection.query(
-        `INSERT INTO Users (ID, eMail, Password, IsParent, FirstName, LastName, SSN)
-        VALUES (?, ?, ?, true, ?, ?, ?);`,
-        [parentId, eMail, parentPassword, firstName, lastName, SSN]
-      );
+    if (selectResult[0].count != 0) {
       connection.release();
-
-      if (insertResult.affectedRows != 1) {
-        throw new Error('Something went wrong')
-      } else {
-        return {
-          id: parentId
-        }
-      }
-
-    } catch(err) {
-      connection.release();
-      console.log(err.message);
-      throw(err);
+      throw new Error('Parent already in db')
     }
   }
 

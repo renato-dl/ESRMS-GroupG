@@ -93,7 +93,7 @@ describe('Tests about the insertion of parent data by admin', () => {
     expect(queryResult[0].eMail).toEqual(testEmail);
 
     //delete result for future tests
-    User.remove(result.id);
+    await User.remove(result.id);
   }); 
   
 

@@ -103,10 +103,12 @@ class AdminController extends BaseController {
       ));
     } catch(error) {
       if (parent1Insert) {
-        User.remove(parent1);
+        await User.remove(parent1);
+        throw(error);
       }
       if (parent2Insert) {
-        User.remove(parent2);
+        await User.remove(parent2);
+        throw(error);
       }
       throw(error);
     }
