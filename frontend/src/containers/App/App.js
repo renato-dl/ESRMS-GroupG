@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../assets/styles/global.scss';
 import 'toastr/toastr.scss';
-import {Container, Icon} from 'semantic-ui-react';
+import {Icon} from 'semantic-ui-react';
 
 import {Switch, Route} from 'react-router-dom';
 

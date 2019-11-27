@@ -2,11 +2,8 @@ import React from 'react';
 import { Icon, Menu } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 
-
-import {Marks}  from '../../Marks/Marks';
-
 export const ParentMenu = (props) => {  
-  const id = localStorage.getItem('parentID');
+  //const id = localStorage.getItem('parentID');
 
   return (
     <>

@@ -43,7 +43,7 @@ export class Topic extends React.Component{
       const response = await api.teacher.getTeacherSubjects(params.teacherID);
       if (response) {
         response.data.forEach((subject) => {
-          if (subject.subjectId == params.subjectID) {
+          if (subject.subjectId === params.subjectID) {
             this.setState({subject});
           }
         });
@@ -68,7 +68,7 @@ export class Topic extends React.Component{
       return (
         <Container className="Topic-container contentContainer">
           <h3 className="contentHeader">
-            <Icon name='braille' size="small" />
+            <Icon name='braille'/>
             {this.state.subject ? this.state.subject.subject : ''} topics
           </h3>
           <Button className="ui vk button" onClick={this.addTopic}>
@@ -115,9 +115,9 @@ export class Topic extends React.Component{
       }
 
       return(
-        <div className="Topic-container contentContainer">
+        <Container className="Topic-container contentContainer">
           <h3 className="contentHeader">
-            <Icon name='braille' size="small" />
+            <Icon name='braille'/>
             {this.state.subject ? this.state.subject.subject : ''} topics
           </h3>
           <Button className="ui vk button" onClick={this.addTopic}>
@@ -137,7 +137,7 @@ export class Topic extends React.Component{
               }}
             />
           }
-        </div>
+        </Container>
       );
     }
 }

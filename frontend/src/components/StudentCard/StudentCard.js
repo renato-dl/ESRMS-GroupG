@@ -13,7 +13,7 @@ export const StudentCard = (props) => (
     key={props.id} 
     onClick={props.onClick ? props.onClick : null}
   >
-    <Image src={props.Gender=='M'?studentStubImage:studentStudFemaleImage} wrapped ui={false} />
+    <Image src={props.Gender==='M'?studentStubImage:studentStudFemaleImage} wrapped ui={false} />
     <Card.Content>
       <Card.Header className="studentCardHeader">{props.FirstName} {props.LastName}</Card.Header>
     </Card.Content>

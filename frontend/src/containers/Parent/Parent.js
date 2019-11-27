@@ -23,7 +23,7 @@ export class Parent extends React.Component {
   }
  
   selectChild = async (child) => {
-    const {params} = this.props.match;
+    //const {params} = this.props.match;
     localStorage.setItem('selectedChild', JSON.stringify(child));
     this.props.history.push(`/parent/student/${child.ID}/marks`)
   };
