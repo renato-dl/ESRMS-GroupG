@@ -4,9 +4,6 @@ import Student from "../database/models/student";
 import nodemailer from 'nodemailer';
 import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
-import {signToken} from '../services/tokenService'
-
-console.log(signToken({id: '205db8275d3c06e6ce3fe7a47b30e0fe'}));
 
 class AdminController extends BaseController {
 
