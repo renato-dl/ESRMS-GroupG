@@ -11,6 +11,7 @@ export class BaseController {
       .catch((error) => {
         res.status(422).json({
           errors: [{
+            success: false,
             msg: error.message
           }]
         });

@@ -83,7 +83,7 @@ class Topic extends Model {
     if(selectResult.length != 1) {
       throw new Error('Unauthorized');
     };
-    this.remove(topicId);
+    await this.remove(topicId);
   }
   
   async editTopic(teacherId, topicId, topicTitle, topicDescription, topicDate) {
