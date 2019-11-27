@@ -9,11 +9,6 @@ class User extends Model {
     super('Users');
   }
 
-  findOne(params) {
-    const columns = "ID, eMail, FirstName, LastName, SSN, IsParent, IsTeacher, IsPrincipal, IsAdminOfficer, IsSysAdmin"
-    return super.findOne(params, columns);
-  }
-
   async getUserRolesById(userId) {
     const connection = await this.db.getConnection();
     return connection.query(
@@ -56,6 +51,46 @@ class User extends Model {
 
     if (!results.length) {
       throw new Error('No parents registered in the system');
+    }
+    return results;
+  }
+
+
+  async getStudentsData(isAssigned, pagination){
+    let result;
+    if(isAssigned == 'true'){
+      result = true;
+    }
+    else if(isAssigned == 'false'){
+      result = false;
+    }
+    else{
+      throw new Error('Invalid parameter isAssigned!');
+    }
+
+    const connection = await this.db.getConnection();
+    let query;
+    if(result){
+      query = `SELECT ID, FirstName, LastName, Gender
+      FROM Students
+      WHERE ClassId IS NOT NULL
+      ORDER BY LastName`
+    }
+    else{
+      query = `SELECT ID, FirstName, LastName, Gender
+      FROM Students
+      WHERE ClassId IS NULL
+      ORDER BY LastName`;
+    }
+    if (pagination) {
+      query += ` ${this.db.getPaginationQuery(pagination)}`
+    }
+
+    const results = await connection.query(query);    
+    connection.release();
+
+    if (!results.length) {
+      throw new Error('No students registered in the system');
     }
     return results;
   }
