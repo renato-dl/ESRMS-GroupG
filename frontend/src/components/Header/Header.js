@@ -3,7 +3,6 @@ import {Header as SemanticHeader, Icon,Image, Dropdown} from 'semantic-ui-react'
 
 import logoImage from '../../assets/images/logo.png';
 import './Header.scss';
-import { Link, withRouter } from "react-router-dom";
 
 const trigger = (
   <span style={{color:"#DBFDFC"}}><Icon name='user' />

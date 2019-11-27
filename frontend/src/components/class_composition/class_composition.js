@@ -1,7 +1,7 @@
 import React from 'react';
-import { api } from '../../services/api';
+//import { api } from '../../services/api';
 import {Table, Icon} from 'semantic-ui-react';
-import { NoData } from '../NoData/NoData';
+//import { NoData } from '../NoData/NoData';
 
 export class Class_composition extends React.Component{
   constructor(props) {

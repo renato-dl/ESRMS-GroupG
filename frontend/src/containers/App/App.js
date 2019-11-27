@@ -18,7 +18,7 @@ import {Marks}  from '../../components/Marks/Marks';
 import {Topic}  from'../../components/Topic/Topic';
 import {Admin} from '../Admin/Admin';
 import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
-import {Class_composition} from '../../components/Class_composition/Class_composition';
+import {Class_composition} from '../../components/class_composition/class_composition';
 
 
 
