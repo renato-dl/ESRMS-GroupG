@@ -25,7 +25,7 @@ class ParentController extends BaseController {
     }
     const assignments = await Assignment.findByStudentId(
       req.body.studentId, 
-      {from: req.query.fromDate, to: req.query.toDate},
+      {from: req.body.fromDate, to: req.body.toDate},
       {page: req.query.page, pageSize: req.query.pageSize}
       );
     res.send(assignments);
