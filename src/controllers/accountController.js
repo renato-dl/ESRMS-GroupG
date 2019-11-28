@@ -1,6 +1,7 @@
 import {BaseController} from "./baseController";
 import User from "../database/models/user";
 import { signToken } from "../services/tokenService";
+import { verifyPassword } from "../services/passwordGenerator";
 
 class AccountController extends BaseController {
   
@@ -9,10 +10,20 @@ class AccountController extends BaseController {
       throw new Error('Invalid credentials.');
     }
 
-    const user = await User.findOne({ email: req.body.email, password: req.body.password });
-    const token = signToken({id: user.ID});
+    const user = await User.findOne({ email: req.body.email });
+    const isCorrectPassword = verifyPassword(req.body.password, user.Password);
 
-    res.send({ token });
+    if (!isCorrectPassword) {
+      throw new Error('Invalid credentials.');
+    }
+
+    const roles = ['IsAdminOfficer', 'IsSysAdmin', 'IsParent', 'IsTeacher', 'IsPrincipal'];
+    const thisUserRoles = {};
+
+    roles.filter((role) => user[role]).forEach((role) => thisUserRoles[role] = true);
+    const token = signToken({ id: user.ID });
+
+    res.send({ token, ...thisUserRoles });
   }
 
 }

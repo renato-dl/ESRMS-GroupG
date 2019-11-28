@@ -58,7 +58,6 @@ class Topic extends Model {
 
   async deleteTopic(teacherId, topicId){
     const connection = await this.db.getConnection();
-    console.log('bbb')
     //check if the topic exists
     const checkTopic = await connection.query(
       `SELECT TeacherSubjectClassRelationId as id
@@ -83,7 +82,7 @@ class Topic extends Model {
     if(selectResult.length != 1) {
       throw new Error('Unauthorized');
     };
-    this.remove(topicId);
+    await this.remove(topicId);
   }
   
   async editTopic(teacherId, topicId, topicTitle, topicDescription, topicDate) {
@@ -134,6 +133,11 @@ class Topic extends Model {
   }
 
   async findByTeacherClassSubject(teacherId, classId, subjectId, pagination) {
+
+    if (!teacherId) throw new Error('Missing or invalid teacher id');
+    if (!classId) throw new Error('Missing or invalid class id');
+    if (!subjectId) throw new Error('Missing or invalid subject id');
+
     const connection = await this.db.getConnection();
     let sql_query = `SELECT t.ID, t.Title, t.TopicDescription, t.TopicDate 
     FROM TeacherSubjectClassRelation tscr, Topics t

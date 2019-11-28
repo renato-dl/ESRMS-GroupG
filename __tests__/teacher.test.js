@@ -53,7 +53,7 @@ describe('Tests about topic insertion by teacher', () => {
 
     expect(testResult[0].count).toBe(1);
         
-    Topic.remove(result.id);
+    await Topic.remove(result.id);
 
     
   });
@@ -432,7 +432,7 @@ describe("Teacher tests about editing of the inserted topics", () =>{
     expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateUpdateStr + "T00:00:00.000Z"));
 
     // clean db
-    Topic.remove(topicId);
+    await Topic.remove(topicId);
   });
 
   test("It should not update the topic given unauthorized teacher id", async() =>{
@@ -480,7 +480,7 @@ describe("Teacher tests about editing of the inserted topics", () =>{
     expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
 
     // clean db
-    Topic.remove(topicId);
+    await Topic.remove(topicId);
     
   });
   
@@ -529,7 +529,7 @@ describe("Teacher tests about editing of the inserted topics", () =>{
     expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
 
     // clean db
-    Topic.remove(topicId);
+    await Topic.remove(topicId);
 
   });
 
@@ -578,7 +578,7 @@ describe("Teacher tests about editing of the inserted topics", () =>{
     expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
 
     // clean db
-    Topic.remove(topicId);
+    await Topic.remove(topicId);
   });
 
   test("It should not update the topic given null topic title", async() =>{
@@ -626,7 +626,7 @@ describe("Teacher tests about editing of the inserted topics", () =>{
     expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
 
     // clean db
-    Topic.remove(topicId);
+    await Topic.remove(topicId);
   });
 
   test("It should not update the topic given invalid topic date", async() =>{
@@ -672,7 +672,7 @@ describe("Teacher tests about editing of the inserted topics", () =>{
     expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
 
     // clean db
-    Topic.remove(topicId);
+    await Topic.remove(topicId);
   });
 
   test("It should not update the topic given null topic date", async() =>{
@@ -720,7 +720,7 @@ describe("Teacher tests about editing of the inserted topics", () =>{
     expect(updatedTopic["TopicDate"]).toEqual(new Date(topicDateStr + "T00:00:00.000Z"));
 
     // clean db
-    Topic.remove(topicId);
+    await Topic.remove(topicId);
   });
 
 });
@@ -795,7 +795,7 @@ describe('Tests about deletion of a topic by a teacher', () => {
      }catch(error){
           expect(error).toBeInstanceOf(Error);
           expect(error).toHaveProperty('message', 'Unauthorized');
-          Topic.remove(testTopicId);
+          await Topic.remove(testTopicId);
       }
     });
 
@@ -829,7 +829,7 @@ describe('Tests about deletion of a topic by a teacher', () => {
      }catch(error){
           expect(error).toBeInstanceOf(Error);
           expect(error).toHaveProperty('message', 'The topic does not exist!');
-          Topic.remove(resultInsertion.id);
+          await Topic.remove(resultInsertion.id);
       }
     });
 });

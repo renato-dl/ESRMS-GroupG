@@ -30,6 +30,52 @@ class Student extends Model {
 
   async insertStudent(firstName, lastName, SSN, gender, birthDate, parent1, parent2) {
     
+    await this.validateStudentData(firstName, lastName, SSN, gender, birthDate, parent1, parent2);
+
+    const id = uuid();
+
+    const date = moment.utc(birthDate);
+
+    await this.create({
+      ID: id,
+      FirstName: firstName,
+      LastName: lastName,
+      SSN: SSN,
+      BirthDate: date.format(this.db.getDateFormatString()),
+      Parent1: parent1,
+      Parent2: parent2,
+      Gender: gender
+    });
+
+    return {
+      id: id
+    }  
+
+  }
+
+  async updateStudentData(studentId, firstName, lastName, SSN, gender, birthDate, parent1, parent2) {
+    
+    await this.validateStudentData(firstName, lastName, SSN, gender, birthDate, parent1, parent2);
+
+    const date = moment.utc(birthDate);
+
+    const result = await this.update(studentId, {
+      FirstName: firstName,
+      LastName: lastName,
+      SSN: SSN,
+      BirthDate: date.format(this.db.getDateFormatString()),
+      Parent1: parent1,
+      Parent2: parent2,
+      Gender: gender
+    });
+
+    return {
+      success: result
+    }  
+
+  }
+
+  async validateStudentData(firstName, lastName, SSN, gender, birthDate, parent1, parent2) {
     //input data validation
     if (!validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
       throw new Error('Missing or invalid first name');
@@ -71,36 +117,21 @@ class Student extends Model {
     if (parent1 == parent2) {
       throw new Error('Parents id must be different');
     }
+  }
 
-    const id = uuid();
-
-    const connection = await this.db.getConnection();
-
-    try {
-      
-      const insertResult = await connection.query(
-        `INSERT INTO Students(ID, FirstName, LastName, SSN, BirthDate, Parent1, Parent2, Gender)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
-        [id, firstName, lastName, SSN, date.format(this.db.getDateFormatString()), parent1, parent2, gender]
-      );
-      connection.release();
-
-      if (insertResult.affectedRows != 1) {
-        throw new Error('Something went wrong')
-      } else {
-        return {
-          id: id
-        }
-      }
-
-    } catch(err) {
-      connection.release();
-      console.log(err.message);
-      throw(err);
+  async checkIfRelated(studentId, parentId) {
+    const connenction = await this.db.getConnection();
+    const result = await connenction.query(
+      `SELECT COUNT(*) AS count
+      FROM Students
+      WHERE ID = ? AND (Parent1 = ? OR Parent2 = ?);`,
+      [studentId, parentId, parentId]
+    );
+    connenction.release();
+    if (result[0].count == 1) {
+      return true;
     }
-    
-
-    
+    return false;
 
   }
 }
