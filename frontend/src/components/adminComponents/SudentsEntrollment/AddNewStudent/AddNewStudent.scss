@@ -1,0 +1,57 @@
+div.addStudButtonField{
+    float: right;
+    margin: 20px 0 20px 0;
+    button.nextBTN{
+        background-color:  #fff;
+        color:#008272;
+        border:1px solid #28AF70;
+    }
+     button.nextBTN:hover, button.nextBTN:focus {
+        //background-color:  #def8ea;
+        box-shadow:  0px 4px 6px 0px rgba(0,0,0,0.4);
+        background-color:  #fff;
+        color:#28AF70;
+        border:1px solid #28AF70;
+    }
+    button.confirmBTN{
+        border:1px solid #68af64;
+        background-color: #68af64;
+        color:white;
+    }
+    button.confirmBTN:hover, button.confirmBTN:focus {
+        box-shadow:  0px 4px 6px 0px rgba(0,0,0,0.4);
+        border:1px solid #68af64;//#28AF70;
+        background-color: #68af64;
+        color:white;
+        opacity:0.9
+    }
+}
+.addStudBlockHeader{
+    //background-color: #4d7198;
+    color:#41648A;
+    border-bottom:2px solid #41648A;
+    text-align: center;
+    padding:5px;
+}
+
+.optionalField{
+    color:#41648A!important;
+    border-bottom: 1px solid #41648A;
+    font-size:17px!important;
+}
+
+
+@-webkit-keyframes fadeIn {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+
+.ui.accordion  .active.content{
+    display: block;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
