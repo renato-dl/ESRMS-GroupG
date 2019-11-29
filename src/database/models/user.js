@@ -145,6 +145,19 @@ class User extends Model {
 
     return results;
   }
+  async getParentById(parentId){
+    const connection = await this.db.getConnection();
+    
+    let query = `
+      SELECT ID, eMail, FirstName, LastName, SSN
+      FROM Users
+      WHERE IsParent = true
+      AND ID = ?`;
+
+    const results = await connection.query(query, [parentId]);    
+    connection.release();
+    return results;
+  }
 
 }
 

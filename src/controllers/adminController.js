@@ -153,21 +153,20 @@ class AdminController extends BaseController {
         isAssigned = false;
       }
 
-      students = await Student.getStudentsData(isAssigned, 
+      students = await Student.getStudentsByClassStatus(isAssigned, 
         {
           page: req.query.page,
           pageSize: req.query.pageSize
         }
       );
     }else{
-      Student.findAll(
+      students = await Student.getStudentsWithParentsData(
         {
           page: req.query.page,
           pageSize: req.query.pageSize
         }
       );
     }
-    
     res.send(students);
   }
 

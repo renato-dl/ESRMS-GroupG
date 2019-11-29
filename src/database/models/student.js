@@ -143,9 +143,27 @@ class Student extends Model {
     connection.release();
 
     if (!results.length) {
-      throw new Error('No students registered in the system');
+      throw new Error('No students found!');
     }
     return results;
+  }
+
+  async getStudentsWithParentsData(pagination){
+    const students = await this.findAll(pagination);
+    let result = [];
+    students.forEach(async element => {
+      let newElement = {};
+      newElement.studentInfo = element; 
+      const parent1 = await User.getParentById(element.Parent1);
+      newElement.firstParent = parent1;
+
+      if(element.Parent2){
+        const parent2 = await User.getParentById(element.Parent2);
+        newElement.secondParent = parent2;
+      }
+      this.result.push(newElement);
+    });
+    return result;
   }
 
   async checkIfRelated(studentId, parentId) {
