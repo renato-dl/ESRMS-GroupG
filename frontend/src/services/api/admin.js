@@ -15,5 +15,9 @@ export class AdminAPIService extends BaseAPIService {
     return this.get(`/admin/find-parents?ssn=${str}`);
   }
 
+  saveNewStudent(data){
+    return this.post('/admin/student', data);
+  }
+
 
 }

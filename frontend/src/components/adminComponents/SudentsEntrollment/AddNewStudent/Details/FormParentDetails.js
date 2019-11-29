@@ -4,15 +4,34 @@ import { api } from '../../../../../services/api';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import {Button, Icon,Input, Form, Accordion, Search, Grid, Segment, Label, Header} from 'semantic-ui-react'
+import {Button, Icon,Input, Form, Accordion, Search, Grid, Segment, Label, Header, List} from 'semantic-ui-react'
  
 /////////////////////////START SEARCH STUFF
-const resultRenderer = ({ SSN }) => <Label content={SSN} />
+{/* <><Label content={SSN}/><Label color='teal'> <Icon name ='user'/>{FirstName}&nbsp;{LastName}</Label> </> */}
+{/* <><Header as='h2'><Icon name='user'/><Header.Content>{SSN}<Header.Subheader>{FirstName}&nbsp;{LastName}</Header.Subheader></Header.Content></Header></> */}
+
+const resultRenderer = ({ SSN, FirstName, LastName , eMail}) => <>
+                                                        <Header as='h4' style={{color:"#984d71"}}>
+                                                          <Header.Content><Icon name ="user"/>{FirstName}&nbsp;{LastName}
+                                                            <Header.Subheader style={{fontSize: "18px", color:"#4D7198"}}>{SSN}</Header.Subheader>
+                                                          </Header.Content>
+                                                        </Header>
+                                                        <p style={{fontSize:"13px", color:"#984d71"}}>{eMail}</p>
+                                                        </>
 resultRenderer.propTypes = {
   SSN: PropTypes.string,
   eMail: PropTypes.string,
+  FirstName: PropTypes.string,
+  LastName: PropTypes.string
 }
-const initialState = { isLoading: false, results: [], value: '' }
+
+const initialState = { 
+  isLoading: false, 
+  results: [], 
+  value: '', 
+  P1exists: false, 
+  P2exists:false 
+}
 /////////////////////END SEARCH STUFF
 
 
@@ -100,21 +119,12 @@ export class FormParentDetails extends Component {
             </h2>
 
             <Form>
-            
-            {/* <Form.Input
-              //error={this.state.errors['p1_SSN']}
-              label='SSN' placeholder='SSN'
-              name='p1_SSN'
-              defaultValue = {values.p1_SSN}
-              onChange={handleChange('p1_SSN')}
-              onChange={this.handleP1ssnChange.bind(this)}
-
-            /> */}
-
             <Form.Field>
             <Grid>
               <Grid.Column width={6}>
-                  <label>SSN &nbsp; {this.state.P1exists && <Icon name='check' style = {{color:'#68af64' }}/>}</label>
+                  <label>SSN &nbsp; {this.state.P1exists && <p style = {{color:'#68af64' }}><Icon name='check' />
+                                    Details of this parent are known</p>} 
+                  </label>
                 <Search
                   loading={isLoading}
                   onResultSelect={this.handleResultSelect}
@@ -148,24 +158,6 @@ export class FormParentDetails extends Component {
             </Grid>
             </Form.Field>
 
-
-
-            <Form.Field>
-              <label> 
-                  SSN &nbsp; {this.state.P1exists && <span style = {{color:'#68af64' }}>
-                    <Icon name='check'/>Details of this parent are known.</span>}
-              </label>
-              <Input 
-                  type='text'
-                  placeholder='SSN' 
-                  name='p1_SSN'
-                  id="p1"
-                  defaultValue = {values.p1_SSN}
-
-                  onChange={this.handleSSNChange.bind(this)} 
-                  //onChange={handleChange('p1_SSN')}
-              />
-            </Form.Field>
 
             <Form.Group widths='equal'>
               <Form.Input
