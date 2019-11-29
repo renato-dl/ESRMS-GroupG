@@ -149,25 +149,13 @@ class Student extends Model {
   }
 
   async getStudentsWithParentsData(pagination){
+    // Get all students
     const students = await this.findAll(pagination);
 
-    const result = await Promise.all(students.map(async element => {
-      let newElement = {};
-      newElement.studentInfo = element;  
-      const parent1 = await User.getParentById(element.Parent1);
-      newElement.firstParent = parent1[0];
-
-      if(element.Parent2){
-        const parent2 = await User.getParentById(element.Parent2);
-        newElement.secondParent = parent2[0];
-      }
-      delete newElement.studentInfo['Parent1'];
-      delete newElement.studentInfo['Parent2'];
-      return newElement;
-    }));
-    result.sort((a, b) =>{
-      const nameA = (a.studentInfo.LastName + a.studentInfo.FirstName).toUpperCase();
-      var nameB = (b.studentInfo.LastName + b.studentInfo.FirstName).toUpperCase();
+    // Sort results alphabetically (LastName + FirstName)
+    students.sort((a, b) =>{
+      const nameA = (a.LastName + a.FirstName).toUpperCase();
+      var nameB = (b.LastName + b.FirstName).toUpperCase();
       if (nameA < nameB) {
         return -1;
       }
@@ -177,6 +165,30 @@ class Student extends Model {
 
       return 0;
     });
+
+    // Combine students with their parents
+    const result = await Promise.all(students.map(async element => {
+      // Start from student
+      let newElement = {};
+      newElement.studentInfo = element;
+
+      // Add parent 1 data
+      const parent1 = await User.getParentById(element.Parent1);
+      newElement.firstParent = parent1[0];
+
+      // Add parent 2 data if available
+      if(element.Parent2){
+        const parent2 = await User.getParentById(element.Parent2);
+        newElement.secondParent = parent2[0];
+      }
+      
+      // Remove redundant information
+      delete newElement.studentInfo['Parent1'];
+      delete newElement.studentInfo['Parent2'];
+      return newElement;
+    }));
+
+    
     return result;
   }
 
