@@ -86,6 +86,9 @@ class TeacherController extends BaseController {
     res.send(result);
   }
 
+  /* GET /teacher/grades?
+            classId=123&
+            subjectId=456     */
   async gradesByClassAndSubject(req, res) {
     if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
       req.user.ID,
@@ -95,7 +98,11 @@ class TeacherController extends BaseController {
       res.send(401);
       return;
     }
-    res.send(await Grade.findByClassAndSubject(req.query.classId, req.query.subjectId))
+    res.send(await Grade.findByClassAndSubject(
+      req.query.classId,
+      req.query.subjectId,
+      {page: req.query.page, pageSize: req.query.pageSize}
+    ));
   }
 
 
