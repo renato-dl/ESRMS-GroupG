@@ -1,10 +1,9 @@
 import Topic from "../src/database/models/topic";
-import Subject from "../src/database/models/subject"; 
+import Subject from "../src/database/models/subject";
+import Grade from "../src/database/models/grade"; 
 import Class from "../src/database/models/class";
-import Grade from "../src/database/models/grade";
 import moment from "moment";
 import db from '../src/database';
-
 
 describe('Tests about topic insertion by teacher', () => {
 
@@ -838,6 +837,122 @@ describe('Tests about deletion of a topic by a teacher', () => {
           await Topic.remove(resultInsertion.id);
       }
     });
+});
+
+describe('Tests about insertion of a grade by teacher', () => {
+
+  test("It should add correctly a grade for a student", async() =>{
+    const subjectId = "1";
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = "6.0";
+    const type = "Oral";
+
+    const result = await Grade.addGrade(
+      subjectId,
+      studentId,
+      grade,
+      type
+    );
+
+    expect(result.id).not.toBeNaN();
+
+    const connection = await db.getConnection();
+    const testResult = await connection.query(
+      `SELECT COUNT(*) AS count
+      FROM Grades
+      WHERE ID = ?`,
+      [result.id]
+    );
+
+    connection.release();
+    expect(testResult[0].count).toBe(1);
+
+    await Grade.remove(result.id);
+
+  });
+  
+  test("it should throw Error with message \'Missing or invalid subjectId' when the subjectId is not passed", async() =>{
+
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = "6.0";
+    const type = "Oral";
+    
+    try{
+      const result = await Grade.addGrade(
+        undefined,
+        studentId,
+        grade,
+        type
+    );
+
+  }catch(error){
+    expect(error).toBeInstanceOf(Error);
+    expect(error).toHaveProperty('message', 'Missing or invalid subject id');
+  }
+  
+});
+
+
+test("it should throw Error with message \'Missing or invalid studentId' when the studentId is not passed", async() =>{
+  const subjectId = "1";
+  const grade = "6.0";
+  const type = "Oral";
+  
+  try{
+    const result = await Grade.addGrade(
+      subjectId,
+      undefined,
+      grade,
+      type
+  );
+
+}catch(error){
+  expect(error).toBeInstanceOf(Error);
+  expect(error).toHaveProperty('message', 'Missing or invalid student id');
+}
+
+});
+
+test("it should throw Error with message \'Missing or invalid studentId' when the grade is not passed", async() =>{
+  const subjectId = "1";
+  const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+  const type = "Oral";
+  
+  try{
+    const result = await Grade.addGrade(
+      subjectId,
+      studentId,
+      undefined,
+      type
+  );
+
+  }catch(error){
+    expect(error).toBeInstanceOf(Error);
+    expect(error).toHaveProperty('message', 'Missing or invalid grade');
+  }
+
+});
+
+test("it should throw Error with message \'Missing or invalid studentId' when the type is not passed", async() =>{
+  const subjectId = "1";
+  const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+  const grade = "6.0";
+  
+  try{
+    const result = await Grade.addGrade(
+      subjectId,
+      studentId,
+      grade,
+      undefined
+  );
+
+  }catch(error){
+    expect(error).toBeInstanceOf(Error);
+    expect(error).toHaveProperty('message', 'Missing or invalid type');
+  }
+
+});
+
 });
 
 describe('Teacher tests about visualization of grades', () => {
