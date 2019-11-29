@@ -1,9 +1,9 @@
 import Topic from "../src/database/models/topic";
-import Subject from "../src/database/models/subject"; 
-import Classes from "../src/database/models/class";
+import Subject from "../src/database/models/subject";
+import Grade from "../src/database/models/grade"; 
+import Class from "../src/database/models/class";
 import moment from "moment";
 import db from '../src/database';
-
 
 describe('Tests about topic insertion by teacher', () => {
 
@@ -361,7 +361,7 @@ describe('Teacher tests about visualization of the subjects', () => {
   test("It should retrieve the subjects of a given teacher", async() =>{
     const subjects = await Subject.findByTeacherId('6e5c9976f5813e59816b40a814e29899');
     expect(subjects).not.toBeNull();
-    expect(subjects).toHaveLength(1);
+    expect(subjects).toHaveLength(2);
     expect(subjects).toEqual(
       expect.arrayContaining(
           [
@@ -369,6 +369,11 @@ describe('Teacher tests about visualization of the subjects', () => {
               {
                   "ID": 1,
                   "Name": "Mathematics",
+                  "classid": 1
+              },
+              {
+                  "ID": 3, 
+                  "Name": "Physics", 
                   "classid": 1
               }
             )
@@ -379,7 +384,7 @@ describe('Teacher tests about visualization of the subjects', () => {
   );
 
   test("It should retrieve the class name by its id", async() =>{
-    const classObj = await Classes.getClassNameById(1);
+    const classObj = await Class.getClassNameById(1);
     expect(classObj).not.toBeNull();
     expect(classObj).toHaveLength(2);
     expect(classObj).toEqual("1A");
@@ -832,5 +837,211 @@ describe('Tests about deletion of a topic by a teacher', () => {
           await Topic.remove(resultInsertion.id);
       }
     });
+});
+
+describe('Tests about insertion of a grade by teacher', () => {
+
+  test("It should add correctly a grade for a student", async() =>{
+    const subjectId = "1";
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = "6.0";
+    const type = "Oral";
+
+    const result = await Grade.addGrade(
+      subjectId,
+      studentId,
+      grade,
+      type
+    );
+
+    expect(result.id).not.toBeNaN();
+
+    const connection = await db.getConnection();
+    const testResult = await connection.query(
+      `SELECT COUNT(*) AS count
+      FROM Grades
+      WHERE ID = ?`,
+      [result.id]
+    );
+
+    connection.release();
+    expect(testResult[0].count).toBe(1);
+
+    await Grade.remove(result.id);
+
+  });
+  
+  test("it should throw Error with message \'Missing or invalid subjectId' when the subjectId is not passed", async() =>{
+
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = "6.0";
+    const type = "Oral";
+    
+    try{
+      const result = await Grade.addGrade(
+        undefined,
+        studentId,
+        grade,
+        type
+    );
+
+  }catch(error){
+    expect(error).toBeInstanceOf(Error);
+    expect(error).toHaveProperty('message', 'Missing or invalid subject id');
+  }
+  
+});
+
+
+test("it should throw Error with message \'Missing or invalid studentId' when the studentId is not passed", async() =>{
+  const subjectId = "1";
+  const grade = "6.0";
+  const type = "Oral";
+  
+  try{
+    const result = await Grade.addGrade(
+      subjectId,
+      undefined,
+      grade,
+      type
+  );
+
+}catch(error){
+  expect(error).toBeInstanceOf(Error);
+  expect(error).toHaveProperty('message', 'Missing or invalid student id');
+}
+
+});
+
+test("it should throw Error with message \'Missing or invalid studentId' when the grade is not passed", async() =>{
+  const subjectId = "1";
+  const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+  const type = "Oral";
+  
+  try{
+    const result = await Grade.addGrade(
+      subjectId,
+      studentId,
+      undefined,
+      type
+  );
+
+  }catch(error){
+    expect(error).toBeInstanceOf(Error);
+    expect(error).toHaveProperty('message', 'Missing or invalid grade');
+  }
+
+});
+
+test("it should throw Error with message \'Missing or invalid studentId' when the type is not passed", async() =>{
+  const subjectId = "1";
+  const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+  const grade = "6.0";
+  
+  try{
+    const result = await Grade.addGrade(
+      subjectId,
+      studentId,
+      grade,
+      undefined
+  );
+
+  }catch(error){
+    expect(error).toBeInstanceOf(Error);
+    expect(error).toHaveProperty('message', 'Missing or invalid type');
+  }
+
+});
+
+});
+
+describe('Teacher tests about visualization of grades', () => {
+
+  test('It should retrieve the grades of all the students in a given class for a given subject', async () => {
+    const grades = await Grade.findByClassAndSubject(1,1);
+    expect(grades).not.toBeNull();
+    expect(grades.length).toBeGreaterThanOrEqual(3);
+
+    const date1 = new Date('2019-11-03T00:00:00.000Z');
+    const date2 = new Date('2019-11-03T00:00:00.000Z');
+    const date3 = new Date('2019-11-03T00:00:00.000Z');
+
+
+    expect(grades).toEqual(
+      expect.arrayContaining(
+        [
+          {
+            FirstName: "Gianluca",
+            LastName: "Menzi",
+            Grade: 9,
+            GradeDate: date1,
+            Type: "Written"
+          },
+          {          
+            FirstName: "Martina",
+            LastName: "Menzi",
+            Grade: 7,
+            GradeDate: date2,
+            Type: "Oral"
+          },
+          {          
+            FirstName: "Sara",
+            LastName: "Lorenzini",
+            Grade: 8.5,
+            GradeDate: date3,
+            Type: "Written"
+          }
+        ]
+      )
+    );
+  });
+
+  test('It should throw a missing or invalid class id error', async () => {
+    try {
+      await Grade.findByClassAndSubject(null,8);
+    } catch(error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid class id');
+    }
+  });
+
+  test('It should throw a missing or invalid subject id error', async () => {
+    try {
+      await Grade.findByClassAndSubject(5,null);
+    } catch(error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid subject id');
+    }
+  });
+
+  
+});
+
+describe('Test wether a theacher is authorized to access a given grade', () => {
+
+  test('It should return true', async () => {
+    const auth = await Grade.checkIfGradeIsFromTeacher(1, '6e5c9976f5813e59816b40a814e29899');
+    expect(auth).toBe(true);
+  });
+
+  test('It throw an error about invalid teacher id', async () => {
+    try {
+      await Grade.checkIfGradeIsFromTeacher(1, null);
+    } catch(error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid teacher id');
+    }
+  });
+
+  test('It throw an error about invalid teacher id', async () => {
+    try {
+      await Grade.checkIfGradeIsFromTeacher(undefined, '6e5c9976f5813e59816b40a814e29899');
+    } catch(error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid grade id');
+    }
+  });
+
+  test('It should return false', async () => {
+    const auth = await Grade.checkIfGradeIsFromTeacher(7, '6e5c9976f5813e59816b40a814e29899');
+    expect(auth).toBe(false);
+  });
+
 });
 
