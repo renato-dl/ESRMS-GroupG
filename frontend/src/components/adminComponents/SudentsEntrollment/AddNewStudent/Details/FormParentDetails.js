@@ -1,75 +1,12 @@
 import React, { Component } from 'react'
+import { api } from '../../../../../services/api';
 
-
-import PropTypes from 'prop-types'
-import _ from 'lodash'
-//import faker from 'faker'
+import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import {Button, Icon,Input, Form, Accordion, Search, Grid, Segment, Label, Header} from 'semantic-ui-react'
-import { EventEmitter } from 'events';
  
 /////////////////////////START SEARCH STUFF
-const source = [
-  {
-      "ID": "6d361d43-1308-4ac6-95ab-580138de9141",
-      "eMail": "giorgio.digiorgio@parentsunited.com",
-      "Password": "$2b$12$5x1d5dLKzmkBFJutQ9jdhOLLL.DC2qxTKtuIrwES.BgYa6/WtCiby",
-      "FirstName": "Giorgio",
-      "LastName": "Di Giorgio",
-      "SSN": "PVDZRN27M04G189V",
-      "CreatedOn": "2019-11-27T17:26:09.000Z",
-      "IsAdminOfficer": 0,
-      "IsSysAdmin": 0,
-      "IsParent": 1,
-      "IsTeacher": 0,
-      "IsPrincipal": 0
-  },
-  {
-      "ID": "202db8275d3c06e6ce3fe7a47b30e0fe",
-      "eMail": "marco.lorenzini@gmail.com",
-      "Password": "$2b$12$7jfwLDVzo/A.iLqkiUZk0uHH8ZHkkOQiOuXHnc0e51/r09w95n6Ne",
-      "FirstName": "Marco",
-      "LastName": "Lorenzini",
-      "SSN": "LRNMRC76A02L219A",
-      "CreatedOn": "2019-11-27T17:26:09.000Z",
-      "IsAdminOfficer": 0,
-      "IsSysAdmin": 0,
-      "IsParent": 1,
-      "IsTeacher": 0,
-      "IsPrincipal": 0
-  },
-  {
-      "ID": "9d64fa59c91d9109b11cd9e05162c675",
-      "eMail": "nadia.rossi@gmail.com",
-      "Password": "$2b$12$9o/51NyMn6W2bA/UxQUpheRwBiTC13OpRyNc7k6VnCesHKjlz9GQa",
-      "FirstName": "Nadia",
-      "LastName": "Rossi",
-      "SSN": "RSSNDA76A41L219U",
-      "CreatedOn": "2019-11-27T17:26:09.000Z",
-      "IsAdminOfficer": 0,
-      "IsSysAdmin": 0,
-      "IsParent": 1,
-      "IsTeacher": 0,
-      "IsPrincipal": 0
-  },
-  {
-      "ID": "32d905eaa2770b66baf20282dff09191",
-      "eMail": "lucia.verdi@gmail.com",
-      "Password": "$2b$12$vJfPLV3oGNfbouxAZyEdhuR0ek9nh.Y0pUerBPR1QmRD.xTCwaJ32",
-      "FirstName": "Lucia",
-      "LastName": "Verdi",
-      "SSN": "VRDLCU75A41L219F",
-      "CreatedOn": "2019-11-27T17:26:09.000Z",
-      "IsAdminOfficer": 0,
-      "IsSysAdmin": 0,
-      "IsParent": 1,
-      "IsTeacher": 0,
-      "IsPrincipal": 0
-  }
-]
-
-
-console.log(source)
 const resultRenderer = ({ SSN }) => <Label content={SSN} />
 resultRenderer.propTypes = {
   SSN: PropTypes.string,
@@ -79,14 +16,28 @@ const initialState = { isLoading: false, results: [], value: '' }
 /////////////////////END SEARCH STUFF
 
 
+let source = [];
 
 
 export class FormParentDetails extends Component {
+
+  async updateSearchOptions(val) {
+      const response = await api.admin.searchParentBySSN(val);
+      if (response.data) {
+         source = response.data
+      }
+
+  }
+  
+
   /////////////START SEARCH STUFF
   state = initialState
   handleResultSelect = (e, { result }) => this.setState({ value: result.SSN })
-
+  
   handleSearchChange = (e, { value }) => {
+    
+    this.updateSearchOptions(value);
+
     this.setState({ isLoading: true, value })
 
     setTimeout(() => {
@@ -102,12 +53,6 @@ export class FormParentDetails extends Component {
     }, 300)
   }
   ////////////END SEARCH STUFF
-
-
-
-
-
-
 
   
   handleSSNChange = (event) => {
@@ -191,10 +136,10 @@ export class FormParentDetails extends Component {
                 <pre style={{ overflowX: 'auto' }}>
                   {JSON.stringify(this.state, null, 2)}
                 </pre>
-                {/* <Header>Options</Header>
+                 <Header>Options</Header>
                 <pre style={{ overflowX: 'auto' }}>
                   {JSON.stringify(source, null, 2)}
-                </pre> */}
+                </pre> 
               </Segment>
               </Grid.Column>
 
