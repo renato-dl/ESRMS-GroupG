@@ -40,7 +40,10 @@ export class FormStudentDetails extends Component {
                 onChange={handleChange('stud_LastName')}
               />
             </Form.Group>
-
+            
+{/*---------------------------------------------------
+TODO: Find a way to handle DatePicker change and get value
+*/}
             <Form.Group widths='equal'>
               <Form.Field>
                 <LabelDetail><Icon name="birthday cake"/>Birth Date</LabelDetail>
@@ -49,6 +52,10 @@ export class FormStudentDetails extends Component {
                     /* onChange={handleChange('stud_BirthDate')} */
                 />
               </Form.Field>
+
+{/*---------------------------------------------------
+TODO: Gender is still UNDEFINED in AddNewStudentState
+*/}
               <Form.Select
                 label="Gender" placeholder="Gender"
                 name="stud_Gender"

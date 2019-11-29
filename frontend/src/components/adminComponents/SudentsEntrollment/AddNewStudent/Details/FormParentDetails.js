@@ -4,65 +4,86 @@ import { api } from '../../../../../services/api';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import {Button, Icon,Input, Form, Accordion, Search, Grid, Segment, Label, Header, List} from 'semantic-ui-react'
- 
-/////////////////////////START SEARCH STUFF
-{/* <><Label content={SSN}/><Label color='teal'> <Icon name ='user'/>{FirstName}&nbsp;{LastName}</Label> </> */}
-{/* <><Header as='h2'><Icon name='user'/><Header.Content>{SSN}<Header.Subheader>{FirstName}&nbsp;{LastName}</Header.Subheader></Header.Content></Header></> */}
+import {Button, Icon, Form, Accordion, Search, Grid, Header} from 'semantic-ui-react'
 
-const resultRenderer = ({ SSN, FirstName, LastName , eMail}) => <>
-                                                        <Header as='h4' style={{color:"#984d71"}}>
-                                                          <Header.Content><Icon name ="user"/>{FirstName}&nbsp;{LastName}
-                                                            <Header.Subheader style={{fontSize: "18px", color:"#4D7198"}}>{SSN}</Header.Subheader>
-                                                          </Header.Content>
-                                                        </Header>
-                                                        <p style={{fontSize:"13px", color:"#984d71"}}>{eMail}</p>
-                                                        </>
+//Search Result Layout
+const resultRenderer = ({ SSN, 
+                          FirstName, 
+                          LastName , 
+                          eMail}) => 
+                          <>
+                          <Header as='h4' style={{color:"#984d71"}}>
+                            <Header.Content><Icon name ="user"/>{FirstName}&nbsp;{LastName}
+                              <Header.Subheader style={{fontSize: "18px", color:"#4D7198"}}>{SSN}</Header.Subheader>
+                            </Header.Content>
+                          </Header>
+                          <p style={{fontSize:"13px", color:"#984d71"}}>{eMail}</p>
+                          </>
+
 resultRenderer.propTypes = {
   SSN: PropTypes.string,
   eMail: PropTypes.string,
   FirstName: PropTypes.string,
   LastName: PropTypes.string
 }
-
-const initialState = { 
-  isLoading: false, 
-  results: [], 
-  value: '', 
-  P1exists: false, 
-  P2exists:false 
+//initialState for search field
+const initialState = {
+  activeIndex: 1,     //For Accordion
+  idP1:"",
+  idP2:"",
+  p1_value: '',
+  p2_value:'',          //For Search: final value   TODO: make another one vor parent2
+  isLoading: false,   //For Search: loading icon 
+  results: [],        //For Search: filtered data
 }
-/////////////////////END SEARCH STUFF
-
 
 let source = [];
 
 
-export class FormParentDetails extends Component {
 
+export class FormParentDetails extends Component {
+  state = initialState
+ 
+  back = e => {
+    e.preventDefault();
+    this.props.prevStep();
+  }
+
+  confirm = e => {
+    e.preventDefault();
+    this.props.confirm();
+  };
+
+//--Get/Find Possible Prents from back end
   async updateSearchOptions(val) {
       const response = await api.admin.searchParentBySSN(val);
       if (response.data) {
          source = response.data
       }
-
   }
   
 
-  /////////////START SEARCH STUFF
-  state = initialState
-  handleResultSelect = (e, { result }) => this.setState({ value: result.SSN })
+  //------START SEARCH STUFF
+  handleResultSelect = (e, { result }) => {
+    (e.target.name === "p1_SSN") ? this.setState({idP1: result.ID, p1_value:result.SSN}) : this.setState({idP2: result.ID, p2_value:result.SSN});
+    /* this.setState({ 
+      value: result.SSN,
+      idP1: result.ID
+     }) */
+  }
   
   handleSearchChange = (e, { value }) => {
-    
-    this.updateSearchOptions(value);
 
-    this.setState({ isLoading: true, value })
+    this.setState({idP1:"", idP2:""});
+    this.updateSearchOptions(value);
+    
+
+    this.setState({ isLoading: true, p1_value:value })
 
     setTimeout(() => {
-      if (this.state.value.length < 1) return this.setState(initialState)
+      if (this.state.p1_value.length < 1) return this.setState(initialState)
 
-      const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
+      const re = new RegExp(_.escapeRegExp(this.state.p1_value), 'i')
       const isMatch = (result) => re.test(result.SSN)
 
       this.setState({
@@ -71,24 +92,9 @@ export class FormParentDetails extends Component {
       })
     }, 300)
   }
-  ////////////END SEARCH STUFF
+  //------END SEARCH STUFF
 
-  
-  handleSSNChange = (event) => {
-    //send request /find-parents?ssn=<value>
-    //update autocomplete library with responce ssn  
-    //check if responce array.length==1 && value == response.data[0]["SSN"]  
-    //set id = response.data[0]["ID"] and make P1exists:true
 
-    {(event.target.name === "p1_SSN") ? this.setState({P1exists: event.target.value}) : this.setState({typedP2: event.target.value});}
-  }
-
-  state = { 
-    activeIndex: 1,
-    P1exists:true,
-    P2exists:false
-
-  }
   handleAccordionClick = (e, titleProps) => {
     const { index } = titleProps
     const { activeIndex } = this.state
@@ -97,21 +103,14 @@ export class FormParentDetails extends Component {
   }
 
 
-    back = e => {
-        e.preventDefault();
-        this.props.prevStep();
-    }
 
-    confirm = e => {
-      e.preventDefault();
-      this.props.confirm();
-    };
 
     render() {
+      //for sharing props with FormStudentDetails state
       const {values, handleChange} = this.props;
-/////////
-      const { isLoading, value, results } = this.state
-////////
+
+      const { isLoading, p1_value, results } = this.state
+
         return (
             <>
             <h2 className="addStudBlockHeader">
@@ -121,38 +120,43 @@ export class FormParentDetails extends Component {
             <Form>
             <Form.Field>
             <Grid>
-              <Grid.Column width={6}>
-                  <label>SSN &nbsp; {this.state.P1exists && <p style = {{color:'#68af64' }}><Icon name='check' />
-                                    Details of this parent are known</p>} 
-                  </label>
+              <Grid.Column>
+                  <label>SSN</label>
                 <Search
+                  name="p1_SSN"
                   loading={isLoading}
                   onResultSelect={this.handleResultSelect}
                   onSearchChange={_.debounce(this.handleSearchChange, 500, {
                     leading: true,
                   })}
                   results={results}
-                  value={value}
+                  value={p1_value}
                   resultRenderer={resultRenderer}
                   {...this.props}
                 />
+                
+
+                {(!this.state.idP1.trim() === "") && <p style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</p>}
               </Grid.Column>
               
 
-              
-              <Grid.Column width={10}>
-              <Segment>
-                <Header>State</Header>
-                <pre style={{ overflowX: 'auto' }}>
-                  {JSON.stringify(this.state, null, 2)}
-                </pre>
-                 <Header>Options</Header>
-                <pre style={{ overflowX: 'auto' }}>
-                  {JSON.stringify(source, null, 2)}
-                </pre> 
-              </Segment>
-              </Grid.Column>
+{/* 
+--- VISUALIZE MY STATE 
+--- NOTE: make prev. grid.column width={6} ----------------------------- 
 
+                <Grid.Column width={10}>
+                <Segment>
+                  <Header>State</Header>
+                  <pre style={{ overflowX: 'auto' }}>
+                    {JSON.stringify(this.state, null, 2)}
+                  </pre>
+                  <Header>Options</Header>
+                  <pre style={{ overflowX: 'auto' }}>
+                    {JSON.stringify(source, null, 2)}
+                  </pre> 
+                </Segment>
+                </Grid.Column>
+*/}
 
 
             </Grid>
@@ -163,14 +167,16 @@ export class FormParentDetails extends Component {
               <Form.Input
                 label='First Name' placeholder='First Name'
                 name='p1_FirstName'
-                disabled={this.state.P1exists}
+                disabled = {!this.state.idP1.trim() === ""}
+                //disabled={this.state.P1exists}
                 defaultValue = {values.p1_FirstName}
                 onChange={handleChange('p1_FirstName')}
               />
               <Form.Input
                 label='Last Name' placeholder='Last Name'
                 name='p1_LastName'
-                disabled={this.state.P1exists}
+                disabled = {!this.state.idP1.trim() === ""}
+                //disabled={this.state.P1exists}
                 defaultValue = {values.p1_LastName}
                 onChange={handleChange('p1_LastName')}
               />
@@ -179,7 +185,8 @@ export class FormParentDetails extends Component {
                 fluid icon='envelope' iconPosition='left' 
                 label='E-mail address'type='email'placeholder='E-mail address'
                 name="p1_Email"
-                disabled={this.state.P1exists}
+                disabled = {!this.state.idP1.trim() === ""}
+                //disabled={this.state.P1exists}
                 defaultValue = {values.p1_Email}
                 onChange={handleChange('p1_Email')}
             />
@@ -192,22 +199,15 @@ export class FormParentDetails extends Component {
                 onClick={this.handleAccordionClick}
                 className="optionalField"
              >
-              <Icon name="dropdown"/>
-              <Icon name='user plus' />
-              &nbsp;Second Parent Details (Optional)
+              <Icon name="dropdown"/><Icon name='user plus'/>&nbsp;
+              Second Parent Details (Optional)
             </Accordion.Title>
+
             <Accordion.Content active={this.state.activeIndex === 0}>
                 <>
                 <Form.Group widths='equal'>
-                  {/* <Form.Input
-                    //error={this.state.errors['p2_SSN']}
-                    label='SSN' placeholder='SSN'
-                    name='p2_SSN'
-                    defaultValue = {values.p2_SSN}
-                    onChange={handleChange('p2_SSN')}
-                  /> */}
-
-                  <Form.Field>
+    
+{/*                   <Form.Field>
                     <label> 
                         SSN &nbsp; {this.state.P2exists && <span style = {{color:'#68af64' }}>
                           <Icon name='check'/>Details of this parent are known.</span>}
@@ -219,10 +219,11 @@ export class FormParentDetails extends Component {
                         id="p2"
                         defaultValue = {values.p2_SSN}
 
-                        onChange={this.handleSSNChange.bind(this)} 
+                        //onChange={this.handleSSNChange.bind(this)} 
                         //onChange={handleChange('p2_SSN')}
                     />
                  </Form.Field>
+ */}
 
                   <Form.Input
                     fluid icon='envelope' iconPosition='left'
@@ -251,6 +252,7 @@ export class FormParentDetails extends Component {
                   />
                 </Form.Group>
                 </>
+
             </Accordion.Content>
             </Accordion>
 
