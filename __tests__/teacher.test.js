@@ -1015,3 +1015,33 @@ describe('Teacher tests about visualization of grades', () => {
   
 });
 
+describe('Test wether a theacher is authorized to access a given grade', () => {
+
+  test('It should return true', async () => {
+    const auth = await Grade.checkIfGradeIsFromTeacher(1, '6e5c9976f5813e59816b40a814e29899');
+    expect(auth).toBe(true);
+  });
+
+  test('It throw an error about invalid teacher id', async () => {
+    try {
+      await Grade.checkIfGradeIsFromTeacher(1, null);
+    } catch(error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid teacher id');
+    }
+  });
+
+  test('It throw an error about invalid teacher id', async () => {
+    try {
+      await Grade.checkIfGradeIsFromTeacher(undefined, '6e5c9976f5813e59816b40a814e29899');
+    } catch(error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid grade id');
+    }
+  });
+
+  test('It should return false', async () => {
+    const auth = await Grade.checkIfGradeIsFromTeacher(7, '6e5c9976f5813e59816b40a814e29899');
+    expect(auth).toBe(false);
+  });
+
+});
+
