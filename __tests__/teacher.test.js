@@ -361,7 +361,7 @@ describe('Teacher tests about visualization of the subjects', () => {
   test("It should retrieve the subjects of a given teacher", async() =>{
     const subjects = await Subject.findByTeacherId('6e5c9976f5813e59816b40a814e29899');
     expect(subjects).not.toBeNull();
-    expect(subjects).toHaveLength(1);
+    expect(subjects).toHaveLength(2);
     expect(subjects).toEqual(
       expect.arrayContaining(
           [
@@ -369,6 +369,11 @@ describe('Teacher tests about visualization of the subjects', () => {
               {
                   "ID": 1,
                   "Name": "Mathematics",
+                  "classid": 1
+              },
+              {
+                  "ID": 3, 
+                  "Name": "Physics", 
                   "classid": 1
               }
             )
