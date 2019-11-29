@@ -190,7 +190,18 @@ class User extends Model {
     const connection = await this.db.getConnection();
 
     let query = `
-      SELECT *
+      SELECT
+        ID,
+        FirstName,
+        LastName,
+        SSN,
+        eMail,
+        CreatedOn,
+        IsAdminOfficer,
+        IsSysAdmin,
+        IsParent,
+        IsTeacher,
+        IsPrincipal
       FROM Users
       WHERE IsTeacher = true
       OR IsAdminOfficer = true
