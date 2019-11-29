@@ -56,6 +56,7 @@ export class FormParentDetails extends Component {
 
 //--Get/Find Possible Prents from back end
   async updateSearchOptions(val) {
+//TODO: check quantity of symbols to be > 4 
       const response = await api.admin.searchParentBySSN(val);
       if (response.data) {
          source = response.data
@@ -65,11 +66,11 @@ export class FormParentDetails extends Component {
 
   //------START SEARCH STUFF
   handleResultSelect = (e, { result }) => {
-    (e.target.name === "p1_SSN") ? this.setState({idP1: result.ID, p1_value:result.SSN}) : this.setState({idP2: result.ID, p2_value:result.SSN});
-    /* this.setState({ 
+    //(e.target.name === "p1_SSN") ? this.setState({idP1: result.ID, p1_value:result.SSN}) : this.setState({idP2: result.ID, p2_value:result.SSN})
+     this.setState({ 
       value: result.SSN,
       idP1: result.ID
-     }) */
+     }) 
   }
   
   handleSearchChange = (e, { value }) => {
@@ -129,6 +130,7 @@ export class FormParentDetails extends Component {
                   onSearchChange={_.debounce(this.handleSearchChange, 500, {
                     leading: true,
                   })}
+                  //minCharacters = "4" //minimum characters to show options
                   results={results}
                   value={p1_value}
                   resultRenderer={resultRenderer}
@@ -136,7 +138,7 @@ export class FormParentDetails extends Component {
                 />
                 
 
-                {(!this.state.idP1.trim() === "") && <p style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</p>}
+                {(!this.state.idP1.trim() == "") && <p style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</p>}
               </Grid.Column>
               
 
@@ -167,7 +169,7 @@ export class FormParentDetails extends Component {
               <Form.Input
                 label='First Name' placeholder='First Name'
                 name='p1_FirstName'
-                disabled = {!this.state.idP1.trim() === ""}
+                disabled = {!this.state.idP1.trim() == ""}
                 //disabled={this.state.P1exists}
                 defaultValue = {values.p1_FirstName}
                 onChange={handleChange('p1_FirstName')}
@@ -175,7 +177,7 @@ export class FormParentDetails extends Component {
               <Form.Input
                 label='Last Name' placeholder='Last Name'
                 name='p1_LastName'
-                disabled = {!this.state.idP1.trim() === ""}
+                disabled = {!this.state.idP1.trim() == ""}
                 //disabled={this.state.P1exists}
                 defaultValue = {values.p1_LastName}
                 onChange={handleChange('p1_LastName')}
@@ -185,7 +187,7 @@ export class FormParentDetails extends Component {
                 fluid icon='envelope' iconPosition='left' 
                 label='E-mail address'type='email'placeholder='E-mail address'
                 name="p1_Email"
-                disabled = {!this.state.idP1.trim() === ""}
+                disabled = {!this.state.idP1.trim() == ""}
                 //disabled={this.state.P1exists}
                 defaultValue = {values.p1_Email}
                 onChange={handleChange('p1_Email')}
