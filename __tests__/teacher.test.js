@@ -1,7 +1,9 @@
 import Topic from "../src/database/models/topic";
 import Subject from "../src/database/models/subject";
 import Grade from "../src/database/models/grade"; 
-import Classes from "../src/database/models/class";
+import Subject from "../src/database/models/subject"; 
+import Class from "../src/database/models/class";
+import Grade from "../src/database/models/grade";
 import moment from "moment";
 import db from '../src/database';
 
@@ -385,7 +387,7 @@ describe('Teacher tests about visualization of the subjects', () => {
   );
 
   test("It should retrieve the class name by its id", async() =>{
-    const classObj = await Classes.getClassNameById(1);
+    const classObj = await Class.getClassNameById(1);
     expect(classObj).not.toBeNull();
     expect(classObj).toHaveLength(2);
     expect(classObj).toEqual("1A");
@@ -955,3 +957,64 @@ test("it should throw Error with message \'Missing or invalid studentId' when th
 });
 
 });
+
+describe('Teacher tests about visualization of grades', () => {
+
+  test('It should retrieve the grades of all the students in a given class for a given subject', async () => {
+    const grades = await Grade.findByClassAndSubject(1,1);
+    expect(grades).not.toBeNull();
+    expect(grades.length).toBeGreaterThanOrEqual(3);
+
+    const date1 = new Date('2019-11-03T00:00:00.000Z');
+    const date2 = new Date('2019-11-03T00:00:00.000Z');
+    const date3 = new Date('2019-11-03T00:00:00.000Z');
+
+
+    expect(grades).toEqual(
+      expect.arrayContaining(
+        [
+          {
+            FirstName: "Gianluca",
+            LastName: "Menzi",
+            Grade: 9,
+            GradeDate: date1,
+            Type: "Written"
+          },
+          {          
+            FirstName: "Martina",
+            LastName: "Menzi",
+            Grade: 7,
+            GradeDate: date2,
+            Type: "Oral"
+          },
+          {          
+            FirstName: "Sara",
+            LastName: "Lorenzini",
+            Grade: 8.5,
+            GradeDate: date3,
+            Type: "Written"
+          }
+        ]
+      )
+    );
+  });
+
+  test('It should throw a missing or invalid class id error', async () => {
+    try {
+      await Grade.findByClassAndSubject(null,8);
+    } catch(error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid class id');
+    }
+  });
+
+  test('It should throw a missing or invalid subject id error', async () => {
+    try {
+      await Grade.findByClassAndSubject(5,null);
+    } catch(error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid subject id');
+    }
+  });
+
+  
+});
+
