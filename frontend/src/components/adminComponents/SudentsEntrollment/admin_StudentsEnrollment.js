@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Icon, Modal, Container} from 'semantic-ui-react';
+import {Icon, Modal, Container, Button} from 'semantic-ui-react';
 //import {api} from '../../../services/api';
 //import moment from 'moment';
 
@@ -32,13 +32,17 @@ export class admin_StudentsEnrollment extends Component {
             <Container className="contentContainer">
                 <h3 className="contentHeader">
                     <Icon name='braille'/>
-                    Enroll Students
+                    Students Configuration
                 </h3>
             
-            <button className="ui vk button" onClick={this.addNewStudent}>
+            <Button className="ui vk button" onClick={this.addNewStudent}>
                 <i className="user plus icon"></i>
-                Add New Student
-            </button>
+                Enroll a Student
+            </Button>
+            <Button className="google plus" floated="right" disabled>
+                <Icon name="upload"/>
+                Upload Excel File
+            </Button>
             
             
             
