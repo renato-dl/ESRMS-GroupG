@@ -1,12 +1,9 @@
 import Topic from "../src/database/models/topic";
 import Subject from "../src/database/models/subject";
 import Grade from "../src/database/models/grade"; 
-import Subject from "../src/database/models/subject"; 
 import Class from "../src/database/models/class";
-import Grade from "../src/database/models/grade";
 import moment from "moment";
 import db from '../src/database';
-
 
 describe('Tests about topic insertion by teacher', () => {
 
