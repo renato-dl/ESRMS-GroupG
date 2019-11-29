@@ -6,6 +6,7 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex('TeacherSubjectClassRelation').insert([
         {SubjectId: 1, TeacherId: '6e5c9976f5813e59816b40a814e29899', ClassId: 1},
+        {SubjectId: 3, TeacherId: '6e5c9976f5813e59816b40a814e29899', ClassId: 1}
       ]);
     });
 };
