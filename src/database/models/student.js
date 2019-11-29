@@ -150,19 +150,19 @@ class Student extends Model {
 
   async getStudentsWithParentsData(pagination){
     const students = await this.findAll(pagination);
-    let result = [];
-    students.forEach(async element => {
+
+    const result = await Promise.all(students.map(async element => {
       let newElement = {};
       newElement.studentInfo = element; 
       const parent1 = await User.getParentById(element.Parent1);
-      newElement.firstParent = parent1;
+      newElement.firstParent = parent1[0];
 
       if(element.Parent2){
         const parent2 = await User.getParentById(element.Parent2);
-        newElement.secondParent = parent2;
+        newElement.secondParent = parent2[0];
       }
-      this.result.push(newElement);
-    });
+      return newElement;
+    }));
     return result;
   }
 
