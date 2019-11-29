@@ -119,6 +119,35 @@ class Student extends Model {
     }
   }
 
+  async getStudentsData(isAssigned, pagination){
+    const connection = await this.db.getConnection();
+    let query;
+
+    if(isAssigned){
+      query = `SELECT ID, FirstName, LastName, Gender
+      FROM Students
+      WHERE ClassId IS NOT NULL
+      ORDER BY LastName`
+    }
+    else{
+      query = `SELECT ID, FirstName, LastName, Gender
+      FROM Students
+      WHERE ClassId IS NULL
+      ORDER BY LastName`;
+    }
+    if (pagination) {
+      query += ` ${this.db.getPaginationQuery(pagination)}`
+    }
+
+    const results = await connection.query(query);    
+    connection.release();
+
+    if (!results.length) {
+      throw new Error('No students registered in the system');
+    }
+    return results;
+  }
+
   async checkIfRelated(studentId, parentId) {
     const connenction = await this.db.getConnection();
     const result = await connenction.query(
