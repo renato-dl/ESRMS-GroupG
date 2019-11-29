@@ -153,7 +153,7 @@ class Student extends Model {
 
     const result = await Promise.all(students.map(async element => {
       let newElement = {};
-      newElement.studentInfo = element; 
+      newElement.studentInfo = element;  
       const parent1 = await User.getParentById(element.Parent1);
       newElement.firstParent = parent1[0];
 
@@ -161,8 +161,22 @@ class Student extends Model {
         const parent2 = await User.getParentById(element.Parent2);
         newElement.secondParent = parent2[0];
       }
+      delete newElement.studentInfo['Parent1'];
+      delete newElement.studentInfo['Parent2'];
       return newElement;
     }));
+    result.sort((a, b) =>{
+      const nameA = (a.studentInfo.LastName + a.studentInfo.FirstName).toUpperCase();
+      var nameB = (b.studentInfo.LastName + b.studentInfo.FirstName).toUpperCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+
+      return 0;
+    });
     return result;
   }
 
