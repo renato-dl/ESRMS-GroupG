@@ -23,7 +23,8 @@ import {Topic}  from'../../components/Topic/Topic';
 //*** Admin view Components*/
 import {Admin} from '../Admin/Admin';
 import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
-import {Class_composition} from '../../components/class_composition/class_composition';
+import {Class_composition} from '../../components/Class_composition/Class_composition';
+import {TeacherGrade} from '../../components/TearcherGrade/TeacherGrade';
 import {admin_StudentsEnrollment} from '../../components/adminComponents/SudentsEntrollment/admin_StudentsEnrollment';
 
 
@@ -53,7 +54,8 @@ export class App extends React.Component {
               
               <Route exact path="/teacher" component={Teacher}/>
               <Route exact path="/teacher/subjects" component={Teacher}/>
-              <Route exact path="/teacher/subjects/:subjectID/topics" component={Topic}/>
+              <Route exact path="/teacher/subjects/:subjectID/:subjectName/topics" component={Topic}/>
+              <Route exact path="/teacher/subjects/:subjectID/:subjectName/TeacherGrade" component={TeacherGrade}/>
 
 			        <Route exact path="/admin" component={Admin}/>
               <Route exact path="/admin/configParent" component={ConfigParent}/>
