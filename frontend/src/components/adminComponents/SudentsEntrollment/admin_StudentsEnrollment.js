@@ -39,10 +39,10 @@ export class admin_StudentsEnrollment extends Component {
                 <i className="user plus icon"></i>
                 Enroll a Student
             </Button>
-            <Button className="google plus" floated="right" disabled>
+            {/* <Button className="google plus" floated="right" disabled>
                 <Icon name="upload"/>
                 Upload Excel File
-            </Button>
+            </Button> */}
             
             
             

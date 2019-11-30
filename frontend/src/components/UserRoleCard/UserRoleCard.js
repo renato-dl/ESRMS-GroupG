@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Image, CardContent, Label } from 'semantic-ui-react'
+import { Card, Image, CardContent } from 'semantic-ui-react'
 
 import IsAdminOfficer from '../../assets/images/adminOfficer.png'
 import IsPrincipal from '../../assets/images/principal.png';

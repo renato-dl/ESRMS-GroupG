@@ -28,10 +28,10 @@ resultRenderer.propTypes = {
 }
 //initialState for search field
 const initialState = {
-  idP1:"", 
-  idP2:"",
-  p1_value: '',       //For Search: final value for Parent 2
-  p2_value:'',        //For Search: final value for Parent 2
+  p1_ID:"", 
+  p2_ID:"",
+  p1_SSN: '',       //For Search: final value for Parent 2
+  p2_SSN:'',        //For Search: final value for Parent 2
   isLoading: false,   //For Search: loading icon 
   results: [],        //For Search: filtered data
 }
@@ -41,7 +41,19 @@ let source = [];
 
 
 export class FormParentDetails extends Component {
-  state = {activeIndex: 1};   //For Accordion: not in initialState to not be closed during search
+  state = {
+    activeIndex: 1, 
+    
+    p1_SSN:"",
+    p1_FirstName:"",
+    p1_LastName:"",
+    p1_Email:"",
+
+    p2_SSN:"",
+    p2_FirstName:"",
+    p2_LastName:"",
+    p2_Email:""
+  };   //For Accordion: not in initialState to not be closed during search
   state = initialState
  
   back = e => {
@@ -71,13 +83,20 @@ export class FormParentDetails extends Component {
     //console.log([e.target.name]);
     if(e.target.name === "P1"){
       this.setState({ 
-        p1_value: result.SSN,
-        idP1: result.ID
+        p1_SSN: result.SSN,
+        p1_ID: result.ID,
+        p1_FirstName:"",
+        p1_LastName:"",
+        p1_Email:""
+
        }) 
     }else if (e.target.name === "P2"){
       this.setState({ 
-        p2_value: result.SSN,
-        idP2: result.ID
+        p2_SSN: result.SSN,
+        p2_ID: result.ID,
+        p1_FirstName:"",
+        p1_LastName:"",
+        p1_Email:""
        }) 
     }
   }
@@ -85,16 +104,16 @@ export class FormParentDetails extends Component {
   handleSearchChange = (e, { value }) => {
     e.preventDefault();
 
-    //this.setState({idP1:"", idP2:""});
+    //this.setState({p1_ID:"", p2_ID:""});
     
     this.updateSearchOptions(value);
     
     if(e.target.name === "P1"){
-      this.setState({idP1:""});
-      this.setState({ isLoading: true, p1_value:value })
+      this.setState({p1_ID:""});
+      this.setState({ isLoading: true, p1_SSN:value })
       setTimeout(() => {
-        if (this.state.p1_value.length < 1) return this.setState(initialState)
-        const re = new RegExp(_.escapeRegExp(this.state.p1_value), 'i')
+        if (this.state.p1_SSN.length < 1) return this.setState(initialState)
+        const re = new RegExp(_.escapeRegExp(this.state.p1_SSN), 'i')
         const isMatch = (result) => re.test(result.SSN)
         this.setState({
           isLoading: false,
@@ -102,11 +121,11 @@ export class FormParentDetails extends Component {
       })}, 300)
 
     }else if(e.target.name === "P2"){
-      this.setState({idP2:""});
-      this.setState({ isLoading: true, p2_value:value })
+      this.setState({p2_ID:""});
+      this.setState({ isLoading: true, p2_SSN:value })
       setTimeout(() => {
-        if (this.state.p2_value.length < 1) return this.setState(initialState)
-        const re = new RegExp(_.escapeRegExp(this.state.p2_value), 'i')
+        if (this.state.p2_SSN.length < 1) return this.setState(initialState)
+        const re = new RegExp(_.escapeRegExp(this.state.p2_SSN), 'i')
         const isMatch = (result) => re.test(result.SSN)
         this.setState({
           isLoading: false,
@@ -132,7 +151,7 @@ export class FormParentDetails extends Component {
       //for sharing props with FormStudentDetails state
       const {values, handleChange} = this.props;
 
-      const { isLoading, p1_value, p2_value, results } = this.state
+      const { isLoading, p1_SSN, p2_SSN, results } = this.state
 
         return (
             <>
@@ -155,42 +174,42 @@ export class FormParentDetails extends Component {
                   noResultsMessage = "No Parent Found."
                   //minCharacters = "4" //minimum characters to show options
                   results={results}
-                  value={p1_value}
+                  value={p1_SSN}
                   resultRenderer={resultRenderer}
                   {...this.props}
                 />
                 
-                {(!this.state.idP1.trim() == "") && <h5 style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</h5>}
+                {(!this.state.p1_ID.trim() == "") && <h5 style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</h5>}
               </Grid.Column>
             </Grid>
             </Form.Field>
 
 
-            {(this.state.idP1.trim() == '') &&  
+            {(this.state.p1_ID.trim() == '') &&  
             <>
               <Form.Group widths='equal'>
                 <Form.Input
                   label='First Name' placeholder='First Name'
                   name='p1_FirstName'
-                  //disabled = {!this.state.idP1.trim() == ""}
-                  defaultValue = {values.p1_FirstName}
-                  onChange={handleChange('p1_FirstName')}
+                  //defaultValue = {values.p1_FirstName}
+                  defaultValue = {this.state.p1_FirstName}
+                  //onChange={handleChange('p1_FirstName')}
                 />
                 <Form.Input
                   label='Last Name' placeholder='Last Name'
                   name='p1_LastName'
-                  //disabled = {!this.state.idP1.trim() == ""}
-                  defaultValue = {values.p1_LastName}
-                  onChange={handleChange('p1_LastName')}
+                  //defaultValue = {values.p1_LastName}
+                  defaultValue = {this.state.p1_LastName}
+                  //onChange={handleChange('p1_LastName')}
                 />
               </Form.Group>
               <Form.Input
                   fluid icon='envelope' iconPosition='left' 
                   label='E-mail address'type='email'placeholder='E-mail address'
                   name="p1_Email"
-                  //disabled = {!this.state.idP1.trim() == ""}
-                  defaultValue = {values.p1_Email}
-                  onChange={handleChange('p1_Email')}
+                  //defaultValue = {values.p1_Email}
+                  defaultValue = {this.state.p1_Email}
+                  //onChange={handleChange('p1_Email')}
               />
             </>
             }
@@ -224,37 +243,17 @@ export class FormParentDetails extends Component {
                         noResultsMessage = "No Parent Found."
                         //minCharacters = "4" //minimum characters to show options
                         results={results}
-                        value={p2_value}
+                        value={p2_SSN}
                         resultRenderer={resultRenderer}
                         {...this.props}
                       />
                       
-                      {(!this.state.idP2.trim() == "") && <h5 style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</h5>}
+                      {(!this.state.p2_ID.trim() == "") && <h5 style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</h5>}
                     </Grid.Column>
                   </Grid>
                   </Form.Field>
 
-
-    
-{/*                   <Form.Field>
-                    <label> 
-                        SSN &nbsp; {this.state.P2exists && <span style = {{color:'#68af64' }}>
-                          <Icon name='check'/>Details of this parent are known.</span>}
-                    </label>
-                    <Input 
-                        type='text'
-                        placeholder='SSN' 
-                        name='p2_SSN'
-                        id="p2"
-                        defaultValue = {values.p2_SSN}
-
-                        //onChange={this.handleSSNChange.bind(this)} 
-                        //onChange={handleChange('p2_SSN')}
-                    />
-                 </Form.Field>
- */}
-
-              {(this.state.idP2.trim() == '') &&  
+              {(this.state.p2_ID.trim() == '') &&  
                 <>
                 <Form.Group widths='equal'>
 
@@ -282,8 +281,7 @@ export class FormParentDetails extends Component {
                 </>
               }
 
-            
-
+          
             </></Accordion.Content>
             </Accordion>
 
