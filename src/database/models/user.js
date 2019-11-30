@@ -107,11 +107,11 @@ class User extends Model {
     }
   }
 
-  async insertInternalAccountData(firstName, lastName, eMail, SSN, password, isSysAdmin, isTeacher, isAdminOfficer, isPrincipal) {
+  async insertInternalAccountData(firstName, lastName, eMail, SSN, password, isTeacher, isAdminOfficer, isPrincipal) {
 
     await this.validateUserData(firstName, lastName, eMail, SSN);
     
-    await this.vaidateUserRoles(isSysAdmin, isTeacher, isAdminOfficer, isPrincipal);
+    await this.vaidateUserRoles(isTeacher, isAdminOfficer, isPrincipal);
 
     const connection = await this.db.getConnection();
 
@@ -137,7 +137,6 @@ class User extends Model {
       ID: userId,
       eMail: eMail,
       Password: parentPassword,
-      IsSysAdmin: isSysAdmin,
       IsTeacher: isTeacher,
       IsAdminOfficer: isAdminOfficer,
       IsPrincipal: isPrincipal,
@@ -151,17 +150,13 @@ class User extends Model {
     }
   }  
 
-  async vaidateUserRoles(isSysAdmin, isTeacher, isAdminOfficer, isPrincipal) {
+  async vaidateUserRoles(isTeacher, isAdminOfficer, isPrincipal) {
     if (isTeacher && isAdminOfficer) {
       throw new Error('A user cannot be both teacher and admin officer');
-    }
-    if (isSysAdmin && !isAdminOfficer) {
-      throw new Error('The sysadmin must be also admin officer');
     }
     if (isAdminOfficer && isPrincipal) {
       throw new Error('A user cannot be both admin and principal');
     }
-
     if (!isAdminOfficer && !isTeacher && !isPrincipal) {
       throw new Error('A user must be at least admin officer, principal or teacher');
     }

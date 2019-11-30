@@ -200,7 +200,6 @@ class AdminController extends BaseController {
       req.body.eMail,
       req.body.SSN,
       password,
-      req.body.isSysAdmin,
       req.body.isTeacher,
       req.body.isAdminOfficer,
       req.body.isPrincipal
