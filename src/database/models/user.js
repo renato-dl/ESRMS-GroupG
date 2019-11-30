@@ -174,7 +174,7 @@ class User extends Model {
     });
 
     return {
-      id: parentId
+      id: userId
     }
   }  
 
@@ -188,6 +188,11 @@ class User extends Model {
     if (isAdminOfficer && isPrincipal) {
       throw new Error('A user cannot be both admin and principal');
     }
+
+    if (!isAdminOfficer && !isTeacher && !isPrincipal) {
+      throw new Error('A user must be at least admin officer, principal or teacher');
+    }
+    return;
   }
 
   async updateParentData(parentId, firstName, lastName, eMail, SSN) {
@@ -211,13 +216,13 @@ class User extends Model {
 
   async validateUserData(firstName, lastName, eMail, SSN) {
     //input data validation
-    if (!validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
+    if (!firstName || !validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
       throw new Error('Missing or invalid first name');
     }
-    if (!validator.matches(lastName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
+    if (!lastName || !validator.matches(lastName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
       throw new Error('Missing or invalid last name');
     }
-    if (!validator.isEmail(eMail)) {
+    if (!eMail || !validator.isEmail(eMail)) {
       throw new Error('Missing or invalid email');
     }
     if (!SSN || !validateSSN(SSN)) {
