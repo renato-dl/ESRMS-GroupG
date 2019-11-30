@@ -54,8 +54,7 @@ describe('Tests about the insertion of parent data by admin', () => {
     * 3. missing or invalid lastName
     * 4. missing or invalid eMail
     * 5. missing or invalid SSN
-    * 6. missing or invalid password
-    * 7. Exsisting user
+    * 6. Exsisting user
     */
 
   test('It should perform the insertion', async () => {
@@ -232,6 +231,321 @@ describe('Tests about the insertion of parent data by admin', () => {
   });
 
 });
+
+describe('Tests about the insertion of internal account by admin', () => {
+
+  /*
+  * 1. Ok
+  * 2. missing or invalid firstName
+  * 3. missing or invalid lastName
+  * 4. missing or invalid eMail
+  * 5. missing or invalid SSN
+  * 6. Exsisting user
+  * 7. Both teacher and admin
+  * 8. Both admin and principal
+  * 9. No role
+  */
+  test('It should perform the insertion', async () => {
+
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const result = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(result).toEqual({
+      id: expect.anything()
+    });
+
+    const connection = await db.getConnection();
+
+    const queryResult = await connection.query(
+      `SELECT *
+      FROM Users
+      WHERE ID = ?`,
+      [result.id]
+    );
+
+    expect(queryResult.length).toBe(1);
+    expect(queryResult[0].FirstName).toEqual(testFirstName);
+    expect(queryResult[0].LastName).toEqual(testLastName);
+    expect(queryResult[0].SSN).toEqual(testSSN);
+    expect(queryResult[0].eMail).toEqual(testEmail);
+    expect(queryResult[0].IsSysAdmin).toBeFalsy();
+    expect(queryResult[0].IsTeacher).toBeTruthy();
+    expect(queryResult[0].IsAdminOfficer).toBeFalsy();
+    expect(queryResult[0].IsPrincipal).toBeFalsy();
+
+
+    //delete result for future tests
+    await User.remove(result.id);
+  });
+
+  test('Invalid first name', async () => {
+
+    const testFirstName = '23423';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    try {
+      await User.insertInternalAccountData( 
+          testFirstName, 
+          testLastName, 
+          testEmail, 
+          testSSN, 
+          testPassword,
+          testIsTeacher,
+          testIsAdminOfficer,
+          testIsPrincipal
+      );
+    }catch(error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid first name');
+    }
+    
+
+   
+  });
+
+  test('Invalid last name', async () => {
+
+    const testFirstName = 'Joe';
+    const testLastName = null;
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    try {
+      await User.insertInternalAccountData( 
+          testFirstName, 
+          testLastName, 
+          testEmail, 
+          testSSN, 
+          testPassword,
+          testIsTeacher,
+          testIsAdminOfficer,
+          testIsPrincipal
+      );
+    }catch(error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid last name');
+    }
+
+
+
+  });
+
+  test('Invalid last eMail', async () => {
+
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joe';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    try {
+      await User.insertInternalAccountData( 
+          testFirstName, 
+          testLastName, 
+          testEmail, 
+          testSSN, 
+          testPassword,
+          testIsTeacher,
+          testIsAdminOfficer,
+          testIsPrincipal
+      );
+    }catch(error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid email');
+    }
+
+
+
+  });
+
+  test('Invalid SSN', async () => {
+
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'aaaa';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    try {
+      await User.insertInternalAccountData( 
+          testFirstName, 
+          testLastName, 
+          testEmail, 
+          testSSN, 
+          testPassword,
+          testIsTeacher,
+          testIsAdminOfficer,
+          testIsPrincipal
+      );
+    }catch(error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid SSN');
+    }
+
+
+
+  });
+
+  test('Exsisting user', async () => {
+
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const result = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    try {
+      await User.insertInternalAccountData( 
+          testFirstName, 
+          testLastName, 
+          testEmail, 
+          testSSN, 
+          testPassword,
+          testIsTeacher,
+          testIsAdminOfficer,
+          testIsPrincipal
+      );
+    } catch(error) {
+      //delete result for future tests
+      await User.remove(result.id);
+      expect(error).toHaveProperty('message', 'User already in db');
+    }
+  });
+
+  test('Cannot be teacher and admin', async () => {
+
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = true;
+    const testIsPrincipal = false;
+
+    try {
+      await User.insertInternalAccountData( 
+          testFirstName, 
+          testLastName, 
+          testEmail, 
+          testSSN, 
+          testPassword,
+          testIsTeacher,
+          testIsAdminOfficer,
+          testIsPrincipal
+      );
+    }catch(error) {
+      expect(error).toHaveProperty('message', 'A user cannot be both teacher and admin officer');
+    }
+
+
+
+  });
+
+  test('Cannot be Principal and AdminOfficer', async () => {
+
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = false;
+    const testIsAdminOfficer = true;
+    const testIsPrincipal = true;
+
+    try {
+      await User.insertInternalAccountData( 
+          testFirstName, 
+          testLastName, 
+          testEmail, 
+          testSSN, 
+          testPassword,
+          testIsTeacher,
+          testIsAdminOfficer,
+          testIsPrincipal
+      );
+    }catch(error) {
+      expect(error).toHaveProperty('message', 'A user cannot be both admin and principal');
+    }
+
+
+
+  });
+
+  test('No role defined', async () => {
+
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = false;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    try {
+      await User.insertInternalAccountData( 
+          testFirstName, 
+          testLastName, 
+          testEmail, 
+          testSSN, 
+          testPassword,
+          testIsTeacher,
+          testIsAdminOfficer,
+          testIsPrincipal
+      );
+    }catch(error) {
+      expect(error).toHaveProperty('message', 'A user must be at least admin officer, principal or teacher');
+    }
+
+
+
+  });
+
+}); 
 
 
 describe('Tests about the insertion of student data', () => {
@@ -1334,17 +1648,4 @@ describe('Tests about the visualisation of internal accounts by SysAdmin', () =>
       expect(element.IsTeacher || element.IsAdminOfficer || element.IsPrincipal).toBe(1);
     });
   });  
-});
-
-describe('Tests about the visualisation of internal accounts by SysAdmin', () =>{
-  test('It should receive only internal accounts', async () => {
-
-    const result = await User.findInternalAccounts();
-    expect(result.length).toBeGreaterThanOrEqual(1);
-    result.forEach(element => {
-      expect(element.IsTeacher || element.IsAdminOfficer || element.IsPrincipal).toBe(1);
-    });
-
-  });
-
 });
