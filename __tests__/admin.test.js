@@ -1156,6 +1156,7 @@ describe('Tests about visualization of students data', () => {
 });
 
 describe('Tests about the edition of a student', () =>{
+
   
   test('It should do the edition of a student correctly', async () => {
 
@@ -1403,7 +1404,6 @@ describe('Tests about the edition of a student', () =>{
     await User.remove(testParent2.id);
   }
   });
-})
 
   test('It should throw Error with message \'Missing or invalid gender\'', async () => {
 
@@ -1774,6 +1774,7 @@ describe('Tests about the edition of a student', () =>{
   }
   });
 
+});
 
 describe('Tests about the visualisation of internal accounts by SysAdmin', () =>{
   test('It should receive only internal accounts', async () => {
