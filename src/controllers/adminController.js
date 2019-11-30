@@ -178,13 +178,20 @@ class AdminController extends BaseController {
   }
 
   async getInternalAccountsData(req, res) {
-    const internalAccounts = await User.findInternalAccounts( 
-      {
-        page: req.query.page,
-        pageSize: req.query.pageSize
-      });
+    const internalAccounts = await User.findInternalAccounts({
+      page: req.query.page,
+      pageSize: req.query.pageSize
+    });
 
     res.send(internalAccounts);
+  }
+
+  async getClasses(req, res) {
+    const classes = await ClassModel.getClasses({
+      page: req.query.page, pageSize: req.query.pageSize
+    });
+
+    res.send(classes);
   }
 
   async assignStudentsToClass(req, res) {
