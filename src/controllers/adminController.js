@@ -4,6 +4,7 @@ import Student from "../database/models/student";
 import nodemailer from 'nodemailer';
 import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
+import ClassModel from '../database/models/class';
 
 class AdminController extends BaseController {
 
@@ -152,13 +153,21 @@ class AdminController extends BaseController {
   }
 
   async getInternalAccountsData(req, res) {
-    const internalAccounts = await User.findInternalAccounts( 
-      {
-        page: req.query.page,
-        pageSize: req.query.pageSize
-      });
+    const internalAccounts = await User.findInternalAccounts({
+      page: req.query.page,
+      pageSize: req.query.pageSize
+    });
 
     res.send(internalAccounts);
+  }
+
+  async getClasses(req, res) {
+    const classes = await ClassModel.findAll({
+      page: req.query.page,
+      pageSize: req.query.pageSize
+    })
+
+    res.send(classes);
   }
 
   sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){
