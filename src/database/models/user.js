@@ -97,7 +97,7 @@ class User extends Model {
 
   async insertParentData(firstName, lastName, eMail, SSN, password) {
 
-    await this.validateParentData(firstName, lastName, eMail, SSN);
+    await this.validateUserData(firstName, lastName, eMail, SSN);
 
     const connection = await this.db.getConnection();
 
@@ -134,9 +134,65 @@ class User extends Model {
     }
   }
 
+  async insertInternalAccountData(firstName, lastName, eMail, SSN, password, isSysAdmin, isTeacher, isAdminOfficer, isPrincipal) {
+
+    await this.validateUserData(firstName, lastName, eMail, SSN);
+    
+    await this.vaidateUserRoles(isSysAdmin, isTeacher, isAdminOfficer, isPrincipal);
+
+    const connection = await this.db.getConnection();
+
+    const selectResult = await connection.query(
+      `SELECT COUNT(*) AS count
+      FROM Users
+      WHERE SSN = ? OR eMail = ?;`,
+      [SSN, eMail]
+    );
+
+    connection.release();
+
+    if (selectResult[0].count != 0) {
+      connection.release();
+      throw new Error('User already in db')
+    }
+
+    //insert of data
+    const userId = uuid();
+    const parentPassword = createSecurePassword(password);
+
+    await this.create({
+      ID: userId,
+      eMail: eMail,
+      Password: parentPassword,
+      IsSysAdmin: isSysAdmin,
+      IsTeacher: isTeacher,
+      IsAdminOfficer: isAdminOfficer,
+      IsPrincipal: isPrincipal,
+      FirstName: firstName,
+      LastName: lastName,
+      SSN: SSN
+    });
+
+    return {
+      id: parentId
+    }
+  }  
+
+  async vaidateUserRoles(isSysAdmin, isTeacher, isAdminOfficer, isPrincipal) {
+    if (isTeacher && isAdminOfficer) {
+      throw new Error('A user cannot be both teacher and admin officer');
+    }
+    if (isSysAdmin && !isAdminOfficer) {
+      throw new Error('The sysadmin must be also admin officer');
+    }
+    if (isAdminOfficer && isPrincipal) {
+      throw new Error('A user cannot be both admin and principal');
+    }
+  }
+
   async updateParentData(parentId, firstName, lastName, eMail, SSN) {
 
-    await this.validateParentData(firstName, lastName, eMail, SSN);
+    await this.validateUserData(firstName, lastName, eMail, SSN);
 
     //update of data
     
@@ -153,7 +209,7 @@ class User extends Model {
     }
   }
 
-  async validateParentData(firstName, lastName, eMail, SSN) {
+  async validateUserData(firstName, lastName, eMail, SSN) {
     //input data validation
     if (!validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
       throw new Error('Missing or invalid first name');
