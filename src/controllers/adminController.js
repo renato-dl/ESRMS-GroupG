@@ -143,12 +143,37 @@ class AdminController extends BaseController {
   }
   
   async getStudentsData(req, res){
-    const students = await User.getStudentsData(req.query.isAssigned, 
-      {
-        page: req.query.page,
-        pageSize: req.query.pageSize
-      });
+    let students;
 
+    if(req.query.hasOwnProperty("classId")){
+      students = await Student.getStudentsDataByClassId(req.query.classId);
+      res.send(students);
+      return;
+    }
+    if(req.query.hasOwnProperty("isAssigned")){
+      let isAssigned;  
+      if(req.query.isAssigned == 1){
+        isAssigned = true;
+      }else if(req.query.isAssigned == 0){
+        isAssigned = false;
+      }else{
+        throw new Error("Invalid isAssigned parameter!");
+      }
+
+      students = await Student.getStudentsData(isAssigned, 
+        {
+          page: req.query.page,
+          pageSize: req.query.pageSize
+        }
+      );
+    }else{
+      students = await Student.getStudentsWithParentsData(
+        {
+          page: req.query.page,
+          pageSize: req.query.pageSize
+        }
+      );
+    }
     res.send(students);
   }
 
@@ -167,6 +192,18 @@ class AdminController extends BaseController {
     });
 
     res.send(classes);
+  }
+
+  async assignStudentsToClass(req, res) {
+    const classID = req.params.classID;
+    const students = req.body.students;
+
+    if (!students || !students.length) {
+      throw new Error('Empty or invalid students list.');
+    }
+
+    const results = await ClassModel.assignStudentsToClass(classID, students);
+    res.send(results);
   }
 
   sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){

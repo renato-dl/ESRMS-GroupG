@@ -46,6 +46,31 @@ class Class extends Model {
 
     return results;
   }
+  
+  async assignStudentsToClass(classID, students) {
+    const studentsIDs = students.map((s) => "'" + s + "'").join(',');
+    const query = `
+      UPDATE Students
+      SET ClassId = ?
+      WHERE ID IN (${studentsIDs})
+    `;
+
+    const res = {};
+    const connection = await this.db.getConnection();
+    const results = await connection.query(query, [classID]);
+    
+    connection.release();
+
+    if (!results.affectedRows) {
+      res["Success"] = false;
+      res["Message"] = "Something went wrong."; 
+    } else {
+      res["Success"] = true;
+      res["Message"] = "Students associated successfully."; 
+    }
+
+    return res;
+  }
 }
 
 export default new Class();
