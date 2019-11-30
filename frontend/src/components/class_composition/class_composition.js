@@ -1,6 +1,6 @@
 import React from 'react';
 //import { api } from '../../services/api';
-import {Table, Icon} from 'semantic-ui-react';
+import {Table, Icon, Container} from 'semantic-ui-react';
 //import { NoData } from '../NoData/NoData';
 
 export class Class_composition extends React.Component{
@@ -25,7 +25,7 @@ export class Class_composition extends React.Component{
 
   render(){
    return ( 
-   <div className="contentContainer">
+   <Container className="contentContainer">
    <h3 className="contentHeader"> 
      <Icon name='braille'/> 
      Class Composition
@@ -51,7 +51,7 @@ export class Class_composition extends React.Component{
      )} 
      </Table.Body>
      </Table>
- </div>
+ </Container>
 
    )
   }

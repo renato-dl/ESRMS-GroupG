@@ -19,7 +19,19 @@
         font-size:16px;
     }
     div.pusher{background-color:#f1f1f1}
-    div.customSegment{padding:5px;}
+    div.customSegment.Open{    
+        width: calc(100% - 260px)!important;
+        min-width:360px;
+        transition: width 0.5s;
+        //background-color: red;
+    }
+
+    div.customSegment.Closed{
+        //background: yellow;
+        width: 100%;
+        min-width:360px;
+        transition: width 0.5s;
+    }
 }
 
 .menuStandard > i{
@@ -50,4 +62,10 @@
     }
 
 } 
+
+.ui.modal>.header{
+    background-color:#485865!important;
+    color:#fff!important;
+    text-transform: uppercase!important;
+}
 
