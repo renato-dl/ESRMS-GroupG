@@ -119,6 +119,32 @@ class Student extends Model {
     }
   }
 
+
+  async getStudentsDataByClassId(classId, pagination){
+
+    if(!classId){
+      throw new Error('Invalid class id parameters!');
+    }
+    
+    const connection = await this.db.getConnection();
+    const query = `SELECT ID, FirstName, LastName, Gender
+    FROM Students
+    WHERE ClassId = ?
+    ORDER BY LastName`;
+
+    if (pagination) {
+      query += ` ${this.db.getPaginationQuery(pagination)}`
+    }
+
+    const results = await connection.query(query, [classId]);    
+    connection.release();
+
+    if (!results.length) {
+      throw new Error('No students found!');
+    }
+    return results;
+  }
+
   async getStudentsData(isAssigned, pagination){
     const connection = await this.db.getConnection();
     let query;

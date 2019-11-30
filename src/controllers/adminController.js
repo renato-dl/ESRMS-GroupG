@@ -143,6 +143,12 @@ class AdminController extends BaseController {
   
   async getStudentsData(req, res){
     let students;
+
+    if(req.query.hasOwnProperty("classId")){
+      students = await Student.getStudentsDataByClassId(req.query.classId);
+      res.send(students);
+      return;
+    }
     if(req.query.hasOwnProperty("isAssigned")){
       let isAssigned;  
       if(req.query.isAssigned == 1){
