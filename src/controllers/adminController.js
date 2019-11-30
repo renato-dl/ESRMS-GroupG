@@ -153,11 +153,13 @@ class AdminController extends BaseController {
       let isAssigned;  
       if(req.query.isAssigned == 1){
         isAssigned = true;
-      }else{
+      }else if(req.query.isAssigned == 0){
         isAssigned = false;
+      }else{
+        throw new Error("Invalid isAssigned parameter!");
       }
 
-      students = await Student.getStudentsByClassStatus(isAssigned, 
+      students = await Student.getStudentsData(isAssigned, 
         {
           page: req.query.page,
           pageSize: req.query.pageSize
