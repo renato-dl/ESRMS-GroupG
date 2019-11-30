@@ -233,7 +233,7 @@ class AdminController extends BaseController {
 
 
   async deleteAccount(req, res) {
-    const result = await User.deleteAccount(req.user.ID, req.body.ID);
+    const result = await User.deleteAccount(req.body.ID);
     res.send(result);
   }
 

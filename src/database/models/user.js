@@ -3,6 +3,7 @@ import uuid from 'uuid/v4';
 import validator from 'validator';
 import {createSecurePassword} from '../../services/passwordGenerator';
 import {validateSSN} from '../../services/ssnValidator'
+import student from './student';
 
 class User extends Model {
   constructor() {
@@ -260,6 +261,71 @@ class User extends Model {
     return results;
   }
 
+
+  async deleteAccount(accountId){
+
+    const connection = await this.db.getConnection();
+
+    //check if the account exists and can be deleted
+
+    const checkAccount = await connection.query(
+      `SELECT IsParent as isP, IsSysAdmin as isSA, IsTeacher as isT
+      FROM Users 
+      WHERE ID = ?`,
+      [accountId]
+    );
+
+    if(!checkAccount.length){
+      throw new Error ('Account does not exist');      
+    }
+
+    console.log(checkAccount);
+
+    if(checkAccount[0].isSA){
+      throw new Error ('Operation not permitted');      
+    }
+
+    if(checkAccount[0].isP){
+      const hasChildren = await connection.query(
+        `SELECT *
+        FROM Students 
+        WHERE Parent1 = ? OR Parent2 = ?`,
+        [accountId, accountId]
+      );
+
+      if(hasChildren.length){
+        throw new Error ('Operation not permitted');
+      }
+    }
+
+    if(checkAccount[0].isT){
+      
+      const hasClass = await connection.query(
+        `SELECT *
+        FROM TeacherSubjectClassRelation 
+        WHERE TeacherId = ?`,
+        [accountId]
+      );
+
+      if(hasClass.length){
+        throw new Error ('Operation not permitted');
+      }
+
+      const isCoordinator = await connection.query(
+        `SELECT *
+        FROM Classes 
+        WHERE CoordinatorId = ?`,
+        [accountId]
+      );
+
+      if(isCoordinator.length){
+        throw new Error ('Operation not permitted');
+      }
+    }
+
+    connection.release();
+    await this.remove(accountId);
+  }
 }
 
 export default new User();
