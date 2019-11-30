@@ -161,6 +161,40 @@ class AdminController extends BaseController {
     res.send(internalAccounts);
   }
 
+  async insertInternalAccount(req, res) {
+    let isSysAdmin = false;
+    let isTeacher = false;
+    let isAdminOfficer = false;
+    let isPrincipal = false;
+    if (req.body.isSysAdmin == 1) {
+      isSysAdmin = true;
+    }
+    if (req.body.isTeacher == 1) {
+      isTeacher = true;
+    }
+    if (req.body.isAdminOfficer == 1) {
+      isAdminOfficer = true;
+    }
+    if (req.body.isPrincipal == 1) {
+      isPrincipal = true;
+    }
+    const password = genRandomString(8);
+    const result = await User.insertInternalAccountData(
+      req.body.firstName,
+      req.body.lastName,
+      req.body.eMail,
+      req.body.SSN,
+      password,
+      isSysAdmin,
+      isTeacher,
+      isAdminOfficer,
+      isPrincipal
+    );
+
+    res.send({success:true, id: result.id});
+    
+  }
+
   sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){
     try{
       const emailService =  `${config.email.service}`;
