@@ -186,6 +186,39 @@ class User extends Model {
     return results;
   }
 
+  async findInternalAccounts(pagination) {
+    const connection = await this.db.getConnection();
+
+    let query = `
+      SELECT
+        ID,
+        FirstName,
+        LastName,
+        SSN,
+        eMail,
+        CreatedOn,
+        IsAdminOfficer,
+        IsSysAdmin,
+        IsParent,
+        IsTeacher,
+        IsPrincipal
+      FROM Users
+      WHERE IsTeacher = true
+      OR IsAdminOfficer = true
+      OR IsPrincipal = true
+      ORDER BY LastName
+    `;
+
+    if (pagination) {
+      query += ` ${this.db.getPaginationQuery(pagination)}`
+    }
+
+    const results = await connection.query(query);    
+    connection.release();
+
+    return results;
+  }
+
 }
 
 export default new User();
