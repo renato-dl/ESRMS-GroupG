@@ -3,13 +3,16 @@
     //width:100%;
     background-color: #fff;
     padding:13px!important;
-    height: 59px;
+    height: 80px;
     border:1px solid #c5c5c5;
     border-left:5px solid #008272;
     margin-bottom:10px;
     font-size:12;
 
     i{color:#607D8B}
+    Topics{
+        color:'blue'
+    }
 }
 .item.myListItem:hover{
     //background-color: #E3EBEE;

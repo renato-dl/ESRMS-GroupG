@@ -776,3 +776,15 @@ describe('Tests about visualization of students data', () => {
     } 
   });
 });
+
+describe('Tests about the visualisation of internal accounts by SysAdmin', () =>{
+  test('It should receive only internal accounts', async () => {
+
+    const result = await User.findInternalAccounts();
+    expect(result.length).toBeGreaterThanOrEqual(1);
+    result.forEach(element => {
+      expect(element.IsTeacher || element.IsAdminOfficer || element.IsPrincipal).toBe(1);
+    });
+
+  });
+})

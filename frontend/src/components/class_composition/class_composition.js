@@ -1,6 +1,7 @@
 import React from 'react';
 //import { api } from '../../services/api';
-import {Table, Icon} from 'semantic-ui-react';
+import {Table, Icon, Container} from 'semantic-ui-react';
+import ClassCompositionDetail from './ClassCompositionDetail/ClassCompositionDetail';
 //import { NoData } from '../NoData/NoData';
 
 export class Class_composition extends React.Component{
@@ -13,7 +14,11 @@ export class Class_composition extends React.Component{
       {ID:1,Creation_Year:9,Name:'A',CoordinatorName:'c1'},
       {ID:2,Creation_Year:9,Name:'B',CoordinatorName:'c2'},
       {ID:3,Creation_Year:9,Name:'C',CoordinatorName:'c3'}
-      ]
+      ], 
+      classId: null, 
+      className: null, 
+      enrolledStudents: [],
+      isStudentsOpen: false
   }
 }
   async componentDidMount(){
@@ -22,10 +27,13 @@ export class Class_composition extends React.Component{
   selectMarks = async (studentID) => {
   };
 
+  onClassDetailClose = () => {
+    this.setState({classId: null, className: null, isStudentsOpen: false});
+  };
 
   render(){
    return ( 
-   <div className="contentContainer">
+   <Container className="contentContainer">
    <h3 className="contentHeader"> 
      <Icon name='braille'/> 
      Class Composition
@@ -41,18 +49,35 @@ export class Class_composition extends React.Component{
        </Table.Row>
    </Table.Header>
      <Table.Body>
-     {this.state.Class_composition.map((data) =>
-       <Table.Row>
+     {this.state.Class_composition.map((data, index) =>
+       <Table.Row key={index}>
            <Table.Cell>{ data.ID } </Table.Cell>
            <Table.Cell>{ data.Name } </Table.Cell>
            <Table.Cell>{data.CoordinatorName}</Table.Cell>
-           <Table.Cell><button type='button'>details</button></Table.Cell>
+           <Table.Cell>
+             <button type='button'>details</button>
+             <button type='button' onClick={() =>{
+             this.setState({classId: data.ID});
+             this.setState({className: data.Name});
+             this.setState({isStudentsOpen: true});
+            }}>Add Students</button>
+             </Table.Cell>
        </Table.Row>
      )} 
      </Table.Body>
      </Table>
- </div>
-
+     {this.state.isStudentsOpen &&
+            <ClassCompositionDetail
+              classId= {this.state.classId}
+              className= {this.state.className}
+              onClose={this.onClassDetailClose}
+              onSave={() => {
+                this.onClassDetailClose();
+              }}
+            />
+          }
+ </Container>
+     
    )
   }
 }

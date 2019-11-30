@@ -56,17 +56,23 @@ class TopicDetails extends React.Component {
         topicDate: this.state.date.toUTCString()
       };
 
-      this.state.topicID ?
-        await api.teacher.updateTopic(
-          params.teacherID,
-          topicData
-        ) :
+      if(!this.state.topicID){
         await api.teacher.saveTopic(
-          params.teacherID,
           topicData
         );
-
-      toastr.success(`Topic ${this.state.topicID ? 'updated' : 'added'} successfully.`);
+        toastr.success(`Topic ${this.state.topicID ? 'updated' : 'added'} successfully.`);
+      }
+      else{
+        const reqResult = await api.teacher.updateTopic(
+          topicData
+        );  
+        if(reqResult.data.Success){
+          toastr.success('Topic updated successfully.');
+        }
+        else{
+          toastr.error(reqResult.data.Message);
+        }
+      }      
     } catch (e) {
       this.setState({isSaving: false});
       return toastr.error(e);

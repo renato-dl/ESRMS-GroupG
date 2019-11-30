@@ -13,17 +13,17 @@ export const AdminMenu = (props) => (
       </span>
     </Menu.Item>
 
+    <Menu.Item as={Link} to='/admin/enrollStudents'>
+      <Icon name='child' />
+      Students
+    </Menu.Item>
     <Menu.Item as={Link} to='/admin/configParent'>
       <Icon name='users' />
-      Parents of Students
-    </Menu.Item>
-    <Menu.Item as={Link} to='/enrollment'>
-      <Icon name='child' />
-      Students Enrollment
+      Parents' Access
     </Menu.Item>
     <Menu.Item as={Link} to='/admin/Class_composition'>
       <Icon name='linode' />
-      Class Composition
+      Class Compositions
     </Menu.Item>
     <Menu.Item as={Link} to='/accounts'>
       <Icon name='wrench' />

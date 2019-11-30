@@ -21,4 +21,8 @@ export class TeacherAPIService extends BaseAPIService {
   deleteTopic(data){
     return this.delete(`/teacher/topic`, data);
   }
+
+  getTeacherGrades(classId,subjectId){
+    return this.get(`/teacher/grades?subjectId=${subjectId}&classId=${classId}`);
+  }
 }
