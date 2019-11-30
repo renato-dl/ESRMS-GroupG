@@ -231,6 +231,12 @@ class AdminController extends BaseController {
     res.send(results);
   }
 
+
+  async deleteAccount(req, res) {
+    const result = await User.deleteAccount(req.user.ID, req.body.ID);
+    res.send(result);
+  }
+
   sendEmailToUser(parentEmail, parentPassword, parentName, parentSurname){
     try{
       const emailService =  `${config.email.service}`;
