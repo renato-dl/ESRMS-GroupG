@@ -217,6 +217,8 @@ class AdminController extends BaseController {
     );
 
     res.send({success:true, id: result.id});
+
+  }
     
   async getClasses(req, res) {
     const classes = await ClassModel.getClasses({
