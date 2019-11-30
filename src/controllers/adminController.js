@@ -20,7 +20,7 @@ class AdminController extends BaseController {
 
   async getParentsBySSN(req, res) {
     const ssn = req.query.ssn || '';
-    const parents = await User.searchParentsBySSN(ssn);
+    const parents = await User.searchUsersBySSN(ssn);
 
     res.send(parents);
   }
@@ -63,6 +63,7 @@ class AdminController extends BaseController {
         parent1Insert = true;
       } else {
         parent1 = req.body.firstParent.ID;
+        await User.makeParentIfNotAlready(parent1);
       }
     }
     if (req.body.hasOwnProperty('secondParent')) {
@@ -78,6 +79,7 @@ class AdminController extends BaseController {
         parent2Insert = true;
       } else {
         parent2 = req.body.secondParent.ID;
+        await User.makeParentIfNotAlready(parent1);
       }
     } else {
       parent2 = null;

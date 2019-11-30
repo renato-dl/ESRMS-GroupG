@@ -35,6 +35,19 @@ class User extends Model {
     return true;
   }
 
+  async makeParentIfNotAlready(userId) {
+
+    let user;
+    try {
+      user = await this.findById(userId);
+    } catch(err) {
+      throw new Error('Invalid userId');
+    }
+    if (user.IsParent != 1) {
+      this.update(userId, {IsParent: true});
+    }
+  }
+
   async getParentData(pagination){
     const connection = await this.db.getConnection();
     let query = `SELECT FirstName, LastName, SSN , eMail, CreatedOn
@@ -190,14 +203,13 @@ class User extends Model {
     }
   }
 
-  async searchParentsBySSN(ssn) {
+  async searchUsersBySSN(ssn) {
     const connection = await this.db.getConnection();
     
     let query = `
       SELECT *
       FROM Users
-      WHERE IsParent = true
-      AND SSN LIKE '%${ssn}%'
+      WHERE SSN LIKE '%${ssn}%'
       ORDER BY LastName
     `;
 
