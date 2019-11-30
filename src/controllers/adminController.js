@@ -185,22 +185,6 @@ class AdminController extends BaseController {
   }
 
   async insertInternalAccount(req, res) {
-    let isSysAdmin = false;
-    let isTeacher = false;
-    let isAdminOfficer = false;
-    let isPrincipal = false;
-    if (req.body.isSysAdmin == 1) {
-      isSysAdmin = true;
-    }
-    if (req.body.isTeacher == 1) {
-      isTeacher = true;
-    }
-    if (req.body.isAdminOfficer == 1) {
-      isAdminOfficer = true;
-    }
-    if (req.body.isPrincipal == 1) {
-      isPrincipal = true;
-    }
     const password = genRandomString(8);
     const result = await User.insertInternalAccountData(
       req.body.firstName,
@@ -208,10 +192,10 @@ class AdminController extends BaseController {
       req.body.eMail,
       req.body.SSN,
       password,
-      isSysAdmin,
-      isTeacher,
-      isAdminOfficer,
-      isPrincipal
+      req.body.isSysAdmin,
+      req.body.isTeacher,
+      req.body.isAdminOfficer,
+      req.body.isPrincipal
     );
     this.sendEmailToUser(req.body.eMail, password, req.body.firstName, req.body.lastName);
 
