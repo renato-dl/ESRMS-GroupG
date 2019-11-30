@@ -20,13 +20,13 @@ export class Teacher extends React.Component{
     }
   }
 
-  onSubjectClick = (subjectID) => {
+  onSubjectClick = (subjectID,subjectName) => {
     //const {params} = this.props.match;
-    this.props.history.push(`/teacher/subjects/${subjectID}/topics`);
+    this.props.history.push(`/teacher/subjects/${subjectID}/${subjectName}/topics`);
   };
 
-  onSubjectGradeClick = (subjectID)=>{
-    this.props.history.push(`/teacher/subjects/${subjectID}/TeacherGrade`);
+  onSubjectGradeClick = (subjectID,subjectName)=>{
+    this.props.history.push(`/teacher/subjects/${subjectID}/${subjectName}/TeacherGrade`);
   }
 
     render() {
@@ -50,10 +50,10 @@ export class Teacher extends React.Component{
 
                             <List.Description as='div' className="subjectListClass">
                               Class: {subject.class}
-                              <Button className='Topics' color='blue'  onClick={() => this.onSubjectClick(subject.subjectId)}>
+                              <Button className='Topics' color='blue'  onClick={() => this.onSubjectClick(subject.subjectId,subject.subject)}>
                               Topics
                               </Button>
-                              <Button className='Grades'  color='blue' onClick={()=>this.onSubjectGradeClick(subject.subjectId)}>
+                              <Button className='Grades'  color='blue' onClick={()=>this.onSubjectGradeClick(subject.subjectId,subject.subject)}>
                               Grades
                               </Button>
                             </List.Description>

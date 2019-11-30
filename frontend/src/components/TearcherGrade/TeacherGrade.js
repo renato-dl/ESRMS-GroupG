@@ -14,7 +14,8 @@ export class TeacherGrade extends React.Component{
       super(props);
       this.state = {
           gradeList:[],
-          subjectID:null
+          subjectID:null,
+          subjectName:null
         }
        
     }
@@ -22,11 +23,12 @@ export class TeacherGrade extends React.Component{
     async componentDidMount(){
         const {params} = this.props.match;
         this.setState({
-            subjectID: this.props.match.params.subjectID
+            subjectName: this.props.match.params.subjectName
         })
         const response = await api.teacher.getTeacherGrades(1, params.subjectID);
         if (response) {
            this.setState({gradeList:response.data})
+           console.log(this.props)
           } 
       }
       styleMarkColor(mark) {
@@ -41,7 +43,7 @@ export class TeacherGrade extends React.Component{
         <Container className="Grades-container contentContainer">
         <h3 className="contentHeader">
           <Icon name='braille'/>
-          Grades of Class 1 ,Subject {this.state.subjectID}
+          Grades of Class 1 ,Subject {this.state.subjectName}
         </h3>
          <Table className='Marks_table' columns={5}>
          <Table.Header>

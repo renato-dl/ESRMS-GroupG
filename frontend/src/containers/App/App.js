@@ -54,8 +54,8 @@ export class App extends React.Component {
               
               <Route exact path="/teacher" component={Teacher}/>
               <Route exact path="/teacher/subjects" component={Teacher}/>
-              <Route exact path="/teacher/subjects/:subjectID/topics" component={Topic}/>
-              <Route exact path="/teacher/subjects/:subjectID/TeacherGrade" component={TeacherGrade}/>
+              <Route exact path="/teacher/subjects/:subjectID/:subjectName/topics" component={Topic}/>
+              <Route exact path="/teacher/subjects/:subjectID/:subjectName/TeacherGrade" component={TeacherGrade}/>
 
 			        <Route exact path="/admin" component={Admin}/>
               <Route exact path="/admin/configParent" component={ConfigParent}/>
