@@ -24,7 +24,6 @@ class AdminController extends BaseController {
     res.send(parents);
   }
 
-  /* DEPRECATED
   async insertParentData(req, res) {
     const password = genRandomString(8);
 
@@ -39,7 +38,6 @@ class AdminController extends BaseController {
     this.sendEmailToParent(req.body.eMail, password, req.body.firstName, req.body.lastName);
     res.send(parent); 
   }
-  */
 
   async addStudent(req, res) {
         
@@ -151,6 +149,16 @@ class AdminController extends BaseController {
       });
 
     res.send(students);
+  }
+
+  async getInternalAccountsData(req, res) {
+    const internalAccounts = await User.findInternalAccounts( 
+      {
+        page: req.query.page,
+        pageSize: req.query.pageSize
+      });
+
+    res.send(internalAccounts);
   }
 
   sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){

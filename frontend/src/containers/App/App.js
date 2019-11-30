@@ -11,15 +11,21 @@ import {Header}  from '../../components/Header/Header';
 import {NotFound} from '../NotFound/NotFound';
 import {AppSidebar} from '../../components/Sidebar/Sidebar';
 
+//*** Parent view Components */
 import {Parent} from '../Parent/Parent';
 import {Student} from '../Student/Student';
+
+//*** Teacher view Components */
 import {Teacher} from '../Teacher/Teacher';
 import {Marks}  from '../../components/Marks/Marks';
 import {Topic}  from'../../components/Topic/Topic';
+
+//*** Admin view Components*/
 import {Admin} from '../Admin/Admin';
 import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
 import {Class_composition} from '../../components/Class_composition/Class_composition';
 import {TeacherGrade} from '../../components/TearcherGrade/TeacherGrade';
+import {admin_StudentsEnrollment} from '../../components/adminComponents/SudentsEntrollment/admin_StudentsEnrollment';
 
 
 export class App extends React.Component {
@@ -54,6 +60,8 @@ export class App extends React.Component {
 			        <Route exact path="/admin" component={Admin}/>
               <Route exact path="/admin/configParent" component={ConfigParent}/>
               <Route exact path="/admin/Class_composition" component={Class_composition}/>
+              <Route exact path="/admin/enrollStudents" component={admin_StudentsEnrollment}/>
+
               <Route path="*" component={NotFound} />
               
             </Switch>

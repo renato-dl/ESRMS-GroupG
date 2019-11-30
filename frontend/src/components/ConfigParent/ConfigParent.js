@@ -41,7 +41,7 @@ export class ConfigParent extends React.Component{
     return (
       <Container className="contentContainer">
         <h3 className="contentHeader">
-          <Icon name='braille' size="small" />
+          <Icon name='braille'/>
           Parents Accounts Configuration
         </h3>
 
@@ -92,7 +92,7 @@ export class ConfigParent extends React.Component{
   return(
     <Container className="contentContainer">
       <h3 className="contentHeader">
-          <Icon name='braille' size="small" />
+          <Icon name='braille'/>
           Parents Accounts Configuration
         </h3>
 
