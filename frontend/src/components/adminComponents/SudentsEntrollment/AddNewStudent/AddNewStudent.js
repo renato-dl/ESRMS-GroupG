@@ -22,19 +22,21 @@ export class AddNewStudent extends Component {
             stud_SSN:"",
             stud_Gender:"",
             stud_BirthDate:"",
+            stud_errors:{},
 
-            p1_ID:"",
+            //p1_ID:"",
+            idP1:"",
             p1_SSN:"",
             p1_FirstName:"",
             p1_LastName:"",
             p1_Email:"",
 
-            p2_ID:"",
+            //p2_ID:"",
+            idP2:"",
             p2_SSN:"",
             p2_FirstName:"",
             p2_LastName:"",
             p2_Email:""
-
 
             /* 
             studentData:{
@@ -115,7 +117,7 @@ export class AddNewStudent extends Component {
                     <FormStudentDetails
                     nextStep = {this.nextStep}
                     handleChange = {this.handleChange}
-                    handleDateChange = {this.handleDateChange}
+                    //handleDateChange = {this.handleDateChange}
                     values = {values}
                     />
                 );
