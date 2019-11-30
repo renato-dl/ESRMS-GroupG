@@ -143,12 +143,35 @@ class AdminController extends BaseController {
   }
   
   async getStudentsData(req, res){
-    const students = await User.getStudentsData(req.query.isAssigned, 
-      {
-        page: req.query.page,
-        pageSize: req.query.pageSize
-      });
+    let students;
 
+    if(req.query.hasOwnProperty("classId")){
+      students = await Student.getStudentsDataByClassId(req.query.classId);
+      res.send(students);
+      return;
+    }
+    if(req.query.hasOwnProperty("isAssigned")){
+      let isAssigned;  
+      if(req.query.isAssigned == 1){
+        isAssigned = true;
+      }else{
+        isAssigned = false;
+      }
+
+      students = await Student.getStudentsByClassStatus(isAssigned, 
+        {
+          page: req.query.page,
+          pageSize: req.query.pageSize
+        }
+      );
+    }else{
+      students = await Student.getStudentsWithParentsData(
+        {
+          page: req.query.page,
+          pageSize: req.query.pageSize
+        }
+      );
+    }
     res.send(students);
   }
 

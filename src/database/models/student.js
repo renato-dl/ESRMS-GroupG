@@ -119,6 +119,105 @@ class Student extends Model {
     }
   }
 
+
+  async getStudentsDataByClassId(classId, pagination){
+
+    if(!classId){
+      throw new Error('Invalid class id parameters!');
+    }
+    
+    const connection = await this.db.getConnection();
+    const query = `SELECT ID, FirstName, LastName, Gender
+    FROM Students
+    WHERE ClassId = ?
+    ORDER BY LastName`;
+
+    if (pagination) {
+      query += ` ${this.db.getPaginationQuery(pagination)}`
+    }
+
+    const results = await connection.query(query, [classId]);    
+    connection.release();
+
+    if (!results.length) {
+      throw new Error('No students found!');
+    }
+    return results;
+  }
+
+  async getStudentsData(isAssigned, pagination){
+    const connection = await this.db.getConnection();
+    let query;
+
+    if(isAssigned){
+      query = `SELECT ID, FirstName, LastName, Gender
+      FROM Students
+      WHERE ClassId IS NOT NULL
+      ORDER BY LastName`
+    }
+    else{
+      query = `SELECT ID, FirstName, LastName, Gender
+      FROM Students
+      WHERE ClassId IS NULL
+      ORDER BY LastName`;
+    }
+    if (pagination) {
+      query += ` ${this.db.getPaginationQuery(pagination)}`
+    }
+
+    const results = await connection.query(query);    
+    connection.release();
+
+    if (!results.length) {
+      throw new Error('No students found!');
+    }
+    return results;
+  }
+
+  async getStudentsWithParentsData(pagination){
+    // Get all students
+    const students = await this.findAll(pagination);
+
+    // Sort results alphabetically (LastName + FirstName)
+    students.sort((a, b) =>{
+      const nameA = (a.LastName + a.FirstName).toUpperCase();
+      var nameB = (b.LastName + b.FirstName).toUpperCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+
+      return 0;
+    });
+
+    // Combine students with their parents
+    const result = await Promise.all(students.map(async element => {
+      // Start from student
+      let newElement = {};
+      newElement.studentInfo = element;
+
+      // Add parent 1 data
+      const parent1 = await User.getParentById(element.Parent1);
+      newElement.firstParent = parent1[0];
+
+      // Add parent 2 data if available
+      if(element.Parent2){
+        const parent2 = await User.getParentById(element.Parent2);
+        newElement.secondParent = parent2[0];
+      }
+      
+      // Remove redundant information
+      delete newElement.studentInfo['Parent1'];
+      delete newElement.studentInfo['Parent2'];
+      return newElement;
+    }));
+
+    
+    return result;
+  }
+
   async checkIfRelated(studentId, parentId) {
     const connenction = await this.db.getConnection();
     const result = await connenction.query(
