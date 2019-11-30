@@ -35,6 +35,19 @@ class User extends Model {
     return true;
   }
 
+  async makeParentIfNotAlready(userId) {
+
+    let user;
+    try {
+      user = await this.findById(userId);
+    } catch(err) {
+      throw new Error('Invalid userId');
+    }
+    if (user.IsParent != 1) {
+      this.update(userId, {IsParent: true});
+    }
+  }
+
   async getParentData(pagination){
     const connection = await this.db.getConnection();
     let query = `SELECT FirstName, LastName, SSN , eMail, CreatedOn
@@ -57,7 +70,7 @@ class User extends Model {
 
   async insertParentData(firstName, lastName, eMail, SSN, password) {
 
-    await this.validateParentData(firstName, lastName, eMail, SSN);
+    await this.validateUserData(firstName, lastName, eMail, SSN);
 
     const connection = await this.db.getConnection();
 
@@ -94,9 +107,70 @@ class User extends Model {
     }
   }
 
+  async insertInternalAccountData(firstName, lastName, eMail, SSN, password, isSysAdmin, isTeacher, isAdminOfficer, isPrincipal) {
+
+    await this.validateUserData(firstName, lastName, eMail, SSN);
+    
+    await this.vaidateUserRoles(isSysAdmin, isTeacher, isAdminOfficer, isPrincipal);
+
+    const connection = await this.db.getConnection();
+
+    const selectResult = await connection.query(
+      `SELECT COUNT(*) AS count
+      FROM Users
+      WHERE SSN = ? OR eMail = ?;`,
+      [SSN, eMail]
+    );
+
+    connection.release();
+
+    if (selectResult[0].count != 0) {
+      connection.release();
+      throw new Error('User already in db')
+    }
+
+    //insert of data
+    const userId = uuid();
+    const parentPassword = createSecurePassword(password);
+
+    await this.create({
+      ID: userId,
+      eMail: eMail,
+      Password: parentPassword,
+      IsSysAdmin: isSysAdmin,
+      IsTeacher: isTeacher,
+      IsAdminOfficer: isAdminOfficer,
+      IsPrincipal: isPrincipal,
+      FirstName: firstName,
+      LastName: lastName,
+      SSN: SSN
+    });
+
+    return {
+      id: userId
+    }
+  }  
+
+  async vaidateUserRoles(isSysAdmin, isTeacher, isAdminOfficer, isPrincipal) {
+    if (isTeacher && isAdminOfficer) {
+      throw new Error('A user cannot be both teacher and admin officer');
+    }
+    if (isSysAdmin && !isAdminOfficer) {
+      throw new Error('The sysadmin must be also admin officer');
+    }
+    if (isAdminOfficer && isPrincipal) {
+      throw new Error('A user cannot be both admin and principal');
+    }
+
+    if (!isAdminOfficer && !isTeacher && !isPrincipal) {
+      throw new Error('A user must be at least admin officer, principal or teacher');
+    }
+    return;
+  }
+
   async updateParentData(parentId, firstName, lastName, eMail, SSN) {
 
-    await this.validateParentData(firstName, lastName, eMail, SSN);
+    await this.validateUserData(firstName, lastName, eMail, SSN);
 
     //update of data
     
@@ -113,15 +187,15 @@ class User extends Model {
     }
   }
 
-  async validateParentData(firstName, lastName, eMail, SSN) {
+  async validateUserData(firstName, lastName, eMail, SSN) {
     //input data validation
-    if (!validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
+    if (!firstName || !validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
       throw new Error('Missing or invalid first name');
     }
-    if (!validator.matches(lastName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
+    if (!lastName || !validator.matches(lastName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
       throw new Error('Missing or invalid last name');
     }
-    if (!validator.isEmail(eMail)) {
+    if (!eMail || !validator.isEmail(eMail)) {
       throw new Error('Missing or invalid email');
     }
     if (!SSN || !validateSSN(SSN)) {
@@ -129,14 +203,13 @@ class User extends Model {
     }
   }
 
-  async searchParentsBySSN(ssn) {
+  async searchUsersBySSN(ssn) {
     const connection = await this.db.getConnection();
     
     let query = `
       SELECT *
       FROM Users
-      WHERE IsParent = true
-      AND SSN LIKE '%${ssn}%'
+      WHERE SSN LIKE '%${ssn}%'
       ORDER BY LastName
     `;
 
