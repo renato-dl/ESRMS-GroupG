@@ -162,10 +162,9 @@ class AdminController extends BaseController {
   }
 
   async getClasses(req, res) {
-    const classes = await ClassModel.findAll({
-      page: req.query.page,
-      pageSize: req.query.pageSize
-    })
+    const classes = await ClassModel.getClasses({
+      page: req.query.page, pageSize: req.query.pageSize
+    });
 
     res.send(classes);
   }

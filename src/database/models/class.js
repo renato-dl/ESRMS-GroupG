@@ -33,6 +33,19 @@ class Class extends Model {
       throw e;
     }    
   }
+
+  async getClasses(pagination) {
+    const query = `
+      SELECT C.ID, C.CreationYear, C.Name, CONCAT_WS(' ', U.FirstName, U.LastName) as Coordinator
+      FROM Classes C, Users U
+      WHERE C.CoordinatorId = U.ID
+    `;
+
+    const connection = await this.db.getConnection();
+    const results = await connection.query(query);
+
+    return results;
+  }
 }
 
 export default new Class();
