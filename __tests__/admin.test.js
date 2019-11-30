@@ -3,6 +3,7 @@ import Student from '../src/database/models/student';
 import crypto from 'crypto';
 import db from '../src/database';
 import moment from 'moment';
+import student from '../src/database/models/student';
 
 
 describe('Tests about the visualization of inserted parents', () =>{
@@ -96,7 +97,6 @@ describe('Tests about the insertion of parent data by admin', () => {
     await User.remove(result.id);
   }); 
   
-
   test('It should throw Error with message \'Missing or invalid first name\'', async () => {
 
     const testFirstName = 'Joe2';
@@ -703,7 +703,637 @@ describe('Tests about the insertion of student data', () => {
     }
   });
 
+});
 
+describe('Tests about the edition of a student', () =>{
+  
+  test('It should do the edition of a student correctly', async () => {
+
+    const testFirstName = 'Antonio';
+    const testLastName = 'De Giovanni';
+    const testSSN = 'TBKHSA93A02F494U';
+    const testBirthDate = moment().utc().subtract(13, 'years');
+    const testGender = 'M';
+
+    //parent1
+    const testParent1 = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(testParent1).toMatchObject({id: expect.anything()});
+
+    //parent2
+    const testParent2 = await User.insertParentData(
+      'NameTwo',
+      'LastnameTwo',
+      'parent2@parents.com',
+      'ZGIJMW64B22B275T',
+      'Password2'
+    );
+    expect(testParent2).toMatchObject({id: expect.anything()});
+
+
+    const result = await Student.insertStudent(
+      testFirstName,
+      testLastName,
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+    expect(result).toMatchObject({id: expect.anything()});
+
+    const editionResult = await Student.updateStudentData(
+      result.id,
+      'Mario',
+      'Rossi',
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+
+    expect(editionResult).not.toBeNull();
+    expect(editionResult).toEqual(
+                  expect.objectContaining(
+                    {
+                        success:true,
+                    }
+       ));
+
+    await Student.remove(result.id);
+    await User.remove(testParent1.id);
+    await User.remove(testParent2.id);
+  });
+
+  test('It should throw Error with message \'Missing or invalid first name\'', async () => {
+
+    const testFirstName = 'Antonio';
+    const testLastName = 'De Giovanni';
+    const testSSN = 'TBKHSA93A02F494U';
+    const testBirthDate = moment().utc().subtract(13, 'years');
+    const testGender = 'M';
+
+    //parent1
+    const testParent1 = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(testParent1).toMatchObject({id: expect.anything()});
+
+    //parent2
+    const testParent2 = await User.insertParentData(
+      'NameTwo',
+      'LastnameTwo',
+      'parent2@parents.com',
+      'ZGIJMW64B22B275T',
+      'Password2'
+    );
+    expect(testParent2).toMatchObject({id: expect.anything()});
+
+
+    const result = await Student.insertStudent(
+      testFirstName,
+      testLastName,
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+    expect(result).toMatchObject({id: expect.anything()});
+
+    try{
+    const editionResult = await Student.updateStudentData(
+      result.id,
+      'Mario 1',
+      'Rossi',
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+
+}catch(err){
+
+    expect(err).toHaveProperty('message', 'Missing or invalid first name');
+    await Student.remove(result.id);
+    await User.remove(testParent1.id);
+    await User.remove(testParent2.id);
+  }
+  });
+
+  test('It should throw Error with message \'Missing or invalid last name\'', async () => {
+
+    const testFirstName = 'Antonio';
+    const testLastName = 'De Giovanni';
+    const testSSN = 'TBKHSA93A02F494U';
+    const testBirthDate = moment().utc().subtract(13, 'years');
+    const testGender = 'M';
+
+    //parent1
+    const testParent1 = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(testParent1).toMatchObject({id: expect.anything()});
+
+    //parent2
+    const testParent2 = await User.insertParentData(
+      'NameTwo',
+      'LastnameTwo',
+      'parent2@parents.com',
+      'ZGIJMW64B22B275T',
+      'Password2'
+    );
+    expect(testParent2).toMatchObject({id: expect.anything()});
+
+
+    const result = await Student.insertStudent(
+      testFirstName,
+      testLastName,
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+    expect(result).toMatchObject({id: expect.anything()});
+
+    try{
+    const editionResult = await Student.updateStudentData(
+      result.id,
+      'Mario',
+      'Rossi 2',
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+
+}catch(err){
+
+    expect(err).toHaveProperty('message', 'Missing or invalid last name');
+    await Student.remove(result.id);
+    await User.remove(testParent1.id);
+    await User.remove(testParent2.id);
+  }
+  });
+  
+  test('It should throw Error with message \'Missing or invalid SSN\'', async () => {
+
+    const testFirstName = 'Antonio';
+    const testLastName = 'De Giovanni';
+    const testSSN = 'TBKHSA93A02F494U';
+    const testBirthDate = moment().utc().subtract(13, 'years');
+    const testGender = 'M';
+
+    //parent1
+    const testParent1 = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(testParent1).toMatchObject({id: expect.anything()});
+
+    //parent2
+    const testParent2 = await User.insertParentData(
+      'NameTwo',
+      'LastnameTwo',
+      'parent2@parents.com',
+      'ZGIJMW64B22B275T',
+      'Password2'
+    );
+    expect(testParent2).toMatchObject({id: expect.anything()});
+
+
+    const result = await Student.insertStudent(
+      testFirstName,
+      testLastName,
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+    expect(result).toMatchObject({id: expect.anything()});
+
+    try{
+    const editionResult = await Student.updateStudentData(
+      result.id,
+      'Mario',
+      'Rossi',
+      'notSSN',
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+
+}catch(err){
+
+    expect(err).toHaveProperty('message', 'Missing or invalid SSN');
+    await Student.remove(result.id);
+    await User.remove(testParent1.id);
+    await User.remove(testParent2.id);
+  }
+  });
+
+  test('It should throw Error with message \'Missing or invalid gender\'', async () => {
+
+    const testFirstName = 'Antonio';
+    const testLastName = 'De Giovanni';
+    const testSSN = 'TBKHSA93A02F494U';
+    const testBirthDate = moment().utc().subtract(13, 'years');
+    const testGender = 'M';
+
+    //parent1
+    const testParent1 = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(testParent1).toMatchObject({id: expect.anything()});
+
+    //parent2
+    const testParent2 = await User.insertParentData(
+      'NameTwo',
+      'LastnameTwo',
+      'parent2@parents.com',
+      'ZGIJMW64B22B275T',
+      'Password2'
+    );
+    expect(testParent2).toMatchObject({id: expect.anything()});
+
+
+    const result = await Student.insertStudent(
+      testFirstName,
+      testLastName,
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+    expect(result).toMatchObject({id: expect.anything()});
+
+    try{
+    const editionResult = await Student.updateStudentData(
+      result.id,
+      'Mario',
+      'Rossi',
+      testSSN,
+      'not specified',
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+
+}catch(err){
+
+    expect(err).toHaveProperty('message', 'Missing or invalid gender');
+    await Student.remove(result.id);
+    await User.remove(testParent1.id);
+    await User.remove(testParent2.id);
+  }
+  });
+
+
+  test('It should throw Error with message \'Invalid birth date\'', async () => {
+
+    const testFirstName = 'Antonio';
+    const testLastName = 'De Giovanni';
+    const testSSN = 'TBKHSA93A02F494U';
+    const testBirthDate = moment().utc().subtract(13, 'years');
+    const testGender = 'M';
+
+    //parent1
+    const testParent1 = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(testParent1).toMatchObject({id: expect.anything()});
+
+    //parent2
+    const testParent2 = await User.insertParentData(
+      'NameTwo',
+      'LastnameTwo',
+      'parent2@parents.com',
+      'ZGIJMW64B22B275T',
+      'Password2'
+    );
+    expect(testParent2).toMatchObject({id: expect.anything()});
+
+
+    const result = await Student.insertStudent(
+      testFirstName,
+      testLastName,
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+    expect(result).toMatchObject({id: expect.anything()});
+
+    try{
+    const editionResult = await Student.updateStudentData(
+      result.id,
+      'Mario',
+      'Rossi',
+      testSSN,
+      testGender,
+      '20/11/2005',
+      testParent1.id,
+      testParent2.id
+    );
+
+}catch(err){
+
+    expect(err).toHaveProperty('message', 'Invalid birth date');
+    await Student.remove(result.id);
+    await User.remove(testParent1.id);
+    await User.remove(testParent2.id);
+  }
+  });
+
+  test('It should throw Error with message \'Future birth date\'', async () => {
+
+    const testFirstName = 'Antonio';
+    const testLastName = 'De Giovanni';
+    const testSSN = 'TBKHSA93A02F494U';
+    const testBirthDate = moment().utc().subtract(13, 'years');
+    const testGender = 'M';
+
+    //parent1
+    const testParent1 = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(testParent1).toMatchObject({id: expect.anything()});
+
+    //parent2
+    const testParent2 = await User.insertParentData(
+      'NameTwo',
+      'LastnameTwo',
+      'parent2@parents.com',
+      'ZGIJMW64B22B275T',
+      'Password2'
+    );
+    expect(testParent2).toMatchObject({id: expect.anything()});
+
+
+    const result = await Student.insertStudent(
+      testFirstName,
+      testLastName,
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+    expect(result).toMatchObject({id: expect.anything()});
+
+    const birthDate = moment().utc().add(13, 'years'); 
+    try{
+    const editionResult = await Student.updateStudentData(
+      result.id,
+      'Mario',
+      'Rossi',
+      testSSN,
+      testGender,
+      birthDate,
+      testParent1.id,
+      testParent2.id
+    );
+
+}catch(err){
+
+    expect(err).toHaveProperty('message', 'Future birth date');
+    await Student.remove(result.id);
+    await User.remove(testParent1.id);
+    await User.remove(testParent2.id);
+  }
+  });
+
+  test('It should throw Error with message \'Missing or invalid parent1 id\'', async () => {
+
+    const testFirstName = 'Antonio';
+    const testLastName = 'De Giovanni';
+    const testSSN = 'TBKHSA93A02F494U';
+    const testBirthDate = moment().utc().subtract(13, 'years');
+    const testGender = 'M';
+
+    //parent1
+    const testParent1 = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(testParent1).toMatchObject({id: expect.anything()});
+
+    //parent2
+    const testParent2 = await User.insertParentData(
+      'NameTwo',
+      'LastnameTwo',
+      'parent2@parents.com',
+      'ZGIJMW64B22B275T',
+      'Password2'
+    );
+    expect(testParent2).toMatchObject({id: expect.anything()});
+
+
+    const result = await Student.insertStudent(
+      testFirstName,
+      testLastName,
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+    expect(result).toMatchObject({id: expect.anything()});
+
+    try{
+    const editionResult = await Student.updateStudentData(
+      result.id,
+      'Mario',
+      'Rossi',
+      testSSN,
+      testGender,
+      testBirthDate,
+      undefined,
+      testParent2.id
+    );
+
+}catch(err){
+
+    expect(err).toHaveProperty('message', 'Missing or invalid parent1 id');
+    await Student.remove(result.id);
+    await User.remove(testParent1.id);
+    await User.remove(testParent2.id);
+  }
+  });
+
+
+  test('It should throw Error with message \'Invalid parent1 id\'', async () => {
+
+    const testFirstName = 'Antonio';
+    const testLastName = 'De Giovanni';
+    const testSSN = 'TBKHSA93A02F494U';
+    const testBirthDate = moment().utc().subtract(13, 'years');
+    const testGender = 'M';
+
+    //parent1
+    const testParent1 = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(testParent1).toMatchObject({id: expect.anything()});
+
+    //parent2
+    const testParent2 = await User.insertParentData(
+      'NameTwo',
+      'LastnameTwo',
+      'parent2@parents.com',
+      'ZGIJMW64B22B275T',
+      'Password2'
+    );
+    expect(testParent2).toMatchObject({id: expect.anything()});
+
+
+    const result = await Student.insertStudent(
+      testFirstName,
+      testLastName,
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+    expect(result).toMatchObject({id: expect.anything()});
+
+    try{
+    const editionResult = await Student.updateStudentData(
+      result.id,
+      'Mario',
+      'Rossi',
+      testSSN,
+      testGender,
+      testBirthDate,
+      'notExistingSSN',
+      testParent2.id
+    );
+
+}catch(err){
+
+    expect(err).toHaveProperty('message', 'Invalid parent1 id');
+    await Student.remove(result.id);
+    await User.remove(testParent1.id);
+    await User.remove(testParent2.id);
+  }
+  });
+
+  test('It should throw Error with message \'Parents id must be different\'', async () => {
+
+    const testFirstName = 'Antonio';
+    const testLastName = 'De Giovanni';
+    const testSSN = 'TBKHSA93A02F494U';
+    const testBirthDate = moment().utc().subtract(13, 'years');
+    const testGender = 'M';
+
+    //parent1
+    const testParent1 = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(testParent1).toMatchObject({id: expect.anything()});
+
+    //parent2
+    const testParent2 = await User.insertParentData(
+      'NameTwo',
+      'LastnameTwo',
+      'parent2@parents.com',
+      'ZGIJMW64B22B275T',
+      'Password2'
+    );
+    expect(testParent2).toMatchObject({id: expect.anything()});
+
+
+    const result = await Student.insertStudent(
+      testFirstName,
+      testLastName,
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+    expect(result).toMatchObject({id: expect.anything()});
+
+    try{
+    const editionResult = await Student.updateStudentData(
+      result.id,
+      'Mario',
+      'Rossi',
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent1.id
+    );
+
+}catch(err){
+
+    expect(err).toHaveProperty('message', 'Parents id must be different');
+    await Student.remove(result.id);
+    await User.remove(testParent1.id);
+    await User.remove(testParent2.id);
+  }
+  });
+
+});
+
+describe('Tests about the visualisation of internal accounts by SysAdmin', () =>{
+  test('It should receive only internal accounts', async () => {
+
+    const result = await User.findInternalAccounts();
+    expect(result.length).toBeGreaterThanOrEqual(1);
+    result.forEach(element => {
+      expect(element.IsTeacher || element.IsAdminOfficer || element.IsPrincipal).toBe(1);
+    });
+  });  
 });
 
 describe('Tests about the visualisation of internal accounts by SysAdmin', () =>{
@@ -716,4 +1346,5 @@ describe('Tests about the visualisation of internal accounts by SysAdmin', () =>
     });
 
   });
-})
+
+});
