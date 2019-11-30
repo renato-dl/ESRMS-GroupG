@@ -201,8 +201,9 @@ class AdminController extends BaseController {
     if (!students || !students.length) {
       throw new Error('Empty or invalid students list.');
     }
-
+    
     const results = await ClassModel.assignStudentsToClass(classID, students);
+    
     res.send(results);
   }
 
