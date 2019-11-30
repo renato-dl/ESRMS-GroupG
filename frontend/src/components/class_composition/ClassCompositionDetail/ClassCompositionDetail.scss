@@ -1,0 +1,19 @@
+.class-composition-detail {
+    .header {
+      display: flex !important;
+      justify-content: space-between;
+      text-align: center;
+  
+    .close-icn {
+      &:hover {
+        cursor: pointer;   
+        float: right;     
+      };
+      float: right;
+    }
+  }
+}
+
+i.icon {
+  float: right;
+}

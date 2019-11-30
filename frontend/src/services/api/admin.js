@@ -20,4 +20,8 @@ export class AdminAPIService extends BaseAPIService {
   }
 
 
+  getStudentsToEnroll(data){
+    return this.get('/admin/students', data);
+  }
+
 }
