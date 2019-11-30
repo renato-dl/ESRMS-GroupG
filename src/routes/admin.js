@@ -15,4 +15,7 @@ router.post('/internal-account', Authorization(['IsSysAdmin']), AdminController.
 router.get('/classes', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getClasses'));
 router.post('/classes/:classID/assign-students', Authorization(['IsSysAdmin']), AdminController.processRequest.bind(AdminController, 'assignStudentsToClass'));
 
+router.delete('/account', Authorization(['IsSysAdmin']), AdminController.processRequest.bind(AdminController, 'deleteAccount'));
+
+
 export default router;
