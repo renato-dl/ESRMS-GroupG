@@ -1,6 +1,6 @@
 import React from 'react';
 import { api } from '../../services/api';
-import {Icon,List, Container} from 'semantic-ui-react';
+import {Icon,List, Container,Button} from 'semantic-ui-react';
 import './Teacher.scss';
 import { NoData } from '../../components/NoData/NoData';
 
@@ -25,6 +25,10 @@ export class Teacher extends React.Component{
     this.props.history.push(`/teacher/subjects/${subjectID}/topics`);
   };
 
+  onSubjectGradeClick = (subjectID)=>{
+    this.props.history.push(`/teacher/subjects/${subjectID}/TeacherGrade`);
+  }
+
     render() {
       
     if(this.state.subjectsList.length){
@@ -37,7 +41,7 @@ export class Teacher extends React.Component{
 
               <List relaxed>
                   {this.state.subjectsList.map((subject, index) =>
-                    <List.Item className="myListItem" key={index} onClick={() => this.onSubjectClick(subject.subjectId)}>
+                    <List.Item className="myListItem" key={index}>
                         <List.Icon name='book' size='large' verticalAlign='middle' />
                         <List.Content>
                             <List.Header as='div' className="subjectListName">
@@ -46,6 +50,12 @@ export class Teacher extends React.Component{
 
                             <List.Description as='div' className="subjectListClass">
                               Class: {subject.class}
+                              <Button className='Topics' color='blue'  onClick={() => this.onSubjectClick(subject.subjectId)}>
+                              Topics
+                              </Button>
+                              <Button className='Grades'  color='blue' onClick={()=>this.onSubjectGradeClick(subject.subjectId)}>
+                              Grades
+                              </Button>
                             </List.Description>
                         </List.Content>
                     </List.Item>

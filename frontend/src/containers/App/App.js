@@ -18,8 +18,8 @@ import {Marks}  from '../../components/Marks/Marks';
 import {Topic}  from'../../components/Topic/Topic';
 import {Admin} from '../Admin/Admin';
 import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
-import {Class_composition} from '../../components/class_composition/class_composition';
-
+import {Class_composition} from '../../components/Class_composition/Class_composition';
+import {TeacherGrade} from '../../components/TearcherGrade/TeacherGrade';
 
 
 export class App extends React.Component {
@@ -49,6 +49,7 @@ export class App extends React.Component {
               <Route exact path="/teacher" component={Teacher}/>
               <Route exact path="/teacher/subjects" component={Teacher}/>
               <Route exact path="/teacher/subjects/:subjectID/topics" component={Topic}/>
+              <Route exact path="/teacher/subjects/:subjectID/TeacherGrade" component={TeacherGrade}/>
 
 			        <Route exact path="/admin" component={Admin}/>
               <Route exact path="/admin/configParent" component={ConfigParent}/>
