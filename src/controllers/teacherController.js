@@ -112,7 +112,8 @@ class TeacherController extends BaseController {
     if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
       req.user.ID,
       req.body.subjectId, 
-      req.body.classId)){
+      req.body.classId)
+      ){
         res.send(401);
         return;
     } 
@@ -125,16 +126,43 @@ class TeacherController extends BaseController {
     res.send({success: true, id: result.id});
   }
 
+  // PATCH /teacher/grade
+  // Body: classId, subjectId, studentId, grade, type
+  async updateGrade(req, res) {
+    const teacherTeachesInClass = await TCSR.checkIfTeacherTeachesSubjectInClass(
+      req.user.ID,
+      req.body.subjectId, 
+      req.body.classId
+    );
+
+    const isGradeFromTeacher = await Grade.checkIfGradeIsFromTeacher(req.body.ID, req.user.ID);
+
+    if(!teacherTeachesInClass || !isGradeFromTeacher) {
+      res.send(401);
+      return;
+    } 
+
+    const success = await Grade.updateGrade(
+      req.body.ID,
+      req.body.grade,
+      req.body.type
+    );
+
+    res.send({ success });
+  }
+
   //DELETE /teacher/grade
   //Body: ID
   async deleteGrade(req, res) {
     if(!await Grade.checkIfGradeIsFromTeacher(req.body.ID, req.user.ID)){
-        res.send(401);
-        return;
-    } 
+      res.send(401);
+      return;
+    }
+    
     const result = await Grade.remove(
       req.body.ID
-     );
+    );
+
     res.send({success: true});
   }
 }
