@@ -4,6 +4,7 @@ import Student from "../database/models/student";
 import nodemailer from 'nodemailer';
 import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
+import ClassModel from '../database/models/class';
 
 class AdminController extends BaseController {
 
@@ -142,21 +143,45 @@ class AdminController extends BaseController {
   }
   
   async getStudentsData(req, res){
-    const students = await User.getStudentsData(req.query.isAssigned, 
-      {
-        page: req.query.page,
-        pageSize: req.query.pageSize
-      });
+    let students;
 
+    if(req.query.hasOwnProperty("classId")){
+      students = await Student.getStudentsDataByClassId(req.query.classId);
+      res.send(students);
+      return;
+    }
+    if(req.query.hasOwnProperty("isAssigned")){
+      let isAssigned;  
+      if(req.query.isAssigned == 1){
+        isAssigned = true;
+      }else if(req.query.isAssigned == 0){
+        isAssigned = false;
+      }else{
+        throw new Error("Invalid isAssigned parameter!");
+      }
+
+      students = await Student.getStudentsData(isAssigned, 
+        {
+          page: req.query.page,
+          pageSize: req.query.pageSize
+        }
+      );
+    }else{
+      students = await Student.getStudentsWithParentsData(
+        {
+          page: req.query.page,
+          pageSize: req.query.pageSize
+        }
+      );
+    }
     res.send(students);
   }
 
   async getInternalAccountsData(req, res) {
-    const internalAccounts = await User.findInternalAccounts( 
-      {
-        page: req.query.page,
-        pageSize: req.query.pageSize
-      });
+    const internalAccounts = await User.findInternalAccounts({
+      page: req.query.page,
+      pageSize: req.query.pageSize
+    });
 
     res.send(internalAccounts);
   }
@@ -193,6 +218,24 @@ class AdminController extends BaseController {
 
     res.send({success:true, id: result.id});
     
+  async getClasses(req, res) {
+    const classes = await ClassModel.getClasses({
+      page: req.query.page, pageSize: req.query.pageSize
+    });
+
+    res.send(classes);
+  }
+
+  async assignStudentsToClass(req, res) {
+    const classID = req.params.classID;
+    const students = req.body.students;
+
+    if (!students || !students.length) {
+      throw new Error('Empty or invalid students list.');
+    }
+
+    const results = await ClassModel.assignStudentsToClass(classID, students);
+    res.send(results);
   }
 
   sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){
