@@ -12,9 +12,8 @@ export class AddNewStudent extends Component {
     
         this.state = {
             step:1,
-            P1exists:false,
-            P2exists:false,
             isSaving: false,
+
             errors: {},
 
             stud_FirstName:"",
@@ -29,6 +28,7 @@ export class AddNewStudent extends Component {
             p1_LastName:"",
             p1_Email:"",
 
+            activeIndex: 1, // Accordion-Parent Form 
             p2_ID:"",
             p2_SSN:"",
             p2_FirstName:"",

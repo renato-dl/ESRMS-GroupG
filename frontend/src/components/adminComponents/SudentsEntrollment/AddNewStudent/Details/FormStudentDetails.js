@@ -21,7 +21,7 @@ export class FormStudentDetails extends Component {
       this.props.handleChange('stud_Gender')(data)
     }
 
-//added to validate SSN before next step 
+//added to be able to validate SSN before next step 
     onSSNCHange = (e) => {
       this.setState({stud_SSN: e.target.value})
       this.props.handleChange('stud_SSN')(e);

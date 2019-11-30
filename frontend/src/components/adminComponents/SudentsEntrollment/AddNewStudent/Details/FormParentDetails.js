@@ -41,20 +41,7 @@ let source = [];
 
 
 export class FormParentDetails extends Component {
-  state = {
-    activeIndex: 1, 
-    
-    p1_SSN:"",
-    p1_FirstName:"",
-    p1_LastName:"",
-    p1_Email:"",
-
-    p2_SSN:"",
-    p2_FirstName:"",
-    p2_LastName:"",
-    p2_Email:""
-  };   //For Accordion: not in initialState to not be closed during search
-  state = initialState
+  state = this.props.values;
  
   back = e => {
     e.preventDefault();
@@ -74,13 +61,48 @@ export class FormParentDetails extends Component {
          source = response.data
       }
   }
+
+//----Wrong but fast :D
+  onSSNandIDChange = (e, onresult) => {
+    const empty = {target:{value:""}};
+    if (onresult){
+      const idData = {target:{value: onresult.ID}};
+      const ssnData = {target:{value: onresult.SSN}};
+
+      if(e.target.name === "P1"){
+        this.props.handleChange('p1_SSN')(ssnData); 
+        this.props.handleChange('p1_ID')(idData);
+        this.props.handleChange('p1_FirstName')(empty);
+        this.props.handleChange('p1_LastName')(empty);
+        this.props.handleChange('p1_Email')(empty);
+
+      }else if(e.target.name === "P2"){
+        this.props.handleChange('p2_SSN')(ssnData); 
+        this.props.handleChange('p2_ID')(idData);
+        this.props.handleChange('p2_FirstName')(empty);
+        this.props.handleChange('p2_LastName')(empty);
+        this.props.handleChange('p2_Email')(empty);
+      }
+    }else{
+
+      if(e.target.name === "P1"){
+        this.props.handleChange('p1_SSN')(e); 
+        this.props.handleChange('p1_ID')(empty);
+
+      }else if(e.target.name === "P2"){
+        this.props.handleChange('p2_SSN')(e); 
+        this.props.handleChange('p2_ID')(empty);
+      }
+    }
+  }
   
 
   //------START SEARCH STUFF
   handleResultSelect = (e, { result }) => {
-    
     e.preventDefault();
     //console.log([e.target.name]);
+    
+    this.onSSNandIDChange(e, result); //wrong but fast :D
     if(e.target.name === "P1"){
       this.setState({ 
         p1_SSN: result.SSN,
@@ -88,7 +110,6 @@ export class FormParentDetails extends Component {
         p1_FirstName:"",
         p1_LastName:"",
         p1_Email:""
-
        }) 
     }else if (e.target.name === "P2"){
       this.setState({ 
@@ -101,16 +122,18 @@ export class FormParentDetails extends Component {
     }
   }
   
+
   handleSearchChange = (e, { value }) => {
     e.preventDefault();
-
-    //this.setState({p1_ID:"", p2_ID:""});
     
+    this.onSSNandIDChange(e, false); //wrong but fast :D
     this.updateSearchOptions(value);
     
     if(e.target.name === "P1"){
+
       this.setState({p1_ID:""});
       this.setState({ isLoading: true, p1_SSN:value })
+
       setTimeout(() => {
         if (this.state.p1_SSN.length < 1) return this.setState(initialState)
         const re = new RegExp(_.escapeRegExp(this.state.p1_SSN), 'i')
@@ -121,8 +144,10 @@ export class FormParentDetails extends Component {
       })}, 300)
 
     }else if(e.target.name === "P2"){
+
       this.setState({p2_ID:""});
       this.setState({ isLoading: true, p2_SSN:value })
+
       setTimeout(() => {
         if (this.state.p2_SSN.length < 1) return this.setState(initialState)
         const re = new RegExp(_.escapeRegExp(this.state.p2_SSN), 'i')
@@ -142,6 +167,10 @@ export class FormParentDetails extends Component {
     const { activeIndex } = this.state
     const newIndex = activeIndex === index ? -1 : index
     this.setState({ activeIndex: newIndex })
+
+    //wrong but fast :D
+    const activeIndexChange={target:{value: newIndex}} 
+    this.props.handleChange('activeIndex')(activeIndexChange);
   }
 
 
@@ -191,34 +220,34 @@ export class FormParentDetails extends Component {
                 <Form.Input
                   label='First Name' placeholder='First Name'
                   name='p1_FirstName'
-                  //defaultValue = {values.p1_FirstName}
-                  defaultValue = {this.state.p1_FirstName}
-                  //onChange={handleChange('p1_FirstName')}
+                  defaultValue = {values.p1_FirstName}
+                  //defaultValue = {this.state.p1_FirstName}
+                  onChange={handleChange('p1_FirstName')}
                 />
                 <Form.Input
                   label='Last Name' placeholder='Last Name'
                   name='p1_LastName'
-                  //defaultValue = {values.p1_LastName}
-                  defaultValue = {this.state.p1_LastName}
-                  //onChange={handleChange('p1_LastName')}
+                  defaultValue = {values.p1_LastName}
+                  //defaultValue = {this.state.p1_LastName}
+                  onChange={handleChange('p1_LastName')}
                 />
               </Form.Group>
               <Form.Input
                   fluid icon='envelope' iconPosition='left' 
                   label='E-mail address'type='email'placeholder='E-mail address'
                   name="p1_Email"
-                  //defaultValue = {values.p1_Email}
-                  defaultValue = {this.state.p1_Email}
-                  //onChange={handleChange('p1_Email')}
+                  defaultValue = {values.p1_Email}
+                  //defaultValue = {this.state.p1_Email}
+                  onChange={handleChange('p1_Email')}
               />
             </>
             }
 
 
 {/*--SECOND PARENT----------------------------------------------------------------------------*/}
-            <Accordion as={Form.Field}  >
+            <Accordion as={Form.Field} activeIndex = {values.activeIndex} >
             <Accordion.Title
-                active={this.state.activeIndex === 0}
+                active={values.activeIndex === 0}
                 index={0}
                 onClick={this.handleAccordionClick}
                 className="optionalField"
