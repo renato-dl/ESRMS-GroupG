@@ -4,6 +4,7 @@ import Student from "../database/models/student";
 import nodemailer from 'nodemailer';
 import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
+import ClassModel from '../database/models/class';
 
 class AdminController extends BaseController {
 
@@ -159,6 +160,18 @@ class AdminController extends BaseController {
       });
 
     res.send(internalAccounts);
+  }
+
+  async assignStudentsToClass(req, res) {
+    const classID = req.params.classID;
+    const students = req.body.students;
+
+    if (!students || !students.length) {
+      throw new Error('Empty or invalid students list.');
+    }
+
+    const results = await ClassModel.assignStudentsToClass(classID, students);
+    res.send(results);
   }
 
   sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){
