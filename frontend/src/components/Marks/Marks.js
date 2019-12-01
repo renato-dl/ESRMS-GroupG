@@ -12,10 +12,6 @@ export class Marks extends React.Component{
     this.state = {
       marks: [],
       studentName: ''
-      // marks:[
-      // {Name:'a',Grade:9,GradeDate:'2019-11-01 00:00:00',type:'Written'},
-      // {Name:'b',Grade:7,GradeDate:'2019-11-03 00:00:00',type:'Oral'}],
-      // studentName:''
     }
   }
     
