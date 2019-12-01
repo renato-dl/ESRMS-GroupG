@@ -3,6 +3,7 @@ import uuid from 'uuid/v4';
 import validator from 'validator';
 import {createSecurePassword} from '../../services/passwordGenerator';
 import {validateSSN} from '../../services/ssnValidator'
+import student from './student';
 
 class User extends Model {
   constructor() {
@@ -35,6 +36,19 @@ class User extends Model {
     return true;
   }
 
+  async makeParentIfNotAlready(userId) {
+
+    let user;
+    try {
+      user = await this.findById(userId);
+    } catch(err) {
+      throw new Error('Invalid userId');
+    }
+    if (user.IsParent != 1) {
+      this.update(userId, {IsParent: true});
+    }
+  }
+
   async getParentData(pagination){
     const connection = await this.db.getConnection();
     let query = `SELECT FirstName, LastName, SSN , eMail, CreatedOn
@@ -55,49 +69,9 @@ class User extends Model {
     return results;
   }
 
-
-  async getStudentsData(isAssigned, pagination){
-    let result;
-    if(isAssigned == 'true'){
-      result = true;
-    }
-    else if(isAssigned == 'false'){
-      result = false;
-    }
-    else{
-      throw new Error('Invalid parameter isAssigned!');
-    }
-
-    const connection = await this.db.getConnection();
-    let query;
-    if(result){
-      query = `SELECT ID, FirstName, LastName, Gender
-      FROM Students
-      WHERE ClassId IS NOT NULL
-      ORDER BY LastName`
-    }
-    else{
-      query = `SELECT ID, FirstName, LastName, Gender
-      FROM Students
-      WHERE ClassId IS NULL
-      ORDER BY LastName`;
-    }
-    if (pagination) {
-      query += ` ${this.db.getPaginationQuery(pagination)}`
-    }
-
-    const results = await connection.query(query);    
-    connection.release();
-
-    if (!results.length) {
-      throw new Error('No students registered in the system');
-    }
-    return results;
-  }
-
   async insertParentData(firstName, lastName, eMail, SSN, password) {
 
-    await this.validateParentData(firstName, lastName, eMail, SSN);
+    await this.validateUserData(firstName, lastName, eMail, SSN);
 
     const connection = await this.db.getConnection();
 
@@ -134,9 +108,65 @@ class User extends Model {
     }
   }
 
+  async insertInternalAccountData(firstName, lastName, eMail, SSN, password, isTeacher, isAdminOfficer, isPrincipal) {
+
+    await this.validateUserData(firstName, lastName, eMail, SSN);
+    
+    await this.vaidateUserRoles(isTeacher, isAdminOfficer, isPrincipal);
+
+    const connection = await this.db.getConnection();
+
+    const selectResult = await connection.query(
+      `SELECT COUNT(*) AS count
+      FROM Users
+      WHERE SSN = ? OR eMail = ?;`,
+      [SSN, eMail]
+    );
+
+    connection.release();
+
+    if (selectResult[0].count != 0) {
+      connection.release();
+      throw new Error('User already in db')
+    }
+
+    //insert of data
+    const userId = uuid();
+    const parentPassword = createSecurePassword(password);
+
+    await this.create({
+      ID: userId,
+      eMail: eMail,
+      Password: parentPassword,
+      IsTeacher: isTeacher,
+      IsAdminOfficer: isAdminOfficer,
+      IsPrincipal: isPrincipal,
+      FirstName: firstName,
+      LastName: lastName,
+      SSN: SSN
+    });
+
+    return {
+      id: userId
+    }
+  }  
+
+  async vaidateUserRoles(isTeacher, isAdminOfficer, isPrincipal) {
+    if (isTeacher && isAdminOfficer) {
+      throw new Error('A user cannot be both teacher and admin officer');
+    }
+    if (isAdminOfficer && isPrincipal) {
+      throw new Error('A user cannot be both admin and principal');
+    }
+    if (!isAdminOfficer && !isTeacher && !isPrincipal) {
+      throw new Error('A user must be at least admin officer, principal or teacher');
+    }
+    return;
+  }
+
   async updateParentData(parentId, firstName, lastName, eMail, SSN) {
 
-    await this.validateParentData(firstName, lastName, eMail, SSN);
+    await this.validateUserData(firstName, lastName, eMail, SSN);
 
     //update of data
     
@@ -153,15 +183,15 @@ class User extends Model {
     }
   }
 
-  async validateParentData(firstName, lastName, eMail, SSN) {
+  async validateUserData(firstName, lastName, eMail, SSN) {
     //input data validation
-    if (!validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
+    if (!firstName || !validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
       throw new Error('Missing or invalid first name');
     }
-    if (!validator.matches(lastName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
+    if (!lastName || !validator.matches(lastName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
       throw new Error('Missing or invalid last name');
     }
-    if (!validator.isEmail(eMail)) {
+    if (!eMail || !validator.isEmail(eMail)) {
       throw new Error('Missing or invalid email');
     }
     if (!SSN || !validateSSN(SSN)) {
@@ -169,20 +199,32 @@ class User extends Model {
     }
   }
 
-  async searchParentsBySSN(ssn) {
+  async searchUsersBySSN(ssn) {
     const connection = await this.db.getConnection();
     
     let query = `
       SELECT *
       FROM Users
-      WHERE IsParent = true
-      AND SSN LIKE '%${ssn}%'
+      WHERE SSN LIKE '%${ssn}%'
       ORDER BY LastName
     `;
 
     const results = await connection.query(query);    
     connection.release();
 
+    return results;
+  }
+  async getParentById(parentId){
+    const connection = await this.db.getConnection();
+    
+    let query = `
+      SELECT ID, eMail, FirstName, LastName, SSN
+      FROM Users
+      WHERE IsParent = true
+      AND ID = ?`;
+
+    const results = await connection.query(query, [parentId]);    
+    connection.release();
     return results;
   }
 
@@ -219,6 +261,71 @@ class User extends Model {
     return results;
   }
 
+
+  async deleteAccount(accountId){
+
+    const connection = await this.db.getConnection();
+
+    //check if the account exists and can be deleted
+
+    const checkAccount = await connection.query(
+      `SELECT IsParent as isP, IsSysAdmin as isSA, IsTeacher as isT
+      FROM Users 
+      WHERE ID = ?`,
+      [accountId]
+    );
+
+    if(!checkAccount.length){
+      throw new Error ('Account does not exist');      
+    }
+
+    console.log(checkAccount);
+
+    if(checkAccount[0].isSA){
+      throw new Error ('Operation not permitted');      
+    }
+
+    if(checkAccount[0].isP){
+      const hasChildren = await connection.query(
+        `SELECT *
+        FROM Students 
+        WHERE Parent1 = ? OR Parent2 = ?`,
+        [accountId, accountId]
+      );
+
+      if(hasChildren.length){
+        throw new Error ('Operation not permitted');
+      }
+    }
+
+    if(checkAccount[0].isT){
+      
+      const hasClass = await connection.query(
+        `SELECT *
+        FROM TeacherSubjectClassRelation 
+        WHERE TeacherId = ?`,
+        [accountId]
+      );
+
+      if(hasClass.length){
+        throw new Error ('Operation not permitted');
+      }
+
+      const isCoordinator = await connection.query(
+        `SELECT *
+        FROM Classes 
+        WHERE CoordinatorId = ?`,
+        [accountId]
+      );
+
+      if(isCoordinator.length){
+        throw new Error ('Operation not permitted');
+      }
+    }
+
+    connection.release();
+    await this.remove(accountId);
+  }
 }
 
 export default new User();

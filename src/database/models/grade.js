@@ -106,12 +106,12 @@ class Grade extends Model {
       return true;
     }
     return false;
-
-
-
-
-
   }
+
+  updateGrade(ID, Grade, Type) {
+    return this.update(ID, {Grade, Type})
+  }
+
 }
 
 export default new Grade();
