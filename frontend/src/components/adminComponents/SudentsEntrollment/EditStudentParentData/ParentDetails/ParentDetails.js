@@ -21,10 +21,10 @@ export class ParentDetails extends React.Component {
     console.log(this.props)
     if (this.props) {
       this.setState({
-        ID:this.props.studentInfo.ID,
-        FirstName: this.props.studentInfo.FirstName,
-        LastName: this.props.studentInfo.LastName,
-        eMail: this.props.studentInfo.eMail
+        ID:this.props.parentInfo.ID,
+        FirstName: this.props.parentInfo.FirstName,
+        LastName: this.props.parentInfo.LastName,
+        eMail: this.props.parentInfo.eMail
       });
     }
   };
@@ -43,10 +43,10 @@ export class ParentDetails extends React.Component {
 
     try {
       const parentData = {
-        Id: this.props.studentInfo.ID,
+        Id: this.props.parentInfo.ID,
         FirstName: this.state.FirstName,
         LastName: this.state.LastName,
-        SSN:this.props.studentInfo.SSN,
+        SSN:this.props.parentInfo.SSN,
         eMail:this.state.eMail
       };
         const reqResult = await api.admin.updateParent(

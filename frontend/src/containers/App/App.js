@@ -24,10 +24,10 @@ import {Topic}  from'../../components/Topic/Topic';
 import {Admin} from '../Admin/Admin';
 import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
 
-import {Class_composition} from '../../components/class_composition/class_composition';
-import {TeacherGrade} from '../../components/TearcherGrade/TeacherGrade';
+import {Class_composition} from '../../components/class_composition/Class_composition';
 
 import {admin_StudentsEnrollment} from '../../components/adminComponents/SudentsEntrollment/admin_StudentsEnrollment';
+import {TeacherGrade} from '../../components/TeacherGrade/TeacherGrade';
 
 export class App extends React.Component {
   static contextType = ApplicationStoreContext;
