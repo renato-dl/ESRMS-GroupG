@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Button, Modal, Checkbox, Icon, Table, Grid} from 'semantic-ui-react';
+import "./ClassCompositionDetail.scss";
 import { api } from '../../../services/api';
 
 export class ClassCompositionDetail extends Component {
@@ -10,20 +11,38 @@ export class ClassCompositionDetail extends Component {
     enrolledStudents: [],
     toEnrollStudents: [],
     checkedStudents: 0,
+    enrolledStudentsCnt: 0,
     isSaving: false
   };
 
   async componentDidMount() {
-    const request = { isAssigned: true };
-    const toEnrollStudents = await api.admin.getStudentsToEnroll(request);
-    if (toEnrollStudents) {
-      this.setState({ students: toEnrollStudents.data })
-    } 
     this.setState({
       classId: this.props.classId,
-      className: this.props.className,
-      enrolledStudents: this.props.enrolledStudents
+      className: this.props.className
     });
+
+    try{
+      const request = { isAssigned: 0 };
+      const toEnrollStudents = await api.admin.getStudentsToEnroll(request);
+      if (toEnrollStudents) {
+        this.setState({ students: toEnrollStudents.data });
+      } 
+    }
+    catch(e){
+      this.setState({ students: [] });
+    }  
+
+    try {
+      const classRequest = { classId: this.props.classId };
+      const alreadyEnrolledStudents = await api.admin.getEnrolledStudentsByClass(classRequest);
+      if(alreadyEnrolledStudents){
+        this.setState({enrolledStudents: alreadyEnrolledStudents.data,
+          enrolledStudentsCnt: alreadyEnrolledStudents.data.length });
+      } 
+    }
+    catch(e){
+      this.setState({enrolledStudents: []});
+    }  
   };
 
   onChecked = (e) => {
@@ -48,10 +67,10 @@ export class ClassCompositionDetail extends Component {
 
     this.setState({isSaving: true});
 
-    const requestParams = {
-      classId : this.state.classId,
-      studentIds: this.state.toEnrollStudents
-    }
+    const classId = this.state.classId;
+    const studentIds = { students: this.state.toEnrollStudents };
+
+    await api.admin.sendStudentsToEnrollToClass(classId, studentIds);
 
     this.setState({isSaving: false});
     this.props.onSave();
@@ -61,7 +80,15 @@ export class ClassCompositionDetail extends Component {
     if (this.state.isSaving) {
       return;
     }
-
+    this.setState({
+      classId: null, 
+      className: null, 
+      enrolledStudents: [],
+      students: [],
+      toEnrollStudents: [],
+      checkedStudents: 0,
+      enrolledStudentsCnt: 0
+    })
     this.props.onClose();
   };
 
@@ -79,7 +106,8 @@ export class ClassCompositionDetail extends Component {
             <Table columns={2}>
               <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell colSpan='2'>Enrolled students</Table.HeaderCell>     
+                    <Table.HeaderCell colSpan='2'>Enrolled students: {this.state.enrolledStudentsCnt}
+                    </Table.HeaderCell>     
                 </Table.Row>
                 <Table.Row>
                     <Table.HeaderCell>Name</Table.HeaderCell>
@@ -87,9 +115,20 @@ export class ClassCompositionDetail extends Component {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                <Table.Row>
-                  <Table.Cell colSpan="2"><p>No students yet</p></Table.Cell>                  
-                </Table.Row>                           
+                  {this.state.enrolledStudents.length > 0 && 
+                  this.state.enrolledStudents.map((eStudent, index) =>                   
+                    <Table.Row key={index}>
+                      <Table.Cell textAlign="left">{ eStudent.FirstName }</Table.Cell>
+                      <Table.Cell textAlign="left">{ eStudent.LastName }</Table.Cell>
+                    </Table.Row>
+                  )}
+                  {this.state.enrolledStudents.length <= 0 &&
+                    <Table.Row>
+                      <Table.Cell>
+                        <p>No students yet.</p>
+                      </Table.Cell>
+                    </Table.Row>
+                  }                                    
               </Table.Body>
             </Table>
             </Grid.Column>
@@ -119,7 +158,7 @@ export class ClassCompositionDetail extends Component {
                         </Table.Row>
                       )}
                       <Table.Row>
-                        <Table.Cell colSpan='3'>
+                        <Table.Cell colSpan='3' textAlign="center">
                           <Button positive 
                           onClick={this.onSave}
                           disabled={this.state.checkedStudents === 0}>
