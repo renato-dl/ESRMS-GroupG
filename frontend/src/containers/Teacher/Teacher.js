@@ -36,7 +36,7 @@ export class Teacher extends React.Component{
           <Container className="contentContainer">
               <h3 className="contentHeader">
                 <Icon name='braille'/>
-                Teaching Plan
+                Subjects
               </h3>
 
               <List relaxed>
