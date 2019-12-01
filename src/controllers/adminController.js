@@ -186,7 +186,6 @@ class AdminController extends BaseController {
     res.send(internalAccounts);
   }
 
-<<<<<<< HEAD
   async getClasses(req, res) {
     const classes = await ClassModel.findAll({
       page: req.query.page,
@@ -194,7 +193,8 @@ class AdminController extends BaseController {
     })
 
     res.send(classes);
-=======
+  }
+  
   async assignStudentsToClass(req, res) {
     const classID = req.params.classID;
     const students = req.body.students;
@@ -205,7 +205,6 @@ class AdminController extends BaseController {
 
     const results = await ClassModel.assignStudentsToClass(classID, students);
     res.send(results);
->>>>>>> d75953d2dc25501e300d0da3539387d1ffd00110
   }
 
   sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){

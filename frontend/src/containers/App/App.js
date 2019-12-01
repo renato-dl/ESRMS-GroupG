@@ -23,14 +23,9 @@ import {Topic}  from'../../components/Topic/Topic';
 //*** Admin view Components*/
 import {Admin} from '../Admin/Admin';
 import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
-<<<<<<< HEAD
 import {Class_composition} from '../../components/class_composition/Class_composition';
-=======
-import {Class_composition} from '../../components/Class_composition/Class_composition';
-import {TeacherGrade} from '../../components/TearcherGrade/TeacherGrade';
->>>>>>> 5b262987f5d0c2b5992735510e2589a94d6f13b0
 import {admin_StudentsEnrollment} from '../../components/adminComponents/SudentsEntrollment/admin_StudentsEnrollment';
-
+import {TeacherGrade} from '../../components/TeacherGrade/TeacherGrade';
 
 export class App extends React.Component {
   static contextType = ApplicationStoreContext;
