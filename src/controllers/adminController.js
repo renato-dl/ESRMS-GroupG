@@ -217,6 +217,7 @@ class AdminController extends BaseController {
 
     res.send(classes);
   }
+  
 
   async assignStudentsToClass(req, res) {
     const classID = req.params.classID;
