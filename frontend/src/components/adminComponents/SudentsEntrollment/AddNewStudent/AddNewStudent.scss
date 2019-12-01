@@ -72,3 +72,17 @@ border: 2px solid blue
 .error{
     color:#9f3a38
 }
+.knownDetails{
+    color: #68af64;
+    background-color:#F3FAF0;
+    font-size: 18px;
+    height: 50px;
+    //border-left: 3px solid #68af64;
+    vertical-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    i{
+        margin-bottom:5px;
+    }
+}

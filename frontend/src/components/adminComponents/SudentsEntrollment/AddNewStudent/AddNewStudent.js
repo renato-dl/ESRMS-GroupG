@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import './AddNewStudent.scss'
 
+import { api } from '../../../../services/api';
+import * as toastr from 'toastr';
+
 //import {Button, Modal, Form, Icon} from 'semantic-ui-react'
 import FormStudentDetails from './Details/FormStudentDetails';
 import FormParentDetails from './Details/FormParentDetails';
@@ -36,31 +39,6 @@ export class AddNewStudent extends Component {
             p2_FirstName:"",
             p2_LastName:"",
             p2_Email:""
-
-            /* 
-            studentData:{
-    
-                studentInfo:{
-                    FirstName: "Mara", 
-                    LastName: "M",
-                    SSN: "juijgkl",
-                    Gender: "F",
-                    BirthDate: ""
-                },
-                firstParent:{
-                    SSN: "",
-                    FirstName: "",
-                    LastName: "",
-                    Email: "",
-                },
-                // optional:
-                secondParent:{ 
-                    SSN: "",
-                    FirstName: "",
-                    LastName: "",
-                    Email: "", 
-                }	
-            } */
         }
       }
 
@@ -92,15 +70,66 @@ export class AddNewStudent extends Component {
     handleChange = input => e => {
         this.setState({[input]: e.target.value});
     }
-    
-    //handleStudentChange = input =>( e, {name, value}) => {
-        //this.setState({[name]: value});
-        //this.setState({ studentInfo: { ...this.state.studentData.studentInfo, [name]: value} });
-    //}
 
-    ConfirmEnrollment=()=>{
+    isEmptyStr(str) {
+        return (!str || 0 === str.length);
+    }
+
+    collectSubmitData() {
+        let cnfrmDat = {};
+        //STUDENT
+        cnfrmDat.studentInfo = {
+            SSN: this.state.stud_SSN,
+            FirstName: this.state.stud_FirstName,
+            LastName: this.state.stud_LastName,
+            Gender: this.state.stud_Gender,
+            BirthDate: this.state.stud_BirthDate
+        }
+        //FIRST PARENT
+        if (this.isEmptyStr(this.state.p1_ID)){
+            cnfrmDat.firstParent = {
+                SSN: this.state.p1_SSN,
+                FirstName: this.state.p1_FirstName,
+                LastName: this.state.p1_LastName,
+                Email: this.state.p1_Email
+            }
+        }else{cnfrmDat.firstParent = {ID: this.state.p1_ID}}
+        //SECOND PARENT
+        if(this.state.activeIndex === 1){
+            if (this.isEmptyStr(this.state.p2_ID)){
+                cnfrmDat.secondParent = {
+                    SSN: this.state.p2_SSN,
+                    FirstName: this.state.p2_FirstName,
+                    LastName: this.state.p2_LastName,
+                    Email: this.state.p2_Email
+                }
+            }else{cnfrmDat.secondParent = {ID: this.state.p2_ID}}
+        }
+
+        return cnfrmDat;
+    }
+    
+
+    ConfirmEnrollment = async () => {
         console.log("ADDD CONFIRM");
         console.log(this.state);
+        if (this.state.isSaving){
+            return;
+        }
+
+        this.setState({isSaving: true});
+
+        try{
+            const data = this.collectSubmitData();
+            await api.admin.insertNewStudent(data);
+            toastr.success(`Student Enrolled successfully `);
+        }catch(e){
+            this.setState({isSaving: false});
+            return toastr.error(e);
+        }
+
+        this.setState({isSaving: false});
+        this.props.ConfirmEnrollment();
     };
 
 

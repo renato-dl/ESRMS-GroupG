@@ -35,13 +35,13 @@ const initialState_P1 = {
   p1_ID:"",
   p1_SSN: '',        
   isLoading_P1: false,
-  results: [],       
+  results_P1: [],       
 }
 const initialState_P2 = {
   p2_ID:"",
   p2_SSN:'',        
   isLoading_P2:false,
-  results: [],      
+  results_P2: [],      
 }
 
 let source = [];
@@ -126,7 +126,7 @@ export class FormParentDetails extends Component {
 
   //------START SEARCH STUFF
   handleResultSelect = (e, { result }) => {
-    e.preventDefault();
+    //e.preventDefault();
     //console.log([e.target.name]);
     
     this.onSSNandIDChange(e, result); //wrong but fast :D
@@ -167,7 +167,7 @@ export class FormParentDetails extends Component {
         const isMatch = (result) => re.test(result.SSN)
         this.setState({
           isLoading_P1: false,
-          results: _.filter(source, isMatch),
+          results_P1: _.filter(source, isMatch),
       })}, 300)
 
     }else if(e.target.name === "P2"){
@@ -181,7 +181,7 @@ export class FormParentDetails extends Component {
         const isMatch = (result) => re.test(result.SSN)
         this.setState({
           isLoading_P2: false,
-          results: _.filter(source, isMatch),
+          results_P2: _.filter(source, isMatch),
       })}, 300) 
     }
 
@@ -207,7 +207,7 @@ export class FormParentDetails extends Component {
       //for sharing props with FormStudentDetails state
       const {values, handleChange} = this.props;
 
-      const { isLoading_P1, isLoading_P2, p1_SSN, p2_SSN, results } = this.state
+      const { isLoading_P1, isLoading_P2, p1_SSN, p2_SSN, results_P1, results_P2 } = this.state
 
         return (
             <>
@@ -235,13 +235,13 @@ export class FormParentDetails extends Component {
                   })}
                   noResultsMessage = "No Parent Found."
                   //minCharacters = "4" //minimum characters to show options
-                  results={results}
+                  results={results_P1}
                   value={p1_SSN}
                   resultRenderer={resultRenderer}
                   {...this.props}
                 />
                 
-                { !this.isEmptyStr(this.state.p1_ID)  && <h5 style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</h5>}
+                { !this.isEmptyStr(this.state.p1_ID)  && <h5 className = "knownDetails"><Icon name='check' />Details of this parent are known</h5>}
               </Grid.Column>
             </Grid>
             </Form.Field>
@@ -286,7 +286,7 @@ export class FormParentDetails extends Component {
                 className="optionalField"
              >
               <Icon name="dropdown"/><Icon name='user plus'/>&nbsp;
-              Second Parent Details (Optional)
+              Add Second Parent Details (Optional)
             </Accordion.Title>
 
             <Accordion.Content active={values.activeIndex === 1}>
@@ -304,13 +304,13 @@ export class FormParentDetails extends Component {
                         })}
                         noResultsMessage = "No Parent Found."
                         //minCharacters = "4" //minimum characters to show options
-                        results={results}
+                        results={results_P2}
                         value={p2_SSN}
                         resultRenderer={resultRenderer}
                         //{...this.props}
                       />
                       
-                      {!this.isEmptyStr(this.state.p2_ID) && <h5 style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</h5>}
+                      {!this.isEmptyStr(this.state.p2_ID) && <h5 className = "knownDetails"><Icon name='check' />Details of this parent are known</h5>}
                     </Grid.Column>
                   </Grid>
                   </Form.Field>
