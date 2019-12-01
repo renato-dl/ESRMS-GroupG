@@ -1145,12 +1145,12 @@ describe('Tests about visualization of students data', () => {
   });
 
   
-  test('It should visualize the data of a student who is not assegned to a parent', async () => {
+  test('It should throw an error when isAssigned parameter is invalid', async () => {
     try {
       const result = await Student.getStudentsData();
       
     } catch(err) {
-      expect(err).toHaveProperty('message', 'Invalid parameter isAssigned!');
+      expect(err).toHaveProperty('message', 'No students found!');
     } 
   });
 });
@@ -1973,5 +1973,225 @@ describe('Tests about assignment of student to a class', () =>{
     await User.remove(testParent2.id);
 
   });
+});
+
+describe('Tests about deletion of accounts', () =>{
+  
+  test('It should perform the deletion correctly', async () => {
+
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const result = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(result).toEqual({
+      id: expect.anything()
+    });
+
+    try{
+      await User.deleteAccount(result.id);
+      await User.findById(result.id);
+
+    }catch(error){
+
+      expect(error).toHaveProperty('message', 'Entity not found');
+
+      //delete result for future tests
+       await User.remove(result.id);
+    }
+
+  });
+
+  test('It should throw an error when trying to delete an SysAdmin account', async () => {
+
+    const sysAdminId = "205db8275d3c06e6ce3fe7a47b30e0fe";  
+    try{
+      await User.deleteAccount(sysAdminId);
+
+    }catch(error){
+      expect(error).toHaveProperty('message', 'Operation not permitted');
+    }
+
+  });
+
+  test('It should throw an error when trying to delete a not existing account', async () => {
+
+    const sysAdminId = "notExistingId";  
+    try{
+      await User.deleteAccount(sysAdminId);
+
+    }catch(error){
+      expect(error).toHaveProperty('message', 'Account does not exist');
+    }
+
+  });
+
+  test('It should throw an error when trying to delete a parent accout connected to a student one', async () => {
+
+    const testFirstName = 'TestName';
+    const testLastName = 'TestSurname';
+    const testSSN = 'TBKHSA93A02F494U';
+    const testBirthDate = moment().utc().subtract(13, 'years');
+    const testGender = 'M';
+
+    //parent1
+    const testParent = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(testParent).toMatchObject({id: expect.anything()});
+
+    const result = await Student.insertStudent(
+      testFirstName,
+      testLastName,
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent.id,
+      null
+    );
+    expect(result).toMatchObject({id: expect.anything()});
+
+    try{
+      await User.deleteAccount(testParent.id);
+
+    }catch(error){
+      expect(error).toHaveProperty('message', 'Operation not permitted');
+      await Student.remove(result.id);
+      await User.remove(testParent.id);
+
+    }
+  
+  });
+  
+  test('It should throw an error when trying to delete a teacher accout connected to a class', async () => {
+
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const result = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(result).toEqual({
+      id: expect.anything()
+    });
+
+    const connection = await db.getConnection();
+    const assignTeacherToClass = await connection.query(
+      `INSERT INTO TeacherSubjectClassRelation (SubjectId, ClassId, TeacherId)
+      VALUES (1, 1, ?)`,
+      [result.id]
+
+    );
+    connection.release();
+
+    try{
+      await User.deleteAccount(result.id);
+
+    }catch(error){
+
+      expect(error).toHaveProperty('message', 'Operation not permitted');
+
+      //delete insertions for future tests
+      
+      const deleteClassAssignment = await connection.query(
+        `DELETE FROM TeacherSubjectClassRelation
+        WHERE ID = ?`,
+        [assignTeacherToClass.insertId]
+      );
+
+      await User.remove(result.id);
+    }
+
+  });
+
+  test('It should throw an error when trying to delete a teacher accout who is also a coordinator', async () => {
+
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const result = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(result).toEqual({
+      id: expect.anything()
+    });
+
+    const connection = await db.getConnection();
+    const assignCoordinator = await connection.query(
+      `INSERT INTO Classes (CreationYear, Name, CoordinatorId)
+      VALUES (2019, 'D', ?)`,
+      [result.id]
+
+    );
+    connection.release();
+
+    try{
+      await User.deleteAccount(result.id);
+
+    }catch(error){
+
+      expect(error).toHaveProperty('message', 'Operation not permitted');
+
+      //delete insertions for future tests
+      
+      const deleteClassAssignment = await connection.query(
+        `DELETE FROM Classes
+        WHERE ID = ?`,
+        [assignCoordinator.insertId]
+      );
+
+      await User.remove(result.id);
+    }
+
+  });
+
+
 });
 
