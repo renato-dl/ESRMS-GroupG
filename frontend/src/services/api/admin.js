@@ -24,4 +24,11 @@ export class AdminAPIService extends BaseAPIService {
     return this.get('/admin/students', data);
   }
 
+  getEnrolledStudentsByClass(classId){
+      return this.get('/admin/students', classId);   
+  }
+
+  sendStudentsToEnrollToClass(classId, students){
+    return this.post(`admin/classes/${classId}/assign-students`, students);
+  }
 }
