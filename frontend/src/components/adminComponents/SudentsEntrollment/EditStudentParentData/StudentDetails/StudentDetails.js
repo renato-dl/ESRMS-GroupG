@@ -10,24 +10,34 @@ export class StudentDetails extends React.Component {
   constructor(props) {
     super(props);
   this.state = {
+    ID:null,
     FirstName: null,
     LastName:null,
     Gender:null,
     BirthDate: new Date(),
+    Parent1Id:null,
+    Parent2Id:null,
     isSaving: false
   }};
 
 
   componentDidMount() {
+    console.log(this.props)
     const {studentInfo} = this.props;
 
     if (studentInfo) {
       this.setState({
+        ID:studentInfo.ID,
         FirstName: studentInfo.FirstName,
         LastName: studentInfo.LastName,
         Gender: studentInfo.Gender,
-        BirthDate: new Date(studentInfo.BirthDate)
+        BirthDate: new Date(studentInfo.BirthDate),
+        Parent1Id:this.props.parentInfo.ID
       });
+      if(this.props.parentInfo2)
+      {
+        this.setState({Parent2Id:this.props.parentInfo2.ID})
+      }
     }
   };
 
@@ -55,17 +65,10 @@ export class StudentDetails extends React.Component {
         SSN:this.props.studentInfo.SSN,
         Gender: this.state.Gender,
         BirthDate: this.state.BirthDate.toUTCString(),
-        Parent1Id:'9e412480-4287-4b62-a1ba-a8dcb03cdd41'
+        Parent1Id:this.state.Parent1Id,
+        Parent2Id:this.state.Parent2Id
+        //Parent1Id:'9e412480-4287-4b62-a1ba-a8dcb03cdd41'
       };
-
-
-      if(!this.state.studentID){
-        await api.admin.saveStudent(
-            studentData
-        );
-        toastr.success(`Student ${this.props.studentInfo.ID } updated successfully.`);
-      }
-      else{
         const reqResult = await api.admin.updateStudent(
             studentData
         );  
@@ -76,7 +79,7 @@ export class StudentDetails extends React.Component {
           toastr.error(reqResult.data.Message);
         }
       }      
-    } catch (e) {
+    catch (e) {
       this.setState({isSaving: false});
       return toastr.error(e);
     }
@@ -135,12 +138,26 @@ export class StudentDetails extends React.Component {
                   onChange={this.handleDateChange}
                 />
               </Form.Field>
+              <Form.Input
+              name="Parent1Id"
+              label='Parent1Id'
+              placeholder='Parent1Id'
+              value={this.state.Parent1Id}
+              onChange={this.handleInputChange}
+            />
+            <Form.Input
+              name="Parent2Id"
+              label='Parent2Id'
+              placeholder='Parent2Id'
+              value={this.state.Parent2Id}
+              onChange={this.handleInputChange}
+            />
             </Form.Group>
           </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button positive onClick={this.onSave} disabled={!this.state.FirstName || !this.state.LastName || !this.state.BirthDate}>
-            <Icon name='checkstudent' />Save
+          <Button positive onClick={this.onSave} disabled={!this.state.FirstName || !this.state.LastName || !this.state.BirthDate||!this.state.Parent1Id}>
+            <Icon name='checkstudent' /> Save
           </Button>
         </Modal.Actions>
       </Modal>

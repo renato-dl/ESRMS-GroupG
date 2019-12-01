@@ -3,7 +3,7 @@ import {BaseAPIService} from './base';
 
 export class AdminAPIService extends BaseAPIService {
 
-    getAuthParentList() {
+  getAuthParentList() {
     return this.get(`/admin/parents`);
   }
 
@@ -31,8 +31,13 @@ export class AdminAPIService extends BaseAPIService {
   {
     return this.get('/admin/students');
   }
-  saveStudent(data)
+
+  updateStudent(data)
   {
     return this.patch('admin/student',data)
+  }
+  updateParent(data)
+  {
+    return this.patch('admin/parent',data)
   }
 }
