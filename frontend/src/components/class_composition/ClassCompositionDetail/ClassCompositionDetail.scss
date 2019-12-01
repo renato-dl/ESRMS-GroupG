@@ -1,8 +1,11 @@
 .class-composition-detail {
-    .header {
-      display: flex !important;
-      justify-content: space-between;
-      text-align: center;
+  span {
+    margin: auto;
+  }
+  .header {    
+    display: flex !important;
+    justify-content: space-between;
+    text-align: center;
   
     .close-icn {
       &:hover {

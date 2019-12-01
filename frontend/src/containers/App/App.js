@@ -23,7 +23,10 @@ import {Topic}  from'../../components/Topic/Topic';
 //*** Admin view Components*/
 import {Admin} from '../Admin/Admin';
 import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
-import {Class_composition} from '../../components/class_composition/Class_composition';
+
+import {Class_composition} from '../../components/class_composition/class_composition';
+import {TeacherGrade} from '../../components/TearcherGrade/TeacherGrade';
+
 import {admin_StudentsEnrollment} from '../../components/adminComponents/SudentsEntrollment/admin_StudentsEnrollment';
 import {TeacherGrade} from '../../components/TeacherGrade/TeacherGrade';
 
