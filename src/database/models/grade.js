@@ -30,7 +30,7 @@ class Grade extends Model {
     }
     return results;
   }
-  async addGrade(subjectId, studentId, grade, type){
+  async addGrade(subjectId, studentId, grade, gradeDate, type){
 
     if (!subjectId) {
       throw new Error('Missing or invalid subject id');
@@ -53,6 +53,7 @@ class Grade extends Model {
       SubjectId: subjectId,
       StudentId: studentId,
       Grade: grade,
+      GradeDate: gradeDate,
       Type: type
     });
 

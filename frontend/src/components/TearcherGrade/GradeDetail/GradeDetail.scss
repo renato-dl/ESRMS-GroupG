@@ -1,0 +1,49 @@
+.grade-detail {
+    .header {
+      display: flex !important;
+      justify-content: space-between;
+  
+      .close-icn {
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+
+    button i{
+      float: left;
+    }
+
+    .numberInput{
+      display: flex;
+      float: right;
+    }
+  
+    .content {
+  
+      .dropdown {
+        .menu {
+          left: 0 !important;
+        }
+      }
+  
+      textarea {
+        resize: none;
+      }
+  
+      .detail {
+        display: block;
+        margin: 0 0 .28571429rem 0;
+        color: rgba(0,0,0,.87);
+        font-size: .92857143em;
+        font-weight: 700;
+        text-transform: none;
+      }
+  
+      .react-datepicker-wrapper {
+        width: 100%;
+      }
+    }
+  
+  }
+  
