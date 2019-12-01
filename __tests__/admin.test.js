@@ -1153,6 +1153,90 @@ describe('Tests about visualization of students data', () => {
       expect(err).toHaveProperty('message', 'No students found!');
     } 
   });
+
+  test('It should visualize the data of a student who is assigned to a parent by classId', async () => {
+    const testFirstName = 'TestFirstName';
+    const testLastName = 'TestLastName';
+    const testSSN = 'TBKHSA93A02F494U';
+    const testBirthDate = moment().utc().subtract(13, 'years');
+    const testGender = 'M';
+
+    //parent1
+    const testParent1 = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(testParent1).toMatchObject({id: expect.anything()});
+
+    //parent2
+    const testParent2 = await User.insertParentData(
+      'NameTwo',
+      'LastnameTwo',
+      'parent2@parents.com',
+      'ZGIJMW64B22B275T',
+      'Password2'
+    );
+    expect(testParent2).toMatchObject({id: expect.anything()});
+
+    const result = await Student.insertStudent(
+      testFirstName,
+      testLastName,
+      testSSN,
+      testGender,
+      testBirthDate,
+      testParent1.id,
+      testParent2.id
+    );
+    expect(result).toMatchObject({id: expect.anything()});
+
+    const assignment = await ClassModel.assignStudentsToClass(1, [result.id]);
+
+    const students = await Student.getStudentsDataByClassId(1);
+    
+    expect(students).not.toBeNull();
+    expect(students.length).toBeGreaterThan(0);
+    expect(students).toEqual(
+            expect.arrayContaining(
+                [
+                  expect.objectContaining(
+                    {
+                        "ID" : result.id,
+                        "FirstName": testFirstName,
+                        "LastName": testLastName,
+                        "Gender" : testGender
+                        
+                }
+       )]));
+
+    await Student.remove(result.id);
+    await User.remove(testParent1.id);
+    await User.remove(testParent2.id);
+
+  });
+
+  test('It should throw an error when class Id is invalid', async () => {
+    try {
+      const result = await Student.getStudentsDataByClassId();
+      
+    } catch(err) {
+      expect(err).toHaveProperty('message', 'Invalid class id parameters!');
+    } 
+  });
+
+  test('It should throw an error when no students are found for that class', async () => {
+    try {
+      const result = await Student.getStudentsDataByClassId(1000);
+      
+    } catch(err) {
+      expect(err).toHaveProperty('message', 'No students found!');
+    } 
+  });
+
+
+
 });
 
 describe('Tests about the edition of a student', () =>{
