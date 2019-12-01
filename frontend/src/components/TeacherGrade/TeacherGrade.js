@@ -28,7 +28,6 @@ export class TeacherGrade extends React.Component{
         const response = await api.teacher.getTeacherGrades(1, params.subjectID);
         if (response) {
            this.setState({gradeList:response.data})
-           console.log(this.props)
           } 
       }
       styleMarkColor(mark) {
