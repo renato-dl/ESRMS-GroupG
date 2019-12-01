@@ -192,8 +192,6 @@ class AdminController extends BaseController {
     res.send(internalAccounts);
   }
 
-<<<<<<< HEAD
-=======
   async insertInternalAccount(req, res) {
     const password = genRandomString(8);
     const result = await User.insertInternalAccountData(
@@ -212,7 +210,6 @@ class AdminController extends BaseController {
 
   }
     
->>>>>>> 29823a31adb87779cd37d1f0795db0eeefff3ce5
   async getClasses(req, res) {
     const classes = await ClassModel.getClasses({
       page: req.query.page, pageSize: req.query.pageSize
@@ -220,11 +217,8 @@ class AdminController extends BaseController {
 
     res.send(classes);
   }
-<<<<<<< HEAD
   
-=======
 
->>>>>>> 29823a31adb87779cd37d1f0795db0eeefff3ce5
   async assignStudentsToClass(req, res) {
     const classID = req.params.classID;
     const students = req.body.students;

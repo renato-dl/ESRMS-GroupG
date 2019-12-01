@@ -5,29 +5,32 @@ import {api} from '../../../services/api';
 
 import AddNewStudent from './AddNewStudent/AddNewStudent';
 //import student from '../../../../../src/database/models/student';
-//import { NoData } from '../../NoData/NoData';
+import { NoData } from '../../NoData/NoData';
+import {StudentDetails} from './EditStudentParentData/StudentDetails/StudentDetails'
 
 export class admin_StudentsEnrollment extends Component {
     constructor(props) {
         super(props);
     
         this.state = {
-            studentInfo:{
-            },
             open_AddModal: false,
             open_EditModal: false,
-            student_info:[]
+            student_info:[],
+            editingStudent:null
         }
       }
-    
-      async componentDidMount(){
+
+      fetchStudents= async () =>{
         const {params} = this.props.match;
         const response = await api.admin.getStudents();
         console.log(response)
         if (response) {
            this.setState({student_info:response.data})
-          }     
-      }
+          }    
+      };
+      async componentDidMount(){
+        this.fetchStudents()
+      };
 
     //Opens Add Student Modal = AddNewStudent.js component
     addNewStudent = () => {
@@ -37,6 +40,26 @@ export class admin_StudentsEnrollment extends Component {
     onAddModalClose = () => {
         this.setState({open_AddModal: false});
     };
+    renderParent_FirstName=(student)=>{
+        if(student.secondParent)
+            return <Table.Cell>{ student.firstParent.FirstName }  </Table.Cell>
+    };
+    renderParent_LastName=(student)=>{
+        if(student.secondParent)
+            return <Table.Cell>{ student.firstParent.LastName }  </Table.Cell>
+    };
+    renderParent_eMail=(student)=>{
+        if(student.secondParent)
+            return <Table.Cell>{ student.firstParent.eMail }  </Table.Cell>
+    };
+
+    editStudent=(data)=>{
+        this.setState({editingStudent: data, open_EditModal: true});
+    }
+    onStudentDetailClose = () => {
+        this.setState({editingStudent: null, open_EditModal: false});
+    };
+    
 
     render() {
         return (
@@ -56,13 +79,14 @@ export class admin_StudentsEnrollment extends Component {
             <Table className='Student_admin' columns={10} textAlign='center'>
               <Table.Header >
                    <Table.Row>
-                        <Table.HeaderCell colSpan="4" > Student</Table.HeaderCell>
+                        <Table.HeaderCell colSpan="5" > Student</Table.HeaderCell>
                         <Table.HeaderCell colSpan="6" >Parent</Table.HeaderCell>
                     </Table.Row>
                     <Table.Row>
                         <Table.HeaderCell>FirstName  </Table.HeaderCell>
                         <Table.HeaderCell>LastName </Table.HeaderCell>
                         <Table.HeaderCell>ClassId </Table.HeaderCell>
+                        <Table.HeaderCell>Opreation </Table.HeaderCell>
                         <Table.HeaderCell>FirstName </Table.HeaderCell>
                         <Table.HeaderCell >LastName </Table.HeaderCell>
                         <Table.HeaderCell >Email </Table.HeaderCell>
@@ -77,12 +101,15 @@ export class admin_StudentsEnrollment extends Component {
                  <Table.Cell>{ student.studentInfo.FirstName }  </Table.Cell>
                  <Table.Cell>{ student.studentInfo.LastName }</Table.Cell>
                  <Table.Cell>{ student.studentInfo.ClassId }</Table.Cell>
+                 <Table.Cell textAlign="left" className="edit-cell" width={1}>
+                    <Icon name="edit" onClick={() =>this.editStudent(student.studentInfo)}/> Edit
+                  </Table.Cell>
                  <Table.Cell>{ student.firstParent.FirstName }  </Table.Cell>
                  <Table.Cell>{ student.firstParent.LastName }</Table.Cell>
                  <Table.Cell>{ student.firstParent.eMail }</Table.Cell>
-                 {/* <Table.Cell>{ student.secondParent.FirstName}</Table.Cell>
-                 <Table.Cell>{ student.secondParent.LastName }</Table.Cell>
-                 <Table.Cell>{ student.secondParent.eMail }</Table.Cell>  */}
+                 {this.renderParent_FirstName(student)}
+                 {this.renderParent_LastName(student)}
+                 {this.renderParent_eMail(student)}
              </Table.Row>
            )} 
            </Table.Body>
@@ -105,6 +132,16 @@ export class admin_StudentsEnrollment extends Component {
                     </Modal.Content>
                 </Modal>
             }
+            {this.state.editingStudent &&
+            <StudentDetails
+              studentInfo={this.state.editingStudent}
+              onClose={this.onStudentDetailClose}
+              onSave={() => {
+                this.fetchStudents();
+                this.onStudentDetailClose();
+              }}
+            />
+          }
             </Container>
         )
     }
