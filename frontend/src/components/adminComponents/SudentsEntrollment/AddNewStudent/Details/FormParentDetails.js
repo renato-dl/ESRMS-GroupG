@@ -36,7 +36,8 @@ const initialState = {
   p2_ID:"",
   p1_SSN: '',       //For Search: final value for Parent 2
   p2_SSN:'',        //For Search: final value for Parent 2
-  isLoading: false,   //For Search: loading icon 
+  isLoading_P1: false,   //For Search: loading icon 
+  isLoading_P2:false,
   results: [],        //For Search: filtered data
 }
 
@@ -47,6 +48,10 @@ let source = [];
 export class FormParentDetails extends Component {
   state = this.props.values;
  
+  isEmptyStr(str) {
+    return (!str || 0 === str.length);
+  }
+
   back = e => {
     e.preventDefault();
     this.props.prevstep('a');
@@ -65,7 +70,7 @@ export class FormParentDetails extends Component {
   validateFields = () => {
     let parent_errors = this.state.parent_errors;
 
-    parent_errors['p1_SSN'] = ((!this.state.p1_ID.trim() == '') ? false : !SSNRegexp.test(this.state.p1_SSN));
+    //parent_errors['p1_SSN'] = ((!this.state.p1_ID.trim() == '') ? false : !SSNRegexp.test(this.state.p1_SSN));
     //parent_errors['p2_SSN'] = ((!this.state.p1_ID.trim() == '') ? false : !SSNRegexp.test(this.state.p2_SSN) );
 
     const hasErrorsParent = !!Object.keys(parent_errors).filter((e) => parent_errors[e]).length;
@@ -151,28 +156,28 @@ export class FormParentDetails extends Component {
     if(e.target.name === "P1"){
 
       this.setState({p1_ID:""});
-      this.setState({ isLoading: true, p1_SSN:value })
+      this.setState({ isLoading_P1: true, p1_SSN:value })
 
       setTimeout(() => {
         if (this.state.p1_SSN.length < 1) return this.setState(initialState)
         const re = new RegExp(_.escapeRegExp(this.state.p1_SSN), 'i')
         const isMatch = (result) => re.test(result.SSN)
         this.setState({
-          isLoading: false,
+          isLoading_P1: false,
           results: _.filter(source, isMatch),
       })}, 300)
 
     }else if(e.target.name === "P2"){
 
       this.setState({p2_ID:""});
-      this.setState({ isLoading: true, p2_SSN:value })
+      this.setState({ isLoading_P2: true, p2_SSN:value })
 
       setTimeout(() => {
         if (this.state.p2_SSN.length < 1) return this.setState(initialState)
         const re = new RegExp(_.escapeRegExp(this.state.p2_SSN), 'i')
         const isMatch = (result) => re.test(result.SSN)
         this.setState({
-          isLoading: false,
+          isLoading_P2: false,
           results: _.filter(source, isMatch),
       })}, 300) 
     }
@@ -199,7 +204,7 @@ export class FormParentDetails extends Component {
       //for sharing props with FormStudentDetails state
       const {values, handleChange} = this.props;
 
-      const { isLoading, p1_SSN, p2_SSN, results } = this.state
+      const { isLoading_P1, isLoading_P2, p1_SSN, p2_SSN, results } = this.state
 
         return (
             <>
@@ -220,7 +225,7 @@ export class FormParentDetails extends Component {
                   //className = {!this.state.parent_errors['p1_SSN'] ? "" : 'errorSNN'}
                   error={this.state.parent_errors['p1_SSN']}
                   name="P1"
-                  loading={isLoading}
+                  loading={isLoading_P1}
                   onResultSelect={this.handleResultSelect}
                   onSearchChange={_.debounce(this.handleSearchChange, 500, {
                     leading: true,
@@ -233,13 +238,13 @@ export class FormParentDetails extends Component {
                   {...this.props}
                 />
                 
-                {(!this.state.p1_ID.trim() == "") && <h5 style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</h5>}
+                { !this.isEmptyStr(this.state.p1_ID)  && <h5 style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</h5>}
               </Grid.Column>
             </Grid>
             </Form.Field>
 
 
-            {(this.state.p1_ID.trim() == '') &&  
+            { this.isEmptyStr(this.state.p1_ID) &&
             <>
               <Form.Group widths='equal'>
                 <Form.Input
@@ -289,7 +294,7 @@ export class FormParentDetails extends Component {
                         <label><b>SSN</b></label>
                       <Search
                         name="P2"
-                        loading={isLoading}
+                        loading={isLoading_P2}
                         onResultSelect={this.handleResultSelect}
                         onSearchChange={_.debounce(this.handleSearchChange, 500, {
                           leading: true,
@@ -302,12 +307,12 @@ export class FormParentDetails extends Component {
                         //{...this.props}
                       />
                       
-                      {(!this.state.p2_ID.trim() == "") && <h5 style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</h5>}
+                      {!this.isEmptyStr(this.state.p2_ID) && <h5 style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</h5>}
                     </Grid.Column>
                   </Grid>
                   </Form.Field>
 
-              {(this.state.p2_ID.trim() == '') &&  
+              {this.isEmptyStr(this.state.p2_ID) &&  
                 <>
                 <Form.Group widths='equal'>
 
