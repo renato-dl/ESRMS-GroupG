@@ -30,15 +30,18 @@ resultRenderer.propTypes = {
   FirstName: PropTypes.string,
   LastName: PropTypes.string
 }
-//initialState for search field
-const initialState = {
-  p1_ID:"", 
+//initialState for search fields
+const initialState_P1 = {
+  p1_ID:"",
+  p1_SSN: '',        
+  isLoading_P1: false,
+  results: [],       
+}
+const initialState_P2 = {
   p2_ID:"",
-  p1_SSN: '',       //For Search: final value for Parent 2
-  p2_SSN:'',        //For Search: final value for Parent 2
-  isLoading_P1: false,   //For Search: loading icon 
+  p2_SSN:'',        
   isLoading_P2:false,
-  results: [],        //For Search: filtered data
+  results: [],      
 }
 
 let source = [];
@@ -159,7 +162,7 @@ export class FormParentDetails extends Component {
       this.setState({ isLoading_P1: true, p1_SSN:value })
 
       setTimeout(() => {
-        if (this.state.p1_SSN.length < 1) return this.setState(initialState)
+        if (this.state.p1_SSN.length < 1) return this.setState(initialState_P1)
         const re = new RegExp(_.escapeRegExp(this.state.p1_SSN), 'i')
         const isMatch = (result) => re.test(result.SSN)
         this.setState({
@@ -173,7 +176,7 @@ export class FormParentDetails extends Component {
       this.setState({ isLoading_P2: true, p2_SSN:value })
 
       setTimeout(() => {
-        if (this.state.p2_SSN.length < 1) return this.setState(initialState)
+        if (this.state.p2_SSN.length < 1) return this.setState(initialState_P2)
         const re = new RegExp(_.escapeRegExp(this.state.p2_SSN), 'i')
         const isMatch = (result) => re.test(result.SSN)
         this.setState({
