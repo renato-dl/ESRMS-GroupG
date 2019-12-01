@@ -20,7 +20,7 @@ class AdminController extends BaseController {
 
   async getParentsBySSN(req, res) {
     const ssn = req.query.ssn || '';
-    const parents = await User.searchParentsBySSN(ssn);
+    const parents = await User.searchUsersBySSN(ssn);
 
     res.send(parents);
   }
@@ -36,7 +36,7 @@ class AdminController extends BaseController {
       req.body.SSN, 
       password
     );
-    this.sendEmailToParent(req.body.eMail, password, req.body.firstName, req.body.lastName);
+    this.sendEmailToUser(req.body.eMail, password, req.body.firstName, req.body.lastName);
     res.send(parent); 
   }
 
@@ -61,9 +61,9 @@ class AdminController extends BaseController {
           password
         )).id;
         parent1Insert = true;
-        this.sendEmailToParent(req.body.firstParent.Email, password, req.body.firstParent.FirstName, req.body.firstParent.LastName);
       } else {
         parent1 = req.body.firstParent.ID;
+        await User.makeParentIfNotAlready(parent1);
       }
     }
     if (req.body.hasOwnProperty('secondParent')) {
@@ -77,9 +77,9 @@ class AdminController extends BaseController {
           password
         )).id;
         parent2Insert = true;
-        this.sendEmailToParent(req.body.secondParent.Email, password, req.body.secondParent.FirstName, req.body.secondParent.LastName);
       } else {
         parent2 = req.body.secondParent.ID;
+        await User.makeParentIfNotAlready(parent1);
       }
     } else {
       parent2 = null;
@@ -95,16 +95,22 @@ class AdminController extends BaseController {
         parent2
       );
 
+      if(parent1Insert) {
+        this.sendEmailToUser(req.body.firstParent.Email, password, req.body.firstParent.FirstName, req.body.firstParent.LastName);
+      }
+
+      if (parent2Insert) {
+        this.sendEmailToUser(req.body.secondParent.Email, password, req.body.secondParent.FirstName, req.body.secondParent.LastName);
+      }
+
       res.send({success:true, id: result.id});
 
     } catch(error) {
       if (parent1Insert) {
         await User.remove(parent1);
-        throw(error);
       }
       if (parent2Insert) {
         await User.remove(parent2);
-        throw(error);
       }
       throw(error);
     }
@@ -186,15 +192,39 @@ class AdminController extends BaseController {
     res.send(internalAccounts);
   }
 
+<<<<<<< HEAD
+=======
+  async insertInternalAccount(req, res) {
+    const password = genRandomString(8);
+    const result = await User.insertInternalAccountData(
+      req.body.firstName,
+      req.body.lastName,
+      req.body.eMail,
+      req.body.SSN,
+      password,
+      req.body.isTeacher,
+      req.body.isAdminOfficer,
+      req.body.isPrincipal
+    );
+    this.sendEmailToUser(req.body.eMail, password, req.body.firstName, req.body.lastName);
+
+    res.send({success:true, id: result.id});
+
+  }
+    
+>>>>>>> 29823a31adb87779cd37d1f0795db0eeefff3ce5
   async getClasses(req, res) {
-    const classes = await ClassModel.findAll({
-      page: req.query.page,
-      pageSize: req.query.pageSize
-    })
+    const classes = await ClassModel.getClasses({
+      page: req.query.page, pageSize: req.query.pageSize
+    });
 
     res.send(classes);
   }
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> 29823a31adb87779cd37d1f0795db0eeefff3ce5
   async assignStudentsToClass(req, res) {
     const classID = req.params.classID;
     const students = req.body.students;
@@ -202,12 +232,19 @@ class AdminController extends BaseController {
     if (!students || !students.length) {
       throw new Error('Empty or invalid students list.');
     }
-
+    
     const results = await ClassModel.assignStudentsToClass(classID, students);
+    
     res.send(results);
   }
 
-  sendEmailToParent(parentEmail, parentPassword, parentName, parentSurname){
+
+  async deleteAccount(req, res) {
+    const result = await User.deleteAccount(req.body.ID);
+    res.send(result);
+  }
+
+  sendEmailToUser(parentEmail, parentPassword, parentName, parentSurname){
     try{
       const emailService =  `${config.email.service}`;
       const senderEmail = `${config.email.sender_email}`;
