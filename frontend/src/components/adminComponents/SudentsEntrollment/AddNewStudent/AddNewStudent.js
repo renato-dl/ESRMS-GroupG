@@ -14,7 +14,7 @@ export class AddNewStudent extends Component {
             step:1,
             isSaving: false,
 
-            errors: {},
+            stud_errors: {},
 
             stud_FirstName:"",
             stud_LastName:"",
@@ -22,13 +22,15 @@ export class AddNewStudent extends Component {
             stud_Gender:"",
             stud_BirthDate: new Date(2013,1,1),
 
+            parent_errors: {},
+
             p1_ID:"",
             p1_SSN:"",
             p1_FirstName:"",
             p1_LastName:"",
             p1_Email:"",
 
-            activeIndex: 1, // Accordion-Parent Form 
+            activeIndex: 0, // Accordion-Parent Form 
             p2_ID:"",
             p2_SSN:"",
             p2_FirstName:"",
@@ -112,7 +114,7 @@ export class AddNewStudent extends Component {
             case 1:
                 return (
                     <FormStudentDetails
-                    nextStep = {this.nextStep}
+                    nextstep = {this.nextStep}
                     handleChange = {this.handleChange}
                     //handleDateChange = {this.handleDateChange}
                     values = {values}
@@ -121,8 +123,8 @@ export class AddNewStudent extends Component {
             case 2:
                 return (
                     <FormParentDetails
-                    confirm = {this.ConfirmEnrollment}
-                    prevStep = {this.prevStep}
+                    nextconfirm = {this.ConfirmEnrollment}
+                    prevstep = {this.prevStep}
                     handleChange = {this.handleChange}
                     values = {values}
                     />

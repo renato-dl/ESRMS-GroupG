@@ -8,12 +8,15 @@ export class FormStudentDetails extends Component {
     state = this.props.values;
 
     continue = e => {
-        const [hasErrors, errors] = this.validateFields();
+      e.preventDefault();
+        const [hasErrors, stud_errors] = this.validateFields();
         if (hasErrors) {
-          this.setState({errors});
-          return;
+          this.setState({stud_errors});
+          //return;
+        }else{
+
+          this.props.nextstep('a');
         }
-        this.props.nextStep();
     }
 
     onSelectChange = (e, data) => {
@@ -28,12 +31,12 @@ export class FormStudentDetails extends Component {
     }
     
     validateFields = () => {
-      let errors = this.state.errors;
+      let stud_errors = this.state.stud_errors;
 
-      errors['stud_SSN'] = !SSNRegexp.test(this.state.stud_SSN);
+      stud_errors['stud_SSN'] = !SSNRegexp.test(this.state.stud_SSN);
   
-      const hasErrors = !!Object.keys(errors).filter((e) => errors[e]).length;
-      return [hasErrors, errors];
+      const hasErrors = !!Object.keys(stud_errors).filter((e) => stud_errors[e]).length;
+      return [hasErrors, stud_errors];
     };
 
     render() {
@@ -47,7 +50,7 @@ export class FormStudentDetails extends Component {
             <Form>
                 
             <Form.Input
-              error={this.state.errors['stud_SSN']}
+              error={this.state.stud_errors['stud_SSN']}
               label='SSN' placeholder='SSN'
               name='stud_SSN'
               //defaultValue = {this.state.stud_SSN}

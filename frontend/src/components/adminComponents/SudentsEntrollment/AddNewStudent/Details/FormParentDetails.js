@@ -4,6 +4,10 @@ import { api } from '../../../../../services/api';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
+import '../AddNewStudent.scss'
+
+import {SSNRegexp} from '../../../../../utils';
+
 import {Button, Icon, Form, Accordion, Search, Grid, Header} from 'semantic-ui-react'
 
 //Search Result Layout
@@ -45,13 +49,28 @@ export class FormParentDetails extends Component {
  
   back = e => {
     e.preventDefault();
-    this.props.prevStep();
+    this.props.prevstep('a');
   }
 
-  confirm = e => {
+  nextConfirm = e => {
     e.preventDefault();
-    this.props.confirm();
+    const [hasErrorsParent, parent_errors] = this.validateFields();
+        if (hasErrorsParent) {
+          this.setState({parent_errors});
+          return;
+        }
+    this.props.nextconfirm('a');
   };
+
+  validateFields = () => {
+    let parent_errors = this.state.parent_errors;
+
+    parent_errors['p1_SSN'] = ((!this.state.p1_ID.trim() == '') ? false : !SSNRegexp.test(this.state.p1_SSN));
+    //parent_errors['p2_SSN'] = ((!this.state.p1_ID.trim() == '') ? false : !SSNRegexp.test(this.state.p2_SSN) );
+
+    const hasErrorsParent = !!Object.keys(parent_errors).filter((e) => parent_errors[e]).length;
+    return [hasErrorsParent, parent_errors];
+  };  
 
 //--Get/Find Possible Prents from back end
   async updateSearchOptions(val) {
@@ -165,7 +184,7 @@ export class FormParentDetails extends Component {
   handleAccordionClick = (e, titleProps) => {
     const { index } = titleProps
     const { activeIndex } = this.state
-    const newIndex = activeIndex === index ? -1 : index
+    const newIndex = activeIndex === index ? 0 : index
     this.setState({ activeIndex: newIndex })
 
     //wrong but fast :D
@@ -193,7 +212,13 @@ export class FormParentDetails extends Component {
             <Grid>
               <Grid.Column>
                   <label><b>SSN</b></label>
+                  {/* {!this.state.parent_errors['p1_SSN'] && <label><b>SSN</b></label>} */}
+                  {/* {this.state.parent_errors['p1_SSN'] &&
+                  <p className="errMsg"><Icon name="exclamation triangle"/>SSN: Invalid</p>} */}
+
                 <Search
+                  //className = {!this.state.parent_errors['p1_SSN'] ? "" : 'errorSNN'}
+                  error={this.state.parent_errors['p1_SSN']}
                   name="P1"
                   loading={isLoading}
                   onResultSelect={this.handleResultSelect}
@@ -247,8 +272,8 @@ export class FormParentDetails extends Component {
 {/*--SECOND PARENT----------------------------------------------------------------------------*/}
             <Accordion as={Form.Field} activeIndex = {values.activeIndex} >
             <Accordion.Title
-                active={values.activeIndex === 0}
-                index={0}
+                active={values.activeIndex === 1}
+                index={1}
                 onClick={this.handleAccordionClick}
                 className="optionalField"
              >
@@ -256,7 +281,7 @@ export class FormParentDetails extends Component {
               Second Parent Details (Optional)
             </Accordion.Title>
 
-            <Accordion.Content active={this.state.activeIndex === 0}>
+            <Accordion.Content active={values.activeIndex === 1}>
                 <>
                 <Form.Field>
                   <Grid>
@@ -274,7 +299,7 @@ export class FormParentDetails extends Component {
                         results={results}
                         value={p2_SSN}
                         resultRenderer={resultRenderer}
-                        {...this.props}
+                        //{...this.props}
                       />
                       
                       {(!this.state.p2_ID.trim() == "") && <h5 style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</h5>}
@@ -318,7 +343,9 @@ export class FormParentDetails extends Component {
                 <Button onClick={this.back} className="nextBTN">
                     <Icon name='left arrow' />Back 
                 </Button>
-                <Button  onClick={this.confirm} className="confirmBTN">
+                <Button  onClick={this.nextConfirm} className="confirmBTN"
+                  disabled = {values.p1_ID ?  false : (!values.p1_FirstName || !values.p1_LastName || !values.p1_Email || !values.p1_SSN)}
+                >
                     <Icon name='checkmark' />Submit
                 </Button>
             </div>
