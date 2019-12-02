@@ -26,6 +26,7 @@ export class TeacherGrade extends React.Component{
           deleteGradeOpen: false,
           selectedGrade: null
         }
+       
     }
 
     async componentDidMount(){
@@ -86,87 +87,85 @@ export class TeacherGrade extends React.Component{
       }
         return({backgroundColor: "#C6EDBA"});
     };
-    render() {
-        console.log(this.state.gradeList);
-        if (this.state.gradeList.length) {
-          return (
-            <Container className="Grades-container contentContainer">
-            <h3 className="contentHeader">
-              <Icon name='braille'/>
-              Grades of Class 1, Subject {this.state.subjectName}
-            </h3>
-            <Button className="ui vk button" onClick={this.addNewMarks}>
-                <i className="plus icon"></i>
-                Add Grades
-            </Button>
-            {this.state.addMarksOpen &&
-                <GradeDetail
-                  subjectId={this.state.subjectID}
-                  classId={this.state.classId}
-                  onClose={this.onGradeDetailClose}
-                  onSave={() =>{
-                    this.fetchGrades();
-                    this.onGradeDetailClose();
-                  }}
-                />
-              }
-            <Table className='Marks_table' columns={6}>
-            <Table.Header>
-                <Table.Row>
-                    <Table.HeaderCell>FirstName</Table.HeaderCell>
-                    <Table.HeaderCell>LastName</Table.HeaderCell>
-                    <Table.HeaderCell>Mark</Table.HeaderCell>
-                    <Table.HeaderCell>Type</Table.HeaderCell>
-                    <Table.HeaderCell>Date</Table.HeaderCell>
-                    <Table.HeaderCell>Actions</Table.HeaderCell>
-                </Table.Row>
-            </Table.Header>
-              <Table.Body>
-              {this.state.gradeList.map((mark, index) =>
-                <Table.Row key={index}>
-                    <Table.Cell>{ mark.FirstName } </Table.Cell>
-                    <Table.Cell>{ mark.LastName } </Table.Cell>
-                    <Table.Cell><span className="markField" style={this.styleMarkColor(mark.Grade)}>{ mark.Grade }</span></Table.Cell>
-                    <Table.Cell>{ mark.Type } </Table.Cell>
-                    <Table.Cell>{ moment(mark.GradeDate).format('LL')}</Table.Cell>
-                    <Table.Cell>
-                      <Icon name="edit" onClick={() => this.updateGrade(mark)}/> Edit
-                        <br/>
-                        <Icon name="delete" onClick={() =>this.deleteGrade(mark)}/> Delete
-                    </Table.Cell>
-                </Table.Row>
-              )} 
-              </Table.Body>
-              </Table>
-              {this.state.modifyGradeOpen &&
-                <GradeUpdate
-                  subjectId={this.state.subjectID}
-                  classId={this.state.classId}
-                  grade={this.state.selectedGrade}
-                  onClose={this.onUpdateGradeClose}
-                  onSave={() =>{
-                    this.fetchGrades();
-                    this.onUpdateGradeClose();
-                  }}
-                />
-              }
-              {this.state.deleteGradeOpen &&
-                <GradeDelete
-                  subjectId={this.state.subjectID}
-                  classId={this.state.classId}
-                  grade={this.state.selectedGrade}
-                  onClose={this.onDeleteGradeClose}
-                  onSave={() =>{
-                    this.fetchGrades();
-                    this.onDeleteGradeClose();
-                  }}
-                />
-              }
+    render(){
+        if(this.state.gradeList.length){
+      return (
+        <Container className="Grades-container contentContainer">
+        <h3 className="contentHeader">
+          <Icon name='braille'/>
+          Grades of Class 1, Subject {this.state.subjectName}
+        </h3>
+        <Button className="ui vk button" onClick={this.addNewMarks}>
+            <i className="plus icon"></i>
+            Add Grades
+        </Button>
+        {this.state.addMarksOpen &&
+            <GradeDetail
+              subjectId={this.state.subjectID}
+              classId={this.state.classId}
+              onClose={this.onGradeDetailClose}
+              onSave={() =>{
+                this.fetchGrades();
+                this.onGradeDetailClose();
+              }}
+            />
+          }
+         <Table className='Marks_table' columns={6}>
+         <Table.Header>
+             <Table.Row>
+                 <Table.HeaderCell>FirstName</Table.HeaderCell>
+                 <Table.HeaderCell>LastName</Table.HeaderCell>
+                 <Table.HeaderCell>Grade</Table.HeaderCell>
+                 <Table.HeaderCell>Type</Table.HeaderCell>
+                 <Table.HeaderCell>Date</Table.HeaderCell>
+                 <Table.HeaderCell>Actions</Table.HeaderCell>
+             </Table.Row>
+         </Table.Header>
+           <Table.Body>
+           {this.state.gradeList.map((mark, index) =>
+             <Table.Row key={index}>
+                 <Table.Cell>{ mark.FirstName } </Table.Cell>
+                 <Table.Cell>{ mark.LastName } </Table.Cell>
+                 <Table.Cell><span className="markField" style={this.styleMarkColor(mark.Grade)}>{ mark.Grade }</span></Table.Cell>
+                 <Table.Cell>{ mark.Type } </Table.Cell>
+                 <Table.Cell>{ moment(mark.GradeDate).format('LL')}</Table.Cell>
+                 <Table.Cell>
+                   <Icon name="edit" onClick={() => this.updateGrade(mark)}/> Edit
+                    <br/>
+                    <Icon name="delete" onClick={() =>this.deleteGrade(mark)}/> Delete
+                 </Table.Cell>
+             </Table.Row>
+           )} 
+           </Table.Body>
+           </Table>
+           {this.state.modifyGradeOpen &&
+            <GradeUpdate
+              subjectId={this.state.subjectID}
+              classId={this.state.classId}
+              grade={this.state.selectedGrade}
+              onClose={this.onUpdateGradeClose}
+              onSave={() =>{
+                this.fetchGrades();
+                this.onUpdateGradeClose();
+              }}
+            />
+          }
+          {this.state.deleteGradeOpen &&
+            <GradeDelete
+              subjectId={this.state.subjectID}
+              classId={this.state.classId}
+              grade={this.state.selectedGrade}
+              onClose={this.onDeleteGradeClose}
+              onSave={() =>{
+                this.fetchGrades();
+                this.onDeleteGradeClose();
+              }}
+            />
+          }
 
-          </Container>
-        );
-      }
-
+       </Container>
+     );
+   }
    return (
      <Container className="Grades-container contentContainer">       
        <h3 className="contentHeader">
@@ -191,5 +190,5 @@ export class TeacherGrade extends React.Component{
        <NoData/>
      </Container>
    );
-  } 
+}
 }

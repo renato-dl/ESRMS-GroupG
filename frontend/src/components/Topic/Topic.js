@@ -9,6 +9,7 @@ import {
 } from 'semantic-ui-react'
 import moment from 'moment';
 import TopicDetails from './TopicDetail/TopicDetails';
+import TopicDelete from './TopicDetail/TopicDelete';
 import { NoData } from '../NoData/NoData';
 
 export class Topic extends React.Component{
@@ -18,6 +19,8 @@ export class Topic extends React.Component{
         subject: null,
         topics: [],
         editingTopic: null,
+        deleteTopicOpen: false, 
+        selectedTopic: null,
         isTopicDetailsOpen: false
       }
     }
@@ -62,13 +65,21 @@ export class Topic extends React.Component{
       this.setState({editingTopic: topic, isTopicDetailsOpen: true});
     };
 
-    async deleteTopic (topic) {
-     const response=await api.teacher.deleteTopic(topic)
-     if (response) {
-      this.fetchTopics();
-     } 
+    // open modal for deleting topic
+    deleteTopic = (topic) =>{
+      this.setState({deleteTopicOpen: true, selectedTopic: topic});
+    }
+    onDeleteTopicClose = () =>{
+      this.setState({deleteTopicOpen: false, selectedTopic: null});
+    }
+
+    // async deleteTopic (topic) {
+    //  const response=await api.teacher.deleteTopic(topic)
+    //  if (response) {
+    //   this.fetchTopics();
+    //  } 
     
-    };
+    // };
 
 
     render(){
@@ -117,6 +128,16 @@ export class Topic extends React.Component{
               onSave={() => {
                 this.fetchTopics();
                 this.onTopicDetailClose();
+              }}
+            />
+          }
+          {this.state.deleteTopicOpen &&
+            <TopicDelete
+              topic={this.state.selectedTopic}
+              onClose={this.onDeleteTopicClose}
+              onSave={() =>{
+                this.fetchTopics();
+                this.onDeleteTopicClose();
               }}
             />
           }
