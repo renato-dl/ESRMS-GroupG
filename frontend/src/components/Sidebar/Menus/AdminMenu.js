@@ -7,8 +7,8 @@ export const AdminMenu = (props) => (
     <Menu.Item as={Link} to="/admin">
       <span>
         <br/>
-        <Icon name='cog' size="big" />
-        ADMINISTRATOR 
+        <Icon name='address book outline' size="big" />
+        ADMIN Officer 
         <br/><br/>
       </span>
     </Menu.Item>
@@ -25,9 +25,9 @@ export const AdminMenu = (props) => (
       <Icon name='linode' />
       Class Compositions
     </Menu.Item>
-    <Menu.Item as={Link} to='/accounts'>
+    {/* <Menu.Item as={Link} to='/accounts'>
       <Icon name='wrench' />
       Internal Accounts Setup
-    </Menu.Item>
+    </Menu.Item> */}
   </>
 );
