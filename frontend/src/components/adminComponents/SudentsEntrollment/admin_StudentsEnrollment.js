@@ -101,6 +101,7 @@ export class admin_StudentsEnrollment extends Component {
                     <Icon name='braille'/>
                     Students Configuration
                 </h3>
+                
             
             <Button className="ui vk button" onClick={this.addNewStudent}>
                 <i className="user plus icon"></i>
