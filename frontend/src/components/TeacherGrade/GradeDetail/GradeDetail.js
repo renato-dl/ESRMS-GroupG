@@ -79,12 +79,14 @@ export class GradeDetail extends Component {
     allMarks.forEach(async (key, value) => {
       if(key != "0"){
         try{
+          let correctedDate = this.state.date;
+          correctedDate = new Date(correctedDate.setTime( correctedDate.getTime() + 1 * 86400000 ));
           const request = {
             subjectId: this.state.subjectId,
             studentId: value,
             classId: this.state.classId,
             grade: key,
-            gradeDate: this.state.date.toISOString().replace(/T.+/, ''),
+            gradeDate: correctedDate.toISOString().replace(/T.+/, ''),
             type: this.state.type
           }
           const response = await api.teacher.addMark(request);
@@ -142,7 +144,7 @@ export class GradeDetail extends Component {
                   <label>{ eStudent.FirstName } { eStudent.LastName }</label>
                   <NumberInput className="numberInput" valueType="decimal" 
                   minValue={2} maxValue={10} 
-                  stepAmount={0.25} allowEmptyValue value={this.state.studentMarks.get(eStudent.ID) ? this.state.studentMarks.get(eStudent.ID) : "0"}
+                  stepAmount={0.25} allowEmptyValue value={this.state.studentMarks.get(eStudent.ID)}
                   onChange={(e) => {this.changeValue(eStudent.ID, e)} }/>                   
                 </Form.Field>                 
               )}          

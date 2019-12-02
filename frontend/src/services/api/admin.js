@@ -33,7 +33,8 @@ export class AdminAPIService extends BaseAPIService {
   }
   
   saveStudent(data) {
-    return this.patch('admin/student',data)
+    return this.patch('admin/student',data);
+  }
     
   getEnrolledStudentsByClass(classId){
       return this.get('/admin/students', classId);   

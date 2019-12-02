@@ -123,6 +123,10 @@ export class TeacherGrade extends React.Component{
               subjectId={this.state.subjectID}
               classId={this.state.classId}
               onClose={this.onGradeDetailClose}
+              onSave={() =>{
+                this.fetchGrades();
+                this.onGradeDetailClose();
+              }}
             />
           }
        <NoData/>
