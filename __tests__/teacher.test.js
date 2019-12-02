@@ -846,11 +846,13 @@ describe('Tests about insertion of a grade by teacher', () => {
     const studentId = "868d6ec1dfc8467f6d260c48b5620543"
     const grade = "6.0";
     const type = "Oral";
+    const date = moment.utc();
 
     const result = await Grade.addGrade(
       subjectId,
       studentId,
       grade,
+      date.format(),
       type
     );
 
@@ -966,30 +968,35 @@ describe('Teacher tests about visualization of grades', () => {
     const date2 = new Date('2019-11-03T00:00:00.000Z');
     const date3 = new Date('2019-11-03T00:00:00.000Z');
 
-
     expect(grades).toEqual(
       expect.arrayContaining(
         [
           {
+            ID: expect.anything(),
             FirstName: "Gianluca",
             LastName: "Menzi",
             Grade: 9,
             GradeDate: date1,
-            Type: "Written"
+            Type: "Written",
+            StudentId: "868d6ec1dfc8467f6d260c48b5620543"
           },
-          {          
+          {
+            ID: expect.anything(),        
             FirstName: "Martina",
             LastName: "Menzi",
             Grade: 7,
             GradeDate: date2,
-            Type: "Oral"
+            Type: "Oral",
+            StudentId: "7460aba98f7291ee69fcfdd17274c3a1"
           },
-          {          
+          {
+            ID: expect.anything(),          
             FirstName: "Sara",
             LastName: "Lorenzini",
             Grade: 8.5,
             GradeDate: date3,
-            Type: "Written"
+            Type: "Written",
+            StudentId: "266667153e975bbf735b89d4b03d9f93"
           }
         ]
       )
@@ -1045,3 +1052,40 @@ describe('Test wether a theacher is authorized to access a given grade', () => {
 
 });
 
+describe("Tests about updating grades", () => {
+
+  test('Teacher should be able to updated grade successfully', async () => {
+    const subjectId = 1;
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = "6.0";
+    const type = "Oral";
+    const date = moment.utc();
+
+    const result = await Grade.addGrade(
+      subjectId,
+      studentId,
+      grade,
+      date.format(),
+      type
+    );
+
+    expect(result.id).not.toBeNaN();
+    
+    const gradeID = result.id;
+    const updateResult = await Grade.updateGrade(gradeID, 7, 'Written');
+    expect(updateResult).toBeTruthy();
+
+    const connection = await db.getConnection();
+    const testResult = await connection.query(
+      `SELECT COUNT(*) AS count
+      FROM Grades
+      WHERE ID = ?`,
+      [result.id]
+    );
+
+    connection.release();
+    expect(testResult[0].count).toBe(1);
+    await Grade.remove(result.id);
+  });
+
+});

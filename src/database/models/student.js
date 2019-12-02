@@ -119,9 +119,7 @@ class Student extends Model {
     }
   }
 
-
   async getStudentsDataByClassId(classId, pagination){
-
     if(!classId){
       throw new Error('Invalid class id parameters!');
     }
@@ -143,6 +141,31 @@ class Student extends Model {
       throw new Error('No students found!');
     }
     return results;
+  }
+
+  async getStudentsDataByClassIdAndSubjectId(teacherId, classId, subjectId, pagination) {
+    if(!teacherId || !classId || !subjectId) {
+      throw new Error('Invalid parameters!');
+    }
+    
+    const connection = await this.db.getConnection();
+    const query = `
+      SELECT s.ID, s.FirstName, s.LastName, s.Gender
+      FROM TeacherSubjectClassRelation tscr, Students s
+      WHERE s.ClassId = ?
+      AND tscr.ClassId = ?
+      AND tscr.TeacherId = ?
+      AND tscr.SubjectId = ?
+    `;
+
+    if (pagination) {
+      query += ` ${this.db.getPaginationQuery(pagination)}`
+    }
+
+    const results = await connection.query(query, [classId, classId, teacherId, subjectId]);    
+    connection.release();
+
+    return results || [];
   }
 
   async getStudentsData(isAssigned, pagination){

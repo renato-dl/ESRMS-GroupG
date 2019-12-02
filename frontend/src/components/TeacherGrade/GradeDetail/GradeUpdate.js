@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './GradeDetail.scss';
 import {Button, Modal, Form, LabelDetail, Icon} from 'semantic-ui-react';
-import DatePicker from "react-datepicker";
 import NumberInput from 'semantic-ui-react-numberinput';
 import moment from 'moment';
 import * as toastr from 'toastr';

@@ -6,7 +6,7 @@ exports.up = function(knex) {
       table.integer('ClassId').unsigned().notNullable();
       table.text('Title').notNullable();
       table.text('Description').notNullable();
-      table.timestamp('DueDate').notNullable();
+      table.datetime('DueDate').notNullable();
       table.timestamp('CreatedOn').defaultTo(knex.fn.now()).notNullable();
 
       table.foreign('SubjectId').references('Subjects.ID');

@@ -31,11 +31,15 @@ export class AdminAPIService extends BaseAPIService {
   getStudents() {
     return this.get('/admin/students');
   }
+  updateStudent(data)
+  {
+    return this.patch('admin/student',data)
+  }  
   
   saveStudent(data) {
     return this.patch('admin/student',data);
   }
-    
+  
   getEnrolledStudentsByClass(classId){
       return this.get('/admin/students', classId);   
   }
@@ -43,5 +47,9 @@ export class AdminAPIService extends BaseAPIService {
   sendStudentsToEnrollToClass(classId, students){
     return this.post(`admin/classes/${classId}/assign-students`, students);
 
+  }
+  updateParent(data)
+  {
+    return this.patch('admin/parent',data)
   }
 }

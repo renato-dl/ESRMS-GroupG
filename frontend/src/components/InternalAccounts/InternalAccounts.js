@@ -7,6 +7,8 @@ import moment from 'moment';
 
 import { NoData } from '../NoData/NoData';
 import InternalAccountDetails from './InternalAccountDetails/InternalAccountDetails';
+import InternalAccountDelete from './InternalAccountDetails/InternalAccountDelete';
+
 
 
 export class InternalAccounts extends Component {
@@ -18,7 +20,9 @@ export class InternalAccounts extends Component {
               {eMail: 'sad', FirstName:"kjhg", LastName: "oijlk", SSN: "kj", CreatedOn: "22.04.2019", IsTeacher: "0", IsParent: "0", IsAdminIfficer: "1", IsPrincipal: "0"},
 
           ],
-          isInternalAccountDetailsOpen: false
+          isInternalAccountDetailsOpen: false,
+          deleteUserOpen: false, 
+          selectedUser: null
         }
     }
 
@@ -31,9 +35,9 @@ export class InternalAccounts extends Component {
         }
     };
 
-    /* async componentDidMount() {
-        await this.fetchUsers();
-    } */
+    async componentDidMount() {
+      await this.fetchUsers();
+    }
     
     addUser = () => {
         this.setState({isInternalAccountDetailsOpen: true});
@@ -43,13 +47,21 @@ export class InternalAccounts extends Component {
         this.setState({isInternalAccountDetailsOpen: false});
     };
 
-    async deleteUser (user) {
-        const response=await api.sysadmin.deleteUser(user)
-        if (response) {
-         this.fetchUsers();
-        } 
+    // async deleteUser (user) {
+    //     const response=await api.sysadmin.deleteUser(user)
+    //     if (response) {
+    //      this.fetchUsers();
+    //     } 
        
-    };
+    // };
+
+    // open modal for deleting grade
+    deleteUser= (user) =>{
+      this.setState({deleteUserOpen: true, selectedUser: user});
+    }
+    onDeleteUserClose = () =>{
+      this.setState({deleteUserOpen: false, selectedUser: null});
+    }
 
     render() {
         if(this.state.authUsers.length){
@@ -105,6 +117,16 @@ export class InternalAccounts extends Component {
                   this.onInternalAccountDetailsClose();
                     }}
                 />
+            }
+            {this.state.deleteUserOpen &&
+            <InternalAccountDelete
+              user={this.state.selectedUser}
+              onClose={this.onDeleteUserClose}
+              onSave={() =>{
+                this.fetchUsers();
+                this.onDeleteUserClose();
+              }}
+            />
             }
           </Container>
         );
