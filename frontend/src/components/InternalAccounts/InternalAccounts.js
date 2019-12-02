@@ -43,6 +43,14 @@ export class InternalAccounts extends Component {
         this.setState({isInternalAccountDetailsOpen: false});
     };
 
+    async deleteUser (user) {
+        const response=await api.sysadmin.deleteUser(user)
+        if (response) {
+         this.fetchUsers();
+        } 
+       
+    };
+
     render() {
         if(this.state.authUsers.length){
         return (
@@ -66,6 +74,7 @@ export class InternalAccounts extends Component {
                         <Table.HeaderCell textAlign="left">SSN</Table.HeaderCell>
                         <Table.HeaderCell textAlign="left">EMAIL</Table.HeaderCell>
                         <Table.HeaderCell textAlign="left">AUTH DATE</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="left">Actions</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -78,6 +87,10 @@ export class InternalAccounts extends Component {
     
                     <Table.Cell textAlign="left">{ user.eMail }</Table.Cell>
                     <Table.Cell textAlign="left" width={2}>{ moment(user.CreatedOn).format('LL') }</Table.Cell>
+                    
+                    <Table.Cell textAlign="left" className="edit-cell" width={1}>
+                    <Icon name="delete" onClick={()=>this.deleteUser(user)}/> Delete
+                  </Table.Cell>
     
                     </Table.Row>
                 )}

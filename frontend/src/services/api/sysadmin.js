@@ -7,7 +7,11 @@ export class SysAdminAPIService extends BaseAPIService {
     }
 
     createUser(data) {
-        return this.post(`/internal-accounts`, data);
+        return this.post(`/internal-account`, data);
+    }
+
+    deleteUser(data){
+        return this.delete(`/account`, data);
     }
 
 }
