@@ -2,7 +2,7 @@ import React from 'react'
 
 import PropTypes from 'prop-types';
 
-import {Button, Modal, Form, Icon} from 'semantic-ui-react'
+import {Button, Modal, Form, Icon, Label} from 'semantic-ui-react'
 import "./InternalAccountDetails.scss";
 import {api} from '../../../services/api';
 import { withRouter } from "react-router";
@@ -139,12 +139,14 @@ handleCheckboxChange(e) {
 
           <Form loading={this.state.isSaving}>
             <Form.Group widths= 'equal'>
+              
+             <Label basic>Roles of the user:</Label> 
             {
           checkboxes.map(item => (
-            <label key={item.key}>
-              {item.name}
+            <Label key={item.key}>
+              {item.label}
               <Checkbox name={item.name} checked={this.state.checkedItems.get(item.name)} onChange={this.handleCheckboxChange} />
-            </label>
+            </Label>
           ))
         }
 
