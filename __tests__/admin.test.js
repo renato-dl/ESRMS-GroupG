@@ -2276,6 +2276,46 @@ describe('Tests about deletion of accounts', () =>{
 
   });
 
-
 });
 
+describe('Tests about classes', () => {
+
+
+  test('It should not throw errors while getting the list of classes', async () => {
+    expect(ClassModel.getClasses()).resolves.not.toThrow();
+  });
+
+  test('It should return the correct class data', async () => {
+    // TODO: retest this after we have a method to create classes
+    const classes = await ClassModel.getClasses();
+    expect(classes).not.toBeNull();
+    expect(classes).toHaveLength(3);
+    expect(classes).toEqual(
+      expect.arrayContaining(
+        [
+          expect.objectContaining(
+            {
+              "ID": 1,
+              "CreationYear": 2019,
+              "Name": "A",
+              "Coordinator": "Giulia Tesori"
+            },
+            {
+              "ID": 2,
+              "CreationYear": 2019,
+              "Name": "B",
+              "Coordinator": "Paola De Paola"
+            },
+            {
+              "ID": 3,
+              "CreationYear": 2019,
+              "Name": "C",
+              "Coordinator": "Luca De Luca"
+            }
+          )
+        ]
+      )
+    );
+  });
+
+});
