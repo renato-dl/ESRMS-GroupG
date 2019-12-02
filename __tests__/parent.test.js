@@ -188,3 +188,51 @@ describe("Tests about assignments", () => {
     });
 
 })
+
+describe("Tests about getting the students based on subject and class", () => {
+
+    test('It should return an empty list of students when teacher passes a subject that he/she doesnt teach', async () => {
+        const teacherID = '6e5c9976f5813e59816b40a814e29899';
+        const classID = 1;
+        const subjectID = 5;
+
+        const students = await Student.getStudentsDataByClassIdAndSubjectId(teacherID, classID, subjectID);
+        expect(students).not.toBeNull();
+        expect(students).toHaveLength(0);
+    });
+
+    test('It should return the list of students for the subject that the teacher teaches in a class', async () => {
+        const teacherID = '6e5c9976f5813e59816b40a814e29899';
+        const classID = 1;
+        const subjectID = 1;
+
+        const students = await Student.getStudentsDataByClassIdAndSubjectId(teacherID, classID, subjectID);
+        expect(students).not.toBeNull();
+        expect(students).toHaveLength(3);
+        expect(students).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining(
+                    {
+                        "ID": "266667153e975bbf735b89d4b03d9f93",
+                        "FirstName": "Sara",
+                        "LastName": "Lorenzini",
+                        "Gender": "F"
+                    },
+                    {
+                        "ID": "7460aba98f7291ee69fcfdd17274c3a1",
+                        "FirstName": "Martina",
+                        "LastName": "Menzi",
+                        "Gender": "F"
+                    },
+                    {
+                        "ID": "868d6ec1dfc8467f6d260c48b5620543",
+                        "FirstName": "Gianluca",
+                        "LastName": "Menzi",
+                        "Gender": "M"
+                    }
+                )
+            ])
+        );
+    });
+
+})
