@@ -76,10 +76,11 @@ export class FormParentDetails extends Component {
     let parent_errors = this.state.parent_errors;
 
     parent_errors['p1_SSN'] = (this.isEmptyStr(this.state.p1_ID) ? !SSNRegexp.test(this.state.p1_SSN) : false);
-    parent_errors['p1_Email'] = (this.isEmptyStr(this.state.p1_ID) ? !validator.isEmail(this.state.p1_Email) : false);
+    //parent_errors['p1_Email'] = (this.isEmptyStr(this.state.p1_ID) ? !validator.isEmail(this.state.p1_Email) : false);
+    
 
     parent_errors['p2_SSN'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? !SSNRegexp.test(this.state.p2_SSN) : false);
-    parent_errors['p2_Email'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? !validator.isEmail(this.state.p2_Email) : false);
+    //parent_errors['p2_Email'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? !validator.isEmail(this.state.p2_Email) : false);
 
     parent_errors['p2_FirstName'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? this.isEmptyStr(this.state.p2_FirstName) : false); 
     parent_errors['p2_LastName'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? this.isEmptyStr(this.state.p2_LastName) : false); 
@@ -230,10 +231,10 @@ export class FormParentDetails extends Component {
                   {/* <label><b>SSN</b></label> */}
                   {!this.state.parent_errors['p1_SSN'] && <label><b>SSN</b></label>}
                   {this.state.parent_errors['p1_SSN'] &&
-                  <p className="errMsg"><Icon name="exclamation triangle"/>SSN: Invalid</p>}
+                  <p className="error"><b>SSN</b></p>}
 
                 <Search
-                  //className = {!this.state.parent_errors['p1_SSN'] ? "" : 'errorSNN'}
+                  className = {!this.state.parent_errors['p1_SSN'] ? "" : 'errorSNN'}
                   error={this.state.parent_errors['p1_SSN']}
                   name="P1"
                   loading={isLoading_P1}
@@ -303,8 +304,13 @@ export class FormParentDetails extends Component {
                 <Form.Field>
                   <Grid>
                     <Grid.Column>
-                        <label><b>SSN</b></label>
+                        {/* <label><b>SSN</b></label> */}
+                        {!this.state.parent_errors['p2_SSN'] && <label><b>SSN</b></label>}
+                        {this.state.parent_errors['p2_SSN'] &&
+                        <p className="error"><b>SSN</b></p>}
+                      
                       <Search
+                        className = {!this.state.parent_errors['p2_SSN'] ? "" : 'errorSNN'}
                         name="P2"
                         loading={isLoading_P2}
                         onResultSelect={this.handleResultSelect}

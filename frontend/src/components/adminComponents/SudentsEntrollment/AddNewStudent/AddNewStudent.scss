@@ -70,8 +70,15 @@ border: 2px solid blue
     }
 }
 .error{
-    color:#9f3a38
+    color:#9f3a38;
 }
+.errorSNN > * {
+    border:1px solid #e0b4b4;
+    border-radius: 5px;
+    background: #fff6f6;
+    color: #9f3a38!important;
+}
+
 .knownDetails{
     color: #68af64;
     background-color:#F3FAF0;
