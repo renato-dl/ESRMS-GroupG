@@ -1,21 +1,75 @@
 import React from 'react'
-import {Button, Modal, Form, Icon} from 'semantic-ui-react'
+
+import PropTypes from 'prop-types';
+
+import {Button, Modal, Form, Icon, Label} from 'semantic-ui-react'
 import "./InternalAccountDetails.scss";
 import {api} from '../../../services/api';
 import { withRouter } from "react-router";
 import validator from 'validator';
 import {SSNRegexp} from '../../../utils';
 import * as toastr from 'toastr';
+ 
+
+//const roleOptions=["Admin Officer","Teacher" ,"Principal"];
+const checkboxes = [
+  {
+    name: 'IsAdminOfficer',
+    key: 'IsAdminOfficer',
+    label: 'Admn Officer',
+  },
+  {
+    name: 'IsTeacher',
+    key: 'IsTeacher',
+    label: 'Teacher',
+  },
+  {
+    name: 'IsPrincipal',
+    key: 'IsPrincipal',
+    label: 'Principal',
+  }
+];
+
+const Checkbox = ({ type = 'checkbox', name, checked = false, onChange }) => (
+  <input type={type} name={name} checked={checked} onChange={onChange} />
+);
+
+Checkbox.propTypes = {
+  type: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  checked: PropTypes.bool,
+  onChange: PropTypes.func.isRequired,
+}
 
 class InternalAccountDetails extends React.Component {
-  state = {
+  constructor(props) {
+    super(props);
+  this.state = {
     firstName:'',
     lastName:'',
     ssn:'',
     email:'',
     isSaving: false,
-    errors: {}
+    errors: {},
+    /* checkboxes: roleOptions.reduce(
+      (options, option) => ({
+        ...options,
+        [option]: 0
+      }),
+      {}
+    ) */
+    
+    checkedItems: new Map(),
+
   };
+  this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+}
+
+handleCheckboxChange(e) {
+  const item = e.target.name;
+  const isChecked = e.target.checked;
+  this.setState(prevState => ({ checkedItems: prevState.checkedItems.set(item, isChecked) }));
+}
 
   handleInputChange = (e, { name, value }) => {
     this.setState({[name]: value});
@@ -84,6 +138,19 @@ class InternalAccountDetails extends React.Component {
         <Modal.Content>
 
           <Form loading={this.state.isSaving}>
+            <Form.Group widths= 'equal'>
+              
+             <Label basic>Roles of the user:</Label> 
+            {
+          checkboxes.map(item => (
+            <Label key={item.key}>
+              {item.label}
+              <Checkbox name={item.name} checked={this.state.checkedItems.get(item.name)} onChange={this.handleCheckboxChange} />
+            </Label>
+          ))
+        }
+
+            </Form.Group>
             <Form.Group widths='equal'>
               <Form.Input
                 name='firstName'
