@@ -5,6 +5,7 @@ import '../../assets/styles/global.scss';
 import { ParentMenu } from './Menus/ParentMenu';
 import { TeacherMenu } from './Menus/TeacherMenu';
 import { AdminMenu } from './Menus/AdminMenu';
+import { SysAdminMenu } from './Menus/SysAdminMenu';
 
 const loc = window.location.pathname;
 
@@ -27,6 +28,8 @@ export const AppSidebar = (props) => {
         {loc.indexOf("/parent") !== -1 && <ParentMenu />}
         {loc.indexOf("/teacher") !== -1 && <TeacherMenu />}
         {loc.indexOf("/admin") !== -1 && <AdminMenu />}
+        {loc.indexOf("/sysadmin") !== -1 && <SysAdminMenu />}
+
 
       </Sidebar>
 

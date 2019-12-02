@@ -25,8 +25,8 @@ export class Teacher extends React.Component{
     this.props.history.push(`/teacher/subjects/${subjectID}/${subjectName}/topics`);
   };
 
-  onSubjectGradeClick = (subjectID,subjectName)=>{
-    this.props.history.push(`/teacher/subjects/${subjectID}/${subjectName}/TeacherGrade`);
+  onSubjectGradeClick = (subjectID,subjectName, classId)=>{
+    this.props.history.push(`/teacher/subjects/${classId}/${subjectID}/${subjectName}/TeacherGrade`);
   }
 
     render() {
@@ -53,7 +53,7 @@ export class Teacher extends React.Component{
                               <Button className='Topics' color='blue'  onClick={() => this.onSubjectClick(subject.subjectId,subject.subject)}>
                               Topics
                               </Button>
-                              <Button className='Grades'  color='blue' onClick={()=>this.onSubjectGradeClick(subject.subjectId,subject.subject)}>
+                              <Button className='Grades'  color='blue' onClick={()=>this.onSubjectGradeClick(subject.subjectId,subject.subject, subject.classId)}>
                               Grades
                               </Button>
                             </List.Description>

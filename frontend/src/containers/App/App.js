@@ -20,11 +20,19 @@ import {Teacher} from '../Teacher/Teacher';
 import {Marks}  from '../../components/Marks/Marks';
 import {Topic}  from'../../components/Topic/Topic';
 
-//*** Admin view Components*/
+//*** SYSTEM Administrator Components */
+import {SysAdmin} from '../SysAdmin/SysAdmin'
+import {InternalAccounts} from '../../components/InternalAccounts/InternalAccounts'
+
+//*** Admin officer view Components*/
 import {Admin} from '../Admin/Admin';
 import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
 
+<<<<<<< HEAD
 import {Class_composition} from '../../components/class_composition/Class_composition';
+=======
+import {Class_composition} from '../../components/class_composition/class_composition';
+>>>>>>> d9b4436836eebd6f893320085a58034460bb5241
 
 import {admin_StudentsEnrollment} from '../../components/adminComponents/SudentsEntrollment/admin_StudentsEnrollment';
 import {TeacherGrade} from '../../components/TeacherGrade/TeacherGrade';
@@ -56,12 +64,15 @@ export class App extends React.Component {
               <Route exact path="/teacher" component={Teacher}/>
               <Route exact path="/teacher/subjects" component={Teacher}/>
               <Route exact path="/teacher/subjects/:subjectID/:subjectName/topics" component={Topic}/>
-              <Route exact path="/teacher/subjects/:subjectID/:subjectName/TeacherGrade" component={TeacherGrade}/>
+              <Route exact path="/teacher/subjects/:classID/:subjectID/:subjectName/TeacherGrade" component={TeacherGrade}/>
 
 			        <Route exact path="/admin" component={Admin}/>
               <Route exact path="/admin/configParent" component={ConfigParent}/>
               <Route exact path="/admin/Class_composition" component={Class_composition}/>
               <Route exact path="/admin/enrollStudents" component={admin_StudentsEnrollment}/>
+
+              <Route exact path="/sysadmin" component={SysAdmin}/>
+              <Route exact path="/sysadmin/accounts" component={InternalAccounts}/>
 
               <Route path="*" component={NotFound} />
               

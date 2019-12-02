@@ -55,3 +55,41 @@ div.addStudButtonField{
     -webkit-animation: fadeIn 1s;
     animation: fadeIn 1s;
 }
+.search.normal{
+border: 2px solid blue
+}
+.search.error {
+    border:1px solid #9f3a38; 
+    border-radius:5px;
+    .ui.form .field .ui.input input, .ui.form .fields .field .ui.input input{
+        background: #fff6f6;
+        border-color: #e0b4b4;
+        color: #9f3a38;
+        border-radius: '';
+        box-shadow: none;
+    }
+}
+.error{
+    color:#9f3a38;
+}
+.errorSNN > * {
+    border:1px solid #e0b4b4;
+    border-radius: 5px;
+    background: #fff6f6;
+    color: #9f3a38!important;
+}
+
+.knownDetails{
+    color: #68af64;
+    background-color:#F3FAF0;
+    font-size: 18px;
+    height: 50px;
+    //border-left: 3px solid #68af64;
+    vertical-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    i{
+        margin-bottom:5px;
+    }
+}

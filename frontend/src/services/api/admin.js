@@ -15,7 +15,7 @@ export class AdminAPIService extends BaseAPIService {
     return this.get(`/admin/find-parents?ssn=${str}`);
   }
 
-  saveNewStudent(data){
+  insertNewStudent(data){
     return this.post('/admin/student', data);
   }
 
@@ -31,11 +31,19 @@ export class AdminAPIService extends BaseAPIService {
   getStudents() {
     return this.get('/admin/students');
   }
+<<<<<<< HEAD
 
   updateStudent(data)
   {
     return this.patch('admin/student',data)
   }  
+=======
+  
+  saveStudent(data) {
+    return this.patch('admin/student',data);
+  }
+    
+>>>>>>> d9b4436836eebd6f893320085a58034460bb5241
   getEnrolledStudentsByClass(classId){
       return this.get('/admin/students', classId);   
   }
