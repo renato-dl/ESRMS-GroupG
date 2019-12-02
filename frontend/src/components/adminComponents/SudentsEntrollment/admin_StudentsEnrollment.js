@@ -8,6 +8,8 @@ import AddNewStudent from './AddNewStudent/AddNewStudent';
 import { NoData } from '../../NoData/NoData';
 import {StudentDetails} from './EditStudentParentData/StudentDetails/StudentDetails';
 import {ParentDetails} from './EditStudentParentData/ParentDetails/ParentDetails';
+import './admin_StudentsEnrollment.scss'
+
 export class admin_StudentsEnrollment extends Component {
     constructor(props) {
         super(props);
@@ -46,21 +48,27 @@ export class admin_StudentsEnrollment extends Component {
         this.setState({open_AddModal: false});
     };
 
-    renderParent_FirstName=(student)=>{
-        if(student.secondParent)
+    renderParent_FirstName=(student,number)=>{
+        if(student.secondParent&&number==2)
             return <Table.Cell>{ student.secondParent.FirstName }  </Table.Cell>
+        else if(student.firstParent&&number==1)
+            return <Table.Cell>{ student.firstParent.FirstName }  </Table.Cell>
         else return <Table.Cell>  </Table.Cell>
     };
 
-    renderParent_LastName=(student)=>{
-        if(student.secondParent)
+    renderParent_LastName=(student,number)=>{
+        if(student.secondParent&&number==2)
             return <Table.Cell>{ student.secondParent.LastName }  </Table.Cell>
+        else if(student.firstParent&&number==1)
+            return <Table.Cell>{ student.firstParent.LastName }  </Table.Cell>
         else return <Table.Cell>  </Table.Cell>
     };
 
-    renderParent_eMail=(student)=>{
-        if(student.secondParent)
+    renderParent_eMail=(student,number)=>{
+        if(student.secondParent&&number==2)
             return <Table.Cell>{ student.secondParent.eMail }  </Table.Cell>
+        else if(student.firstParent&&number==1)
+            return <Table.Cell>{ student.firstParent.eMail }  </Table.Cell>
         else return <Table.Cell>  </Table.Cell>
     };
     editStudent=(data)=>{
@@ -78,6 +86,9 @@ export class admin_StudentsEnrollment extends Component {
     editParent=(data)=>{
         this.setState({editingParent: data, open_parentEditModal: true});
     }
+    addParent=()=>{
+        console.log('add parent')
+    }
     
     onParentDetailClose = () => {
         this.setState({editingParent: null, open_parentEditModal: false});
@@ -90,6 +101,7 @@ export class admin_StudentsEnrollment extends Component {
                     <Icon name='braille'/>
                     Students Configuration
                 </h3>
+                
             
             <Button className="ui vk button" onClick={this.addNewStudent}>
                 <i className="user plus icon"></i>
@@ -99,21 +111,24 @@ export class admin_StudentsEnrollment extends Component {
                 <Icon name="upload"/>
                 Upload Excel File
             </Button>
-            <Table className='Student_admin' columns={12} textAlign='center'>
+            <h1 />
+
+            <div className='Student_admin'>
+            <Table  columns={12} textAlign='center'>
               <Table.Header >
-                   <Table.Row>
-                        <Table.HeaderCell colSpan="4" > Student</Table.HeaderCell>
-                        <Table.HeaderCell colSpan="8" >Parent</Table.HeaderCell>
+                   <Table.Row >
+                        <Table.HeaderCell colSpan="4"  > Student</Table.HeaderCell>
+                        <Table.HeaderCell colSpan="8"  >Parent</Table.HeaderCell>
                     </Table.Row>
                     <Table.Row>
                         <Table.HeaderCell>FirstName  </Table.HeaderCell>
                         <Table.HeaderCell>LastName </Table.HeaderCell>
                         <Table.HeaderCell>ClassId </Table.HeaderCell>
-                        <Table.HeaderCell>Opreation </Table.HeaderCell>
+                        <Table.HeaderCell className='right-border'>Opreation </Table.HeaderCell>
                         <Table.HeaderCell>FirstName </Table.HeaderCell>
                         <Table.HeaderCell >LastName </Table.HeaderCell>
                         <Table.HeaderCell >Email </Table.HeaderCell>
-                        <Table.HeaderCell>Opreation </Table.HeaderCell>
+                        <Table.HeaderCell className='right-border'>Opreation </Table.HeaderCell>
                         <Table.HeaderCell>FirstName </Table.HeaderCell>
                         <Table.HeaderCell >LastName </Table.HeaderCell>
                         <Table.HeaderCell >Email </Table.HeaderCell>
@@ -126,25 +141,31 @@ export class admin_StudentsEnrollment extends Component {
                  <Table.Cell>{ student.studentInfo.FirstName }  </Table.Cell>
                  <Table.Cell>{ student.studentInfo.LastName }</Table.Cell>
                  <Table.Cell>{ student.studentInfo.ClassId }</Table.Cell>
-                 <Table.Cell textAlign="left" className="edit-cell" width={1}>
+                 <Table.Cell textAlign="left" className="edit-cell right-border" width={1}>
                     <Icon name="edit" onClick={() =>this.editStudent(student)}/> Edit
                   </Table.Cell>
-                 <Table.Cell>{ student.firstParent.FirstName }  </Table.Cell>
-                 <Table.Cell>{ student.firstParent.LastName }</Table.Cell>
-                 <Table.Cell>{ student.firstParent.eMail }</Table.Cell>
-                 <Table.Cell textAlign="left" className="edit-cell" width={1}>
+                  {this.renderParent_FirstName(student,1)}
+                  {this.renderParent_LastName(student,1)}
+                   {this.renderParent_eMail(student,1)}
+                 <Table.Cell textAlign="left" className="edit-cell right-border" width={1}>
                     <Icon name="edit" onClick={() =>this.editParent(student.firstParent)}/> Edit
                   </Table.Cell>
-                 {this.renderParent_FirstName(student)}
-                 {this.renderParent_LastName(student)}
-                 {this.renderParent_eMail(student)}
+                 {this.renderParent_FirstName(student,2)}
+                 {this.renderParent_LastName(student,2)}
+                 {this.renderParent_eMail(student,2)}
                  <Table.Cell textAlign="left" className="edit-cell" width={1}>
-                 <Icon name="edit" disabled={!student.secondParent}onClick={() =>this.editParent(student.secondParent)}> Edit </Icon>
+                 {!student.secondParent && 
+                 <Icon name="plus" onClick={() =>this.addParent(student.studentInfo)}> Add </Icon>
+                 }    
+                 {student.secondParent &&
+                 <Icon name="edit"onClick={() =>this.editParent(student.secondParent)}> Edit </Icon>
+                 }
                  </Table.Cell>
              </Table.Row>
            )} 
            </Table.Body>
            </Table>
+           </div>
             
             
             
