@@ -50,7 +50,7 @@ class Class extends Model {
     const results = await connection.query(query);
     connection.release();
 
-    return results;
+    return results || [];
   }
   
   async assignStudentsToClass(classID, students) {
@@ -77,6 +77,9 @@ class Class extends Model {
 
     return res;
   }
+
+ 
+
 }
 
 export default new Class();

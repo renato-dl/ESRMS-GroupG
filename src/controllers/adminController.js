@@ -36,7 +36,6 @@ class AdminController extends BaseController {
       req.body.SSN, 
       password
     );
-    this.sendEmailToUser(req.body.eMail, password, req.body.firstName, req.body.lastName);
     res.send(parent); 
   }
 
@@ -46,19 +45,20 @@ class AdminController extends BaseController {
     let parent2;
     let parent1Insert = false;
     let parent2Insert = false;
+    let parent1Password, parent2Password = null;
 
     if (!req.body.hasOwnProperty('firstParent')) {
       res.status(422).send({ success: false, error: 'Missing first parent' });
       return;
     } else {
       if (!req.body.firstParent.hasOwnProperty('ID')) {
-        const password = genRandomString(8);
+        parent1Password = genRandomString(8);
         parent1 = (await User.insertParentData(
           req.body.firstParent.FirstName,
           req.body.firstParent.LastName,
           req.body.firstParent.Email,
           req.body.firstParent.SSN,
-          password
+          parent1Password
         )).id;
         parent1Insert = true;
       } else {
@@ -68,13 +68,13 @@ class AdminController extends BaseController {
     }
     if (req.body.hasOwnProperty('secondParent')) {
       if (!req.body.secondParent.hasOwnProperty('ID')) {
-        const password = genRandomString(8);
+        parent2Password = genRandomString(8);
         parent2 = (await User.insertParentData(
           req.body.secondParent.FirstName,
           req.body.secondParent.LastName,
           req.body.secondParent.Email,
           req.body.secondParent.SSN,
-          password
+          parent2Password
         )).id;
         parent2Insert = true;
       } else {
@@ -96,16 +96,17 @@ class AdminController extends BaseController {
       );
 
       if(parent1Insert) {
-        this.sendEmailToUser(req.body.firstParent.Email, password, req.body.firstParent.FirstName, req.body.firstParent.LastName);
+        this.sendEmailToUser(req.body.firstParent.Email, parent1Password, req.body.firstParent.FirstName, req.body.firstParent.LastName);
       }
 
       if (parent2Insert) {
-        this.sendEmailToUser(req.body.secondParent.Email, password, req.body.secondParent.FirstName, req.body.secondParent.LastName);
+        this.sendEmailToUser(req.body.secondParent.Email, parent2Password, req.body.secondParent.FirstName, req.body.secondParent.LastName);
       }
 
       res.send({success:true, id: result.id});
 
     } catch(error) {
+      console.log(error)
       if (parent1Insert) {
         await User.remove(parent1);
       }
@@ -232,6 +233,45 @@ class AdminController extends BaseController {
     res.send(results);
   }
 
+  async updateAssignmentStudentsToClass(req, res) {
+    const studentId = req.params.studentId;
+    const classId = req.query.classId;
+
+    if (!studentId) {
+      throw new Error('Missing or invalid studentId parameter');
+    }
+
+    if (!classId) {
+      throw new Error('Missing or invalid classId parameter');
+    }
+
+    //check if class id exists
+   await ClassModel.findById(classId);
+   
+    const results = await Student.update(studentId, {
+      ClassId: classId
+    });
+    
+    res.send({success: results});
+  }
+
+  async removeAssignmentStudentsToClass(req, res) {
+    const studentId = req.params.studentId;
+
+    if (!studentId) {
+      throw new Error('Missing or invalid studentId parameter');
+    }
+
+    //check if class id exists
+    
+    const results = await Student.update(studentId, {
+      ClassId: null
+    });
+    
+    res.send({success: results});
+  }
+
+
 
   async deleteAccount(req, res) {
     const result = await User.deleteAccount(req.body.ID);
@@ -278,6 +318,20 @@ class AdminController extends BaseController {
       //throw e; 
     }
     return;
+  }
+
+  async updateInternalAccount(req, res) {
+    const result = await User.editInternalAccount(
+      req.body.Id,
+      req.body.FirstName,
+      req.body.LastName,
+      req.body.eMail,
+      req.body.SSN,
+      req.body.isTeacher,
+      req.body.isAdminOfficer,
+      req.body.isPrincipal
+    );
+    res.send({success: result})
   }
 }
 

@@ -147,7 +147,7 @@ class TeacherController extends BaseController {
     const success = await Grade.updateGrade(
       req.body.ID,
       req.body.grade,
-      req.body.type
+      req.body.type 
     );
 
     res.send({ success });
@@ -168,19 +168,24 @@ class TeacherController extends BaseController {
     res.send({success: true});
   }
 
-  // body: class id
-  async getStudentsByClassId(req, res){
-    let students;
+  // Get students by classId if only classId is present on query
+  // Get students by classId and subjectId if both are present on query
+  async getStudents(req, res) {
+    let students = [];
 
-    if(req.query.hasOwnProperty("classId")){
+    if (req.query.classId && !req.query.subjectId) {
       students = await Student.getStudentsDataByClassId(req.query.classId);
-      res.send(students);
-      return;
+      return res.send(students);
     }
-    else{
-      res.send([]);
+    
+    if (req.query.classId && req.query.subjectId) {
+      students = await Student.getStudentsDataByClassIdAndSubjectId(req.user.ID, req.query.classId, req.query.subjectId);
+      return res.send(students); 
     }
+
+    res.send(students);
   }
+
 }
 
 export default new TeacherController();

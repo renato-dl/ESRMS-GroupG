@@ -1,6 +1,6 @@
 import React from 'react';
 import { api } from '../../services/api';
-import {Table, Icon, Container} from 'semantic-ui-react';
+import {Table, Icon, Container, Button} from 'semantic-ui-react';
 import ClassCompositionDetail from './ClassCompositionDetail/ClassCompositionDetail';
 import { NoData } from '../NoData/NoData';
 
@@ -55,12 +55,12 @@ export class Class_composition extends React.Component{
            <Table.Cell>{data.CreationYear}</Table.Cell>
            <Table.Cell>{data.CoordinatorName}</Table.Cell>
            <Table.Cell>
-             <button type='button'>details</button>
-             <button type='button' onClick={() =>{
+             <Button color='blue' type='button'>Details</Button>
+             <Button color='blue' type='button' onClick={() =>{
              this.setState({classId: data.ID});
              this.setState({className: data.Name});
              this.setState({isStudentsOpen: true});
-            }}>Add Students</button>
+            }}>Add Students</Button>
              </Table.Cell>
        </Table.Row>
      )} 

@@ -23,11 +23,13 @@ class ParentController extends BaseController {
       res.send(401);
       return;
     }
+    
     const assignments = await Assignment.findByStudentId(
       req.body.studentId, 
       {from: req.body.fromDate, to: req.body.toDate},
       {page: req.query.page, pageSize: req.query.pageSize}
-      );
+    );
+
     res.send(assignments);
   }
 }

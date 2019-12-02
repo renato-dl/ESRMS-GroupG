@@ -281,6 +281,8 @@ describe('Tests about the insertion of internal account by admin', () => {
       [result.id]
     );
 
+    connection.release();
+
     expect(queryResult.length).toBe(1);
     expect(queryResult[0].FirstName).toEqual(testFirstName);
     expect(queryResult[0].LastName).toEqual(testLastName);
@@ -548,6 +550,70 @@ describe('Tests about the insertion of internal account by admin', () => {
 
 }); 
 
+describe('Tests about editing internal accounts by admin', () => {
+
+  /*
+  * 1. Ok
+  * 2. Same behaviour as insertion
+  */
+  test('Ok', async () => {
+
+    // Perform insertion
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const insertResult = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(insertResult).toEqual({
+      id: expect.anything()
+    });
+
+    // Edit the entry just inserted
+    const editResult = await User.editInternalAccount(
+      insertResult.id,
+      'Norberto', 
+      testLastName, 
+      testEmail, 
+      testSSN, 
+      testIsTeacher,
+      testIsAdminOfficer,
+      true
+    );
+    
+    expect(editResult).toBe(true);
+
+    const queryResult = await User.findById(insertResult.id);
+
+    expect(queryResult.FirstName).toEqual('Norberto');
+    expect(queryResult.LastName).toEqual(testLastName);
+    expect(queryResult.SSN).toEqual(testSSN);
+    expect(queryResult.eMail).toEqual(testEmail);
+    expect(queryResult.IsSysAdmin).toBeFalsy();
+    expect(queryResult.IsTeacher).toBeTruthy();
+    expect(queryResult.IsAdminOfficer).toBeFalsy();
+    expect(queryResult.IsPrincipal).toBeTruthy();
+
+
+    //delete result for future tests
+    await User.remove(insertResult.id);
+  }); 
+
+}); 
 
 describe('Tests about the insertion of student data', () => {
   /*
@@ -2108,7 +2174,7 @@ describe('Tests about deletion of accounts', () =>{
       await User.deleteAccount(sysAdminId);
 
     }catch(error){
-      expect(error).toHaveProperty('message', 'Operation not permitted');
+      expect(error).toHaveProperty('message', 'Cannot delete SysAdmin');
     }
 
   });
@@ -2158,7 +2224,7 @@ describe('Tests about deletion of accounts', () =>{
       await User.deleteAccount(testParent.id);
 
     }catch(error){
-      expect(error).toHaveProperty('message', 'Operation not permitted');
+      expect(error).toHaveProperty('message', 'Cannot delete user with associated students');
       await Student.remove(result.id);
       await User.remove(testParent.id);
 
@@ -2206,7 +2272,7 @@ describe('Tests about deletion of accounts', () =>{
 
     }catch(error){
 
-      expect(error).toHaveProperty('message', 'Operation not permitted');
+      expect(error).toHaveProperty('message', 'Cannot delete teacher associated to classes');
 
       //delete insertions for future tests
       
@@ -2261,7 +2327,7 @@ describe('Tests about deletion of accounts', () =>{
 
     }catch(error){
 
-      expect(error).toHaveProperty('message', 'Operation not permitted');
+      expect(error).toHaveProperty('message', 'Cannot delete coordinator');
 
       //delete insertions for future tests
       
@@ -2276,6 +2342,46 @@ describe('Tests about deletion of accounts', () =>{
 
   });
 
-
 });
 
+describe('Tests about classes', () => {
+
+
+  test('It should not throw errors while getting the list of classes', async () => {
+    expect(ClassModel.getClasses()).resolves.not.toThrow();
+  });
+
+  test('It should return the correct class data', async () => {
+    // TODO: retest this after we have a method to create classes
+    const classes = await ClassModel.getClasses();
+    expect(classes).not.toBeNull();
+    expect(classes).toHaveLength(3);
+    expect(classes).toEqual(
+      expect.arrayContaining(
+        [
+          expect.objectContaining(
+            {
+              "ID": 1,
+              "CreationYear": 2019,
+              "Name": "A",
+              "Coordinator": "Giulia Tesori"
+            },
+            {
+              "ID": 2,
+              "CreationYear": 2019,
+              "Name": "B",
+              "Coordinator": "Paola De Paola"
+            },
+            {
+              "ID": 3,
+              "CreationYear": 2019,
+              "Name": "C",
+              "Coordinator": "Luca De Luca"
+            }
+          )
+        ]
+      )
+    );
+  });
+
+});
