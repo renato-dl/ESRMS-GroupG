@@ -83,7 +83,7 @@ export class GradeDelete extends Component {
         <Header icon='archive' content='Delete Grade' onClick={this.onClose}/>
         <Modal.Content>
         <p>
-            Are you sure you want to delete this mark?
+            Are you sure you want to delete this grade?
         </p>
         <p>Student: {this.state.name} {this.state.surname}</p>
         <p>{this.state.type} {this.state.value}</p>
