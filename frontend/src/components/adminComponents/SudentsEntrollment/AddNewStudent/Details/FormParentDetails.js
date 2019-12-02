@@ -4,6 +4,11 @@ import { api } from '../../../../../services/api';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
+import '../AddNewStudent.scss'
+
+import validator from 'validator';
+import {SSNRegexp} from '../../../../../utils';
+
 import {Button, Icon, Form, Accordion, Search, Grid, Header} from 'semantic-ui-react'
 
 //Search Result Layout
@@ -26,14 +31,18 @@ resultRenderer.propTypes = {
   FirstName: PropTypes.string,
   LastName: PropTypes.string
 }
-//initialState for search field
-const initialState = {
-  idP1:"", 
-  idP2:"",
-  p1_value: '',       //For Search: final value for Parent 2
-  p2_value:'',        //For Search: final value for Parent 2
-  isLoading: false,   //For Search: loading icon 
-  results: [],        //For Search: filtered data
+//initialState for search fields
+const initialState_P1 = {
+  p1_ID:"",
+  p1_SSN: '',        
+  isLoading_P1: false,
+  results_P1: [],       
+}
+const initialState_P2 = {
+  p2_ID:"",
+  p2_SSN:'',        
+  isLoading_P2:false,
+  results_P2: [],      
 }
 
 let source = [];
@@ -41,18 +50,44 @@ let source = [];
 
 
 export class FormParentDetails extends Component {
-  state = {activeIndex: 1};   //For Accordion: not in initialState to not be closed during search
-  state = initialState
+  state = this.props.values;
  
-  back = e => {
-    e.preventDefault();
-    this.props.prevStep();
+  isEmptyStr(str) {
+    return (!str || 0 === str.length);
   }
 
-  confirm = e => {
+  back = e => {
     e.preventDefault();
-    this.props.confirm();
+    this.props.prevstep('a');
+  }
+
+  nextConfirm = e => {
+    e.preventDefault();
+    const [hasErrorsParent, parent_errors] = this.validateFields();
+    console.log(hasErrorsParent, parent_errors);
+    if (hasErrorsParent) {
+      this.setState({parent_errors});
+      return;
+    }
+    this.props.nextconfirm('a');
   };
+
+  validateFields = () => {
+    let parent_errors = this.state.parent_errors;
+
+    parent_errors['p1_SSN'] = (this.isEmptyStr(this.state.p1_ID) ? !SSNRegexp.test(this.state.p1_SSN) : false);
+    //parent_errors['p1_Email'] = (this.isEmptyStr(this.state.p1_ID) ? !validator.isEmail(this.state.p1_Email) : false);
+    
+
+    parent_errors['p2_SSN'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? !SSNRegexp.test(this.state.p2_SSN) : false);
+    //parent_errors['p2_Email'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? !validator.isEmail(this.state.p2_Email) : false);
+
+    parent_errors['p2_FirstName'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? this.isEmptyStr(this.state.p2_FirstName) : false); 
+    parent_errors['p2_LastName'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? this.isEmptyStr(this.state.p2_LastName) : false); 
+    
+    const hasErrorsParent = !!Object.keys(parent_errors).filter((e) => parent_errors[e]).length;
+    return [hasErrorsParent, parent_errors];
+  };  
 
 //--Get/Find Possible Prents from back end
   async updateSearchOptions(val) {
@@ -62,55 +97,100 @@ export class FormParentDetails extends Component {
          source = response.data
       }
   }
+
+//----Wrong but fast :D
+  onSSNandIDChange = (e, onresult) => {
+    const empty = {target:{value:""}};
+    if (onresult){
+      const idData = {target:{value: onresult.ID}};
+      const ssnData = {target:{value: onresult.SSN}};
+
+      if(e.target.name === "P1"){
+        this.props.handleChange('p1_SSN')(ssnData); 
+        this.props.handleChange('p1_ID')(idData);
+        this.props.handleChange('p1_FirstName')(empty);
+        this.props.handleChange('p1_LastName')(empty);
+        this.props.handleChange('p1_Email')(empty);
+
+      }else if(e.target.name === "P2"){
+        this.props.handleChange('p2_SSN')(ssnData); 
+        this.props.handleChange('p2_ID')(idData);
+        this.props.handleChange('p2_FirstName')(empty);
+        this.props.handleChange('p2_LastName')(empty);
+        this.props.handleChange('p2_Email')(empty);
+      }
+    }else{
+
+      if(e.target.name === "P1"){
+        this.props.handleChange('p1_SSN')(e); 
+        this.props.handleChange('p1_ID')(empty);
+
+      }else if(e.target.name === "P2"){
+        this.props.handleChange('p2_SSN')(e); 
+        this.props.handleChange('p2_ID')(empty);
+      }
+    }
+  }
   
 
   //------START SEARCH STUFF
   handleResultSelect = (e, { result }) => {
-    
-    e.preventDefault();
+    //e.preventDefault();
     //console.log([e.target.name]);
+    
+    this.onSSNandIDChange(e, result); //wrong but fast :D
     if(e.target.name === "P1"){
       this.setState({ 
-        p1_value: result.SSN,
-        idP1: result.ID
+        p1_SSN: result.SSN,
+        p1_ID: result.ID,
+        p1_FirstName:"",
+        p1_LastName:"",
+        p1_Email:""
        }) 
     }else if (e.target.name === "P2"){
       this.setState({ 
-        p2_value: result.SSN,
-        idP2: result.ID
+        p2_SSN: result.SSN,
+        p2_ID: result.ID,
+        p1_FirstName:"",
+        p1_LastName:"",
+        p1_Email:""
        }) 
     }
   }
   
+
   handleSearchChange = (e, { value }) => {
     e.preventDefault();
-
-    //this.setState({idP1:"", idP2:""});
     
+    this.onSSNandIDChange(e, false); //wrong but fast :D
     this.updateSearchOptions(value);
     
     if(e.target.name === "P1"){
-      this.setState({idP1:""});
-      this.setState({ isLoading: true, p1_value:value })
+
+      this.setState({p1_ID:""});
+      this.setState({ isLoading_P1: true, p1_SSN:value })
+
       setTimeout(() => {
-        if (this.state.p1_value.length < 1) return this.setState(initialState)
-        const re = new RegExp(_.escapeRegExp(this.state.p1_value), 'i')
+        if (this.state.p1_SSN.length < 1) return this.setState(initialState_P1)
+        const re = new RegExp(_.escapeRegExp(this.state.p1_SSN), 'i')
         const isMatch = (result) => re.test(result.SSN)
         this.setState({
-          isLoading: false,
-          results: _.filter(source, isMatch),
+          isLoading_P1: false,
+          results_P1: _.filter(source, isMatch),
       })}, 300)
 
     }else if(e.target.name === "P2"){
-      this.setState({idP2:""});
-      this.setState({ isLoading: true, p2_value:value })
+
+      this.setState({p2_ID:""});
+      this.setState({ isLoading_P2: true, p2_SSN:value })
+
       setTimeout(() => {
-        if (this.state.p2_value.length < 1) return this.setState(initialState)
-        const re = new RegExp(_.escapeRegExp(this.state.p2_value), 'i')
+        if (this.state.p2_SSN.length < 1) return this.setState(initialState_P2)
+        const re = new RegExp(_.escapeRegExp(this.state.p2_SSN), 'i')
         const isMatch = (result) => re.test(result.SSN)
         this.setState({
-          isLoading: false,
-          results: _.filter(source, isMatch),
+          isLoading_P2: false,
+          results_P2: _.filter(source, isMatch),
       })}, 300) 
     }
 
@@ -121,8 +201,12 @@ export class FormParentDetails extends Component {
   handleAccordionClick = (e, titleProps) => {
     const { index } = titleProps
     const { activeIndex } = this.state
-    const newIndex = activeIndex === index ? -1 : index
+    const newIndex = activeIndex === index ? 0 : index
     this.setState({ activeIndex: newIndex })
+
+    //wrong but fast :D
+    const activeIndexChange={target:{value: newIndex}} 
+    this.props.handleChange('activeIndex')(activeIndexChange);
   }
 
 
@@ -132,7 +216,7 @@ export class FormParentDetails extends Component {
       //for sharing props with FormStudentDetails state
       const {values, handleChange} = this.props;
 
-      const { isLoading, p1_value, p2_value, results } = this.state
+      const { isLoading_P1, isLoading_P2, p1_SSN, p2_SSN, results_P1, results_P2 } = this.state
 
         return (
             <>
@@ -144,43 +228,49 @@ export class FormParentDetails extends Component {
             <Form.Field>
             <Grid>
               <Grid.Column>
-                  <label><b>SSN</b></label>
+                  {/* <label><b>SSN</b></label> */}
+                  {!this.state.parent_errors['p1_SSN'] && <label><b>SSN</b></label>}
+                  {this.state.parent_errors['p1_SSN'] &&
+                  <p className="error"><b>SSN</b></p>}
+
                 <Search
+                  className = {!this.state.parent_errors['p1_SSN'] ? "" : 'errorSNN'}
+                  error={this.state.parent_errors['p1_SSN']}
                   name="P1"
-                  loading={isLoading}
+                  loading={isLoading_P1}
                   onResultSelect={this.handleResultSelect}
                   onSearchChange={_.debounce(this.handleSearchChange, 500, {
                     leading: true,
                   })}
                   noResultsMessage = "No Parent Found."
                   //minCharacters = "4" //minimum characters to show options
-                  results={results}
-                  value={p1_value}
+                  results={results_P1}
+                  value={p1_SSN}
                   resultRenderer={resultRenderer}
                   {...this.props}
                 />
                 
-                {(!this.state.idP1.trim() == "") && <h5 style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</h5>}
+                { !this.isEmptyStr(this.state.p1_ID)  && <h5 className = "knownDetails"><Icon name='check' />Details of this parent are known</h5>}
               </Grid.Column>
             </Grid>
             </Form.Field>
 
 
-            {(this.state.idP1.trim() == '') &&  
+            { this.isEmptyStr(this.state.p1_ID) &&
             <>
               <Form.Group widths='equal'>
                 <Form.Input
                   label='First Name' placeholder='First Name'
                   name='p1_FirstName'
-                  //disabled = {!this.state.idP1.trim() == ""}
                   defaultValue = {values.p1_FirstName}
+                  //defaultValue = {this.state.p1_FirstName}
                   onChange={handleChange('p1_FirstName')}
                 />
                 <Form.Input
                   label='Last Name' placeholder='Last Name'
                   name='p1_LastName'
-                  //disabled = {!this.state.idP1.trim() == ""}
                   defaultValue = {values.p1_LastName}
+                  //defaultValue = {this.state.p1_LastName}
                   onChange={handleChange('p1_LastName')}
                 />
               </Form.Group>
@@ -188,8 +278,9 @@ export class FormParentDetails extends Component {
                   fluid icon='envelope' iconPosition='left' 
                   label='E-mail address'type='email'placeholder='E-mail address'
                   name="p1_Email"
-                  //disabled = {!this.state.idP1.trim() == ""}
+                  error={this.state.parent_errors['p1_Email']}
                   defaultValue = {values.p1_Email}
+                  //defaultValue = {this.state.p1_Email}
                   onChange={handleChange('p1_Email')}
               />
             </>
@@ -197,70 +288,56 @@ export class FormParentDetails extends Component {
 
 
 {/*--SECOND PARENT----------------------------------------------------------------------------*/}
-            <Accordion as={Form.Field}  >
+            <Accordion as={Form.Field} activeIndex = {values.activeIndex} >
             <Accordion.Title
-                active={this.state.activeIndex === 0}
-                index={0}
+                active={values.activeIndex === 1}
+                index={1}
                 onClick={this.handleAccordionClick}
                 className="optionalField"
              >
               <Icon name="dropdown"/><Icon name='user plus'/>&nbsp;
-              Second Parent Details (Optional)
+              Add Second Parent Details (Optional)
             </Accordion.Title>
 
-            <Accordion.Content active={this.state.activeIndex === 0}>
+            <Accordion.Content active={values.activeIndex === 1}>
                 <>
                 <Form.Field>
                   <Grid>
                     <Grid.Column>
-                        <label><b>SSN</b></label>
+                        {/* <label><b>SSN</b></label> */}
+                        {!this.state.parent_errors['p2_SSN'] && <label><b>SSN</b></label>}
+                        {this.state.parent_errors['p2_SSN'] &&
+                        <p className="error"><b>SSN</b></p>}
+                      
                       <Search
+                        className = {!this.state.parent_errors['p2_SSN'] ? "" : 'errorSNN'}
                         name="P2"
-                        loading={isLoading}
+                        loading={isLoading_P2}
                         onResultSelect={this.handleResultSelect}
                         onSearchChange={_.debounce(this.handleSearchChange, 500, {
                           leading: true,
                         })}
                         noResultsMessage = "No Parent Found."
                         //minCharacters = "4" //minimum characters to show options
-                        results={results}
-                        value={p2_value}
+                        results={results_P2}
+                        value={p2_SSN}
                         resultRenderer={resultRenderer}
-                        {...this.props}
+                        //{...this.props}
                       />
                       
-                      {(!this.state.idP2.trim() == "") && <h5 style = {{color:'#68af64' }}><Icon name='check' />Details of this parent are known</h5>}
+                      {!this.isEmptyStr(this.state.p2_ID) && <h5 className = "knownDetails"><Icon name='check' />Details of this parent are known</h5>}
                     </Grid.Column>
                   </Grid>
                   </Form.Field>
 
-
-    
-{/*                   <Form.Field>
-                    <label> 
-                        SSN &nbsp; {this.state.P2exists && <span style = {{color:'#68af64' }}>
-                          <Icon name='check'/>Details of this parent are known.</span>}
-                    </label>
-                    <Input 
-                        type='text'
-                        placeholder='SSN' 
-                        name='p2_SSN'
-                        id="p2"
-                        defaultValue = {values.p2_SSN}
-
-                        //onChange={this.handleSSNChange.bind(this)} 
-                        //onChange={handleChange('p2_SSN')}
-                    />
-                 </Form.Field>
- */}
-
-              {(this.state.idP2.trim() == '') &&  
+              {this.isEmptyStr(this.state.p2_ID) &&  
                 <>
                 <Form.Group widths='equal'>
 
                   <Form.Input
                     fluid icon='envelope' iconPosition='left'
                     label='E-mail address'type='email'placeholder='E-mail address'
+                    error={this.state.parent_errors['p2_Email']}
                     name="p2_Email"
                     defaultValue = {values.p2_Email}
                     onChange={handleChange('p2_Email')}
@@ -268,12 +345,14 @@ export class FormParentDetails extends Component {
 
                   <Form.Input
                     label='First Name' placeholder='First Name'
+                    error={this.state.parent_errors['p2_FirstName']}
                     name='p2_FirstName'
                     defaultValue = {values.p2_FirstName}
                     onChange={handleChange('p2_FirstName')}
                   />
                   <Form.Input
                     label='Last Name' placeholder='Last Name'
+                    error={this.state.parent_errors['p2_LastName']}
                     name='p2_LastName'
                     defaultValue = {values.p2_LastName}
                     onChange={handleChange('p2_LastName')}
@@ -282,8 +361,7 @@ export class FormParentDetails extends Component {
                 </>
               }
 
-            
-
+          
             </></Accordion.Content>
             </Accordion>
 
@@ -291,7 +369,9 @@ export class FormParentDetails extends Component {
                 <Button onClick={this.back} className="nextBTN">
                     <Icon name='left arrow' />Back 
                 </Button>
-                <Button  onClick={this.confirm} className="confirmBTN">
+                <Button  onClick={this.nextConfirm} className="confirmBTN"
+                  disabled = {values.p1_ID ?  false : (!values.p1_FirstName || !values.p1_LastName || !values.p1_Email || !values.p1_SSN)}
+                >
                     <Icon name='checkmark' />Submit
                 </Button>
             </div>
