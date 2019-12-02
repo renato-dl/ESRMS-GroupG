@@ -77,6 +77,34 @@ class Class extends Model {
 
     return res;
   }
+
+  async updateAssignmentStudentClass(classId, studentId) {
+
+    const query = `
+      UPDATE Students
+      SET ClassId = ?
+      WHERE ID = ?`;
+
+    const res = {};
+    const connection = await this.db.getConnection();
+    const results = await connection.query(query, [classId, studentId]);
+    
+    connection.release();
+
+    if (!results.affectedRows) {
+      res["Success"] = false;
+      res["Message"] = "Something went wrong."; 
+    } else {
+      res["Success"] = true;
+      res["Message"] = "Update done successfully."; 
+    }
+
+    return res;
+  }
+
+
+
+
 }
 
 export default new Class();
