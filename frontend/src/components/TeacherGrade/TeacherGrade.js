@@ -115,7 +115,7 @@ export class TeacherGrade extends React.Component{
              <Table.Row>
                  <Table.HeaderCell>FirstName</Table.HeaderCell>
                  <Table.HeaderCell>LastName</Table.HeaderCell>
-                 <Table.HeaderCell>Mark</Table.HeaderCell>
+                 <Table.HeaderCell>Grade</Table.HeaderCell>
                  <Table.HeaderCell>Type</Table.HeaderCell>
                  <Table.HeaderCell>Date</Table.HeaderCell>
                  <Table.HeaderCell>Actions</Table.HeaderCell>

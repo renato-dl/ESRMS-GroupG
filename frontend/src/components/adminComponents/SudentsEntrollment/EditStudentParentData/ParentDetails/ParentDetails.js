@@ -13,6 +13,7 @@ export class ParentDetails extends React.Component {
     FirstName: null,
     LastName:null,
     eMail:null,
+    SSN:null,
     isSaving: false
   }};
 
@@ -24,7 +25,8 @@ export class ParentDetails extends React.Component {
         ID:this.props.parentInfo.ID,
         FirstName: this.props.parentInfo.FirstName,
         LastName: this.props.parentInfo.LastName,
-        eMail: this.props.parentInfo.eMail
+        eMail: this.props.parentInfo.eMail,
+        SSN:this.props.parentInfo.SSN
       });
     }
   };
@@ -46,7 +48,7 @@ export class ParentDetails extends React.Component {
         Id: this.props.parentInfo.ID,
         FirstName: this.state.FirstName,
         LastName: this.state.LastName,
-        SSN:this.props.parentInfo.SSN,
+        SSN:this.state.SSN,
         Email:this.state.eMail
       };
         const reqResult = await api.admin.updateParent(
@@ -79,7 +81,7 @@ export class ParentDetails extends React.Component {
 
   render() {
     return (
-      <Modal dimmer open className="parent-detail" size="small">
+      <Modal dimmer open className="topic-detail" size="small">
         <Modal.Header>
           <span> 'Edit Parent' </span>
           <Icon onClick={this.onClose} className="close-icn" name="close" />
@@ -105,6 +107,13 @@ export class ParentDetails extends React.Component {
               label='Parent eMail'
               placeholder='Parent eMail'
               value={this.state.eMail}
+              onChange={this.handleInputChange}
+            />
+            <Form.Input
+              name="SSN"
+              label='Parent SSN'
+              placeholder='Parent SSN'
+              value={this.state.SSN}
               onChange={this.handleInputChange}
             />
             <Form.Group widths='equal'>

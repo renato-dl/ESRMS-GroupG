@@ -90,6 +90,9 @@ export class GradeDetail extends Component {
             type: this.state.type
           }
           const response = await api.teacher.addMark(request);
+          if(response){
+            toastr.success('Grade added successfully!');
+          }
         }
         catch(e){
           this.setState({isSaving: false});
@@ -135,6 +138,7 @@ export class GradeDetail extends Component {
                 <DatePicker
                   selected={this.state.date}
                   onChange={this.handleDateChange}
+                  maxDate={new Date()}
                 />              
               </Form.Field>              
             </Form.Group>
