@@ -28,6 +28,7 @@ export class admin_StudentsEnrollment extends Component {
       fetchStudents= async () =>{
         const {params} = this.props.match;
         const response = await api.admin.getStudents();
+        console.log(response)
         if (response) {
            this.setState({student_info:response.data})
           }    
@@ -47,19 +48,19 @@ export class admin_StudentsEnrollment extends Component {
 
     renderParent_FirstName=(student)=>{
         if(student.secondParent)
-            return <Table.Cell>{ student.firstParent.FirstName }  </Table.Cell>
+            return <Table.Cell>{ student.secondParent.FirstName }  </Table.Cell>
         else return <Table.Cell>  </Table.Cell>
     };
 
     renderParent_LastName=(student)=>{
         if(student.secondParent)
-            return <Table.Cell>{ student.firstParent.LastName }  </Table.Cell>
+            return <Table.Cell>{ student.secondParent.LastName }  </Table.Cell>
         else return <Table.Cell>  </Table.Cell>
     };
 
     renderParent_eMail=(student)=>{
         if(student.secondParent)
-            return <Table.Cell>{ student.firstParent.eMail }  </Table.Cell>
+            return <Table.Cell>{ student.secondParent.eMail }  </Table.Cell>
         else return <Table.Cell>  </Table.Cell>
     };
     editStudent=(data)=>{

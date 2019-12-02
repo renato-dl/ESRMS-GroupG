@@ -49,13 +49,17 @@ export class Teacher extends React.Component{
                             </List.Header>
 
                             <List.Description as='div' className="subjectListClass">
+                              <div className='classname'>
                               Class: {subject.class}
-                              <Button className='Topics' color='blue'  onClick={() => this.onSubjectClick(subject.subjectId,subject.subject)}>
-                              Topics
-                              </Button>
-                              <Button className='Grades'  color='blue' onClick={()=>this.onSubjectGradeClick(subject.subjectId,subject.subject, subject.classId)}>
-                              Grades
-                              </Button>
+                              </div>
+                              <div>
+                                  <Button className='Topics' color='blue'  onClick={() => this.onSubjectClick(subject.subjectId,subject.subject)}>
+                                  Topics
+                                  </Button>
+                                  <Button className='Grades'  color='blue' onClick={()=>this.onSubjectGradeClick(subject.subjectId,subject.subject, subject.classId)}>
+                                  Grades
+                                  </Button>
+                                </div>
                             </List.Description>
                         </List.Content>
                     </List.Item>

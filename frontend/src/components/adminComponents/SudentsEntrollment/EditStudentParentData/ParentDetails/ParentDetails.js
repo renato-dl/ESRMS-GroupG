@@ -47,12 +47,13 @@ export class ParentDetails extends React.Component {
         FirstName: this.state.FirstName,
         LastName: this.state.LastName,
         SSN:this.props.parentInfo.SSN,
-        eMail:this.state.eMail
+        Email:this.state.eMail
       };
         const reqResult = await api.admin.updateParent(
             parentData
         );  
-        if(reqResult.data.Success){
+        console.log(reqResult)
+        if(reqResult.data.success){
           toastr.success('Parent updated successfully.');
         }
         else{
