@@ -8,13 +8,14 @@ import validator from 'validator';
 import logoImage from '../../assets/images/logo.png';
 import { UserRoleCard } from '../../components/UserRoleCard/UserRoleCard';
 
+
 export class Login extends React.Component {
     state = {
         email:'',
         password:'',
         errors: {},
         showErrMsg: false,
-        showRoleSelection: true,
+        showRoleSelection: false,
 
         roles:[
             {role: "IsAdminOfficer"},
@@ -24,6 +25,7 @@ export class Login extends React.Component {
             //{role: "IsSysAdmin"},
         ]
     };
+
     
     
     handleInputChange = (e, { name, value }) => {
@@ -40,6 +42,15 @@ export class Login extends React.Component {
         const hasErrors = !!Object.keys(errors).filter((e) => errors[e]).length;
         return [hasErrors, errors];
     };
+
+
+    retrieveroles = (data) => {
+//------------TODO
+    }
+
+    handleRouteOf = (role) => {
+//------------TODO
+    }
 
 
     submitLogin = async () => {
@@ -67,15 +78,17 @@ export class Login extends React.Component {
             
             if (response.data.token) {
                 localStorage.setItem("token", JSON.stringify(response.data.token));
+                //localstorage.userHasAuthenticated(true);
+                //this.state.roles = this.retrieveroles(response.data);
                 
-                this.state.roles = this.retrieveroles(response.data);
-                
-                if(this.state.roles > 1) {
+                if(this.state.roles.length > 1) {
                     this.setState({showRoleSelection: true});
+                }else{
+                    this.handleRouteOf(this.state.role);
                 }
                 // redirect based on the role
                 //props.userHasAuthenticated(true);
-                this.props.history.push('/parent');
+                //this.props.history.push('/parent');
             }
 
         }catch (e) {
@@ -157,7 +170,7 @@ export class Login extends React.Component {
                                 <UserRoleCard
                                     key={index}
                                     {...role}
-                                    onClick={() => this.selectPage(role)}
+                                    onClick={() => this.handleRouteOf(role)}
                                 />
                                 ))}
                             </div>
