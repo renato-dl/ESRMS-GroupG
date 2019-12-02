@@ -180,7 +180,7 @@ class TeacherController extends BaseController {
     
     if (req.query.classId && req.query.subjectId) {
       students = await Student.getStudentsDataByClassIdAndSubjectId(req.user.ID, req.query.classId, req.query.subjectId);
-      return res.send(students);
+      return res.send(students); 
     }
 
     res.send(students);
