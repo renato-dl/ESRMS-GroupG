@@ -6,12 +6,14 @@
       .close-icn {
         &:hover {
           cursor: pointer;
+          float: right;
         }
       }
     }
 
     button i{
       float: left;
+      cursor: pointer;
     }
 
     .numberInput{

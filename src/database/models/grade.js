@@ -1,4 +1,5 @@
 import {Model} from './base';
+import moment from 'moment';
 
 class Grade extends Model {
   constructor() {
@@ -48,12 +49,20 @@ class Grade extends Model {
       throw new Error('Missing or invalid type');
     }
 
+    const date = moment.utc(gradeDate);
+    if (!date.isValid()) {
+      throw new Error('Invalid grade date');
+    }
+
+    if (date.isAfter(moment().utc(), 'day')) {
+      throw new Error('Future grade date');
+    }
     //add grade
     const result = await this.create({
       SubjectId: subjectId,
       StudentId: studentId,
       Grade: grade,
-      GradeDate: gradeDate,
+      GradeDate: date.format(this.db.getDateFormatString()),
       Type: type
     });
 
@@ -69,7 +78,7 @@ class Grade extends Model {
 
     const connection = await this.db.getConnection();
     let query =
-        `SELECT FirstName, LastName, Grade, GradeDate, Type
+        `SELECT ${this.tableName}.ID, ${this.tableName}.StudentId, FirstName, LastName, Grade, GradeDate, Type
         FROM ${this.tableName}, Students
         WHERE
           ${this.tableName}.StudentId = Students.ID AND

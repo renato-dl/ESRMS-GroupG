@@ -9,6 +9,8 @@ import {
 import moment from 'moment';
 import { NoData } from '../NoData/NoData';
 import GradeDetail from './GradeDetail/GradeDetail';
+import GradeUpdate from './GradeDetail/GradeUpdate';
+import GradeDelete from './GradeDetail/GradeDelete';
 import './TeacherGrade.scss';
 
 export class TeacherGrade extends React.Component{
@@ -19,7 +21,10 @@ export class TeacherGrade extends React.Component{
           subjectID:null,
           subjectName:null, 
           classId: null, 
-          addMarksOpen: false
+          addMarksOpen: false,
+          modifyGradeOpen: false, 
+          deleteGradeOpen: false,
+          selectedGrade: null
         }
        
     }
@@ -39,10 +44,15 @@ export class TeacherGrade extends React.Component{
     fetchGrades = async () =>{     
       const cId = this.props.match.params.classID;
       const sId = this.props.match.params.subjectID;
-      const response = await api.teacher.getTeacherGrades(cId, sId);
-      if (response) {
-          this.setState({gradeList:response.data});
-      }       
+      try{
+        const response = await api.teacher.getTeacherGrades(cId, sId);
+        if (response) {
+            this.setState({gradeList:response.data});
+        }  
+      }
+      catch(e){
+        //
+      }           
     }
 
     // Open modal for adding new marks
@@ -53,6 +63,23 @@ export class TeacherGrade extends React.Component{
     onGradeDetailClose = () => {
       this.setState({addMarksOpen: false});
     };
+
+    // open modal for deleting grade
+    deleteGrade = (grade) =>{
+      this.setState({deleteGradeOpen: true, selectedGrade: grade});
+    }
+    onDeleteGradeClose = () =>{
+      this.setState({deleteGradeOpen: false, selectedGrade: null});
+    }
+
+    // open modal for updating grade
+    updateGrade = (grade) =>{
+      this.setState({modifyGradeOpen: true, selectedGrade: grade});
+    }
+
+    onUpdateGradeClose = () =>{
+      this.setState({modifyGradeOpen: false, selectedGrade: null});
+    }
 
     styleMarkColor(mark) {
       if(mark<6){
@@ -83,7 +110,7 @@ export class TeacherGrade extends React.Component{
               }}
             />
           }
-         <Table className='Marks_table' columns={5}>
+         <Table className='Marks_table' columns={6}>
          <Table.Header>
              <Table.Row>
                  <Table.HeaderCell>FirstName</Table.HeaderCell>
@@ -91,6 +118,7 @@ export class TeacherGrade extends React.Component{
                  <Table.HeaderCell>Mark</Table.HeaderCell>
                  <Table.HeaderCell>Type</Table.HeaderCell>
                  <Table.HeaderCell>Date</Table.HeaderCell>
+                 <Table.HeaderCell>Actions</Table.HeaderCell>
              </Table.Row>
          </Table.Header>
            <Table.Body>
@@ -101,10 +129,40 @@ export class TeacherGrade extends React.Component{
                  <Table.Cell><span className="markField" style={this.styleMarkColor(mark.Grade)}>{ mark.Grade }</span></Table.Cell>
                  <Table.Cell>{ mark.Type } </Table.Cell>
                  <Table.Cell>{ moment(mark.GradeDate).format('LL')}</Table.Cell>
+                 <Table.Cell>
+                   <Icon name="edit" onClick={() => this.updateGrade(mark)}/> Edit
+                    <br/>
+                    <Icon name="delete" onClick={() =>this.deleteGrade(mark)}/> Delete
+                 </Table.Cell>
              </Table.Row>
            )} 
            </Table.Body>
            </Table>
+           {this.state.modifyGradeOpen &&
+            <GradeUpdate
+              subjectId={this.state.subjectID}
+              classId={this.state.classId}
+              grade={this.state.selectedGrade}
+              onClose={this.onUpdateGradeClose}
+              onSave={() =>{
+                this.fetchGrades();
+                this.onUpdateGradeClose();
+              }}
+            />
+          }
+          {this.state.deleteGradeOpen &&
+            <GradeDelete
+              subjectId={this.state.subjectID}
+              classId={this.state.classId}
+              grade={this.state.selectedGrade}
+              onClose={this.onDeleteGradeClose}
+              onSave={() =>{
+                this.fetchGrades();
+                this.onDeleteGradeClose();
+              }}
+            />
+          }
+
        </Container>
      );
    }

@@ -846,11 +846,13 @@ describe('Tests about insertion of a grade by teacher', () => {
     const studentId = "868d6ec1dfc8467f6d260c48b5620543"
     const grade = "6.0";
     const type = "Oral";
+    const date = moment.utc();
 
     const result = await Grade.addGrade(
       subjectId,
       studentId,
       grade,
+      date.format(),
       type
     );
 
@@ -971,25 +973,31 @@ describe('Teacher tests about visualization of grades', () => {
       expect.arrayContaining(
         [
           {
+            ID: expect.anything(),
             FirstName: "Gianluca",
             LastName: "Menzi",
             Grade: 9,
             GradeDate: date1,
-            Type: "Written"
+            Type: "Written",
+            StudentId: "868d6ec1dfc8467f6d260c48b5620543"
           },
-          {          
+          {
+            ID: expect.anything(),        
             FirstName: "Martina",
             LastName: "Menzi",
             Grade: 7,
             GradeDate: date2,
-            Type: "Oral"
+            Type: "Oral",
+            StudentId: "7460aba98f7291ee69fcfdd17274c3a1"
           },
-          {          
+          {
+            ID: expect.anything(),          
             FirstName: "Sara",
             LastName: "Lorenzini",
             Grade: 8.5,
             GradeDate: date3,
-            Type: "Written"
+            Type: "Written",
+            StudentId: "266667153e975bbf735b89d4b03d9f93"
           }
         ]
       )
