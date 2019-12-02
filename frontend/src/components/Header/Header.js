@@ -11,22 +11,17 @@ const trigger = (
 )
 
 const options = [
-  {
-    key: 'user',
-    text: (<span>Signed in as <strong>Name Surname</strong></span>),
-    disabled: true,
-  },
+  // {
+  //   key: 'user',
+  //   text: (<span>Signed in as <strong>Name Surname</strong></span>),
+  //   disabled: true,
+  // },
   { key: 'signOut', text: 'Sign Out' }
 ]
 
-//let handleClick = (e, value, idx) => this.setState();
 let logOut = (e) => {
   localStorage.removeItem("token");
-  window.location.replace("/login")
-  
-  //this.props.history.push('/login');
-  //props.userHasAuthenticated(false);
-  
+  window.location.replace("/login")  
 };
 
 export const Header = (props) => {

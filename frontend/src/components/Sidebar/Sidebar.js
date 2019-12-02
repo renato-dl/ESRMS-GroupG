@@ -7,10 +7,10 @@ import { TeacherMenu } from './Menus/TeacherMenu';
 import { AdminMenu } from './Menus/AdminMenu';
 import { SysAdminMenu } from './Menus/SysAdminMenu';
 
-const loc = window.location.pathname;
 
 export const AppSidebar = (props) => {
-
+  const loc = window.location.pathname;
+  
   return (
     <Sidebar.Pushable as={Segment} className="mySidebar">
       <Sidebar

@@ -23,7 +23,7 @@ class AccountController extends BaseController {
     roles.filter((role) => user[role]).forEach((role) => thisUserRoles[role] = true);
     const token = signToken({ id: user.ID });
 
-    res.send({ token, ...thisUserRoles });
+    res.send({ token, roles: Object.keys(thisUserRoles) });
   }
 
 }
