@@ -17,7 +17,7 @@ export class Login extends React.Component {
         showErrMsg: false,
         showRoleSelection: false,
 
-        roles:[
+        roles: [
             {role: "IsAdminOfficer"},
             {role: "IsParent"}, 
             {role: "IsTeacher"},
@@ -37,21 +37,35 @@ export class Login extends React.Component {
     
         errors['email'] = !validator.isEmail(this.state.email);
         errors['password'] = !this.state.password.length;
-        //TODO:Add password validation
         
         const hasErrors = !!Object.keys(errors).filter((e) => errors[e]).length;
         return [hasErrors, errors];
     };
 
-
-    retrieveroles = (data) => {
-//------------TODO
-    }
-
     handleRouteOf = (role) => {
-//------------TODO
+        console.log(role);
+        localStorage.setItem("role", role);
+        switch(role) {
+            case "IsParent":
+                this.props.history.push('/parent');
+                break;
+            case "IsTeacher":
+                this.props.history.push('/teacher');
+                break;
+            case "IsPrincipal":
+                this.props.history.push('/admin');
+                break;
+            case "IsAdminOfficer":
+                this.props.history.push('/admin');
+                break;
+            case "IsSysAdmin":
+                this.props.history.push('/sysadmin');
+                break;
+            default:
+                console.log('Invalid role.');
+                break;
+        }
     }
-
 
     submitLogin = async () => {
         this.setState({
@@ -60,7 +74,6 @@ export class Login extends React.Component {
         });
 
         const [hasErrors, errors] = this.validateFields();
-        //console.log(hasErrors, errors);
         if (hasErrors) {
             this.setState({errors});
             return;
@@ -71,6 +84,7 @@ export class Login extends React.Component {
                 email:this.state.email,
                 password: this.state.password,
             };
+
             const response = await api.auth.login(loginData);
             // check for error response
             
@@ -78,17 +92,13 @@ export class Login extends React.Component {
             
             if (response.data.token) {
                 localStorage.setItem("token", JSON.stringify(response.data.token));
-                //localstorage.userHasAuthenticated(true);
-                //this.state.roles = this.retrieveroles(response.data);
-                
-                if(this.state.roles.length > 1) {
-                    this.setState({showRoleSelection: true});
-                }else{
-                    this.handleRouteOf(this.state.role);
+                const roles = response.data.roles;
+
+                if (roles.length > 1) {
+                    this.setState({ showRoleSelection: true, roles: roles.map((role) => {return {role}}) });
+                } else {
+                    this.handleRouteOf(roles[0]);
                 }
-                // redirect based on the role
-                //props.userHasAuthenticated(true);
-                //this.props.history.push('/parent');
             }
 
         }catch (e) {
@@ -106,82 +116,77 @@ export class Login extends React.Component {
                 <Container>
 
                     {!this.state.showRoleSelection &&
-
-                    <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
-                        <Grid.Column className="loginContainer" >
-                        <Image src={logoImage} size="small" centered disabled verticalAlign="bottom"/>                       
-                        <Header as='h2'  textAlign='center' className="loginHeader">
-                            Welcome to ESRMS-G
-                        </Header>
-                        
-                        <Form size='large'>
-                            <Segment stacked>
-                            <Form.Input 
-                                fluid icon='user' 
-                                iconPosition='left' 
-                                placeholder='E-mail address' 
-                                error={this.state.errors['email']}
-                                name={'email'}
-                                value={this.state.email}
-                                onChange={this.handleInputChange}
-                                
-                            />
-                            <Form.Input
-                                fluid
-                                icon='lock'
-                                iconPosition='left'
-                                placeholder='Password'
-                                type='password'
-                                error={this.state.errors['password']}
-                                name={'password'}
-                                value={this.state.password}
-                                onChange={this.handleInputChange}
-                            />
+                        <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
+                            <Grid.Column className="loginContainer" >
+                            <Image src={logoImage} size="small" centered disabled verticalAlign="bottom"/>                       
+                            <Header as='h2'  textAlign='center' className="loginHeader">
+                                Welcome to ESRMS-G
+                            </Header>
                             
-                            {this.state.showErrMsg && 
-                            <p className="errMsg">
-                                <Icon name="exclamation triangle"/>
-                                Your login credentials could not be verified, please try again.
-                            </p>}
+                            <Form size='large'>
+                                <Segment stacked>
+                                <Form.Input 
+                                    fluid icon='user' 
+                                    iconPosition='left' 
+                                    placeholder='E-mail address' 
+                                    error={this.state.errors['email']}
+                                    name={'email'}
+                                    value={this.state.email}
+                                    onChange={this.handleInputChange}
+                                    
+                                />
+                                <Form.Input
+                                    fluid
+                                    icon='lock'
+                                    iconPosition='left'
+                                    placeholder='Password'
+                                    type='password'
+                                    error={this.state.errors['password']}
+                                    name={'password'}
+                                    value={this.state.password}
+                                    onChange={this.handleInputChange}
+                                />
+                                
+                                {this.state.showErrMsg && 
+                                <p className="errMsg">
+                                    <Icon name="exclamation triangle"/>
+                                    Your login credentials could not be verified, please try again.
+                                </p>}
 
-                            <Button fluid size='large' className = "loginBtn" onClick={this.submitLogin}>
-                                Sign in 
-                            </Button>
-                            </Segment>
-                            </Form>
-                            </Grid.Column>
-                    </Grid>
-
+                                <Button fluid size='large' className = "loginBtn" onClick={this.submitLogin}>
+                                    Sign in 
+                                </Button>
+                                </Segment>
+                                </Form>
+                                </Grid.Column>
+                            </Grid>
                         }
                         
                         {this.state.showRoleSelection &&
                             <>
-                        <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
-                            <Grid.Column className="roleGrid">
-                            <Header as='h2' icon textAlign='center'>
-                            {/* <Icon name='users' circular /> */}
-                            <Header.Content style = {{textAlign:'left', paddingLeft: "35px", color: "rgb(77, 113, 152)"}}>
-                                Welcome! Please select your account type.</Header.Content>
-                            </Header>
-                            
-                            
-                            <div className = "rolesContainer">    
-                                {this.state.roles.map((role, index) => (
-                                <UserRoleCard
-                                    key={index}
-                                    {...role}
-                                    onClick={() => this.handleRouteOf(role)}
-                                />
-                                ))}
-                            </div>
-                            
-                            </Grid.Column>
-                        </Grid>
+                                <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
+                                    <Grid.Column className="roleGrid">
+                                    <Header as='h2' icon textAlign='center'>
+                                    {/* <Icon name='users' circular /> */}
+                                    <Header.Content style = {{textAlign:'left', paddingLeft: "35px", color: "rgb(77, 113, 152)"}}>
+                                        Welcome! Please select your account type.</Header.Content>
+                                    </Header>
+                                    
+                                    
+                                    <div className = "rolesContainer">    
+                                        {this.state.roles.map((role, index) => (
+                                            <UserRoleCard
+                                                key={index}
+                                                {...role}
+                                                onClick={() => this.handleRouteOf(role.role)}
+                                            />
+                                        ))}
+                                    </div>
+                                    
+                                    </Grid.Column>
+                                </Grid>
                             </>
                         }
-                    
-
-
 
                 </Container>
             </>

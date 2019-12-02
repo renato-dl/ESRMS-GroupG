@@ -11,9 +11,27 @@ import { Login } from './containers/Login/Login';
 render(
   <BrowserRouter>
     <Switch>
+      
+      <Route exact path="/login" component={Login} />
+      
+      <Route exact path="/" render={() => {
+          const role = localStorage.getItem('role');
 
-      <Route exact path="/" render={() => <Redirect to="/login" />} />
-      <Route exact path="/login" component={Login}/>
+          switch(role) {
+            case 'IsTeacher':
+              return (<Redirect to="/teacher" />);
+            case 'IsParent':
+              return (<Redirect to="/parent" />);
+            case 'IsSysAdmin':
+              return (<Redirect to="/sysadmin" />);
+            case 'IsAdmin':
+              return (<Redirect to="/admin" />);
+            default:
+              return (<Redirect to="/login" />);
+          }
+          
+        }} 
+      />
       <Route path="/" component={App} />
 
     </Switch>
