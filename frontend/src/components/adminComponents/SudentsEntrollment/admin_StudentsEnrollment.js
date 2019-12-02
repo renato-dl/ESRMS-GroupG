@@ -118,7 +118,7 @@ export class admin_StudentsEnrollment extends Component {
               <Table.Header >
                    <Table.Row >
                         <Table.HeaderCell colSpan="4"  > Student</Table.HeaderCell>
-                        <Table.HeaderCell colSpan="8"  >Parent</Table.HeaderCell>
+                        <Table.HeaderCell colSpan="8"  >Parents</Table.HeaderCell>
                     </Table.Row>
                     <Table.Row>
                         <Table.HeaderCell>FirstName  </Table.HeaderCell>
