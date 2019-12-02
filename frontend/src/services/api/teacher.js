@@ -25,4 +25,12 @@ export class TeacherAPIService extends BaseAPIService {
   getTeacherGrades(classId,subjectId){
     return this.get(`/teacher/grades?subjectId=${subjectId}&classId=${classId}`);
   }
+
+  getStudentsByClass(classId){
+    return this.get('/teacher/students', classId);   
+  }
+
+  addMark(data){
+    return this.post('/teacher/grade', data);
+  }
 }

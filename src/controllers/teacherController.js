@@ -4,6 +4,7 @@ import Topic from '../database/models/topic';
 import Class from '../database/models/class';
 import TCSR from '../database/models/teacherClassSubject';
 import Grade from '../database/models/grade';
+import Student from '../database/models/student';
 
 class TeacherController extends BaseController {
 
@@ -121,6 +122,7 @@ class TeacherController extends BaseController {
       req.body.subjectId,
       req.body.studentId,
       req.body.grade,
+      req.body.gradeDate,
       req.body.type
      );
     res.send({success: true, id: result.id});
@@ -164,6 +166,20 @@ class TeacherController extends BaseController {
     );
 
     res.send({success: true});
+  }
+
+  // body: class id
+  async getStudentsByClassId(req, res){
+    let students;
+
+    if(req.query.hasOwnProperty("classId")){
+      students = await Student.getStudentsDataByClassId(req.query.classId);
+      res.send(students);
+      return;
+    }
+    else{
+      res.send([]);
+    }
   }
 }
 
