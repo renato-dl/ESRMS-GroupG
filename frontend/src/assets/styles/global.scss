@@ -70,9 +70,19 @@
 }
 
 .rolesContainer{
-    display: flex;
-    align-Items: center;
-    justify-content: center;
+    //width:auto;
+    //display: flex;
+    //align-Items: center;
+    //justify-content: center;
+    width:100%;
+    display:inline-block
+}
+.roleGrid{
+    //max-width: auto;
+    margin: -60px 15px 0 15px;
+    display:inline-block!important;
+    //background: red;
+    //max-width: 450px;
 }
 .rolesCard{
     margin:20px!important;

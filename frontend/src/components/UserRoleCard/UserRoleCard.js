@@ -25,8 +25,9 @@ const image = {
 }
 
 export const UserRoleCard = (props) => (
+    <div style={{width: '230px', margin: '10px',float:"left"}}>
     <Card style = {{margin: '20px', background: '#f7f7f7' }}
-        onClick={props.onClick ? props.onClick : null}
+        onClick={props.onClick ? props.onClick : null} //fluid
     >
         <Card.Content>
             <Card.Header textAlign = "center" style = {{fontSize:"24px", color:"#4d7198"}}>
@@ -37,4 +38,5 @@ export const UserRoleCard = (props) => (
             <Image src={image[props.role]} wrapped ui={false} width={200}/>
         </CardContent>
     </Card>
+    </div>
 );

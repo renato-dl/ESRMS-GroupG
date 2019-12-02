@@ -14,12 +14,14 @@ export class Login extends React.Component {
         password:'',
         errors: {},
         showErrMsg: false,
+        showRoleSelection: true,
+
         roles:[
             {role: "IsAdminOfficer"},
             {role: "IsParent"}, 
             {role: "IsTeacher"},
-            {role: "IsPrincipal"},
-            {role: "IsSysAdmin"},
+            //{role: "IsPrincipal"},
+            //{role: "IsSysAdmin"},
         ]
     };
     
@@ -58,11 +60,19 @@ export class Login extends React.Component {
                 email:this.state.email,
                 password: this.state.password,
             };
-
             const response = await api.auth.login(loginData);
             // check for error response
+            
+            console.log(response);
+            
             if (response.data.token) {
                 localStorage.setItem("token", JSON.stringify(response.data.token));
+                
+                this.state.roles = this.retrieveroles(response.data);
+                
+                if(this.state.roles > 1) {
+                    this.setState({showRoleSelection: true});
+                }
                 // redirect based on the role
                 //props.userHasAuthenticated(true);
                 this.props.history.push('/parent');
@@ -81,6 +91,9 @@ export class Login extends React.Component {
             <>
             <div className="loginBackground"></div>
                 <Container>
+
+                    {!this.state.showRoleSelection &&
+
                     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
                         <Grid.Column className="loginContainer" >
                         <Image src={logoImage} size="small" centered disabled verticalAlign="bottom"/>                       
@@ -122,23 +135,37 @@ export class Login extends React.Component {
                                 Sign in 
                             </Button>
                             </Segment>
-                        </Form>
-                        
-                        </Grid.Column>
-                        
+                            </Form>
+                            </Grid.Column>
                     </Grid>
 
-
-
-                        <div className = "rolesContainer">
-                            {this.state.roles.map((role, index) => (
-                            <UserRoleCard
-                                key={index}
-                                {...role}
-                                onClick={() => this.selectPage(role)}
-                            />
-                            ))}
-                        </div>
+                        }
+                        
+                        {this.state.showRoleSelection &&
+                            <>
+                        <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
+                            <Grid.Column className="roleGrid">
+                            <Header as='h2' icon textAlign='center'>
+                            {/* <Icon name='users' circular /> */}
+                            <Header.Content style = {{textAlign:'left', paddingLeft: "35px", color: "rgb(77, 113, 152)"}}>
+                                Welcome! Please select your account type.</Header.Content>
+                            </Header>
+                            
+                            
+                            <div className = "rolesContainer">    
+                                {this.state.roles.map((role, index) => (
+                                <UserRoleCard
+                                    key={index}
+                                    {...role}
+                                    onClick={() => this.selectPage(role)}
+                                />
+                                ))}
+                            </div>
+                            
+                            </Grid.Column>
+                        </Grid>
+                            </>
+                        }
                     
 
 
