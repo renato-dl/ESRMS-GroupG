@@ -968,7 +968,6 @@ describe('Teacher tests about visualization of grades', () => {
     const date2 = new Date('2019-11-03T00:00:00.000Z');
     const date3 = new Date('2019-11-03T00:00:00.000Z');
 
-
     expect(grades).toEqual(
       expect.arrayContaining(
         [
@@ -1053,3 +1052,40 @@ describe('Test wether a theacher is authorized to access a given grade', () => {
 
 });
 
+describe("Tests about updating grades", () => {
+
+  test('Teacher should be able to updated grade successfully', async () => {
+    const subjectId = 1;
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = "6.0";
+    const type = "Oral";
+    const date = moment.utc();
+
+    const result = await Grade.addGrade(
+      subjectId,
+      studentId,
+      grade,
+      date.format(),
+      type
+    );
+
+    expect(result.id).not.toBeNaN();
+    
+    const gradeID = result.id;
+    const updateResult = await Grade.updateGrade(gradeID, 7, 'Written');
+    expect(updateResult).toBeTruthy();
+
+    const connection = await db.getConnection();
+    const testResult = await connection.query(
+      `SELECT COUNT(*) AS count
+      FROM Grades
+      WHERE ID = ?`,
+      [result.id]
+    );
+
+    connection.release();
+    expect(testResult[0].count).toBe(1);
+    await Grade.remove(result.id);
+  });
+
+});
