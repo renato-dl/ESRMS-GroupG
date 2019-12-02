@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './GradeDetail.scss';
 import {Button, Modal, Form, LabelDetail, Icon} from 'semantic-ui-react';
 import DatePicker from "react-datepicker";
-import {NumberInput} from 'semantic-ui-react-numberinput';
+import NumberInput from 'semantic-ui-react-numberinput';
 import "react-datepicker/dist/react-datepicker.css";
 import { api } from '../../../services/api';
 import * as toastr from 'toastr';
