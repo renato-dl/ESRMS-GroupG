@@ -326,6 +326,33 @@ class User extends Model {
     connection.release();
     await this.remove(accountId);
   }
+
+  async editInternalAccount(userId, firstName, lastName, eMail, SSN, isTeacher, isAdminOfficer, isPrincipal) {
+
+    if (!userId) throw new Error('Missing user id');
+
+    await this.validateUserData(firstName, lastName, eMail, SSN);
+
+    await this.vaidateUserRoles(isTeacher, isAdminOfficer, isPrincipal);
+
+    const user = await this.findById(userId);
+
+    if (!user.IsTeacher && !user.IsPrincipal && !user.IsAdminOfficer) {
+      throw new Error('User is not an internal user');
+    }
+    
+    await this.update(userId, {
+      eMail: eMail,
+      IsTeacher: isTeacher,
+      IsAdminOfficer: isAdminOfficer,
+      IsPrincipal: isPrincipal,
+      FirstName: firstName,
+      LastName: lastName,
+      SSN: SSN
+    });
+
+    return true;
+  }  
 }
 
 export default new User();

@@ -318,6 +318,20 @@ class AdminController extends BaseController {
     }
     return;
   }
+
+  async updateInternalAccount(req, res) {
+    const result = await User.editInternalAccount(
+      req.body.Id,
+      req.body.FirstName,
+      req.body.LastName,
+      req.body.eMail,
+      req.body.SSN,
+      req.body.isTeacher,
+      req.body.isAdminOfficer,
+      req.body.isPrincipal
+    );
+    res.send({success: result})
+  }
 }
 
 export default new AdminController();

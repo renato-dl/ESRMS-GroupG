@@ -281,6 +281,8 @@ describe('Tests about the insertion of internal account by admin', () => {
       [result.id]
     );
 
+    connection.release();
+
     expect(queryResult.length).toBe(1);
     expect(queryResult[0].FirstName).toEqual(testFirstName);
     expect(queryResult[0].LastName).toEqual(testLastName);
@@ -548,6 +550,70 @@ describe('Tests about the insertion of internal account by admin', () => {
 
 }); 
 
+describe('Tests about editing internal accounts by admin', () => {
+
+  /*
+  * 1. Ok
+  * 2. Same behaviour as insertion
+  */
+  test('Ok', async () => {
+
+    // Perform insertion
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const insertResult = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(insertResult).toEqual({
+      id: expect.anything()
+    });
+
+    // Edit the entry just inserted
+    const editResult = await User.editInternalAccount(
+      insertResult.id,
+      'Norberto', 
+      testLastName, 
+      testEmail, 
+      testSSN, 
+      testIsTeacher,
+      testIsAdminOfficer,
+      true
+    );
+    
+    expect(editResult).toBe(true);
+
+    const queryResult = await User.findById(insertResult.id);
+
+    expect(queryResult.FirstName).toEqual('Norberto');
+    expect(queryResult.LastName).toEqual(testLastName);
+    expect(queryResult.SSN).toEqual(testSSN);
+    expect(queryResult.eMail).toEqual(testEmail);
+    expect(queryResult.IsSysAdmin).toBeFalsy();
+    expect(queryResult.IsTeacher).toBeTruthy();
+    expect(queryResult.IsAdminOfficer).toBeFalsy();
+    expect(queryResult.IsPrincipal).toBeTruthy();
+
+
+    //delete result for future tests
+    await User.remove(insertResult.id);
+  }); 
+
+}); 
 
 describe('Tests about the insertion of student data', () => {
   /*
