@@ -147,7 +147,7 @@ class TeacherController extends BaseController {
     const success = await Grade.updateGrade(
       req.body.ID,
       req.body.grade,
-      req.body.type
+      req.body.type 
     );
 
     res.send({ success });
