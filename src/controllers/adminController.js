@@ -232,6 +232,29 @@ class AdminController extends BaseController {
     res.send(results);
   }
 
+  async updateAssignmentStudentsToClass(req, res) {
+    const studentId = req.params.studentId;
+    const classId = req.query.classId;
+
+    if (!studentId) {
+      throw new Error('Missing or invalid studentId parameter');
+    }
+
+    if (!classId) {
+      throw new Error('Missing or invalid classId parameter');
+    }
+
+    //check if class id exists
+   await ClassModel.findById(classId);
+   
+    const results = await Student.update(studentId, {
+      ClassId: classId
+    });
+    
+    res.send({success: results});
+  }
+
+
 
   async deleteAccount(req, res) {
     const result = await User.deleteAccount(req.body.ID);

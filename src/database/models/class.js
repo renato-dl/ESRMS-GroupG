@@ -77,6 +77,9 @@ class Class extends Model {
 
     return res;
   }
+
+ 
+
 }
 
 export default new Class();
