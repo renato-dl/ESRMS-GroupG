@@ -4,11 +4,11 @@ import {Link} from 'react-router-dom';
 
 export const SysAdminMenu = (props) => (
   <>
-    <Menu.Item as={Link} to="/admin">
+    <Menu.Item as={Link} to="/sysadmin">
       <span>
         <br/>
         <Icon name='cog' size="big" />
-        SYSTEM &nbsp; ADMIN. 
+        SYSTEM &nbsp; ADMIN
         <br/><br/>
       </span>
     </Menu.Item>

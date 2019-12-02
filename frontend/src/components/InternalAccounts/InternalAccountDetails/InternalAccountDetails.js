@@ -1,6 +1,7 @@
 import React from 'react'
 
 import PropTypes from 'prop-types';
+import './InternalAccountDetails.scss';
 
 import {Button, Modal, Form, Icon, Label} from 'semantic-ui-react'
 import "./InternalAccountDetails.scss";
@@ -137,20 +138,16 @@ handleCheckboxChange(e) {
         </Modal.Header>
         <Modal.Content>
 
-          <Form loading={this.state.isSaving}>
-            <Form.Group widths= 'equal'>
-              
-             <Label basic>Roles of the user:</Label> 
-            {
-          checkboxes.map(item => (
-            <Label key={item.key}>
-              {item.label}
-              <Checkbox name={item.name} checked={this.state.checkedItems.get(item.name)} onChange={this.handleCheckboxChange} />
-            </Label>
-          ))
-        }
+          <Form loading={this.state.isSaving} className="account-detail">
+        
+          {checkboxes.map(item => (
+            <label class="container" key={item.key} > {item.label}
+            <input type="checkbox" name={item.name} checked={this.state.checkedItems.get(item.name)} onChange={this.handleCheckboxChange} />
+              <span class="checkmark"></span>
+            </label>
+          ))}
 
-            </Form.Group>
+            {/* </Form.Group> */}
             <Form.Group widths='equal'>
               <Form.Input
                 name='firstName'
