@@ -6,13 +6,21 @@ import validator from 'validator';
 
 
 import logoImage from '../../assets/images/logo.png';
+import { UserRoleCard } from '../../components/UserRoleCard/UserRoleCard';
 
 export class Login extends React.Component {
     state = {
         email:'',
         password:'',
         errors: {},
-        showErrMsg: false
+        showErrMsg: false,
+        roles:[
+            {role: "IsAdminOfficer"},
+            {role: "IsParent"}, 
+            {role: "IsTeacher"},
+            {role: "IsPrincipal"},
+            {role: "IsSysAdmin"},
+        ]
     };
     
     
@@ -119,6 +127,22 @@ export class Login extends React.Component {
                         </Grid.Column>
                         
                     </Grid>
+
+
+
+                        <div className = "rolesContainer">
+                            {this.state.roles.map((role, index) => (
+                            <UserRoleCard
+                                key={index}
+                                {...role}
+                                onClick={() => this.selectPage(role)}
+                            />
+                            ))}
+                        </div>
+                    
+
+
+
                 </Container>
             </>
         )
