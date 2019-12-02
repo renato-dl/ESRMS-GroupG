@@ -10,7 +10,8 @@ router.get('/students', Authorization(['IsAdminOfficer']), AdminController.proce
 
 
 router.patch('/parent', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'updateParent'));
-router.patch('/students/:studentId/update-student', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'updateAssignmentStudentsToClass'));
+router.patch('/students/:studentId/updateClassAssignment', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'updateAssignmentStudentsToClass'));
+router.delete('/students/:studentId/removeClassAssignment', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'removeAssignmentStudentsToClass'));
 router.get('/parents', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getParentData'));
 router.get('/find-parents', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getParentsBySSN'));
 
