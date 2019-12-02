@@ -15,6 +15,7 @@ export class StudentDetails extends React.Component {
     LastName:null,
     Gender:null,
     BirthDate: new Date(),
+    SSN:null,
     Parent1Id:null,
     Parent2Id:null,
     isSaving: false
@@ -31,6 +32,7 @@ export class StudentDetails extends React.Component {
         FirstName: studentInfo.FirstName,
         LastName: studentInfo.LastName,
         Gender: studentInfo.Gender,
+        SSN:studentInfo.SSN,
         BirthDate: new Date(studentInfo.BirthDate),
         Parent1Id:this.props.parentInfo.ID
       });
@@ -62,7 +64,7 @@ export class StudentDetails extends React.Component {
         Id: this.props.studentInfo.ID,
         FirstName: this.state.FirstName,
         LastName: this.state.LastName,
-        SSN:this.props.studentInfo.SSN,
+        SSN:this.state.SSN,
         Gender: this.state.Gender,
         BirthDate: this.state.BirthDate.toUTCString(),
         Parent1Id:this.state.Parent1Id,
@@ -72,7 +74,7 @@ export class StudentDetails extends React.Component {
         const reqResult = await api.admin.updateStudent(
             studentData
         );  
-        if(reqResult.data.Success){
+        if(reqResult.data.success){
           toastr.success('Student updated successfully.');
         }
         else{
@@ -98,7 +100,7 @@ export class StudentDetails extends React.Component {
 
   render() {
     return (
-      <Modal dimmer open className="student-detail" size="small">
+      <Modal dimmer open className="topic-detail" size="small">
         <Modal.Header>
           <span> 'Edit student' </span>
           <Icon onClick={this.onClose} className="close-icn" name="close" />
@@ -139,19 +141,19 @@ export class StudentDetails extends React.Component {
                 />
               </Form.Field>
               <Form.Input
-              name="Parent1Id"
-              label='Parent1Id'
-              placeholder='Parent1Id'
-              value={this.state.Parent1Id}
+              name="SSN"
+              label='SSN'
+              placeholder='SSN'
+              value={this.state.SSN}
               onChange={this.handleInputChange}
             />
-            <Form.Input
+            {/* <Form.Input
               name="Parent2Id"
               label='Parent2Id'
               placeholder='Parent2Id'
               value={this.state.Parent2Id}
               onChange={this.handleInputChange}
-            />
+            /> */}
             </Form.Group>
           </Form>
         </Modal.Content>

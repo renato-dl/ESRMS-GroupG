@@ -28,7 +28,7 @@ import {InternalAccounts} from '../../components/InternalAccounts/InternalAccoun
 import {Admin} from '../Admin/Admin';
 import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
 
-import {Class_composition} from '../../components/class_composition/class_composition';
+import {Class_composition} from '../../components/class_composition/Class_composition';
 import {admin_StudentsEnrollment} from '../../components/adminComponents/SudentsEntrollment/admin_StudentsEnrollment';
 import {TeacherGrade} from '../../components/TeacherGrade/TeacherGrade';
 import { PrivateRoute } from '../../components/PrivateRoute/PrivateRoute';
