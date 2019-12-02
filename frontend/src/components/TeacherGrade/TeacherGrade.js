@@ -69,7 +69,7 @@ export class TeacherGrade extends React.Component{
       this.setState({deleteGradeOpen: true, selectedGrade: grade});
     }
     onDeleteGradeClose = () =>{
-      this.setState({deleteGradeOpen: false});
+      this.setState({deleteGradeOpen: false, selectedGrade: null});
     }
 
     // open modal for updating grade
@@ -78,7 +78,7 @@ export class TeacherGrade extends React.Component{
     }
 
     onUpdateGradeClose = () =>{
-      this.setState({modifyGradeOpen: false});
+      this.setState({modifyGradeOpen: false, selectedGrade: null});
     }
 
     styleMarkColor(mark) {
