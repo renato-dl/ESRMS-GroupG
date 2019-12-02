@@ -72,7 +72,7 @@ export class StudentDetails extends React.Component {
         const reqResult = await api.admin.updateStudent(
             studentData
         );  
-        if(reqResult.data.Success){
+        if(reqResult.data.success){
           toastr.success('Student updated successfully.');
         }
         else{

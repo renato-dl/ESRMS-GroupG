@@ -18,15 +18,16 @@ class ParentController extends BaseController {
     const grades = await Grade.findByStudentId(studentId, {page: req.query.page, pageSize: req.query.pageSize});
     res.send(grades);
   }
+
   async assigmentsByStudentId(req, res) {
-    if (!await Student.checkIfRelated(req.body.studentId, req.user.ID)) {
+    if (!await Student.checkIfRelated(req.query.studentId, req.user.ID)) {
       res.send(401);
       return;
     }
     
     const assignments = await Assignment.findByStudentId(
-      req.body.studentId, 
-      {from: req.body.fromDate, to: req.body.toDate},
+      req.query.studentId, 
+      {from: req.query.fromDate, to: req.query.toDate},
       {page: req.query.page, pageSize: req.query.pageSize}
     );
 
