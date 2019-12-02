@@ -45,7 +45,7 @@ class AdminController extends BaseController {
     let parent2;
     let parent1Insert = false;
     let parent2Insert = false;
-    let parent1Password, parent2password = null;
+    let parent1Password, parent2Password = null;
 
     if (!req.body.hasOwnProperty('firstParent')) {
       res.status(422).send({ success: false, error: 'Missing first parent' });
