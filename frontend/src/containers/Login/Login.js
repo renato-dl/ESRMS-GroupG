@@ -6,14 +6,26 @@ import validator from 'validator';
 
 
 import logoImage from '../../assets/images/logo.png';
+import { UserRoleCard } from '../../components/UserRoleCard/UserRoleCard';
+
 
 export class Login extends React.Component {
     state = {
         email:'',
         password:'',
         errors: {},
-        showErrMsg: false
+        showErrMsg: false,
+        showRoleSelection: false,
+
+        roles:[
+            {role: "IsAdminOfficer"},
+            {role: "IsParent"}, 
+            {role: "IsTeacher"},
+            //{role: "IsPrincipal"},
+            //{role: "IsSysAdmin"},
+        ]
     };
+
     
     
     handleInputChange = (e, { name, value }) => {
@@ -30,6 +42,15 @@ export class Login extends React.Component {
         const hasErrors = !!Object.keys(errors).filter((e) => errors[e]).length;
         return [hasErrors, errors];
     };
+
+
+    retrieveroles = (data) => {
+//------------TODO
+    }
+
+    handleRouteOf = (role) => {
+//------------TODO
+    }
 
 
     submitLogin = async () => {
@@ -50,14 +71,24 @@ export class Login extends React.Component {
                 email:this.state.email,
                 password: this.state.password,
             };
-
             const response = await api.auth.login(loginData);
             // check for error response
+            
+            console.log(response);
+            
             if (response.data.token) {
                 localStorage.setItem("token", JSON.stringify(response.data.token));
+                //localstorage.userHasAuthenticated(true);
+                //this.state.roles = this.retrieveroles(response.data);
+                
+                if(this.state.roles.length > 1) {
+                    this.setState({showRoleSelection: true});
+                }else{
+                    this.handleRouteOf(this.state.role);
+                }
                 // redirect based on the role
                 //props.userHasAuthenticated(true);
-                this.props.history.push('/parent');
+                //this.props.history.push('/parent');
             }
 
         }catch (e) {
@@ -73,6 +104,9 @@ export class Login extends React.Component {
             <>
             <div className="loginBackground"></div>
                 <Container>
+
+                    {!this.state.showRoleSelection &&
+
                     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
                         <Grid.Column className="loginContainer" >
                         <Image src={logoImage} size="small" centered disabled verticalAlign="bottom"/>                       
@@ -114,11 +148,41 @@ export class Login extends React.Component {
                                 Sign in 
                             </Button>
                             </Segment>
-                        </Form>
-                        
-                        </Grid.Column>
-                        
+                            </Form>
+                            </Grid.Column>
                     </Grid>
+
+                        }
+                        
+                        {this.state.showRoleSelection &&
+                            <>
+                        <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
+                            <Grid.Column className="roleGrid">
+                            <Header as='h2' icon textAlign='center'>
+                            {/* <Icon name='users' circular /> */}
+                            <Header.Content style = {{textAlign:'left', paddingLeft: "35px", color: "rgb(77, 113, 152)"}}>
+                                Welcome! Please select your account type.</Header.Content>
+                            </Header>
+                            
+                            
+                            <div className = "rolesContainer">    
+                                {this.state.roles.map((role, index) => (
+                                <UserRoleCard
+                                    key={index}
+                                    {...role}
+                                    onClick={() => this.handleRouteOf(role)}
+                                />
+                                ))}
+                            </div>
+                            
+                            </Grid.Column>
+                        </Grid>
+                            </>
+                        }
+                    
+
+
+
                 </Container>
             </>
         )
