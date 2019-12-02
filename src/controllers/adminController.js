@@ -243,7 +243,7 @@ class AdminController extends BaseController {
     if (!classId) {
       throw new Error('Missing or invalid classId parameter');
     }
-    const results = await ClassModel.updateAssignmentStudentClass(classId, studentId);
+    const results = await ClassModel.updateAssignmentStudentsClass(classId, studentId);
     
     res.send(results);
   }

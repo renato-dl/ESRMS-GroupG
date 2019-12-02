@@ -78,7 +78,7 @@ class Class extends Model {
     return res;
   }
 
-  async updateAssignmentStudentClass(classId, studentId) {
+  async updateAssignmentStudentsClass(classId, studentId) {
 
     const query = `
       UPDATE Students
@@ -101,9 +101,6 @@ class Class extends Model {
 
     return res;
   }
-
-
-
 
 }
 
