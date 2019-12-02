@@ -31,9 +31,9 @@ export class InternalAccounts extends Component {
         }
     };
 
-    /* async componentDidMount() {
-        await this.fetchUsers();
-    } */
+    async componentDidMount() {
+      await this.fetchUsers();
+    }
     
     addUser = () => {
         this.setState({isInternalAccountDetailsOpen: true});

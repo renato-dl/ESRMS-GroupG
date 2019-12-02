@@ -80,13 +80,13 @@ export class GradeDetail extends Component {
       if(key != "0"){
         try{
           let correctedDate = this.state.date;
-          correctedDate = new Date(correctedDate.setTime( correctedDate.getTime() + 1 * 86400000 ));
+          correctedDate = correctedDate.toUTCString();
           const request = {
             subjectId: this.state.subjectId,
             studentId: value,
             classId: this.state.classId,
             grade: key,
-            gradeDate: correctedDate.toISOString().replace(/T.+/, ''),
+            gradeDate: correctedDate,
             type: this.state.type
           }
           const response = await api.teacher.addMark(request);
