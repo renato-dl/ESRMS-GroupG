@@ -6,8 +6,8 @@ import {api} from '../../../services/api';
 import AddNewStudent from './AddNewStudent/AddNewStudent';
 //import student from '../../../../../src/database/models/student';
 import { NoData } from '../../NoData/NoData';
-import {StudentDetails} from './EditStudentParentData/StudentDetails/StudentDetails'
-
+import {StudentDetails} from './EditStudentParentData/StudentDetails/StudentDetails';
+import {ParentDetails} from './EditStudentParentData/ParentDetails/ParentDetails';
 export class admin_StudentsEnrollment extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +17,11 @@ export class admin_StudentsEnrollment extends Component {
             open_AddModal: false,
             open_EditModal: false,
             student_info:[],
-            editingStudent:null
+            editingStudent:null,
+            editingStudentParent:null,
+            editingStudentParent2:null,
+            editingParent:null,
+            open_parentEditModal:false
         }
       }
 
@@ -41,26 +45,43 @@ export class admin_StudentsEnrollment extends Component {
     onAddModalClose = () => {
         this.setState({open_AddModal: false});
     };
+
     renderParent_FirstName=(student)=>{
         if(student.secondParent)
-            return <Table.Cell>{ student.firstParent.FirstName }  </Table.Cell>
-    };
-    renderParent_LastName=(student)=>{
-        if(student.secondParent)
-            return <Table.Cell>{ student.firstParent.LastName }  </Table.Cell>
-    };
-    renderParent_eMail=(student)=>{
-        if(student.secondParent)
-            return <Table.Cell>{ student.firstParent.eMail }  </Table.Cell>
+            return <Table.Cell>{ student.secondParent.FirstName }  </Table.Cell>
+        else return <Table.Cell>  </Table.Cell>
     };
 
+    renderParent_LastName=(student)=>{
+        if(student.secondParent)
+            return <Table.Cell>{ student.secondParent.LastName }  </Table.Cell>
+        else return <Table.Cell>  </Table.Cell>
+    };
+
+    renderParent_eMail=(student)=>{
+        if(student.secondParent)
+            return <Table.Cell>{ student.secondParent.eMail }  </Table.Cell>
+        else return <Table.Cell>  </Table.Cell>
+    };
     editStudent=(data)=>{
-        this.setState({editingStudent: data, open_EditModal: true});
+        this.setState({
+            editingStudent: data.studentInfo, 
+            open_EditModal: true,
+            editingStudentParent:data.firstParent,
+            editingStudentParent2:data.secondParent,
+        });
     }
     onStudentDetailClose = () => {
         this.setState({editingStudent: null, open_EditModal: false});
-    };
+    }
+
+    editParent=(data)=>{
+        this.setState({editingParent: data, open_parentEditModal: true});
+    }
     
+    onParentDetailClose = () => {
+        this.setState({editingParent: null, open_parentEditModal: false});
+    }
 
     render() {
         return (
@@ -78,11 +99,11 @@ export class admin_StudentsEnrollment extends Component {
                 <Icon name="upload"/>
                 Upload Excel File
             </Button>
-            <Table className='Student_admin' columns={10} textAlign='center'>
+            <Table className='Student_admin' columns={12} textAlign='center'>
               <Table.Header >
                    <Table.Row>
-                        <Table.HeaderCell colSpan="5" > Student</Table.HeaderCell>
-                        <Table.HeaderCell colSpan="6" >Parent</Table.HeaderCell>
+                        <Table.HeaderCell colSpan="4" > Student</Table.HeaderCell>
+                        <Table.HeaderCell colSpan="8" >Parent</Table.HeaderCell>
                     </Table.Row>
                     <Table.Row>
                         <Table.HeaderCell>FirstName  </Table.HeaderCell>
@@ -92,9 +113,11 @@ export class admin_StudentsEnrollment extends Component {
                         <Table.HeaderCell>FirstName </Table.HeaderCell>
                         <Table.HeaderCell >LastName </Table.HeaderCell>
                         <Table.HeaderCell >Email </Table.HeaderCell>
+                        <Table.HeaderCell>Opreation </Table.HeaderCell>
                         <Table.HeaderCell>FirstName </Table.HeaderCell>
                         <Table.HeaderCell >LastName </Table.HeaderCell>
                         <Table.HeaderCell >Email </Table.HeaderCell>
+                        <Table.HeaderCell>Opreation </Table.HeaderCell>    
                     </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -104,14 +127,20 @@ export class admin_StudentsEnrollment extends Component {
                  <Table.Cell>{ student.studentInfo.LastName }</Table.Cell>
                  <Table.Cell>{ student.studentInfo.ClassId }</Table.Cell>
                  <Table.Cell textAlign="left" className="edit-cell" width={1}>
-                    <Icon name="edit" onClick={() =>this.editStudent(student.studentInfo)}/> Edit
+                    <Icon name="edit" onClick={() =>this.editStudent(student)}/> Edit
                   </Table.Cell>
                  <Table.Cell>{ student.firstParent.FirstName }  </Table.Cell>
                  <Table.Cell>{ student.firstParent.LastName }</Table.Cell>
                  <Table.Cell>{ student.firstParent.eMail }</Table.Cell>
+                 <Table.Cell textAlign="left" className="edit-cell" width={1}>
+                    <Icon name="edit" onClick={() =>this.editParent(student.firstParent)}/> Edit
+                  </Table.Cell>
                  {this.renderParent_FirstName(student)}
                  {this.renderParent_LastName(student)}
                  {this.renderParent_eMail(student)}
+                 <Table.Cell textAlign="left" className="edit-cell" width={1}>
+                 <Icon name="edit" disabled={!student.secondParent}onClick={() =>this.editParent(student.secondParent)}> Edit </Icon>
+                 </Table.Cell>
              </Table.Row>
            )} 
            </Table.Body>
@@ -137,10 +166,22 @@ export class admin_StudentsEnrollment extends Component {
             {this.state.editingStudent &&
             <StudentDetails
               studentInfo={this.state.editingStudent}
+              parentInfo={this.state.editingStudentParent}
+              parentInfo2={this.state.editingStudentParent2}
               onClose={this.onStudentDetailClose}
               onSave={() => {
                 this.fetchStudents();
                 this.onStudentDetailClose();
+              }}
+            />
+          }
+           {this.state.editingParent &&
+            <ParentDetails
+              parentInfo={this.state.editingParent}
+              onClose={this.onParentDetailClose}
+              onSave={() => {
+                this.fetchStudents();
+                this.onParentDetailClose();
               }}
             />
           }

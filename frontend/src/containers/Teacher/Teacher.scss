@@ -21,3 +21,11 @@
     box-shadow: 3px 3px 3px  grey;
     cursor:pointer;
 }
+
+.subjectListClass {
+    display: flex !important;
+    justify-content: space-between;
+}
+.classname{
+    font-size: 16px
+}
