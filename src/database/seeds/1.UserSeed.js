@@ -79,6 +79,7 @@ exports.seed = function(knex) {
           eMail: 'giorgio.digiorgio@parentsunited.com',
           Password: createSecurePassword('easypass'), //'easypass',
           IsParent: true,
+          IsTeacher: true,
           FirstName: 'Giorgio',
           LastName: 'Di Giorgio',
           SSN: 'PVDZRN27M04G189V'
