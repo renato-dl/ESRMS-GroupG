@@ -282,7 +282,7 @@ class User extends Model {
     console.log(checkAccount);
 
     if(checkAccount[0].isSA){
-      throw new Error ('Operation not permitted');      
+      throw new Error ('Cannot delete SysAdmin');      
     }
 
     if(checkAccount[0].isP){
@@ -294,7 +294,7 @@ class User extends Model {
       );
 
       if(hasChildren.length){
-        throw new Error ('Operation not permitted');
+        throw new Error ('Cannot delete user with associated students');
       }
     }
 
@@ -308,7 +308,7 @@ class User extends Model {
       );
 
       if(hasClass.length){
-        throw new Error ('Operation not permitted');
+        throw new Error ('Cannot delete teacher associated to classes');
       }
 
       const isCoordinator = await connection.query(
@@ -319,7 +319,7 @@ class User extends Model {
       );
 
       if(isCoordinator.length){
-        throw new Error ('Operation not permitted');
+        throw new Error ('Cannot delete coordinator');
       }
     }
 

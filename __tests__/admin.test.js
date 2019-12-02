@@ -2174,7 +2174,7 @@ describe('Tests about deletion of accounts', () =>{
       await User.deleteAccount(sysAdminId);
 
     }catch(error){
-      expect(error).toHaveProperty('message', 'Operation not permitted');
+      expect(error).toHaveProperty('message', 'Cannot delete SysAdmin');
     }
 
   });
@@ -2224,7 +2224,7 @@ describe('Tests about deletion of accounts', () =>{
       await User.deleteAccount(testParent.id);
 
     }catch(error){
-      expect(error).toHaveProperty('message', 'Operation not permitted');
+      expect(error).toHaveProperty('message', 'Cannot delete user with associated students');
       await Student.remove(result.id);
       await User.remove(testParent.id);
 
@@ -2272,7 +2272,7 @@ describe('Tests about deletion of accounts', () =>{
 
     }catch(error){
 
-      expect(error).toHaveProperty('message', 'Operation not permitted');
+      expect(error).toHaveProperty('message', 'Cannot delete teacher associated to classes');
 
       //delete insertions for future tests
       
@@ -2327,7 +2327,7 @@ describe('Tests about deletion of accounts', () =>{
 
     }catch(error){
 
-      expect(error).toHaveProperty('message', 'Operation not permitted');
+      expect(error).toHaveProperty('message', 'Cannot delete coordinator');
 
       //delete insertions for future tests
       
