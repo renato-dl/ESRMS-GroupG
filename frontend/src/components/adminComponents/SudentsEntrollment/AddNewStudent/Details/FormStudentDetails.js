@@ -2,15 +2,45 @@ import React, { Component } from 'react'
 import {Button, Icon, LabelDetail,Form} from 'semantic-ui-react'
 import DatePicker from "react-datepicker";
 
+import {SSNRegexp} from '../../../../../utils';
+
 export class FormStudentDetails extends Component {
+    state = this.props.values;
+
     continue = e => {
-        e.preventDefault();
-        this.props.nextStep();
+      e.preventDefault();
+        const [hasErrors, stud_errors] = this.validateFields();
+        if (hasErrors) {
+          this.setState({stud_errors});
+          //return;
+        }else{
+
+          this.props.nextstep('a');
+        }
     }
+
+    onSelectChange = (e, data) => {
+      data.target = {value: data.value};
+      this.props.handleChange('stud_Gender')(data)
+    }
+
+//added to be able to validate SSN before next step 
+    onSSNCHange = (e) => {
+      this.setState({stud_SSN: e.target.value})
+      this.props.handleChange('stud_SSN')(e);
+    }
+    
+    validateFields = () => {
+      let stud_errors = this.state.stud_errors;
+
+      stud_errors['stud_SSN'] = !SSNRegexp.test(this.state.stud_SSN);
+  
+      const hasErrors = !!Object.keys(stud_errors).filter((e) => stud_errors[e]).length;
+      return [hasErrors, stud_errors];
+    };
 
     render() {
         const {values, handleChange} = this.props;
-        
         return (
             <>
             <h2 className="addStudBlockHeader">
@@ -20,11 +50,13 @@ export class FormStudentDetails extends Component {
             <Form>
                 
             <Form.Input
-              //error={this.state.errors['stud_SSN']}
+              error={this.state.stud_errors['stud_SSN']}
               label='SSN' placeholder='SSN'
               name='stud_SSN'
+              //defaultValue = {this.state.stud_SSN}
               defaultValue = {values.stud_SSN}
-              onChange={handleChange('stud_SSN')}
+              //onChange={handleChange('stud_SSN')}
+              onChange={this.onSSNCHange}
             />
             <Form.Group widths='equal'>
               <Form.Input
@@ -41,34 +73,31 @@ export class FormStudentDetails extends Component {
               />
             </Form.Group>
             
-{/*---------------------------------------------------
-TODO: Find a way to handle DatePicker change and get value
-*/}
             <Form.Group widths='equal'>
               <Form.Field>
                 <LabelDetail><Icon name="birthday cake"/>Birth Date</LabelDetail>
                 <DatePicker
-                    //selected = {values.stud_FirstName}
-                    /* onChange={handleChange('stud_BirthDate')} */
+                    selected={new Date(values.stud_BirthDate || Date.now())}
+                    onChange={(e) => handleChange('stud_BirthDate')({target: {value: e}})}
                 />
               </Form.Field>
 
-{/*---------------------------------------------------
-TODO: Gender is still UNDEFINED in AddNewStudentState
-*/}
               <Form.Select
                 label="Gender" placeholder="Gender"
                 name="stud_Gender"
+                defaultValue = {values.stud_Gender}
                 options={[
                   { key: '1', text: 'Male', value: 'M' },
                   { key: '2', text: 'Female', value: 'F' },
                 ]}
-                onChange={handleChange('stud_Gender')}
+                onChange={this.onSelectChange}
               />
             </Form.Group>
 
             <div className="addStudButtonField">
-                <Button onClick={this.continue} className="nextBTN">
+                <Button onClick={this.continue} className="nextBTN"
+                disabled={!values.stud_FirstName || !values.stud_LastName || !values.stud_BirthDate || !values.stud_Gender || !values.stud_SSN}
+                >
                     Next <Icon name='right arrow' /> 
                 </Button>
             </div>

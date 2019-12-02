@@ -13,6 +13,7 @@ export class admin_StudentsEnrollment extends Component {
         super(props);
     
         this.state = {
+            enrolledStudents:[],
             open_AddModal: false,
             open_EditModal: false,
             student_info:[],
@@ -68,6 +69,7 @@ export class admin_StudentsEnrollment extends Component {
                     <Icon name='braille'/>
                     Students Configuration
                 </h3>
+            
             <Button className="ui vk button" onClick={this.addNewStudent}>
                 <i className="user plus icon"></i>
                 Enroll a Student
@@ -115,7 +117,7 @@ export class admin_StudentsEnrollment extends Component {
            </Table.Body>
            </Table>
             
-           
+            
             
             {this.state.open_AddModal &&
                 <Modal dimmer open className="topic-detail" size="small">

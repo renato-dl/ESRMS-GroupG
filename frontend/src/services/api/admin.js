@@ -3,7 +3,7 @@ import {BaseAPIService} from './base';
 
 export class AdminAPIService extends BaseAPIService {
 
-    getAuthParentList() {
+  getAuthParentList() {
     return this.get(`/admin/parents`);
   }
 
@@ -15,7 +15,7 @@ export class AdminAPIService extends BaseAPIService {
     return this.get(`/admin/find-parents?ssn=${str}`);
   }
 
-  saveNewStudent(data){
+  insertNewStudent(data){
     return this.post('/admin/student', data);
   }
 
