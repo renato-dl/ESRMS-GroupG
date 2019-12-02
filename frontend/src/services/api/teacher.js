@@ -33,4 +33,12 @@ export class TeacherAPIService extends BaseAPIService {
   addMark(data){
     return this.post('/teacher/grade', data);
   }
+
+  updateMark(data){
+    return this.patch('/teacher/grade', data);
+  }
+
+  deleteMark(data){
+    return this.delete('/teacher/grade', data);
+  }
 }
