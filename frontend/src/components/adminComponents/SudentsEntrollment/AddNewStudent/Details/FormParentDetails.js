@@ -75,11 +75,11 @@ export class FormParentDetails extends Component {
   validateFields = () => {
     let parent_errors = this.state.parent_errors;
 
-    parent_errors['p1_SSN'] = (this.isEmptyStr(this.state.p1_ID) ? !SSNRegexp.test(this.state.p1_SSN) : false);
+    parent_errors['p1_SSN'] = (this.isEmptyStr(this.state.p1_ID) ? !SSNRegexp.test(this.state.p1_SSN.trim()) : false);
     //parent_errors['p1_Email'] = (this.isEmptyStr(this.state.p1_ID) ? !validator.isEmail(this.state.p1_Email) : false);
     
 
-    parent_errors['p2_SSN'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? !SSNRegexp.test(this.state.p2_SSN) : false);
+    parent_errors['p2_SSN'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? !SSNRegexp.test(this.state.p2_SSN.trim()) : false);
     //parent_errors['p2_Email'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? !validator.isEmail(this.state.p2_Email) : false);
 
     parent_errors['p2_FirstName'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? this.isEmptyStr(this.state.p2_FirstName) : false); 

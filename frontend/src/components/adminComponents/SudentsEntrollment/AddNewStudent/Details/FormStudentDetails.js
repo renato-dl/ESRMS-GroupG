@@ -33,7 +33,7 @@ export class FormStudentDetails extends Component {
     validateFields = () => {
       let stud_errors = this.state.stud_errors;
 
-      stud_errors['stud_SSN'] = !SSNRegexp.test(this.state.stud_SSN);
+      stud_errors['stud_SSN'] = !SSNRegexp.test(this.state.stud_SSN.trim());
   
       const hasErrors = !!Object.keys(stud_errors).filter((e) => stud_errors[e]).length;
       return [hasErrors, stud_errors];
