@@ -29,15 +29,16 @@ export class ClassCompositionDetail extends Component {
     this.fetchEnrolledStudents();
   };
 
-  async fetchToEnrollStudents(){
+  async fetchToEnrollStudents() {
     try{
       const request = { isAssigned: 0 };
       const toEnrollStudents = await api.admin.getStudentsToEnroll(request);
+      console.log(toEnrollStudents);
       if (toEnrollStudents) {
         this.setState({ students: toEnrollStudents.data });
       } 
     }
-    catch(e){
+    catch(e) {
       this.setState({ students: [] });
     } 
   }
@@ -46,14 +47,18 @@ export class ClassCompositionDetail extends Component {
     try {
       const classRequest = { classId: this.props.classId };
       const alreadyEnrolledStudents = await api.admin.getEnrolledStudentsByClass(classRequest);
-      const studentsMap = new Map();
-      if(alreadyEnrolledStudents){
-        this.setState({enrolledStudents: alreadyEnrolledStudents.data,
-          enrolledStudentsCnt: alreadyEnrolledStudents.data.length });
+      console.log(alreadyEnrolledStudents);
+      const studentsMap = new Map(); 
+      if(alreadyEnrolledStudents) {
         alreadyEnrolledStudents.data.forEach(element => {
           studentsMap.set(element.ID, 'not-removed-student');
         });
-        this.setState({ styleRemoveStudents: studentsMap});
+
+        this.setState({
+          enrolledStudents: alreadyEnrolledStudents.data,
+          enrolledStudentsCnt: alreadyEnrolledStudents.data.length,
+          styleRemoveStudents: studentsMap,
+        });
       } 
     }
     catch(e){
@@ -62,6 +67,7 @@ export class ClassCompositionDetail extends Component {
   }
 
   onRemoved = (e) => {
+    console.log(e);
     let removedStudents = [...this.state.toRemoveStudents];
     const styleStudents = this.state.styleRemoveStudents;
     let countRemoved = this.state.removedStudents;
@@ -72,8 +78,7 @@ export class ClassCompositionDetail extends Component {
       countRemoved = countRemoved + 1;
       removedStudents.push(e);
       styleStudents.set(e, 'removed-student');
-    }
-    else{
+    } else {
       count = count + 1;
       countRemoved = countRemoved - 1;
       removedStudents = removedStudents.filter((s) => s !== e);
@@ -137,7 +142,7 @@ export class ClassCompositionDetail extends Component {
 
     try{
       await api.admin.sendStudentsToEnrollToClass(classId, studentIds);
-      toastr.success("Students enrolled successfully!");
+      toastr.success("Students enrolled successfully!"); 
     }
     catch(e) {
       toastr.error(e);
@@ -146,8 +151,9 @@ export class ClassCompositionDetail extends Component {
     this.setState({ isSaving: false});
     this.setState({ students: [], toEnrollStudents: [], checkedStudents: 0 });
   
-    this.fetchEnrolledStudents();
-    this.fetchToEnrollStudents();
+    // this.fetchEnrolledStudents();
+    // this.fetchToEnrollStudents(); 
+    this.props.onSave();
   }
 
   onClose = () => {
@@ -198,8 +204,7 @@ export class ClassCompositionDetail extends Component {
                       <Table.Cell textAlign="left">{ eStudent.FirstName }</Table.Cell>
                       <Table.Cell textAlign="left">{ eStudent.LastName }</Table.Cell>
                       <Table.Cell textAlign="left" width={1}>
-                          <Icon onClick={(e) => this.onRemoved(eStudent.ID)} 
-                          className="close-icn" name="close" />
+                          <Icon onClick={(e) => this.onRemoved(eStudent.ID)} className="close-icn" name="close" />
                           </Table.Cell>
                     </Table.Row>                                        
                   )}
@@ -215,8 +220,9 @@ export class ClassCompositionDetail extends Component {
                       <Button positive 
                       onClick={() => {
                         this.onRemoveStudents();
-                        this.fetchEnrolledStudents();
-                        this.fetchToEnrollStudents();
+                        // this.fetchEnrolledStudents();
+                        // this.fetchToEnrollStudents();
+                        this.props.onSave();
                       }}
                       disabled={!this.state.removedStudents}>
                         Remove students
