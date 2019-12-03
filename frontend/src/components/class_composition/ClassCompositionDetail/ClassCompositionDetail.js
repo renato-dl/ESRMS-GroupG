@@ -84,11 +84,14 @@ export class ClassCompositionDetail extends Component {
       removedStudents = removedStudents.filter((s) => s !== e);
       styleStudents.set(e, 'not-removed-student');
     }
-      
+    
+    debugger;
+
     this.setState({
       toRemoveStudents: removedStudents, 
       enrolledStudentsCnt: count, 
-      removedStudents: countRemoved 
+      removedStudents: countRemoved,
+      styleRemoveStudents: styleStudents
     });
   }
 
@@ -151,9 +154,9 @@ export class ClassCompositionDetail extends Component {
     this.setState({ isSaving: false});
     this.setState({ students: [], toEnrollStudents: [], checkedStudents: 0 });
   
-    // this.fetchEnrolledStudents();
-    // this.fetchToEnrollStudents(); 
-    this.props.onSave();
+    this.fetchEnrolledStudents();
+    this.fetchToEnrollStudents(); 
+    //this.props.onSave();
   }
 
   onClose = () => {
@@ -220,9 +223,9 @@ export class ClassCompositionDetail extends Component {
                       <Button positive 
                       onClick={() => {
                         this.onRemoveStudents();
-                        // this.fetchEnrolledStudents();
-                        // this.fetchToEnrollStudents();
-                        this.props.onSave();
+                        this.fetchEnrolledStudents();
+                        this.fetchToEnrollStudents();
+                        //this.props.onSave();
                       }}
                       disabled={!this.state.removedStudents}>
                         Remove students
