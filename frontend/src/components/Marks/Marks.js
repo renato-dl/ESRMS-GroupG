@@ -52,7 +52,7 @@ export class Marks extends React.Component{
           <Table.Header>
               <Table.Row>
                   <Table.HeaderCell>SUBJECT</Table.HeaderCell>
-                  <Table.HeaderCell>DAILY_MARK</Table.HeaderCell>
+                  <Table.HeaderCell>MARK</Table.HeaderCell>
                   <Table.HeaderCell>TYPE</Table.HeaderCell>
                   <Table.HeaderCell>DATE</Table.HeaderCell>
               </Table.Row>
@@ -68,11 +68,11 @@ export class Marks extends React.Component{
             )} 
             </Table.Body>
             </Table>
-            <h3 className="contentHeader"> 
+            {/* <h3 className="contentHeader"> 
             <Icon name='braille'/> 
              Final Grades
-          </h3>
-          <Table class='Marks_table' columns={3}>
+          </h3> */}
+          {/* <Table class='Marks_table' columns={3}>
           <Table.Header>
               <Table.Row>
                   <Table.HeaderCell>SUBJECT</Table.HeaderCell>
@@ -81,7 +81,7 @@ export class Marks extends React.Component{
               </Table.Row>
           </Table.Header>
             <Table.Body></Table.Body>
-            </Table>
+            </Table> */}
         </Container>
       );
     }
