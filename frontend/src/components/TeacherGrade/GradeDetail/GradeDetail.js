@@ -16,7 +16,7 @@ export class GradeDetail extends Component {
     date: new Date(),
     students: [],
     studentMarks: new Map(),
-    value: 0,
+    value: 2,
     isSaving: false 
   };
 
@@ -144,12 +144,18 @@ export class GradeDetail extends Component {
             </Form.Group>
             {this.state.students.length > 0 && 
               this.state.students.map((eStudent, index) =>  
-                <Form.Field key={index} inline>
+                <Form.Field key={index} className="student-grade">
                   <label>{ eStudent.FirstName } { eStudent.LastName }</label>
-                  <NumberInput className="numberInput" valueType="decimal" 
-                  minValue={2} maxValue={10} 
-                  stepAmount={0.25} allowEmptyValue value={this.state.studentMarks.get(eStudent.ID)}
-                  onChange={(e) => {this.changeValue(eStudent.ID, e)} }/>                   
+                  <NumberInput 
+                    className="numberInput" 
+                    valueType="decimal" 
+                    minValue={2} 
+                    maxValue={10} 
+                    stepAmount={0.25} 
+                    allowEmptyValue 
+                    value={this.state.studentMarks.get(eStudent.ID)}
+                    onChange={(e) => {this.changeValue(eStudent.ID, e)} }
+                  />                   
                 </Form.Field>                 
               )}          
           </Form>
@@ -158,7 +164,6 @@ export class GradeDetail extends Component {
           <Button  positive onClick={this.onSave} disabled={!this.state.date}>
             <Icon name='checkmark' /> Save Grades
           </Button>
-
         </Modal.Actions>
       </Modal> 
     )

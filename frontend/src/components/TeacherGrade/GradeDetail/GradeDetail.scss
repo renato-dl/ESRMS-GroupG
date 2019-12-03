@@ -46,6 +46,17 @@
         width: 100%;
       }
     }
-  
-  }
+
+    .student-grade {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .numberInput {
+        .input {
+          width: 55px !important;
+        }
+      }
+    }
+}
   

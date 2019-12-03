@@ -54,7 +54,7 @@ export class Class_composition extends React.Component{
        <Table.Row key={index}>
            <Table.Cell>{ data.ID } { data.Name } </Table.Cell>
            <Table.Cell>{data.CreationYear}</Table.Cell>
-           <Table.Cell>{data.CoordinatorName}</Table.Cell>
+           <Table.Cell>{data.Coordinator}</Table.Cell>
            <Table.Cell>
              <Button color='blue' type='button' onClick={() =>{
              this.setState({classId: data.ID});
