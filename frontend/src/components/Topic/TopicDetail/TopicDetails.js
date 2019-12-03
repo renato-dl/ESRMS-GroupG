@@ -120,6 +120,7 @@ class TopicDetails extends React.Component {
                 <DatePicker
                   selected={this.state.date}
                   onChange={this.handleDateChange}
+                  maxDate={new Date()}
                 />
               </Form.Field>
             </Form.Group>

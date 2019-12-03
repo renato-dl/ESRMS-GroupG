@@ -140,7 +140,11 @@ export class ClassCompositionDetail extends Component {
     }    
 
     this.setState({isSaving: false});
-    this.props.onSave();
+
+    this.setState({ toEnrollStudents : [], checkedStudents: 0 });
+  
+    this.fetchEnrolledStudents();
+    this.fetchToEnrollStudents();
   }
 
   onClose = () => {
