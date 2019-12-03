@@ -3,7 +3,7 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import './InternalAccountDetails.scss';
 
-import {Button, Modal, Form, Icon, Label} from 'semantic-ui-react'
+import {Button, Modal, Form, Icon, Label, Checkbox, Segment} from 'semantic-ui-react'
 import "./InternalAccountDetails.scss";
 import {api} from '../../../services/api';
 import { withRouter } from "react-router";
@@ -11,36 +11,6 @@ import validator from 'validator';
 import {SSNRegexp} from '../../../utils';
 import * as toastr from 'toastr';
  
-
-//const roleOptions=["Admin Officer","Teacher" ,"Principal"];
-const checkboxes = [
-  {
-    name: 'IsAdminOfficer',
-    key: 'IsAdminOfficer',
-    label: 'Admn Officer',
-  },
-  {
-    name: 'IsTeacher',
-    key: 'IsTeacher',
-    label: 'Teacher',
-  },
-  {
-    name: 'IsPrincipal',
-    key: 'IsPrincipal',
-    label: 'Principal',
-  }
-];
-
-const Checkbox = ({ type = 'checkbox', name, checked = false, onChange }) => (
-  <input type={type} name={name} checked={checked} onChange={onChange} />
-);
-
-Checkbox.propTypes = {
-  type: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  checked: PropTypes.bool,
-  onChange: PropTypes.func.isRequired,
-}
 
 class InternalAccountDetails extends React.Component {
   constructor(props) {
@@ -50,27 +20,20 @@ class InternalAccountDetails extends React.Component {
     lastName:'',
     ssn:'',
     email:'',
+
+    IsTeacher:false,
+    IsAdminOfficer:false,
+    IsPrincipal:false,
+
     isSaving: false,
     errors: {},
-    /* checkboxes: roleOptions.reduce(
-      (options, option) => ({
-        ...options,
-        [option]: 0
-      }),
-      {}
-    ) */
-    
-    checkedItems: new Map(),
 
   };
-  this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
 }
 
-handleCheckboxChange(e) {
-  const item = e.target.name;
-  const isChecked = e.target.checked;
-  this.setState(prevState => ({ checkedItems: prevState.checkedItems.set(item, isChecked) }));
-}
+  handleCheckboxClick = (e, {name, checked}) => {
+    this.setState({[name]: checked});
+  }
 
   handleInputChange = (e, { name, value }) => {
     this.setState({[name]: value});
@@ -94,7 +57,11 @@ handleCheckboxChange(e) {
         SSN:this.state.ssn,
         firstName: this.state.firstName,
         lastName: this.state.lastName,
-        eMail: this.state.email
+        eMail: this.state.email,
+        isTeacher: this.state.IsTeacher,
+        isAdminOfficer: this.state.IsAdminOfficer,
+        isPrincipal: this.state.IsPrincipal,
+
       };
 
       console.log(userData);
@@ -129,6 +96,33 @@ handleCheckboxChange(e) {
     return [hasErrors, errors];
   };
 
+  handleChangeChk(e){
+    console.log(e);
+
+  }
+
+  toggleChangeAdmin = () => {
+    this.setState({
+      IsAdminOfficer: (!this.state.IsAdminOfficer ? 1 : 0 )
+    });
+    if (this.state.IsTeacher == 1) this.setState({IsTeacher:0})
+    if (this.state.IsPrincipal == 1) this.setState({IsPrincipal:0})
+  }
+  
+  toggleChangePrincipal = () => {
+    this.setState({
+      IsPrincipal: (!this.state.IsPrincipal ? 1 : 0)
+    });
+    if (this.state.IsAdminOfficer == 1) this.setState({IsAdminOfficer:0})
+  }
+  
+  toggleChangeTeacher = () => {
+    this.setState({
+      IsTeacher: (!this.state.IsTeacher ? 1 : 0)
+    });
+    if (this.state.IsAdminOfficer == 1) this.setState({IsAdminOfficer:0})
+  }
+
   render(){
     return(
       <Modal dimmer open className="topic-detail" size="small">
@@ -138,14 +132,13 @@ handleCheckboxChange(e) {
         </Modal.Header>
         <Modal.Content>
 
+
+
+
+          
+
           <Form loading={this.state.isSaving} className="account-detail">
-        
-          {checkboxes.map(item => (
-            <label class="container" key={item.key} > {item.label}
-            <input type="checkbox" name={item.name} checked={this.state.checkedItems.get(item.name)} onChange={this.handleCheckboxChange} />
-              <span class="checkmark"></span>
-            </label>
-          ))}
+
 
             {/* </Form.Group> */}
             <Form.Group widths='equal'>
@@ -165,6 +158,7 @@ handleCheckboxChange(e) {
               />
             </Form.Group>
 
+            <Form.Group widths='equal'>
             <Form.Input
               error={this.state.errors['ssn']}
               name='ssn'
@@ -186,6 +180,31 @@ handleCheckboxChange(e) {
               value={this.state.email}
               onChange={this.handleInputChange}
             />
+            </Form.Group>
+            <Segment compact className="custom" color="red">
+              <Checkbox label={<label>Principal</label>} 
+                id="IsPrincipal"
+                name="IsPrincipal"
+                defaultChecked={this.state.IsPrincipal}
+                onClick={this.handleCheckboxClick}
+              />
+            </Segment>
+            <Segment compact className="custom" color="teal">
+              <Checkbox label={<label>Teacher</label>} 
+                id="IsTeacher"
+                name="IsTeacher"
+                defaultChecked={this.state.IsTeacher}
+                onClick={this.handleCheckboxClick}
+              />
+            </Segment>
+            <Segment compact className="custom" color="orange">
+              <Checkbox label={<label>Secretary Officer</label>} 
+                id="IsAdminOfficer"
+                name="IsAdminOfficer"
+                defaultChecked={this.state.IsAdminOfficer}
+                onClick={this.handleCheckboxClick}
+              />
+            </Segment>
           </Form>
         </Modal.Content>
         <Modal.Actions>

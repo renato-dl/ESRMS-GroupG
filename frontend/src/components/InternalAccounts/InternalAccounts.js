@@ -5,6 +5,8 @@ import { api } from '../../services/api';
 import {Table, Icon, Container, Label} from 'semantic-ui-react';
 import moment from 'moment';
 
+import './InternalAccountDetails/InternalAccountDetails.scss'
+
 import { NoData } from '../NoData/NoData';
 import InternalAccountDetails from './InternalAccountDetails/InternalAccountDetails';
 import InternalAccountDelete from './InternalAccountDetails/InternalAccountDelete';
@@ -74,17 +76,17 @@ export class InternalAccounts extends Component {
                Add User
             </button>
     
-            <Table celled>
+            <Table celled color='teal' >
                 <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell textAlign="left">#</Table.HeaderCell>
-                        <Table.HeaderCell textAlign="left">NAME</Table.HeaderCell>
-                        <Table.HeaderCell textAlign="left">SURMANE</Table.HeaderCell>
-                        <Table.HeaderCell textAlign="left">SSN</Table.HeaderCell>
-                        <Table.HeaderCell textAlign="left">EMAIL</Table.HeaderCell>
-                        <Table.HeaderCell textAlign="left">ACCOUNT TYPE</Table.HeaderCell>
-                        <Table.HeaderCell textAlign="left">AUTH DATE</Table.HeaderCell>
-                        <Table.HeaderCell textAlign="left">Actions</Table.HeaderCell>
+                    <Table.Row positive>
+                        <Table.HeaderCell textAlign="center">#</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="center">NAME</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="center">SURMANE</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="center">SSN</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="center">EMAIL</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="center">ACCOUNT TYPE</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="center">AUTH DATE</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="center"></Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -105,8 +107,9 @@ export class InternalAccounts extends Component {
 
                     <Table.Cell textAlign="left" width={2}>{ moment(user.CreatedOn).format('LL') }</Table.Cell>
                     
-                    <Table.Cell textAlign="left" className="edit-cell" width={1}>
-                    <Icon name="delete" onClick={()=>this.deleteUser(user)}/> Delete
+                    <Table.Cell textAlign="center" className="edit-cell" width={1}>
+                    <Icon name="delete" className = "deleteIcon" onClick={()=>this.deleteUser(user)}/> &nbsp;
+                    <Icon name="edit" className = "editIcon" onClick={()=>this.editUser(user)}/> 
                   </Table.Cell>
     
                     </Table.Row>
