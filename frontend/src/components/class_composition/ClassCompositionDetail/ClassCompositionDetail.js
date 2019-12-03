@@ -42,7 +42,7 @@ export class ClassCompositionDetail extends Component {
     } 
   }
 
-  async fetchEnrolledStudents(){
+  async fetchEnrolledStudents() {
     try {
       const classRequest = { classId: this.props.classId };
       const alreadyEnrolledStudents = await api.admin.getEnrolledStudentsByClass(classRequest);
@@ -62,10 +62,11 @@ export class ClassCompositionDetail extends Component {
   }
 
   onRemoved = (e) => {
-    const removedStudents = this.state.toRemoveStudents;
+    let removedStudents = [...this.state.toRemoveStudents];
     const styleStudents = this.state.styleRemoveStudents;
     let countRemoved = this.state.removedStudents;
     let count = this.state.enrolledStudentsCnt;
+
     if (!removedStudents.includes(e)){
       count = count - 1;
       countRemoved = countRemoved + 1;
@@ -74,13 +75,16 @@ export class ClassCompositionDetail extends Component {
     }
     else{
       count = count + 1;
-      countRemoved =  countRemoved - 1;
-      removedStudents.splice( removedStudents.indexOf(e), 1 );
+      countRemoved = countRemoved - 1;
+      removedStudents = removedStudents.filter((s) => s !== e);
       styleStudents.set(e, 'not-removed-student');
     }
       
-    this.setState({ toRemoveStudents : removedStudents, 
-      enrolledStudentsCnt: count, removedStudents: countRemoved })
+    this.setState({
+      toRemoveStudents: removedStudents, 
+      enrolledStudentsCnt: count, 
+      removedStudents: countRemoved 
+    });
   }
 
   onRemoveStudents = async () => {
@@ -101,24 +105,24 @@ export class ClassCompositionDetail extends Component {
         toastr.error(e);
       }
     });
-    this.setState({isRemoving: false});
-    this.fetchEnrolledStudents();
-    this.fetchToEnrollStudents();
+
+    this.setState({ isRemoving: false, removedStudents: 0 });
   }
 
   onChecked = (e) => {
-    const newStudents = this.state.toEnrollStudents;
+    let newStudents = [...this.state.toEnrollStudents];
     let count = this.state.checkedStudents;
-    if (!newStudents.includes(e)){
+    if (!newStudents.includes(e)) {
       count = count + 1;
       newStudents.push(e);
     }
     else{
       count = count - 1;
-      newStudents.splice( newStudents.indexOf(e), 1 );
+      newStudents = newStudents.filter((s) => s !== e);
     }
       
-  this.setState({ toEnrollStudents : newStudents, checkedStudents: count })
+    console.log()
+    this.setState({ toEnrollStudents : newStudents, checkedStudents: count })
   }
 
   onSave = async () => {
@@ -135,13 +139,12 @@ export class ClassCompositionDetail extends Component {
       await api.admin.sendStudentsToEnrollToClass(classId, studentIds);
       toastr.success("Students enrolled successfully!");
     }
-    catch(e){
+    catch(e) {
       toastr.error(e);
     }    
 
-    this.setState({isSaving: false});
-
-    this.setState({ toEnrollStudents : [], checkedStudents: 0 });
+    this.setState({ isSaving: false});
+    this.setState({ students: [], toEnrollStudents: [], checkedStudents: 0 });
   
     this.fetchEnrolledStudents();
     this.fetchToEnrollStudents();
@@ -210,10 +213,12 @@ export class ClassCompositionDetail extends Component {
                   <Table.Row>
                     <Table.Cell colSpan='3' textAlign="center">
                       <Button positive 
-                      onClick={() => {this.onRemoveStudents();
+                      onClick={() => {
+                        this.onRemoveStudents();
                         this.fetchEnrolledStudents();
-                        this.fetchToEnrollStudents();} }
-                      disabled={this.state.removedStudents === 0}>
+                        this.fetchToEnrollStudents();
+                      }}
+                      disabled={!this.state.removedStudents}>
                         Remove students
                       </Button>
                     </Table.Cell>                        
@@ -243,14 +248,14 @@ export class ClassCompositionDetail extends Component {
                           <Table.Cell textAlign="left" width={1}>
                             <Checkbox onChange={
                               (e) => this.onChecked(student.ID)}/>
-                          </Table.Cell>
+                          </Table.Cell> 
                         </Table.Row>
                       )}
                       <Table.Row>
                         <Table.Cell colSpan='3' textAlign="center">
                           <Button positive 
                           onClick={this.onSave} 
-                          disabled={this.state.checkedStudents === 0}>
+                          disabled={!this.state.checkedStudents}>
                             Enroll students
                           </Button>
                         </Table.Cell>                        
