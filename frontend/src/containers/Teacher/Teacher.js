@@ -20,9 +20,9 @@ export class Teacher extends React.Component{
     }
   }
 
-  onSubjectClick = (subjectID,subjectName) => {
+  onSubjectClick = (subjectID,subjectName, classId) => {
     //const {params} = this.props.match;
-    this.props.history.push(`/teacher/subjects/${subjectID}/${subjectName}/topics`);
+    this.props.history.push(`/teacher/subjects/${classId}/${subjectID}/${subjectName}/topics`);
   };
 
   onSubjectGradeClick = (subjectID,subjectName, classId)=>{
@@ -53,7 +53,7 @@ export class Teacher extends React.Component{
                               Class: {subject.class}
                               </div>
                               <div>
-                                  <Button className='Topics' color='blue'  onClick={() => this.onSubjectClick(subject.subjectId,subject.subject)}>
+                                  <Button className='Topics' color='blue'  onClick={() => this.onSubjectClick(subject.subjectId,subject.subject, subject.classId)}>
                                   Topics
                                   </Button>
                                   <Button className='Grades'  color='blue' onClick={()=>this.onSubjectGradeClick(subject.subjectId,subject.subject, subject.classId)}>

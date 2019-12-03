@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Button, Modal, Header, Icon} from 'semantic-ui-react'
+import {Button, Modal, Icon} from 'semantic-ui-react'
 import moment from 'moment';
 import "react-datepicker/dist/react-datepicker.css";
 import "./TopicDetail.scss";

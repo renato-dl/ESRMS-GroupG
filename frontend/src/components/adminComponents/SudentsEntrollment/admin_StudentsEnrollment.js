@@ -107,32 +107,32 @@ export class admin_StudentsEnrollment extends Component {
                 <i className="user plus icon"></i>
                 Enroll a Student
             </Button>
-            <Button className="google plus" floated="right" disabled>
+            {/* <Button className="google plus" floated="right" disabled>
                 <Icon name="upload"/>
                 Upload Excel File
-            </Button>
-            <h1 />
+            </Button> */}
+            <h3 />
 
             <div className='Student_admin'>
-            <Table  columns={12} textAlign='center'>
+            <Table  columns={12} textAlign='center' color="grey" collapsing>
               <Table.Header >
                    <Table.Row >
-                        <Table.HeaderCell colSpan="4"  > Student</Table.HeaderCell>
-                        <Table.HeaderCell colSpan="8"  >Parents</Table.HeaderCell>
+                        <Table.HeaderCell colSpan="4" className="studentHeader" > Student</Table.HeaderCell>
+                        <Table.HeaderCell colSpan="8" className="parentHeader" >Parents</Table.HeaderCell>
                     </Table.Row>
                     <Table.Row>
                         <Table.HeaderCell>FirstName  </Table.HeaderCell>
                         <Table.HeaderCell>LastName </Table.HeaderCell>
                         <Table.HeaderCell>ClassId </Table.HeaderCell>
-                        <Table.HeaderCell className='right-border'>Opreation </Table.HeaderCell>
+                        <Table.HeaderCell className='right-border'></Table.HeaderCell>
                         <Table.HeaderCell>FirstName </Table.HeaderCell>
                         <Table.HeaderCell >LastName </Table.HeaderCell>
                         <Table.HeaderCell >Email </Table.HeaderCell>
-                        <Table.HeaderCell className='right-border'>Opreation </Table.HeaderCell>
+                        <Table.HeaderCell className='right-border'></Table.HeaderCell>
                         <Table.HeaderCell>FirstName </Table.HeaderCell>
                         <Table.HeaderCell >LastName </Table.HeaderCell>
                         <Table.HeaderCell >Email </Table.HeaderCell>
-                        <Table.HeaderCell>Opreation </Table.HeaderCell>    
+                        <Table.HeaderCell> </Table.HeaderCell>    
                     </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -141,24 +141,24 @@ export class admin_StudentsEnrollment extends Component {
                  <Table.Cell>{ student.studentInfo.FirstName }  </Table.Cell>
                  <Table.Cell>{ student.studentInfo.LastName }</Table.Cell>
                  <Table.Cell>{ student.studentInfo.ClassId }</Table.Cell>
-                 <Table.Cell textAlign="left" className="edit-cell right-border" width={1}>
-                    <Icon name="edit" onClick={() =>this.editStudent(student)}/> Edit
+                 <Table.Cell textAlign="center" className="edit-cell right-border" width={1}>
+                    <Icon name="edit" className="enrlStudEditIcon" onClick={() =>this.editStudent(student)}/> {/* Edit */}
                   </Table.Cell>
                   {this.renderParent_FirstName(student,1)}
                   {this.renderParent_LastName(student,1)}
                    {this.renderParent_eMail(student,1)}
-                 <Table.Cell textAlign="left" className="edit-cell right-border" width={1}>
-                    <Icon name="edit" onClick={() =>this.editParent(student.firstParent)}/> Edit
+                 <Table.Cell textAlign="center" className="edit-cell right-border" width={1}>
+                    <Icon name="edit" className="enrlStudEditIcon" onClick={() =>this.editParent(student.firstParent)}/> {/* Edit */}
                   </Table.Cell>
                  {this.renderParent_FirstName(student,2)}
                  {this.renderParent_LastName(student,2)}
                  {this.renderParent_eMail(student,2)}
-                 <Table.Cell textAlign="left" className="edit-cell" width={1}>
+                 <Table.Cell textAlign="center" className="edit-cell" width={1}>
                  {!student.secondParent && 
-                 <Icon name="plus" onClick={() =>this.addParent(student.studentInfo)}> Add </Icon>
+                 <Icon name="user plus icon" className="enrlStudEditIcon" onClick={() =>this.addParent(student.studentInfo)}> {/* Add */} </Icon>
                  }    
                  {student.secondParent &&
-                 <Icon name="edit"onClick={() =>this.editParent(student.secondParent)}> Edit </Icon>
+                 <Icon name="edit"className="enrlStudEditIcon" onClick={() =>this.editParent(student.secondParent)}> {/* Edit */} </Icon>
                  }
                  </Table.Cell>
              </Table.Row>

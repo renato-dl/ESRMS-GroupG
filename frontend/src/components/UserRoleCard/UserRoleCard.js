@@ -10,7 +10,7 @@ import IsTeacher from '../../assets/images/teacher.png';
 import IsSysAdmin from '../../assets/images/sysAdmin.png'
 
 const text={
-    IsAdminOfficer: 'Admin Officer',
+    IsAdminOfficer: 'Secretary Officer',
     IsParent: 'Parent',
     IsTeacher: 'Teacher',
     IsPrincipal: 'Principal',
