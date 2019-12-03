@@ -83,7 +83,8 @@ export class ParentDetails extends React.Component {
     return (
       <Modal dimmer open className="topic-detail" size="small">
         <Modal.Header>
-          <span> 'Edit Parent' </span>
+          {/* <span> 'Edit Parent' </span> */}
+    <span> <Icon name="edit"/>Edit Parent:&nbsp;&nbsp; <span style={{textTransform: 'capitalize'}}> {this.state.FirstName} {this.state.LastName} </span> </span>
           <Icon onClick={this.onClose} className="close-icn" name="close" />
         </Modal.Header>
         <Modal.Content>
@@ -122,7 +123,7 @@ export class ParentDetails extends React.Component {
         </Modal.Content>
         <Modal.Actions>
           <Button positive onClick={this.onSave} disabled={!this.state.FirstName || !this.state.LastName || !this.state.eMail}>
-            <Icon name='checkparent' /> Save
+            <Icon name='checkmark' /> Save
           </Button>
         </Modal.Actions>
       </Modal>
