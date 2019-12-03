@@ -340,7 +340,7 @@ class AdminController extends BaseController {
       res.send({success: true});
     } catch(error) {
       res.send({
-        success: result,
+        success: false,
         msg: 'Only students not assigned to classes and without grades can be removed'
       });
     }
