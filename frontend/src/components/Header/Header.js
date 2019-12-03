@@ -1,46 +1,66 @@
 import React from 'react';
 import {Header as SemanticHeader, Icon,Image, Dropdown} from 'semantic-ui-react';
-
+import {withRouter} from 'react-router-dom';
 import logoImage from '../../assets/images/logo.png';
 import './Header.scss';
 
-const trigger = (
-  <span style={{color:"#DBFDFC"}}><Icon name='user' />
-  {/* Hi Bob &nbsp; */}
-  </span>
-)
 
-const options = [
-  // {
-  //   key: 'user',
-  //   text: (<span>Signed in as <strong>Name Surname</strong></span>),
-  //   disabled: true,
-  // },
-  { key: 'signOut', text: 'Sign Out' }
-]
 
-let logOut = (e) => {
-  localStorage.removeItem("token");
-  window.location.replace("/login")  
-};
+export const Header = withRouter(({history, ...props}) => {
+  const trigger = (
+    <span style={{color:"#DBFDFC"}}><Icon name='user' />
+    {/* Hi Bob &nbsp; */}
+    </span>
+  );
+  
 
-export const Header = (props) => {
+  const getOptions = () => {
+    const options = [
+      { key: 'signOut', text: 'Sign Out', value: 2 }
+    ];
+
+    const hasMultipleRoles = !!localStorage.getItem('roles');
+    if (hasMultipleRoles) {
+      options.unshift({ key: 'SwitchAccount', text: 'Switch Account', value: 1 });
+    }
+
+    return options;
+  }
+
+  const handleChange = (e, {value}) => {
+    if (value === 1) {
+      switchAccount();
+    } else if (value === 2) {
+      logOut();
+    }
+  }
+
+  const switchAccount = () => {
+    history.push("/roles");
+  };
+  
+  const logOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("roles");
+    window.location.replace("/login");
+  };
+
   return (
     <SemanticHeader className="app-header">
       <div className="headerlogoField">
-        
-        {/* <Icon name="leaf" className="logoIcon"/> */}
         <Image src={logoImage} size="tiny"  verticalAlign="bottom"/> 
-          
-        ESRMS-G</div>
+        ESRMS-G
+      </div>
+
       <div className="headerToolbarFiled">
-        <Dropdown 
+        <Dropdown
           trigger={trigger} 
-          options={options} 
-          onChange={logOut}
+          options={getOptions()} 
+          onChange={handleChange}
         />
       </div>
 
     </SemanticHeader>
   );
-};
+});

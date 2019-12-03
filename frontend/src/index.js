@@ -7,12 +7,14 @@ import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
 import {App} from './containers/App/App';
 import { Login } from './containers/Login/Login';
+import { Roles } from './containers/Roles/Roles';
 
 render(
   <BrowserRouter>
     <Switch>
       
       <Route exact path="/login" component={Login} />
+      <Route exact path="/roles" component={Roles} />
       
       <Route exact path="/" render={() => {
           const role = localStorage.getItem('role');

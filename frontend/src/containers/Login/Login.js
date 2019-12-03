@@ -4,9 +4,6 @@ import { api } from '../../services/api';
 import { Button, Form, Grid, Header, Icon, Image, Segment, Container } from 'semantic-ui-react'
 import validator from 'validator';
 import logoImage from '../../assets/images/logo.png';
-import { UserRoleCard } from '../../components/UserRoleCard/UserRoleCard';
-import {ApplicationStoreContext} from '../../store';
-
 
 export class Login extends React.Component {
     state = {
@@ -85,7 +82,7 @@ export class Login extends React.Component {
             };
 
             const response = await api.auth.login(loginData);
-            // check for error response
+            // check for error response 
             
             console.log(response);
             
@@ -94,7 +91,8 @@ export class Login extends React.Component {
                 const roles = response.data.roles;
 
                 if (roles.length > 1) {
-                    this.setState({ showRoleSelection: true, roles: roles.map((role) => {return {role}}) });
+                    localStorage.setItem("roles", JSON.stringify(roles.map((role) => {return {role}})));
+                    this.props.history.push('/roles');
                 } else {
                     this.handleRouteOf(roles[0]);
                 }
@@ -111,7 +109,7 @@ export class Login extends React.Component {
     render() {
         return (
             <>
-            <div className="loginBackground"></div>
+                <div className="loginBackground"></div>
                 <Container>
 
                     {!this.state.showRoleSelection &&
@@ -160,33 +158,6 @@ export class Login extends React.Component {
                                 </Grid.Column>
                             </Grid>
                         }
-                        
-                        {this.state.showRoleSelection &&
-                            <>
-                                <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
-                                    <Grid.Column className="roleGrid">
-                                    <Header as='h2' icon textAlign='center'>
-                                    {/* <Icon name='users' circular /> */}
-                                    <Header.Content style = {{textAlign:'left', paddingLeft: "35px", color: "rgb(77, 113, 152)"}}>
-                                        Welcome! Please select your account type.</Header.Content>
-                                    </Header>
-                                    
-                                    
-                                    <div className = "rolesContainer">    
-                                        {this.state.roles.map((role, index) => (
-                                            <UserRoleCard
-                                                key={index}
-                                                {...role}
-                                                onClick={() => this.handleRouteOf(role.role)}
-                                            />
-                                        ))}
-                                    </div>
-                                    
-                                    </Grid.Column>
-                                </Grid>
-                            </>
-                        }
-
                 </Container>
             </>
         )
