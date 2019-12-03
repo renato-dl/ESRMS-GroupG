@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { api } from '../../services/api';
 
-import {Table, Icon, Container} from 'semantic-ui-react';
+import {Table, Icon, Container, Label} from 'semantic-ui-react';
 import moment from 'moment';
 
 import { NoData } from '../NoData/NoData';
@@ -16,10 +16,7 @@ export class InternalAccounts extends Component {
         super(props);
     
         this.state = {
-          authUsers: [
-              {eMail: 'sad', FirstName:"kjhg", LastName: "oijlk", SSN: "kj", CreatedOn: "22.04.2019", IsTeacher: "0", IsParent: "0", IsAdminIfficer: "1", IsPrincipal: "0"},
-
-          ],
+          authUsers: [],
           isInternalAccountDetailsOpen: false,
           deleteUserOpen: false, 
           selectedUser: null
@@ -85,6 +82,7 @@ export class InternalAccounts extends Component {
                         <Table.HeaderCell textAlign="left">SURMANE</Table.HeaderCell>
                         <Table.HeaderCell textAlign="left">SSN</Table.HeaderCell>
                         <Table.HeaderCell textAlign="left">EMAIL</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="left">ACCOUNT TYPE</Table.HeaderCell>
                         <Table.HeaderCell textAlign="left">AUTH DATE</Table.HeaderCell>
                         <Table.HeaderCell textAlign="left">Actions</Table.HeaderCell>
                     </Table.Row>
@@ -98,6 +96,13 @@ export class InternalAccounts extends Component {
                     <Table.Cell textAlign="left">{ user.SSN }</Table.Cell>
     
                     <Table.Cell textAlign="left">{ user.eMail }</Table.Cell>
+                    
+                <Table.Cell textAlign="left">
+                  { user.IsTeacher ? <Label as='a' horizontal color="teal">Teacher</Label> : ""}
+                  { user.IsAdminOfficer ? <Label as='a' horizontal color="orange">Secretary Officer</Label> : ""} 
+                  { user.IsPrincipal ? <Label as='a' horizontal color="red">Principal</Label> : ""}  
+                </Table.Cell>
+
                     <Table.Cell textAlign="left" width={2}>{ moment(user.CreatedOn).format('LL') }</Table.Cell>
                     
                     <Table.Cell textAlign="left" className="edit-cell" width={1}>
