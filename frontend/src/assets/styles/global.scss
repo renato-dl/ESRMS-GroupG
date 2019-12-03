@@ -7,12 +7,12 @@
     height: 100%;
 }
 .app > .ui.segment.pushable.mySidebar{
-    //height: calc(100% - 73px);
     margin:0!important;
     border: 0!important;
     border-radius: 0;
-    //background-color:#f1f1f1 ;
     background-color: #F3F2F0;
+    height: auto;
+    min-height: 100%;
 
     div.sidebar{background:  #273037;
         border-top:3px solid #DBCA47;
@@ -40,6 +40,7 @@
 
 .bars.icon.toggleIcon{
     margin-bottom:5px;
+    cursor: pointer;
 }
  //.ui.segment{padding:0}
  /* .contentContainer{
@@ -70,12 +71,11 @@
 }
 
 .rolesContainer{
-    //width:auto;
-    //display: flex;
-    //align-Items: center;
-    //justify-content: center;
     width:100%;
-    display:inline-block
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 .roleGrid{
     //max-width: auto;
@@ -87,4 +87,13 @@
 .rolesCard{
     margin:20px!important;
     background: #f7f7f7!important;
+}
+
+//Container width chnge because of big table
+@media only screen and (min-width: 1200px){
+    .ui.container {
+        width: 1200px;
+        margin-left: auto!important;
+        margin-right: auto!important;
+    }
 }

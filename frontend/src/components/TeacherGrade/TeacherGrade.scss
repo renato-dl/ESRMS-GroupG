@@ -1,6 +1,10 @@
 .Grades-container{
   i {
-      float: left;
-      cursor: pointer;      
+    float: left;
+    cursor: pointer;      
+  }
+
+  .hover-span {
+    cursor: pointer;
   }
 }

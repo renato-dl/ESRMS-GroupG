@@ -102,7 +102,7 @@ export class StudentDetails extends React.Component {
     return (
       <Modal dimmer open className="topic-detail" size="small">
         <Modal.Header>
-          <span> 'Edit student' </span>
+    <span> <Icon name="edit"/>Edit Student:&nbsp;&nbsp; <span style={{textTransform: 'capitalize'}}> {this.state.FirstName} {this.state.LastName} </span> </span>
           <Icon onClick={this.onClose} className="close-icn" name="close" />
         </Modal.Header>
         <Modal.Content>
@@ -159,7 +159,7 @@ export class StudentDetails extends React.Component {
         </Modal.Content>
         <Modal.Actions>
           <Button positive onClick={this.onSave} disabled={!this.state.FirstName || !this.state.LastName || !this.state.BirthDate||!this.state.Parent1Id}>
-            <Icon name='checkstudent' /> Save
+            <Icon name='checkmark' /> Save
           </Button>
         </Modal.Actions>
       </Modal>

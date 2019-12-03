@@ -129,10 +129,10 @@ export class TeacherGrade extends React.Component{
                  <Table.Cell><span className="markField" style={this.styleMarkColor(mark.Grade)}>{ mark.Grade }</span></Table.Cell>
                  <Table.Cell>{ mark.Type } </Table.Cell>
                  <Table.Cell>{ moment(mark.GradeDate).format('LL')}</Table.Cell>
-                 <Table.Cell>
-                   <Icon name="edit" onClick={() => this.updateGrade(mark)}/> Edit
+                 <Table.Cell >
+                   <span className="hover-span" onClick={() => this.updateGrade(mark)}><Icon name="edit"/> Edit</span>
                     <br/>
-                    <Icon name="delete" onClick={() =>this.deleteGrade(mark)}/> Delete
+                   <span className="hover-span" onClick={() =>this.deleteGrade(mark)}><Icon name="delete"/> Delete</span>
                  </Table.Cell>
              </Table.Row>
            )} 

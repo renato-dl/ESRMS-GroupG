@@ -165,7 +165,7 @@ export class ClassCompositionDetail extends Component {
     return (
       <Modal dimmer open className="class-composition-detail" size="small">
       <Modal.Header>
-        <span>Enroll students to class {this.state.className}</span>
+        <span>Enroll students to: &nbsp;&nbsp; class &nbsp; {this.state.className}</span>
         <Icon onClick={this.onClose} className="close-icn" name="close" />
       </Modal.Header>
       <Modal.Content>

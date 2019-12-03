@@ -1,9 +1,6 @@
 import React from 'react'
-
-import PropTypes from 'prop-types';
-
-import {Button, Modal, Form, Icon, Label} from 'semantic-ui-react'
-import "./InternalAccountDetails.scss";
+import './InternalAccountDetails.scss';
+import {Button, Modal, Form, Icon, Checkbox, Segment} from 'semantic-ui-react'
 import {api} from '../../../services/api';
 import { withRouter } from "react-router";
 import validator from 'validator';
@@ -11,65 +8,48 @@ import {SSNRegexp} from '../../../utils';
 import * as toastr from 'toastr';
  
 
-//const roleOptions=["Admin Officer","Teacher" ,"Principal"];
-const checkboxes = [
-  {
-    name: 'IsAdminOfficer',
-    key: 'IsAdminOfficer',
-    label: 'Admn Officer',
-  },
-  {
-    name: 'IsTeacher',
-    key: 'IsTeacher',
-    label: 'Teacher',
-  },
-  {
-    name: 'IsPrincipal',
-    key: 'IsPrincipal',
-    label: 'Principal',
-  }
-];
-
-const Checkbox = ({ type = 'checkbox', name, checked = false, onChange }) => (
-  <input type={type} name={name} checked={checked} onChange={onChange} />
-);
-
-Checkbox.propTypes = {
-  type: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  checked: PropTypes.bool,
-  onChange: PropTypes.func.isRequired,
-}
-
 class InternalAccountDetails extends React.Component {
-  constructor(props) {
-    super(props);
-  this.state = {
+  state = {
+    userID: null,
     firstName:'',
     lastName:'',
     ssn:'',
     email:'',
+
+    IsTeacher:false,
+    IsAdminOfficer:false,
+    IsPrincipal:false,
+
     isSaving: false,
     errors: {},
-    /* checkboxes: roleOptions.reduce(
-      (options, option) => ({
-        ...options,
-        [option]: 0
-      }),
-      {}
-    ) */
-    
-    checkedItems: new Map(),
 
   };
-  this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
-}
 
-handleCheckboxChange(e) {
-  const item = e.target.name;
-  const isChecked = e.target.checked;
-  this.setState(prevState => ({ checkedItems: prevState.checkedItems.set(item, isChecked) }));
-}
+  componentDidMount() {
+    const {user} = this.props;
+    
+    if (user) {
+      this.setState({
+        userID: user.ID,
+        firstName: user.FirstName,
+        lastName: user.LastName,
+        ssn: user.SSN,
+        email: user.eMail,
+        IsTeacher: user.IsTeacher,
+        IsAdminOfficer: user.IsAdminOfficer,
+        IsPrincipal: user.IsPrincipal
+      });
+    }
+  }
+
+  handleCheckboxClick = (e, {name, checked}) => {
+    if(name === 'IsAdminOfficer' && checked){
+      this.setState({IsTeacher:false, IsPrincipal:false})
+    }else if ((name === 'IsTeacher' || name === 'IsPrincipal') || checked){
+      this.setState({IsAdminOfficer:false})
+    }
+    this.setState({[name]: checked});
+  }
 
   handleInputChange = (e, { name, value }) => {
     this.setState({[name]: value});
@@ -81,26 +61,51 @@ handleCheckboxChange(e) {
     }
 
     const [hasErrors, errors] = this.validateFields();
-    console.log(hasErrors, errors);
+    
+    //console.log(hasErrors, errors);
     if (hasErrors) {
       this.setState({errors});
       return;
     }
 
     this.setState({isSaving: true});
+    const {params} = this.props.match;
     try {
       const userData = {
-        SSN:this.state.ssn,
+        SSN:this.state.ssn.trim(),
         firstName: this.state.firstName,
         lastName: this.state.lastName,
-        eMail: this.state.email
+        eMail: this.state.email,
+        isTeacher: this.state.IsTeacher,
+        isAdminOfficer: this.state.IsAdminOfficer,
+        isPrincipal: this.state.IsPrincipal
+
+      };
+      const userDataForEdit = {
+        Id: this.state.userID,
+        SSN: this.state.ssn.trim(),
+        FirstName: this.state.firstName,
+        LastName: this.state.lastName,
+        eMail: this.state.email,
+        isTeacher: this.state.IsTeacher,
+        isAdminOfficer: this.state.IsAdminOfficer,
+        isPrincipal: this.state.IsPrincipal
+
       };
 
-      console.log(userData);
-
-      await api.sysadmin.createUser(userData);
-
-      toastr.success(`User created successfully.`);
+      if(!this.state.userID){
+        await api.sysadmin.createUser(userData);
+        toastr.success(`User created successfully.`);
+      }
+      else{
+        const reqResult = await api.sysadmin.updateUser(userDataForEdit);
+        //if(reqResult.data.Success){
+          toastr.success('User updated successfully.');
+        /*} 
+        else{
+          toastr.error(reqResult.data.Message);
+        }  */
+      }
     } catch (e) {
       this.setState({isSaving: false});
       return toastr.error(e);
@@ -122,35 +127,23 @@ handleCheckboxChange(e) {
     let errors = this.state.errors;
 
     errors['email'] = !validator.isEmail(this.state.email);
-    errors['ssn'] = !SSNRegexp.test(this.state.ssn);
+    errors['ssn'] = !SSNRegexp.test(this.state.ssn.trim());
 
     const hasErrors = !!Object.keys(errors).filter((e) => errors[e]).length;
     return [hasErrors, errors];
   };
 
+
+
   render(){
     return(
       <Modal dimmer open className="topic-detail" size="small">
         <Modal.Header>
-          <span>Add New User</span>
+{this.state.userID ? <span><Icon name='edit'/> Edit User Data</span> : <span><Icon name="user plus icon"/> Add New User</span>  }   
           <Icon onClick={this.onClose} className="close-icn" name="close" />
         </Modal.Header>
         <Modal.Content>
-
-          <Form loading={this.state.isSaving}>
-            <Form.Group widths= 'equal'>
-              
-             <Label basic>Roles of the user:</Label> 
-            {
-          checkboxes.map(item => (
-            <Label key={item.key}>
-              {item.label}
-              <Checkbox name={item.name} checked={this.state.checkedItems.get(item.name)} onChange={this.handleCheckboxChange} />
-            </Label>
-          ))
-        }
-
-            </Form.Group>
+          <Form loading={this.state.isSaving} className="account-detail">
             <Form.Group widths='equal'>
               <Form.Input
                 name='firstName'
@@ -168,6 +161,7 @@ handleCheckboxChange(e) {
               />
             </Form.Group>
 
+            <Form.Group widths='equal'>
             <Form.Input
               error={this.state.errors['ssn']}
               name='ssn'
@@ -189,6 +183,34 @@ handleCheckboxChange(e) {
               value={this.state.email}
               onChange={this.handleInputChange}
             />
+            </Form.Group>
+            <Segment compact className="custom" color="red">
+              <Checkbox label={<label>Principal</label>} 
+                id="IsPrincipal"
+                name="IsPrincipal"
+                checked={this.state.IsPrincipal}
+                defaultChecked={this.state.IsPrincipal}
+                onClick={this.handleCheckboxClick}
+              />
+            </Segment>
+            <Segment compact className="custom" color="teal">
+              <Checkbox label={<label>Teacher</label>} 
+                id="IsTeacher"
+                name="IsTeacher"
+                checked={this.state.IsTeacher}
+                defaultChecked={this.state.IsTeacher}
+                onClick={this.handleCheckboxClick}
+              />
+            </Segment>
+            <Segment compact className="custom" color="orange">
+              <Checkbox label={<label>Secretary Officer</label>} 
+                id="IsAdminOfficer"
+                name="IsAdminOfficer"
+                checked={this.state.IsAdminOfficer}
+                defaultChecked={this.state.IsAdminOfficer}
+                onClick={this.handleCheckboxClick}
+              />
+            </Segment>
           </Form>
         </Modal.Content>
         <Modal.Actions>

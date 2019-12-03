@@ -1,3 +1,12 @@
+.deleteIcon:hover{
+  color:#D01919;
+  cursor:pointer;
+}
+.editIcon:hover{
+ color:#008272;
+ cursor:pointer;
+}
+
 .modal {
     div.error {
       color: #9f3a38;
@@ -9,3 +18,11 @@
     cursor: pointer;
   }
 }
+
+.ui.compact.segment.custom {
+  display: inline-block!important;
+  margin-right: 8px;
+  /* text-align: right; */
+}
+.rolesLables {margin-bottom:3px!important}
+

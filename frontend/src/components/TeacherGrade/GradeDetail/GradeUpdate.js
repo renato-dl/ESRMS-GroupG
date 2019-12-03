@@ -11,7 +11,7 @@ export class GradeUpdate extends Component {
     gradeId: null,
     name: null,
     surname: null,
-    value: '0',
+    value: 2,
     date: null,
     studentId: null,
     class: '',
@@ -117,12 +117,18 @@ export class GradeUpdate extends Component {
               <Form.Input fluid placeholder={ moment(this.state.date).format('LL')} readOnly />           
             </Form.Field>              
           </Form.Group>
-              <Form.Field inline>
+              <Form.Field className="student-grade">
                 <label>{ this.state.name } { this.state.surname }</label>
-                <NumberInput className="numberInput" valueType="decimal" 
-                minValue={2} maxValue={10} 
-                stepAmount={0.25} allowEmptyValue value={this.state.value}
-                onChange={(e) => {this.changeValue(e)} }/>                   
+                <NumberInput 
+                  className="numberInput" 
+                  valueType="decimal" 
+                  minValue={2} 
+                  maxValue={10} 
+                  stepAmount={0.25} 
+                  allowEmptyValue 
+                  value={this.state.value}
+                  onChange={(e) => {this.changeValue(e)} }
+                />                   
               </Form.Field>           
         </Form>
       </Modal.Content>
