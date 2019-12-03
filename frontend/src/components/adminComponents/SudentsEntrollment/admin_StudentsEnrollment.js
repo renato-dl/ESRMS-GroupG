@@ -179,6 +179,7 @@ export class admin_StudentsEnrollment extends Component {
                         <AddNewStudent
                             ConfirmEnrollment={() => {
                                 //refresh enrolled students table
+                                this.fetchStudents();
                                 this.onAddModalClose();
                             }}/>
                     </Modal.Content>
