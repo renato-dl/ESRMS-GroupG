@@ -114,7 +114,7 @@ export class admin_StudentsEnrollment extends Component {
             <h3 />
 
             <div className='Student_admin'>
-            <Table  columns={12} textAlign='center' color="grey" collapsing>
+            <Table  compact textAlign='center' color="grey" collapsing>
               <Table.Header >
                    <Table.Row >
                         <Table.HeaderCell colSpan="4" className="studentHeader" > Student</Table.HeaderCell>
@@ -154,9 +154,7 @@ export class admin_StudentsEnrollment extends Component {
                  {this.renderParent_LastName(student,2)}
                  {this.renderParent_eMail(student,2)}
                  <Table.Cell textAlign="center" className="edit-cell" width={1}>
-                 {!student.secondParent && 
-                 <Icon name="user plus icon" className="enrlStudEditIcon" onClick={() =>this.addParent(student.studentInfo)}> {/* Add */} </Icon>
-                 }    
+                     
                  {student.secondParent &&
                  <Icon name="edit"className="enrlStudEditIcon" onClick={() =>this.editParent(student.secondParent)}> {/* Edit */} </Icon>
                  }
@@ -179,6 +177,7 @@ export class admin_StudentsEnrollment extends Component {
                         <AddNewStudent
                             ConfirmEnrollment={() => {
                                 //refresh enrolled students table
+                                this.fetchStudents();
                                 this.onAddModalClose();
                             }}/>
                     </Modal.Content>

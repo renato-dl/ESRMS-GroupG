@@ -72,7 +72,7 @@ class InternalAccountDetails extends React.Component {
     const {params} = this.props.match;
     try {
       const userData = {
-        SSN:this.state.ssn,
+        SSN:this.state.ssn.trim(),
         firstName: this.state.firstName,
         lastName: this.state.lastName,
         eMail: this.state.email,
@@ -83,7 +83,7 @@ class InternalAccountDetails extends React.Component {
       };
       const userDataForEdit = {
         Id: this.state.userID,
-        SSN: this.state.ssn,
+        SSN: this.state.ssn.trim(),
         FirstName: this.state.firstName,
         LastName: this.state.lastName,
         eMail: this.state.email,
@@ -127,7 +127,7 @@ class InternalAccountDetails extends React.Component {
     let errors = this.state.errors;
 
     errors['email'] = !validator.isEmail(this.state.email);
-    errors['ssn'] = !SSNRegexp.test(this.state.ssn);
+    errors['ssn'] = !SSNRegexp.test(this.state.ssn.trim());
 
     const hasErrors = !!Object.keys(errors).filter((e) => errors[e]).length;
     return [hasErrors, errors];

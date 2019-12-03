@@ -40,7 +40,7 @@ export class InternalAccountDelete extends Component {
 
       const response=await api.sysadmin.deleteUser(request)
       if (response) {
-        this.fetchUsers();
+        //this.fetchUsers();
       } 
       toastr.success(`Account user deleted successfully.`);           
     } catch (e) {
