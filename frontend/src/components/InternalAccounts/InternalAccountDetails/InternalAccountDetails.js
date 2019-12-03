@@ -1,10 +1,6 @@
 import React from 'react'
-
-import PropTypes from 'prop-types';
 import './InternalAccountDetails.scss';
-
-import {Button, Modal, Form, Icon, Label, Checkbox, Segment} from 'semantic-ui-react'
-import "./InternalAccountDetails.scss";
+import {Button, Modal, Form, Icon, Checkbox, Segment} from 'semantic-ui-react'
 import {api} from '../../../services/api';
 import { withRouter } from "react-router";
 import validator from 'validator';
@@ -13,9 +9,8 @@ import * as toastr from 'toastr';
  
 
 class InternalAccountDetails extends React.Component {
-  constructor(props) {
-    super(props);
-  this.state = {
+  state = {
+    userID: null,
     firstName:'',
     lastName:'',
     ssn:'',
@@ -29,7 +24,23 @@ class InternalAccountDetails extends React.Component {
     errors: {},
 
   };
-}
+
+  componentDidMount() {
+    const {user} = this.props;
+
+    if (user) {
+      this.setState({
+        userID: user.ID,
+        firstName: user.FirstName,
+        lastName: user.LastName,
+        ssn: user.SSN,
+        email: user.eMail,
+        IsTeacher: user.IsTeacher,
+        IsAdminOfficer: user.IsAdminOfficer,
+        IsPrincipal: user.IsPrincipal
+      });
+    }
+  }
 
   handleCheckboxClick = (e, {name, checked}) => {
     this.setState({[name]: checked});
@@ -45,13 +56,15 @@ class InternalAccountDetails extends React.Component {
     }
 
     const [hasErrors, errors] = this.validateFields();
-    console.log(hasErrors, errors);
+    
+    //console.log(hasErrors, errors);
     if (hasErrors) {
       this.setState({errors});
       return;
     }
 
     this.setState({isSaving: true});
+    const {params} = this.props.match;
     try {
       const userData = {
         SSN:this.state.ssn,
@@ -60,15 +73,34 @@ class InternalAccountDetails extends React.Component {
         eMail: this.state.email,
         isTeacher: this.state.IsTeacher,
         isAdminOfficer: this.state.IsAdminOfficer,
-        isPrincipal: this.state.IsPrincipal,
+        isPrincipal: this.state.IsPrincipal
+
+      };
+      const userDataForEdit = {
+        Id: this.state.userID,
+        SSN: this.state.ssn,
+        FirstName: this.state.firstName,
+        LastName: this.state.lastName,
+        eMail: this.state.email,
+        isTeacher: this.state.IsTeacher,
+        isAdminOfficer: this.state.IsAdminOfficer,
+        isPrincipal: this.state.IsPrincipal
 
       };
 
-      console.log(userData);
-
-      await api.sysadmin.createUser(userData);
-
-      toastr.success(`User created successfully.`);
+      if(!this.state.userID){
+        await api.sysadmin.createUser(userData);
+        toastr.success(`User created successfully.`);
+      }
+      else{
+        const reqResult = await api.sysadmin.updateUser(userDataForEdit);
+        //if(reqResult.data.Success){
+          toastr.success('User updated successfully.');
+        /*} 
+        else{
+          toastr.error(reqResult.data.Message);
+        }  */
+      }
     } catch (e) {
       this.setState({isSaving: false});
       return toastr.error(e);
@@ -96,51 +128,18 @@ class InternalAccountDetails extends React.Component {
     return [hasErrors, errors];
   };
 
-  handleChangeChk(e){
-    console.log(e);
 
-  }
-
-  toggleChangeAdmin = () => {
-    this.setState({
-      IsAdminOfficer: (!this.state.IsAdminOfficer ? 1 : 0 )
-    });
-    if (this.state.IsTeacher == 1) this.setState({IsTeacher:0})
-    if (this.state.IsPrincipal == 1) this.setState({IsPrincipal:0})
-  }
-  
-  toggleChangePrincipal = () => {
-    this.setState({
-      IsPrincipal: (!this.state.IsPrincipal ? 1 : 0)
-    });
-    if (this.state.IsAdminOfficer == 1) this.setState({IsAdminOfficer:0})
-  }
-  
-  toggleChangeTeacher = () => {
-    this.setState({
-      IsTeacher: (!this.state.IsTeacher ? 1 : 0)
-    });
-    if (this.state.IsAdminOfficer == 1) this.setState({IsAdminOfficer:0})
-  }
 
   render(){
     return(
       <Modal dimmer open className="topic-detail" size="small">
         <Modal.Header>
-          <span>Add New User</span>
+          {/* <span>Add New User</span> */}
+          <span>{this.state.userID ? 'Edit User Data' : 'Add New User'}</span>
           <Icon onClick={this.onClose} className="close-icn" name="close" />
         </Modal.Header>
         <Modal.Content>
-
-
-
-
-          
-
           <Form loading={this.state.isSaving} className="account-detail">
-
-
-            {/* </Form.Group> */}
             <Form.Group widths='equal'>
               <Form.Input
                 name='firstName'
@@ -185,6 +184,7 @@ class InternalAccountDetails extends React.Component {
               <Checkbox label={<label>Principal</label>} 
                 id="IsPrincipal"
                 name="IsPrincipal"
+                checked={this.state.IsPrincipal}
                 defaultChecked={this.state.IsPrincipal}
                 onClick={this.handleCheckboxClick}
               />
@@ -193,6 +193,7 @@ class InternalAccountDetails extends React.Component {
               <Checkbox label={<label>Teacher</label>} 
                 id="IsTeacher"
                 name="IsTeacher"
+                checked={this.state.IsTeacher}
                 defaultChecked={this.state.IsTeacher}
                 onClick={this.handleCheckboxClick}
               />
@@ -201,6 +202,7 @@ class InternalAccountDetails extends React.Component {
               <Checkbox label={<label>Secretary Officer</label>} 
                 id="IsAdminOfficer"
                 name="IsAdminOfficer"
+                checked={this.state.IsAdminOfficer}
                 defaultChecked={this.state.IsAdminOfficer}
                 onClick={this.handleCheckboxClick}
               />

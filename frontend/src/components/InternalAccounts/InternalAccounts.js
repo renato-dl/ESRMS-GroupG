@@ -10,6 +10,7 @@ import './InternalAccountDetails/InternalAccountDetails.scss'
 import { NoData } from '../NoData/NoData';
 import InternalAccountDetails from './InternalAccountDetails/InternalAccountDetails';
 import InternalAccountDelete from './InternalAccountDetails/InternalAccountDelete';
+import { Topic } from '../Topic/Topic';
 
 
 
@@ -20,6 +21,8 @@ export class InternalAccounts extends Component {
         this.state = {
           authUsers: [],
           isInternalAccountDetailsOpen: false,
+          editingUser: null,
+          selectedUser: null, 
           deleteUserOpen: false, 
           selectedUser: null
         }
@@ -30,7 +33,7 @@ export class InternalAccounts extends Component {
         const response = await api.sysadmin.getAddUsers();
         if (response) {
             console.log(response);
-          this.setState({ authUsers: response.data });
+          this.setState({ authUsers: response.data, editingUser: null});
         }
     };
 
@@ -42,19 +45,15 @@ export class InternalAccounts extends Component {
         this.setState({isInternalAccountDetailsOpen: true});
     };
 
+    editUser = (user) => {
+      this.setState({editingUser: user, isInternalAccountDetailsOpen: true});
+    };
+
     onInternalAccountDetailsClose = () => {
         this.setState({isInternalAccountDetailsOpen: false});
     };
 
-    // async deleteUser (user) {
-    //     const response=await api.sysadmin.deleteUser(user)
-    //     if (response) {
-    //      this.fetchUsers();
-    //     } 
-       
-    // };
-
-    // open modal for deleting grade
+    // open modal for deleting user
     deleteUser= (user) =>{
       this.setState({deleteUserOpen: true, selectedUser: user});
     }
@@ -119,6 +118,7 @@ export class InternalAccounts extends Component {
     
             {this.state.isInternalAccountDetailsOpen &&
                <InternalAccountDetails
+                user={this.state.editingUser}
                 onClose={this.onInternalAccountDetailsClose}
                 onSave={() => {
                   this.fetchUsers();
@@ -146,13 +146,14 @@ export class InternalAccounts extends Component {
               Internal Accounts Configuration
             </h3>
     
-            <button className="ui vk button" >
+            <button className="ui vk button" onClick={this.addUser}>
               <i className="user plus icon"></i>
                Add User
             </button>
           <NoData/>
           {this.state.isInternalAccountDetailsOpen &&
             <InternalAccountDetails
+                user={this.state.editingUser}
                 onClose={this.onInternalAccountDetailsClose}
                 onSave={() => {
                   this.fetchUsers();
