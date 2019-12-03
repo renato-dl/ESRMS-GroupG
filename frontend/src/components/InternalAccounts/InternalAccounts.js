@@ -102,6 +102,8 @@ export class InternalAccounts extends Component {
                   { user.IsTeacher ? <Label as='a' horizontal color="teal">Teacher</Label> : ""}
                   { user.IsAdminOfficer ? <Label as='a' horizontal color="orange">Secretary Officer</Label> : ""} 
                   { user.IsPrincipal ? <Label as='a' horizontal color="red">Principal</Label> : ""}  
+                  { user.IsSysAdmin ? <Label as='a' horizontal color="black">System Admin</Label> : ""}
+                  { user.IsParent ? <Label as='a' horizontal color="blue">Parent</Label> : ""}  
                 </Table.Cell>
 
                     <Table.Cell textAlign="left" width={2}>{ moment(user.CreatedOn).format('LL') }</Table.Cell>

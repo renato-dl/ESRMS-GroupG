@@ -79,7 +79,7 @@ export class AddNewStudent extends Component {
         let cnfrmDat = {};
         //STUDENT
         cnfrmDat.studentInfo = {
-            SSN: this.state.stud_SSN,
+            SSN: this.state.stud_SSN.trim(),
             FirstName: this.state.stud_FirstName,
             LastName: this.state.stud_LastName,
             Gender: this.state.stud_Gender,
@@ -88,7 +88,7 @@ export class AddNewStudent extends Component {
         //FIRST PARENT
         if (this.isEmptyStr(this.state.p1_ID)){
             cnfrmDat.firstParent = {
-                SSN: this.state.p1_SSN,
+                SSN: this.state.p1_SSN.trim(),
                 FirstName: this.state.p1_FirstName,
                 LastName: this.state.p1_LastName,
                 Email: this.state.p1_Email
@@ -98,7 +98,7 @@ export class AddNewStudent extends Component {
         if(this.state.activeIndex === 1){
             if (this.isEmptyStr(this.state.p2_ID)){
                 cnfrmDat.secondParent = {
-                    SSN: this.state.p2_SSN,
+                    SSN: this.state.p2_SSN.trim(),
                     FirstName: this.state.p2_FirstName,
                     LastName: this.state.p2_LastName,
                     Email: this.state.p2_Email
