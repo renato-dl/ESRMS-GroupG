@@ -89,9 +89,9 @@ export class Topic extends React.Component{
                   <Table.Cell textAlign="left">{ topic.TopicDescription }</Table.Cell>
                   <Table.Cell textAlign="left" width={2}>{ moment(topic.TopicDate).format('LL') }</Table.Cell>
                   <Table.Cell textAlign="left" className="edit-cell" width={1}>
-                    <Icon name="edit" onClick={() =>this.editTopic(topic)}/> Edit
+                    <span onClick={() =>this.editTopic(topic)}><Icon name="edit" /> Edit</span>
                     <br/>
-                    <Icon name="delete" onClick={()=>this.deleteTopic(topic)}/> Delete
+                    <span onClick={()=>this.deleteTopic(topic)}><Icon name="delete" /> Delete</span>
                   </Table.Cell>
                 </Table.Row>
               )}
