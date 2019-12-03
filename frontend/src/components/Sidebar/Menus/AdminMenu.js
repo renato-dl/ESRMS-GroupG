@@ -8,7 +8,7 @@ export const AdminMenu = (props) => (
       <span>
         <br/>
         <Icon name='address book outline' size="big" />
-        ADMIN Officer 
+        Secretary Officer 
         <br/><br/>
       </span>
     </Menu.Item>
