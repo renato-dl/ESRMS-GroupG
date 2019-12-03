@@ -27,31 +27,16 @@ export class Topic extends React.Component{
     
     async componentDidMount() {
       await this.fetchTopics();
-      await this.fetchSubject();
     }
 
     fetchTopics =  async () => {
       const {params} = this.props.match;
-      
-      //ATTENTION CLASS ID IS HARDCODED
-      const response = await api.teacher.getTeacherTopics( 1, params.subjectID);
+      this.setState({subject: params.subjectName});
+      const response = await api.teacher.getTeacherTopics(params.classID, params.subjectID);
       if (response) {
         this.setState({ topics: response.data, editingTopic: null })
       } 
     }; 
-
-    fetchSubject = async () => {
-      const {params} = this.props.match;
-
-      const response = await api.teacher.getTeacherSubjects(params.teacherID);
-      if (response) {
-        response.data.forEach((subject) => {
-          if (subject.subjectId === params.subjectID) {
-            this.setState({subject});
-          }
-        });
-      }
-    };
 
     addTopic = () => {
       this.setState({isTopicDetailsOpen: true});
@@ -73,15 +58,6 @@ export class Topic extends React.Component{
       this.setState({deleteTopicOpen: false, selectedTopic: null});
     }
 
-    // async deleteTopic (topic) {
-    //  const response=await api.teacher.deleteTopic(topic)
-    //  if (response) {
-    //   this.fetchTopics();
-    //  } 
-    
-    // };
-
-
     render(){
       if (this.state.topics.length){
 
@@ -89,7 +65,7 @@ export class Topic extends React.Component{
         <Container className="Topic-container contentContainer">
           <h3 className="contentHeader">
             <Icon name='braille'/>
-            {this.state.subject ? this.state.subject.subject : ''} topics
+            {this.state.subject} topics
           </h3>
           <Button className="ui vk button" onClick={this.addTopic}>
             <Icon name="plus" />
@@ -150,7 +126,7 @@ export class Topic extends React.Component{
         <Container className="Topic-container contentContainer">
           <h3 className="contentHeader">
             <Icon name='braille'/>
-            {this.state.subject ? this.state.subject.subject : ''} topics
+            {this.state.subject} topics
           </h3>
           <Button className="ui vk button" onClick={this.addTopic}>
             <Icon name="plus" />

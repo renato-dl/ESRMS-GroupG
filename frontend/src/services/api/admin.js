@@ -46,8 +46,12 @@ export class AdminAPIService extends BaseAPIService {
 
   sendStudentsToEnrollToClass(classId, students){
     return this.post(`admin/classes/${classId}/assign-students`, students);
-
   }
+
+  removeStudentClassAssignment(studentId){
+    return this.delete(`/admin/students/${studentId}/removeClassAssignment`);
+  }
+
   updateParent(data)
   {
     return this.patch('admin/parent',data)
