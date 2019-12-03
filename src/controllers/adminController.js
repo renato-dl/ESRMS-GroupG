@@ -333,6 +333,18 @@ class AdminController extends BaseController {
     );
     res.send({success: result})
   }
+
+  async removeStudent(req, res) {
+    try {
+      await Student.remove(req.body.ID);
+      res.send({success: true});
+    } catch(error) {
+      res.send({
+        success: result,
+        msg: 'Only students not assigned to classes and without grades can be removed'
+      });
+    }
+  }
 }
 
 export default new AdminController();
