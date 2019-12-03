@@ -7,12 +7,11 @@
     height: 100%;
 }
 .app > .ui.segment.pushable.mySidebar{
-    //height: calc(100% - 73px);
     margin:0!important;
     border: 0!important;
     border-radius: 0;
-    //background-color:#f1f1f1 ;
     background-color: #F3F2F0;
+    height: auto;
 
     div.sidebar{background:  #273037;
         border-top:3px solid #DBCA47;
