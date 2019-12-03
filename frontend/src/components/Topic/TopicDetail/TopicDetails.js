@@ -115,18 +115,6 @@ class TopicDetails extends React.Component {
               onChange={this.handleInputChange}
             />
             <Form.Group widths='equal'>
-              <Form.Select
-                name="class"
-                label="Class"
-                options={[
-                  { key: '1', text: 'Class 1', value: '1' },
-                  { key: '2', text: 'Class 2', value: '2' },
-                  { key: '3', text: 'Class 3', value: '3' },
-                ]}
-                placeholder="Class"
-                value={this.state.class}
-                onChange={this.handleInputChange}
-              />
               <Form.Field>
                 <LabelDetail>Topic date</LabelDetail>
                 <DatePicker

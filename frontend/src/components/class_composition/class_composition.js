@@ -3,6 +3,7 @@ import { api } from '../../services/api';
 import {Table, Icon, Container, Button} from 'semantic-ui-react';
 import ClassCompositionDetail from './ClassCompositionDetail/ClassCompositionDetail';
 import { NoData } from '../NoData/NoData';
+import './ClassComposition.scss';
 
 export class Class_composition extends React.Component{
   constructor(props) {
@@ -33,7 +34,7 @@ export class Class_composition extends React.Component{
   render(){
     if(this.state.Class_composition.length){
    return ( 
-   <Container className="contentContainer">
+   <Container className="class-composition contentContainer">
    <h3 className="contentHeader"> 
      <Icon name='braille'/> 
      Class Composition
