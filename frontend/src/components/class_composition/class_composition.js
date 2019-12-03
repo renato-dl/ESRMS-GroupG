@@ -42,10 +42,10 @@ export class Class_composition extends React.Component{
    <Table columns={4}>
    <Table.Header>
        <Table.Row>
-           <Table.HeaderCell>Class_Name</Table.HeaderCell>
+           <Table.HeaderCell>Class Name</Table.HeaderCell>
            <Table.HeaderCell>CreationYear</Table.HeaderCell>
            <Table.HeaderCell>CoordinatorName</Table.HeaderCell>
-           <Table.HeaderCell>View_in_Details</Table.HeaderCell>           
+           <Table.HeaderCell>Details</Table.HeaderCell>           
        </Table.Row>
    </Table.Header>
      <Table.Body>
@@ -55,12 +55,13 @@ export class Class_composition extends React.Component{
            <Table.Cell>{data.CreationYear}</Table.Cell>
            <Table.Cell>{data.CoordinatorName}</Table.Cell>
            <Table.Cell>
-             <Button color='blue' type='button'>Details</Button>
              <Button color='blue' type='button' onClick={() =>{
              this.setState({classId: data.ID});
              this.setState({className: data.Name});
              this.setState({isStudentsOpen: true});
-            }}>Add Students</Button>
+            }}>Students 
+            <Icon className="cog icon" name="cog"/>            
+            </Button>
              </Table.Cell>
        </Table.Row>
      )} 
