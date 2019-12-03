@@ -4,9 +4,8 @@ export const ApplicationStoreContext = React.createContext();
 
 const initialState = {
   isUserAuthenticated: false,
-  user: null, // this will be the correct user
   parent: {
-    ID: '9d64fa59c91d9109b11cd9e05162c675',
+    ID: null,
     children: [],
     selectedStudent: []
   }
@@ -30,8 +29,8 @@ export class ApplicationStore extends React.Component {
     });
   };
 
-  async componentDidMount() {
-
+  setAuthentication = (authenticated) => {
+    this.setState({ isUserAuthenticated: authenticated });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -43,7 +42,8 @@ export class ApplicationStore extends React.Component {
     return (
       <ApplicationStoreContext.Provider value={{
         state: this.state,
-        setSelectedStudent: this.setSelectedStudent
+        setSelectedStudent: this.setSelectedStudent,
+        setAuthentication: this.setAuthentication
       }}>
         {this.props.children}
       </ApplicationStoreContext.Provider>

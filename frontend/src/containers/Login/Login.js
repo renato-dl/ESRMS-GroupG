@@ -3,10 +3,9 @@ import './Login.scss';
 import { api } from '../../services/api';
 import { Button, Form, Grid, Header, Icon, Image, Segment, Container } from 'semantic-ui-react'
 import validator from 'validator';
-
-
 import logoImage from '../../assets/images/logo.png';
 import { UserRoleCard } from '../../components/UserRoleCard/UserRoleCard';
+import {ApplicationStoreContext} from '../../store';
 
 
 export class Login extends React.Component {
