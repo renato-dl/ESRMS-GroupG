@@ -50,6 +50,13 @@ class Class extends Model {
     const results = await connection.query(query);
     connection.release();
 
+    await Promise.all(results.map(async element =>{
+      const name = await this.getClassNameById(element.ID);
+      let newElement = element;
+      newElement.Name = name;
+      return newElement;
+    }));
+
     return results || [];
   }
   
