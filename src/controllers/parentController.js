@@ -13,9 +13,9 @@ class ParentController extends BaseController {
   async gradesByStudentId(req, res) {
     if (!await Student.checkIfRelated(req.query.studentId, req.user.ID)) {
       res.send(401);
-      return;
+      return; 
     }
-    const grades = await Grade.findByStudentId(studentId, {page: req.query.page, pageSize: req.query.pageSize});
+    const grades = await Grade.findByStudentId(req.query.studentId, {page: req.query.page, pageSize: req.query.pageSize});
     res.send(grades);
   }
 
