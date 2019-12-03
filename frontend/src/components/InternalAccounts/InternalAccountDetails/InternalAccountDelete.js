@@ -2,9 +2,6 @@ import React, { Component } from 'react'
 import {Button, Modal, Header, Icon} from 'semantic-ui-react'
 import "./InternalAccountDetails.scss";
 import {api} from '../../../services/api';
-import { withRouter } from "react-router";
-import validator from 'validator';
-import {SSNRegexp} from '../../../utils';
 import * as toastr from 'toastr';
 
 export class InternalAccountDelete extends Component {

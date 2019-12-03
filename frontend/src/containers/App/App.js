@@ -63,7 +63,7 @@ export class App extends React.Component {
               
               <PrivateRoute exact path="/teacher" component={Teacher}/>
               <PrivateRoute exact path="/teacher/subjects" component={Teacher}/>
-              <PrivateRoute exact path="/teacher/subjects/:subjectID/:subjectName/topics" component={Topic}/>
+              <PrivateRoute exact path="/teacher/subjects/:classID/:subjectID/:subjectName/topics" component={Topic}/>
               <PrivateRoute exact path="/teacher/subjects/:classID/:subjectID/:subjectName/TeacherGrade" component={TeacherGrade}/>
 
               <PrivateRoute exact path="/admin" component={Admin}/>

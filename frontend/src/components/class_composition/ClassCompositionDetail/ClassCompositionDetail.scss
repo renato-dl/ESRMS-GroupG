@@ -15,4 +15,15 @@
       float: right;
     }
   }
+
+  .removed-student{
+    text-decoration: line-through;
+  }
+  .not-removed-student{
+    text-decoration: none;
+  }
+
+  .close-icn{
+    cursor: pointer;
+  }
 }
