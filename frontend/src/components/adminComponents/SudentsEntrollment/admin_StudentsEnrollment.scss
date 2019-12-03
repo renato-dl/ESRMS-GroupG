@@ -6,13 +6,19 @@
     //padding: 5px 0 5px 0;
     overflow-x: scroll;
 }
-.enrlStudEditIcon{
+.enrlStudEditIcon, .enrlStudDeleteIcon {
     color: #4d7198;
 }
 .enrlStudEditIcon:hover{
-    cursor:pointer;
-    font-size:16px;
+    cursor: pointer;
+    color: green;
 }
+
+.enrlStudDeleteIcon:hover{
+    cursor: pointer;
+    color: red;
+}
+
 .studentHeader{
     background-color:#ddd9da!important;
     font-size: 18px;

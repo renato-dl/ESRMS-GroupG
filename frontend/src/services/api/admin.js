@@ -56,4 +56,8 @@ export class AdminAPIService extends BaseAPIService {
   {
     return this.patch('admin/parent',data)
   }
+
+  removeStudent(studentID) {
+    return this.delete('/admin/student', {ID: studentID});
+  }
 }
