@@ -27,7 +27,7 @@ class InternalAccountDetails extends React.Component {
 
   componentDidMount() {
     const {user} = this.props;
-
+    
     if (user) {
       this.setState({
         userID: user.ID,
@@ -43,6 +43,11 @@ class InternalAccountDetails extends React.Component {
   }
 
   handleCheckboxClick = (e, {name, checked}) => {
+    if(name === 'IsAdminOfficer' && checked){
+      this.setState({IsTeacher:false, IsPrincipal:false})
+    }else if ((name === 'IsTeacher' || name === 'IsPrincipal') || checked){
+      this.setState({IsAdminOfficer:false})
+    }
     this.setState({[name]: checked});
   }
 
@@ -134,8 +139,7 @@ class InternalAccountDetails extends React.Component {
     return(
       <Modal dimmer open className="topic-detail" size="small">
         <Modal.Header>
-          {/* <span>Add New User</span> */}
-          <span>{this.state.userID ? 'Edit User Data' : 'Add New User'}</span>
+{this.state.userID ? <span><Icon name='edit'/> Edit User Data</span> : <span><Icon name="user plus icon"/> Add New User</span>  }   
           <Icon onClick={this.onClose} className="close-icn" name="close" />
         </Modal.Header>
         <Modal.Content>

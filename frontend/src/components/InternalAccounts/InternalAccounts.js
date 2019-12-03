@@ -42,7 +42,7 @@ export class InternalAccounts extends Component {
     }
     
     addUser = () => {
-        this.setState({isInternalAccountDetailsOpen: true});
+        this.setState({editingUser:null, isInternalAccountDetailsOpen: true});
     };
 
     editUser = (user) => {
