@@ -14,4 +14,8 @@ export class ParentAPIService extends BaseAPIService {
     return this.get(`/parent/grades?studentId=${studentID}`);
   }
 
+  getChildAssignments(studentID, from, to) {
+    return this.get(`/parent/assignments?studentId=${studentID}&from=${from}&to=${to}`);
+  }
+
 }

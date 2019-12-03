@@ -193,7 +193,7 @@ export class admin_StudentsEnrollment extends Component {
               onSave={() => {
                 this.fetchStudents();
                 this.onStudentDetailClose();
-              }}
+              }} 
             />
           }
            {this.state.editingParent &&
