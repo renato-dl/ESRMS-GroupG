@@ -60,7 +60,7 @@ export class Assignments extends React.Component{
       <Container className="contentContainer">
         <h3 className="contentHeader"> 
           <Icon name='braille'/> 
-          {this.state.studentName ? this.state.studentName + "'s" : 'Student'} grades
+          {this.state.studentName ? this.state.studentName + "'s" : 'Student'} assignments
         </h3>
 
         <div className="calendarContainer">
