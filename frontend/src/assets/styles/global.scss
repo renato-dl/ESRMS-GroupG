@@ -88,3 +88,12 @@
     margin:20px!important;
     background: #f7f7f7!important;
 }
+
+//Container width chnge because of big table
+@media only screen and (min-width: 1200px){
+    .ui.container {
+        width: 1170px;
+        margin-left: auto!important;
+        margin-right: auto!important;
+    }
+}
