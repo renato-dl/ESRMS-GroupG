@@ -85,8 +85,6 @@ export class ClassCompositionDetail extends Component {
       styleStudents.set(e, 'not-removed-student');
     }
     
-    debugger;
-
     this.setState({
       toRemoveStudents: removedStudents, 
       enrolledStudentsCnt: count, 
