@@ -1,0 +1,13 @@
+/__tests__
+.github
+.vscode
+node_modules
+Retrospectives
+UC&Personas
+.gitignore
+npm-debug.log
+Dockerfile
+.dockerignore
+/frontend
+.env
+/database
