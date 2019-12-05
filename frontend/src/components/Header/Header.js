@@ -22,6 +22,7 @@ export const Header = withRouter(({history, ...props}) => {
     const hasMultipleRoles = !!localStorage.getItem('roles');
     if (hasMultipleRoles) {
       options.unshift({ key: 'SwitchAccount', text: 'Switch Account', value: 1 });
+      options.unshift({ key: 'empty', text: '', value: 0 });
     }
 
     return options;

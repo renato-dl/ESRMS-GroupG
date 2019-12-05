@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
 import {Icon, Modal, Container, Button,Table} from 'semantic-ui-react';
 import {api} from '../../../services/api';
-//import moment from 'moment';
-
 import AddNewStudent from './AddNewStudent/AddNewStudent';
-//import student from '../../../../../src/database/models/student';
-import { NoData } from '../../NoData/NoData';
 import {StudentDetails} from './EditStudentParentData/StudentDetails/StudentDetails';
 import {ParentDetails} from './EditStudentParentData/ParentDetails/ParentDetails';
 import './admin_StudentsEnrollment.scss'
+import { DeleteStudentModal } from './DeleteStudent/DeleteStudent';
+import * as toastr from 'toastr';
 
 export class admin_StudentsEnrollment extends Component {
     constructor(props) {
@@ -23,7 +21,9 @@ export class admin_StudentsEnrollment extends Component {
             editingStudentParent:null,
             editingStudentParent2:null,
             editingParent:null,
-            open_parentEditModal:false
+            open_parentEditModal:false,
+            deleteStudentModalOpen: false,
+            deleteStudentData: null,
         }
       }
 
@@ -71,6 +71,7 @@ export class admin_StudentsEnrollment extends Component {
             return <Table.Cell>{ student.firstParent.eMail }  </Table.Cell>
         else return <Table.Cell>  </Table.Cell>
     };
+    
     editStudent=(data)=>{
         this.setState({
             editingStudent: data.studentInfo, 
@@ -79,6 +80,11 @@ export class admin_StudentsEnrollment extends Component {
             editingStudentParent2:data.secondParent,
         });
     }
+    
+    deleteStudent = (data) => {
+        this.setState({ deleteStudentData: data.studentInfo, deleteStudentModalOpen: true })
+    }
+
     onStudentDetailClose = () => {
         this.setState({editingStudent: null, open_EditModal: false});
     }
@@ -86,6 +92,7 @@ export class admin_StudentsEnrollment extends Component {
     editParent=(data)=>{
         this.setState({editingParent: data, open_parentEditModal: true});
     }
+
     addParent=()=>{
         console.log('add parent')
     }
@@ -93,6 +100,24 @@ export class admin_StudentsEnrollment extends Component {
     onParentDetailClose = () => {
         this.setState({editingParent: null, open_parentEditModal: false});
     }
+
+    onDeleteStudentModalClose = () => {
+        this.setState({ deleteStudentModalOpen: false });
+    }
+
+    onDeleteStudent = async () => {
+        console.log(this.state.deleteStudentData);
+        const response = await api.admin.removeStudent(this.state.deleteStudentData.ID);
+        console.log(response);
+        this.onDeleteStudentModalClose();
+
+        if (response.data.success) {
+            await this.fetchStudents();
+            toastr.success('Student removed successfully!');
+        } else {
+            toastr.error(response.data.msg);
+        }
+    };
 
     render() {
         return (
@@ -142,7 +167,10 @@ export class admin_StudentsEnrollment extends Component {
                  <Table.Cell>{ student.studentInfo.LastName }</Table.Cell>
                  <Table.Cell>{ student.studentInfo.ClassId }</Table.Cell>
                  <Table.Cell textAlign="center" className="edit-cell right-border" width={1}>
-                    <Icon name="edit" className="enrlStudEditIcon" onClick={() =>this.editStudent(student)}/> {/* Edit */}
+                     <div style={{display: 'flex'}}>
+                        <Icon name="edit" className="enrlStudEditIcon" onClick={() =>this.editStudent(student)}/> {/* Edit */}
+                        <Icon name="delete" className="enrlStudDeleteIcon" onClick={() =>this.deleteStudent(student)}/> {/* Delete */}
+                     </div>
                   </Table.Cell>
                   {this.renderParent_FirstName(student,1)}
                   {this.renderParent_LastName(student,1)}
@@ -196,16 +224,24 @@ export class admin_StudentsEnrollment extends Component {
             />
           }
            {this.state.editingParent &&
-            <ParentDetails
-              parentInfo={this.state.editingParent}
-              onClose={this.onParentDetailClose}
-              onSave={() => {
-                this.fetchStudents();
-                this.onParentDetailClose();
-              }}
-            />
-          }
-            </Container>
+                <ParentDetails
+                parentInfo={this.state.editingParent}
+                onClose={this.onParentDetailClose}
+                onSave={() => {
+                    this.fetchStudents();
+                    this.onParentDetailClose();
+                }}
+                />
+            }
+
+            {this.state.deleteStudentModalOpen && 
+                <DeleteStudentModal 
+                    student={this.state.deleteStudentData}
+                    onClose={this.onDeleteStudentModalClose} 
+                    onDelete={this.onDeleteStudent} 
+                />
+            }
+        </Container>
         )
     }
 }

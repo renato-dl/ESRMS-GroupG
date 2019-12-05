@@ -8,7 +8,7 @@ exports.seed = function(knex) {
           SubjectId: 1,
           ClassId: 1,
           Title: 'Geometry problems',
-          Description: 'Probblems # 15 to 22 page 145',
+          Description: 'Problems # 15 to 22 page 145',
           DueDate: '2019-12-18 00:00:00'
         },
         {

@@ -2272,7 +2272,7 @@ describe('Tests about deletion of accounts', () =>{
 
     }catch(error){
 
-      expect(error).toHaveProperty('message', 'Cannot delete teacher associated to classes');
+      expect(error).toHaveProperty('message', 'Cannot delete teachers associated to classes');
 
       //delete insertions for future tests
       
@@ -2327,7 +2327,7 @@ describe('Tests about deletion of accounts', () =>{
 
     }catch(error){
 
-      expect(error).toHaveProperty('message', 'Cannot delete coordinator');
+      expect(error).toHaveProperty('message', 'Cannot delete class coordinators');
 
       //delete insertions for future tests
       
@@ -2355,7 +2355,7 @@ describe('Tests about classes', () => {
     // TODO: retest this after we have a method to create classes
     const classes = await ClassModel.getClasses();
     expect(classes).not.toBeNull();
-    expect(classes).toHaveLength(3);
+    expect(classes.length).toBeGreaterThanOrEqual(3);
     expect(classes).toEqual(
       expect.arrayContaining(
         [
@@ -2363,19 +2363,19 @@ describe('Tests about classes', () => {
             {
               "ID": 1,
               "CreationYear": 2019,
-              "Name": "A",
+              "Name": "1A",
               "Coordinator": "Giulia Tesori"
             },
             {
               "ID": 2,
               "CreationYear": 2019,
-              "Name": "B",
+              "Name": "1B",
               "Coordinator": "Paola De Paola"
             },
             {
               "ID": 3,
               "CreationYear": 2019,
-              "Name": "C",
+              "Name": "1C",
               "Coordinator": "Luca De Luca"
             }
           )

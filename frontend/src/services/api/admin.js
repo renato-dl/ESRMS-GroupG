@@ -31,29 +31,31 @@ export class AdminAPIService extends BaseAPIService {
   getStudents() {
     return this.get('/admin/students');
   }
-  updateStudent(data)
-  {
-    return this.patch('admin/student',data)
+  updateStudent(data) {
+    return this.patch('admin/student', data)
   }  
   
   saveStudent(data) {
-    return this.patch('admin/student',data);
+    return this.patch('admin/student', data);
   }
   
-  getEnrolledStudentsByClass(classId){
-      return this.get('/admin/students', classId);   
+  getEnrolledStudentsByClass(data) {
+    return this.get('/admin/students', data);   
   }
 
   sendStudentsToEnrollToClass(classId, students){
     return this.post(`admin/classes/${classId}/assign-students`, students);
   }
 
-  removeStudentClassAssignment(studentId){
+  removeStudentClassAssignment(studentId) {
     return this.delete(`/admin/students/${studentId}/removeClassAssignment`);
   }
 
-  updateParent(data)
-  {
+  updateParent(data) {
     return this.patch('admin/parent',data)
+  }
+
+  removeStudent(studentID) {
+    return this.delete('/admin/student', {ID: studentID});
   }
 }
