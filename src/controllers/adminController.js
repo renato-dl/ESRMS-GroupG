@@ -335,8 +335,13 @@ class AdminController extends BaseController {
   }
 
   async removeStudent(req, res) {
+    const student = await Student.findById(req.body.ID);
     try {
       await Student.remove(req.body.ID);
+      await User.checkIfStillParent(student.Parent1);
+      if (student.Parent2) {
+        await User.checkIfStillParent(student.Parent2);
+      }      
       res.send({success: true});
     } catch(error) {
       res.send({
@@ -345,6 +350,11 @@ class AdminController extends BaseController {
       });
     }
   }
+
+  async createClass(req, res) {
+    
+  }
+  
 }
 
 export default new AdminController();

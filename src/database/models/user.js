@@ -45,7 +45,7 @@ class User extends Model {
       throw new Error('Invalid userId');
     }
     if (user.IsParent != 1) {
-      this.update(userId, {IsParent: true});
+      await this.update(userId, {IsParent: true});
     }
   }
 
@@ -276,26 +276,23 @@ class User extends Model {
     );
 
     if(!checkAccount.length){
+      connection.release();
       throw new Error ('Account does not exist');      
     }
 
     console.log(checkAccount);
 
     if(checkAccount[0].isSA){
+      connection.release();
       throw new Error ('Cannot delete SysAdmin');      
     }
 
     if(checkAccount[0].isP){
-      const hasChildren = await connection.query(
-        `SELECT *
-        FROM Students 
-        WHERE Parent1 = ? OR Parent2 = ?`,
-        [accountId, accountId]
-      );
-
-      if(hasChildren.length){
+      const hasChildren = await this.hasChildren(accountId);
+      if (hasChildren) {
+        connection.release();
         throw new Error ('Cannot delete user with associated students');
-      }
+      }      
     }
 
     if(checkAccount[0].isT){
@@ -308,6 +305,7 @@ class User extends Model {
       );
 
       if(hasClass.length){
+        connection.release();
         throw new Error ('Cannot delete teacher associated to classes');
       }
 
@@ -319,6 +317,7 @@ class User extends Model {
       );
 
       if(isCoordinator.length){
+        connection.release();
         throw new Error ('Cannot delete coordinator');
       }
     }
@@ -352,7 +351,30 @@ class User extends Model {
     });
 
     return true;
-  }  
+  } 
+  
+  async hasChildren(userId) {
+    const connection = await this.db.getConnection();
+    const hasChildren = await connection.query(
+      `SELECT *
+      FROM Students 
+      WHERE Parent1 = ? OR Parent2 = ?`,
+      [userId, userId]
+    );
+    connection.release();
+
+    if(hasChildren.length){
+      return true;
+    }
+    return false
+  }
+
+  async checkIfStillParent(userId) {
+    const hasChildren = await this.hasChildren(userId);
+    if (!hasChildren) {
+      await this.update(userId, {IsParent: 0});
+    }
+  }
 }
 
 export default new User();
