@@ -2363,19 +2363,19 @@ describe('Tests about classes', () => {
             {
               "ID": 1,
               "CreationYear": 2019,
-              "Name": "A",
+              "Name": "1A",
               "Coordinator": "Giulia Tesori"
             },
             {
               "ID": 2,
               "CreationYear": 2019,
-              "Name": "B",
+              "Name": "1B",
               "Coordinator": "Paola De Paola"
             },
             {
               "ID": 3,
               "CreationYear": 2019,
-              "Name": "C",
+              "Name": "1C",
               "Coordinator": "Luca De Luca"
             }
           )
