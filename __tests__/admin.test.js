@@ -2272,7 +2272,7 @@ describe('Tests about deletion of accounts', () =>{
 
     }catch(error){
 
-      expect(error).toHaveProperty('message', 'Cannot delete teacher associated to classes');
+      expect(error).toHaveProperty('message', 'Cannot delete teacher associated to classes or class coordinators');
 
       //delete insertions for future tests
       
@@ -2327,7 +2327,7 @@ describe('Tests about deletion of accounts', () =>{
 
     }catch(error){
 
-      expect(error).toHaveProperty('message', 'Cannot delete coordinator');
+      expect(error).toHaveProperty('message', 'Cannot delete teacher associated to classes or class coordinators');
 
       //delete insertions for future tests
       
