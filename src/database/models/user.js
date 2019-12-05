@@ -45,7 +45,7 @@ class User extends Model {
       throw new Error('Invalid userId');
     }
     if (user.IsParent != 1) {
-      this.update(userId, {IsParent: true});
+      await this.update(userId, {IsParent: true});
     }
   }
 
