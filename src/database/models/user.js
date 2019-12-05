@@ -280,8 +280,6 @@ class User extends Model {
       throw new Error ('Account does not exist');      
     }
 
-    console.log(checkAccount);
-
     if(checkAccount[0].isSA){
       connection.release();
       throw new Error ('Cannot delete SysAdmin');      
@@ -296,29 +294,10 @@ class User extends Model {
     }
 
     if(checkAccount[0].isT){
-      
-      const hasClass = await connection.query(
-        `SELECT *
-        FROM TeacherSubjectClassRelation 
-        WHERE TeacherId = ?`,
-        [accountId]
-      );
-
-      if(hasClass.length){
+      const hasClass = await this.hasClass(accountId);
+      if (hasClass) {
         connection.release();
-        throw new Error ('Cannot delete teacher associated to classes');
-      }
-
-      const isCoordinator = await connection.query(
-        `SELECT *
-        FROM Classes 
-        WHERE CoordinatorId = ?`,
-        [accountId]
-      );
-
-      if(isCoordinator.length){
-        connection.release();
-        throw new Error ('Cannot delete coordinator');
+        throw new Error ('Cannot delete teacher associated to classes or class coordinators');
       }
     }
 
@@ -338,6 +317,14 @@ class User extends Model {
 
     if (!user.IsTeacher && !user.IsPrincipal && !user.IsAdminOfficer) {
       throw new Error('User is not an internal user');
+    }
+
+    // TODO: test
+    if (user.IsTeacher == 1 && isTeacher == false) {
+      const hasClass = await this.hasClass(userId);
+      if (hasClass) {
+        throw new Error('User has associated classes, teacher role cannot be removed');
+      }
     }
     
     await this.update(userId, {
@@ -374,6 +361,35 @@ class User extends Model {
     if (!hasChildren) {
       await this.update(userId, {IsParent: 0});
     }
+  }
+
+  async hasClass(userId) {
+    const connection = await this.db.getConnection();
+    const hasClass = await connection.query(
+      `SELECT *
+      FROM TeacherSubjectClassRelation 
+      WHERE TeacherId = ?`,
+      [userId]
+    );
+
+    if(hasClass.length){
+      connection.release();
+      return true;      
+    }
+
+    const isCoordinator = await connection.query(
+      `SELECT *
+      FROM Classes 
+      WHERE CoordinatorId = ?`,
+      [userId]
+    );
+
+    if(isCoordinator.length){
+      connection.release();
+      return true;
+    }
+    connection.release();
+    return false;
   }
 }
 
