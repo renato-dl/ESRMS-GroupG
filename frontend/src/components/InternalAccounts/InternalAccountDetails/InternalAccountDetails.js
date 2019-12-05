@@ -90,7 +90,6 @@ class InternalAccountDetails extends React.Component {
         isTeacher: this.state.IsTeacher,
         isAdminOfficer: this.state.IsAdminOfficer,
         isPrincipal: this.state.IsPrincipal
-
       };
 
       if(!this.state.userID){

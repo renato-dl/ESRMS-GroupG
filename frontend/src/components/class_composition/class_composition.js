@@ -19,9 +19,9 @@ export class Class_composition extends React.Component{
   async componentDidMount(){
     const response = await api.admin.getClasslist();
     if (response) {
-       console.log(response)
-       this.setState({Class_composition:response.data})
-      } 
+      console.log(response)
+      this.setState({Class_composition:response.data})
+    } 
   }
 
   selectMarks = async (studentID) => {
@@ -31,55 +31,59 @@ export class Class_composition extends React.Component{
     this.setState({classId: null, className: null, isStudentsOpen: false});
   };
 
-  render(){
-    if(this.state.Class_composition.length){
-   return ( 
-   <Container className="class-composition contentContainer">
-   <h3 className="contentHeader"> 
-     <Icon name='braille'/> 
-     Class Composition
-   </h3>
-   {/* <h2 className="title">Student {this.props.match.params.studentID}'s score:</h2> */}
-   <Table columns={4}>
-   <Table.Header>
-       <Table.Row>
-           <Table.HeaderCell>Class Name</Table.HeaderCell>
-           <Table.HeaderCell>CreationYear</Table.HeaderCell>
-           <Table.HeaderCell>CoordinatorName</Table.HeaderCell>
-           <Table.HeaderCell>Details</Table.HeaderCell>           
-       </Table.Row>
-   </Table.Header>
-     <Table.Body>
-     {this.state.Class_composition.map((data, index) =>
-       <Table.Row key={index}>
-           <Table.Cell>{ data.Name } </Table.Cell>
-           <Table.Cell>{data.CreationYear}</Table.Cell>
-           <Table.Cell>{data.Coordinator}</Table.Cell>
-           <Table.Cell>
-             <Button color='blue' type='button' onClick={() =>{
-             this.setState({classId: data.ID});
-             this.setState({className: data.Name});
-             this.setState({isStudentsOpen: true});
-            }}>Students 
-            <Icon className="cog icon" name="cog"/>            
-            </Button>
-             </Table.Cell>
-       </Table.Row>
-     )} 
-     </Table.Body>
-     </Table>
-     {this.state.isStudentsOpen &&
-            <ClassCompositionDetail
-              classId= {this.state.classId}
-              className= {this.state.className}
-              onClose={this.onClassDetailClose}
-              onSave={() => {
-                this.onClassDetailClose();
-              }}
-            />
-          }
- </Container>)
+  render() {
+    if(this.state.Class_composition.length) {
+      return (
+        <Container className="class-composition contentContainer">
+          <h3 className="contentHeader"> 
+            <Icon name='braille'/> 
+            Class Composition
+          </h3>
+          {/* <h2 className="title">Student {this.props.match.params.studentID}'s score:</h2> */}
+          <Table columns={4}>
+          <Table.Header>
+              <Table.Row>
+                  <Table.HeaderCell>Class Name</Table.HeaderCell>
+                  <Table.HeaderCell>CreationYear</Table.HeaderCell>
+                  <Table.HeaderCell>CoordinatorName</Table.HeaderCell>
+                  <Table.HeaderCell>Details</Table.HeaderCell>           
+              </Table.Row>
+          </Table.Header>
+            <Table.Body>
+            {this.state.Class_composition.map((data, index) =>
+              <Table.Row key={index}>
+                  <Table.Cell>{ data.Name } </Table.Cell>
+                  <Table.Cell>{data.CreationYear}</Table.Cell>
+                  <Table.Cell>{data.Coordinator}</Table.Cell>
+                  <Table.Cell>
+                    <Button color='blue' type='button' onClick={() =>{
+                        this.setState({
+                        classId: data.ID,
+                        className: data.Name,
+                        isStudentsOpen: true
+                      });
+                    }}>Students 
+                    <Icon className="cog icon" name="cog"/>            
+                    </Button>
+                    </Table.Cell>
+              </Table.Row>
+            )} 
+            </Table.Body>
+            </Table>
+            {this.state.isStudentsOpen &&
+              <ClassCompositionDetail
+                classId= {this.state.classId}
+                className= {this.state.className}
+                onClose={this.onClassDetailClose}
+                onSave={() => {
+                  this.onClassDetailClose();
+                }}
+              />
+            }
+        </Container>
+        )
       }
+
       return (
         <Container className="contentContainer">
           <h3 className="contentHeader"> 
@@ -88,5 +92,5 @@ export class Class_composition extends React.Component{
           <NoData/>
         </Container>
       );
-   }
+    }
   }
