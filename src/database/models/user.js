@@ -10,6 +10,21 @@ class User extends Model {
     super('Users');
   }
 
+  async isThereAlreadyAPrincipal() {
+    const connection = await this.db.getConnection();
+    const result = await connection.query(
+      `SELECT *
+      FROM ${this.tableName}
+      WHERE IsPrincipal = true`
+    );
+    connection.release();
+    if (result.length != 0) {
+      return true;
+    }
+    return false;
+
+  }
+
   async getUserRolesById(userId) {
     const connection = await this.db.getConnection();
     return connection.query(
@@ -51,7 +66,6 @@ class User extends Model {
     }
     return true;
   }
-
 
   async makeParentIfNotAlready(userId) {
 
@@ -130,6 +144,14 @@ class User extends Model {
     await this.validateUserData(firstName, lastName, eMail, SSN);
     
     await this.vaidateUserRoles(isTeacher, isAdminOfficer, isPrincipal);
+
+    // TODO: test
+    if (isPrincipal) {
+      const otherPrincipal = await this.isThereAlreadyAPrincipal();
+      if (otherPrincipal) {
+        throw new Error('There is already a principal')
+      }
+    }
 
     const connection = await this.db.getConnection();
 
@@ -351,6 +373,12 @@ class User extends Model {
       if (isCoordinator) {
         connection.release();
         throw new Error ('User is class coordinator, teacher role cannot be removed');
+      }
+    }
+    if (!user.IsPrincipal && isPrincipal) {
+      const otherPrincipal = await this.isThereAlreadyAPrincipal();
+      if (otherPrincipal) {
+        throw new Error('There is already a principal')
       }
     }
     
