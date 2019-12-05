@@ -353,13 +353,13 @@ class User extends Model {
     return true;
   } 
   
-  async hasChildren(parentId) {
+  async hasChildren(userId) {
     const connection = await this.db.getConnection();
     const hasChildren = await connection.query(
       `SELECT *
       FROM Students 
       WHERE Parent1 = ? OR Parent2 = ?`,
-      [parentId, parentId]
+      [userId, userId]
     );
     connection.release();
 
@@ -367,6 +367,13 @@ class User extends Model {
       return true;
     }
     return false
+  }
+
+  async checkIfStillParent(userId) {
+    const hasChildren = this.hasChildren(userId);
+    if (!hasChildren) {
+      await this.update(userId, {IsParent: 0});
+    }
   }
 }
 
