@@ -5,6 +5,7 @@ import db from '../src/database';
 import moment from 'moment';
 import ClassModel from '../src/database/models/class';
 import student from '../src/database/models/student';
+import user from '../src/database/models/user';
 
 
 describe('Tests about the visualization of inserted parents', () =>{
@@ -483,9 +484,6 @@ describe('Tests about the insertion of internal account by admin', () => {
     }catch(error) {
       expect(error).toHaveProperty('message', 'A user cannot be both teacher and admin officer');
     }
-
-
-
   });
 
   test('Cannot be Principal and AdminOfficer', async () => {
@@ -548,7 +546,45 @@ describe('Tests about the insertion of internal account by admin', () => {
 
   });
 
-}); 
+  test('Cannot insert more than one principal', ()=>{
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = false;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = true;
+
+    try {
+
+      const checkIfExistingPrincipal = await User.isThereAlreadyAPrincipal();
+      if(!checkIfExistingPrincipal){
+        expect(checkIfExistingPrincipal).toBe(false);
+
+        const insertPrincipal =  await User.insertInternalAccountData( 
+            testFirstName, 
+            testLastName, 
+            testEmail, 
+            testSSN, 
+            testPassword,
+            testIsTeacher,
+            testIsAdminOfficer,
+            testIsPrincipal
+          );
+
+          expect(result).toEqual({
+            id: expect.anything()
+          });
+      }
+    }
+    catch(error) {
+      user.remove(insertPrincipal.id);
+      expect(error).toHaveProperty('message', 'There is already a principal');
+    }
+
+  }); 
+  });
 
 describe('Tests about editing internal accounts by admin', () => {
 
