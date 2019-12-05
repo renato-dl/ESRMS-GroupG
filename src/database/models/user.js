@@ -318,6 +318,14 @@ class User extends Model {
     if (!user.IsTeacher && !user.IsPrincipal && !user.IsAdminOfficer) {
       throw new Error('User is not an internal user');
     }
+
+    // TODO: test
+    if (user.IsTeacher == 1 && isTeacher == false) {
+      const hasClass = await this.hasClass(userId);
+      if (hasClass) {
+        throw new Error('User has associated classes, teacher role cannot be removed');
+      }
+    }
     
     await this.update(userId, {
       eMail: eMail,
