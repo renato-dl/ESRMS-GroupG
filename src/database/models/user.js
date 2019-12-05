@@ -36,6 +36,23 @@ class User extends Model {
     return true;
   }
 
+  async isValidTeacher(userId) {
+    const connection = await this.db.getConnection();
+
+    const selectResult = await connection.query(
+      `SELECT *
+      FROM Users
+      WHERE ID = ? AND IsTeacher = true;`,
+      [userId]
+    );
+    connection.release();
+    if (selectResult.length != 1) {
+      return false;
+    }
+    return true;
+  }
+
+
   async makeParentIfNotAlready(userId) {
 
     let user;
@@ -297,7 +314,12 @@ class User extends Model {
       const hasClass = await this.hasClass(accountId);
       if (hasClass) {
         connection.release();
-        throw new Error ('Cannot delete teacher associated to classes or class coordinators');
+        throw new Error ('Cannot delete teachers associated to classes');
+      }
+      const isCoordinator = await this.isCoordinator(accountId);
+      if (isCoordinator) {
+        connection.release();
+        throw new Error ('Cannot delete class coordinators');
       }
     }
 
@@ -324,6 +346,11 @@ class User extends Model {
       const hasClass = await this.hasClass(userId);
       if (hasClass) {
         throw new Error('User has associated classes, teacher role cannot be removed');
+      }
+      const isCoordinator = await this.isCoordinator(accountId);
+      if (isCoordinator) {
+        connection.release();
+        throw new Error ('User is class coordinator, teacher role cannot be removed');
       }
     }
     
@@ -371,12 +398,18 @@ class User extends Model {
       WHERE TeacherId = ?`,
       [userId]
     );
+    
+    connection.release();
 
     if(hasClass.length){
-      connection.release();
       return true;      
     }
 
+    return false;
+  }
+
+  async isCoordinator(userId) {
+    const connection = await this.db.getConnection();
     const isCoordinator = await connection.query(
       `SELECT *
       FROM Classes 
@@ -384,11 +417,11 @@ class User extends Model {
       [userId]
     );
 
+    connection.release();
+
     if(isCoordinator.length){
-      connection.release();
       return true;
     }
-    connection.release();
     return false;
   }
 }
