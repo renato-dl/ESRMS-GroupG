@@ -1,7 +1,6 @@
 import {BaseAPIService} from './base';
 
 export class SysAdminAPIService extends BaseAPIService {
-  
     getAddUsers() {
         return this.get(`/admin/internal-accounts`);
     }
