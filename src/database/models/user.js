@@ -370,7 +370,7 @@ class User extends Model {
   }
 
   async checkIfStillParent(userId) {
-    const hasChildren = this.hasChildren(userId);
+    const hasChildren = await this.hasChildren(userId);
     if (!hasChildren) {
       await this.update(userId, {IsParent: 0});
     }
