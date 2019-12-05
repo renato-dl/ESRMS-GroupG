@@ -137,9 +137,6 @@ class Student extends Model {
     const results = await connection.query(query, [classId]);    
     connection.release();
 
-    if (!results.length) {
-      throw new Error('No students found!');
-    }
     return results;
   }
 
