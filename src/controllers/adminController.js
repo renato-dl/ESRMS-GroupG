@@ -330,7 +330,7 @@ class AdminController extends BaseController {
       req.body.isTeacher,
       req.body.isAdminOfficer,
       req.body.isPrincipal
-    );
+    ); 
     res.send({success: result})
   }
 
@@ -352,7 +352,16 @@ class AdminController extends BaseController {
   }
 
   async createClass(req, res) {
-    
+    const result = await ClassModel.createClass(req.body.coordinatorId);
+    res.send({
+      success: true,
+      id: result.id
+    });
+  }
+
+  async deleteClass(req, res) {
+    const result = await ClassModel.deleteClass(req.body.id);
+    res.send({success: result});
   }
   
 }

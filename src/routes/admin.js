@@ -23,6 +23,7 @@ router.patch('/internal-account', Authorization(['IsSysAdmin']), AdminController
 
 router.get('/classes', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getClasses'));
 router.post('/classes/:classID/assign-students', Authorization(['IsSysAdmin']), AdminController.processRequest.bind(AdminController, 'assignStudentsToClass'));
-
+router.post('/class', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'createClass'));
+router.delete('/class', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'deleteClass'));
 
 export default router;

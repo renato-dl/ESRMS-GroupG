@@ -28,8 +28,8 @@ import {InternalAccounts} from '../../components/InternalAccounts/InternalAccoun
 import {Admin} from '../Admin/Admin';
 import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
 
-import {Class_composition} from '../../components/class_composition/class_composition';
-import {admin_StudentsEnrollment} from '../../components/adminComponents/SudentsEntrollment/admin_StudentsEnrollment';
+import {ClassComposition} from '../../components/class_composition/class_composition';
+import {AdminStudentsEnrollment} from '../../components/adminComponents/SudentsEntrollment/admin_StudentsEnrollment';
 import {TeacherGrade} from '../../components/TeacherGrade/TeacherGrade';
 import { PrivateRoute } from '../../components/PrivateRoute/PrivateRoute';
 import { Assignments } from '../../components/Assignments/Assignments';
@@ -68,8 +68,8 @@ export class App extends React.Component {
 
               <PrivateRoute exact path="/admin" component={Admin}/>
               <PrivateRoute exact path="/admin/configParent" component={ConfigParent}/>
-              <PrivateRoute exact path="/admin/Class_composition" component={Class_composition}/>
-              <PrivateRoute exact path="/admin/enrollStudents" component={admin_StudentsEnrollment}/>
+              <PrivateRoute exact path="/admin/Class_composition" component={ClassComposition}/>
+              <PrivateRoute exact path="/admin/enrollStudents" component={AdminStudentsEnrollment}/>
 
               <PrivateRoute exact path="/sysadmin" component={SysAdmin}/>
               <PrivateRoute exact path="/sysadmin/accounts" component={InternalAccounts}/>

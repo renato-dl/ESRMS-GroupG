@@ -12,6 +12,7 @@ import GradeDetail from './GradeDetail/GradeDetail';
 import GradeUpdate from './GradeDetail/GradeUpdate';
 import GradeDelete from './GradeDetail/GradeDelete';
 import './TeacherGrade.scss';
+import Tooltip from '../Tooltip/Tooltip';
 
 export class TeacherGrade extends React.Component{
     constructor(props) {
@@ -124,16 +125,25 @@ export class TeacherGrade extends React.Component{
            <Table.Body>
            {this.state.gradeList.map((mark, index) =>
              <Table.Row key={index}>
-                 <Table.Cell>{ mark.FirstName } </Table.Cell>
-                 <Table.Cell>{ mark.LastName } </Table.Cell>
-                 <Table.Cell><span className="markField" style={this.styleMarkColor(mark.Grade)}>{ mark.Grade }</span></Table.Cell>
-                 <Table.Cell>{ mark.Type } </Table.Cell>
-                 <Table.Cell>{ moment(mark.GradeDate).format('LL')}</Table.Cell>
-                 <Table.Cell >
-                   <span className="hover-span" onClick={() => this.updateGrade(mark)}><Icon name="edit"/> Edit</span>
-                    <br/>
-                   <span className="hover-span" onClick={() =>this.deleteGrade(mark)}><Icon name="delete"/> Delete</span>
-                 </Table.Cell>
+                <Table.Cell>{ mark.FirstName } </Table.Cell>
+                <Table.Cell>{ mark.LastName } </Table.Cell>
+                <Table.Cell><span className="markField" style={this.styleMarkColor(mark.Grade)}>{ mark.Grade }</span></Table.Cell>
+                <Table.Cell>{ mark.Type } </Table.Cell>
+                <Table.Cell>{ moment(mark.GradeDate).format('LL')}</Table.Cell>
+                <Table.Cell >
+                  <Tooltip 
+                    text="Edit grade"
+                    trigger={
+                      <Icon name="edit" onClick={() => this.updateGrade(mark)} />
+                    }
+                  />
+                  <Tooltip 
+                    text="Delete grade"
+                    trigger={
+                      <Icon name="delete" onClick={() =>this.deleteGrade(mark)} />
+                    }
+                  />
+                </Table.Cell>
              </Table.Row>
            )} 
            </Table.Body>

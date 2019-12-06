@@ -1,29 +1,28 @@
 import React, { Component } from 'react'
 import { api } from '../../../../../services/api';
-
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-
 import '../AddNewStudent.scss'
-
-import validator from 'validator';
 import {SSNRegexp} from '../../../../../utils';
 
 import {Button, Icon, Form, Accordion, Search, Grid, Header} from 'semantic-ui-react'
 
 //Search Result Layout
-const resultRenderer = ({ SSN, 
-                          FirstName, 
-                          LastName , 
-                          eMail}) => 
-                          <>
-                          <Header as='h4' style={{color:"#984d71"}}>
-                            <Header.Content><Icon name ="user"/>{FirstName}&nbsp;{LastName}
-                              <Header.Subheader style={{fontSize: "18px", color:"#4D7198"}}>{SSN}</Header.Subheader>
-                            </Header.Content>
-                          </Header>
-                          <p style={{fontSize:"13px", color:"#984d71"}}>{eMail}</p>
-                          </>
+const resultRenderer = ({ 
+  SSN, 
+  FirstName, 
+  LastName, 
+  eMail
+}) => (
+  <>
+    <Header as='h4' style={{color:"#984d71"}}>
+      <Header.Content><Icon name ="user"/>{FirstName}&nbsp;{LastName}
+        <Header.Subheader style={{fontSize: "18px", color:"#4D7198"}}>{SSN}</Header.Subheader>
+      </Header.Content>
+    </Header>
+    <p style={{fontSize:"13px", color:"#984d71"}}>{eMail}</p>
+  </>
+);
 
 resultRenderer.propTypes = {
   SSN: PropTypes.string,
