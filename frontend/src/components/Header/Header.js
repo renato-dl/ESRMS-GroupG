@@ -44,6 +44,7 @@ export const Header = withRouter(({history, ...props}) => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("roles");
+    localStorage.removeItem("serializedState");
     window.location.replace("/login");
   };
 
