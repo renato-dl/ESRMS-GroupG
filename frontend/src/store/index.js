@@ -2,6 +2,8 @@ import React from 'react';
 
 export const ApplicationStoreContext = React.createContext();
 
+const deserializedState = localStorage.getItem('serializedState') ? JSON.parse(localStorage.getItem('serializedState')) : null 
+
 const initialState = {
   isUserAuthenticated: false,
   parent: {
@@ -13,9 +15,7 @@ const initialState = {
 
 export class ApplicationStore extends React.Component {
   // STORE here all the global state
-  state = {
-    ...initialState
-  };
+  state = deserializedState ? {...deserializedState} : {...initialState};
 
   setSelectedStudent = (studentData) => {
     this.setState((prevState) => {
@@ -26,16 +26,14 @@ export class ApplicationStore extends React.Component {
           selectedStudent: studentData
         }
       }
+    }, () => {
+      localStorage.setItem('serializedState', JSON.stringify(this.state));
     });
   };
 
   setAuthentication = (authenticated) => {
     this.setState({ isUserAuthenticated: authenticated });
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    console.log(prevState);
-    console.log(prevProps);
+    localStorage.setItem('serializedState', JSON.stringify(this.state));
   }
 
   render() {
