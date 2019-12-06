@@ -99,13 +99,13 @@ export class InternalAccounts extends Component {
                     <Table.Cell textAlign="left">{ user.eMail }</Table.Cell>
                     
                 <Table.Cell textAlign="left" className="rolesLables">
-                  { user.IsTeacher ? <Label as='a' horizontal color="teal" className="rolesLables">Teacher</Label> : ""}
-                  { user.IsAdminOfficer ? <Label as='a' horizontal color="orange" className="rolesLables">Secretary Officer</Label> : ""} 
-                  { user.IsPrincipal ? <Label as='a' horizontal color="red" className="rolesLables" >Principal</Label> : ""}  
-                  { user.IsSysAdmin ? <Label as='a' horizontal color="black" className="rolesLables">System Admin</Label> : ""}
-                  { user.IsParent ? <Label as='a' horizontal color="blue" className="rolesLables" >Parent</Label> : ""}  
+                  { user.IsTeacher ? <Label horizontal color="teal" className="rolesLables">Teacher</Label> : ""}
+                  { user.IsAdminOfficer ? <Label horizontal color="orange" className="rolesLables">Secretary Officer</Label> : ""} 
+                  { user.IsPrincipal ? <Label horizontal color="red" className="rolesLables" >Principal</Label> : ""}  
+                  { user.IsSysAdmin ? <Label horizontal color="black" className="rolesLables">System Admin</Label> : ""}
+                  { user.IsParent ? <Label horizontal color="blue" className="rolesLables" >Parent</Label> : ""}  
                 </Table.Cell>
-
+ 
                     <Table.Cell textAlign="left" width={2}>{ moment(user.CreatedOn).format('LL') }</Table.Cell>
                     
                     <Table.Cell textAlign="center" className="edit-cell" width={1}>
