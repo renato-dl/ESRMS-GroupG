@@ -10,6 +10,21 @@ class User extends Model {
     super('Users');
   }
 
+  async isThereAlreadyAPrincipal() {
+    const connection = await this.db.getConnection();
+    const result = await connection.query(
+      `SELECT *
+      FROM ${this.tableName}
+      WHERE IsPrincipal = true`
+    );
+    connection.release();
+    if (result.length != 0) {
+      return true;
+    }
+    return false;
+
+  }
+
   async getUserRolesById(userId) {
     const connection = await this.db.getConnection();
     return connection.query(
@@ -36,6 +51,22 @@ class User extends Model {
     return true;
   }
 
+  async isValidTeacher(userId) {
+    const connection = await this.db.getConnection();
+
+    const selectResult = await connection.query(
+      `SELECT *
+      FROM Users
+      WHERE ID = ? AND IsTeacher = true;`,
+      [userId]
+    );
+    connection.release();
+    if (selectResult.length != 1) {
+      return false;
+    }
+    return true;
+  }
+
   async makeParentIfNotAlready(userId) {
 
     let user;
@@ -45,7 +76,7 @@ class User extends Model {
       throw new Error('Invalid userId');
     }
     if (user.IsParent != 1) {
-      this.update(userId, {IsParent: true});
+      await this.update(userId, {IsParent: true});
     }
   }
 
@@ -113,6 +144,14 @@ class User extends Model {
     await this.validateUserData(firstName, lastName, eMail, SSN);
     
     await this.vaidateUserRoles(isTeacher, isAdminOfficer, isPrincipal);
+
+    // TODO: test
+    if (isPrincipal) {
+      const otherPrincipal = await this.isThereAlreadyAPrincipal();
+      if (otherPrincipal) {
+        throw new Error('There is already a principal')
+      }
+    }
 
     const connection = await this.db.getConnection();
 
@@ -276,50 +315,33 @@ class User extends Model {
     );
 
     if(!checkAccount.length){
+      connection.release();
       throw new Error ('Account does not exist');      
     }
 
-    console.log(checkAccount);
-
     if(checkAccount[0].isSA){
+      connection.release();
       throw new Error ('Cannot delete SysAdmin');      
     }
 
     if(checkAccount[0].isP){
-      const hasChildren = await connection.query(
-        `SELECT *
-        FROM Students 
-        WHERE Parent1 = ? OR Parent2 = ?`,
-        [accountId, accountId]
-      );
-
-      if(hasChildren.length){
+      const hasChildren = await this.hasChildren(accountId);
+      if (hasChildren) {
+        connection.release();
         throw new Error ('Cannot delete user with associated students');
-      }
+      }      
     }
 
     if(checkAccount[0].isT){
-      
-      const hasClass = await connection.query(
-        `SELECT *
-        FROM TeacherSubjectClassRelation 
-        WHERE TeacherId = ?`,
-        [accountId]
-      );
-
-      if(hasClass.length){
-        throw new Error ('Cannot delete teacher associated to classes');
+      const hasClass = await this.hasClass(accountId);
+      if (hasClass) {
+        connection.release();
+        throw new Error ('Cannot delete teachers associated to classes');
       }
-
-      const isCoordinator = await connection.query(
-        `SELECT *
-        FROM Classes 
-        WHERE CoordinatorId = ?`,
-        [accountId]
-      );
-
-      if(isCoordinator.length){
-        throw new Error ('Cannot delete coordinator');
+      const isCoordinator = await this.isCoordinator(accountId);
+      if (isCoordinator) {
+        connection.release();
+        throw new Error ('Cannot delete class coordinators');
       }
     }
 
@@ -340,6 +362,24 @@ class User extends Model {
     if (!user.IsTeacher && !user.IsPrincipal && !user.IsAdminOfficer) {
       throw new Error('User is not an internal user');
     }
+
+    // TODO: test
+    if (user.IsTeacher == 1 && isTeacher == false) {
+      const hasClass = await this.hasClass(userId);
+      if (hasClass) {
+        throw new Error('User has associated classes, teacher role cannot be removed');
+      }
+      const isCoordinator = await this.isCoordinator(userId);
+      if (isCoordinator) {
+        throw new Error ('User is class coordinator, teacher role cannot be removed');
+      }
+    }
+    if (!user.IsPrincipal && isPrincipal) {
+      const otherPrincipal = await this.isThereAlreadyAPrincipal();
+      if (otherPrincipal) {
+        throw new Error('There is already a principal')
+      }
+    }
     
     await this.update(userId, {
       eMail: eMail,
@@ -352,7 +392,65 @@ class User extends Model {
     });
 
     return true;
-  }  
+  } 
+  
+  async hasChildren(userId) {
+    const connection = await this.db.getConnection();
+    const hasChildren = await connection.query(
+      `SELECT *
+      FROM Students 
+      WHERE Parent1 = ? OR Parent2 = ?`,
+      [userId, userId]
+    );
+    connection.release();
+
+    if(hasChildren.length){
+      return true;
+    }
+    return false
+  }
+
+  async checkIfStillParent(userId) {
+    const hasChildren = await this.hasChildren(userId);
+    if (!hasChildren) {
+      await this.update(userId, {IsParent: 0});
+    }
+  }
+
+  async hasClass(userId) {
+    const connection = await this.db.getConnection();
+    const hasClass = await connection.query(
+      `SELECT *
+      FROM TeacherSubjectClassRelation 
+      WHERE TeacherId = ?`,
+      [userId]
+    );
+    
+    connection.release();
+
+    if(hasClass.length){
+      return true;      
+    }
+
+    return false;
+  }
+
+  async isCoordinator(userId) {
+    const connection = await this.db.getConnection();
+    const isCoordinator = await connection.query(
+      `SELECT *
+      FROM Classes 
+      WHERE CoordinatorId = ?`,
+      [userId]
+    );
+
+    connection.release();
+
+    if(isCoordinator.length){
+      return true;
+    }
+    return false;
+  }
 }
 
 export default new User();

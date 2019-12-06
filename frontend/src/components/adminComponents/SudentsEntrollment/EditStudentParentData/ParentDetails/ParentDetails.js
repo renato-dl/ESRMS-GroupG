@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Modal, Form, LabelDetail, Icon} from 'semantic-ui-react'
+import {Button, Modal, Form, Icon} from 'semantic-ui-react'
 import "react-datepicker/dist/react-datepicker.css";
 import {api} from '../../../../../services/api';
 import { withRouter } from "react-router";
@@ -8,18 +8,19 @@ import * as toastr from 'toastr';
 export class ParentDetails extends React.Component {
   constructor(props) {
     super(props);
-  this.state = {
-    ID:null,
-    FirstName: null,
-    LastName:null,
-    eMail:null,
-    SSN:null,
-    isSaving: false
-  }};
+
+    this.state = {
+      ID:null,
+      FirstName: null,
+      LastName:null,
+      eMail:null,
+      SSN:null,
+      isSaving: false
+    }
+  };
 
 
   componentDidMount() {
-    console.log(this.props)
     if (this.props) {
       this.setState({
         ID:this.props.parentInfo.ID,
@@ -51,18 +52,14 @@ export class ParentDetails extends React.Component {
         SSN:this.state.SSN,
         Email:this.state.eMail
       };
-        const reqResult = await api.admin.updateParent(
-            parentData
-        );  
-        console.log(reqResult)
-        if(reqResult.data.success){
-          toastr.success('Parent updated successfully.');
-        }
-        else{
-          toastr.error(reqResult.data.Message);
-        }
-      }      
-     catch (e) {
+      
+      const reqResult = await api.admin.updateParent(parentData);
+      if (reqResult.data.success) {
+        toastr.success('Parent updated successfully.');
+      } else {
+        toastr.error(reqResult.data.Message);
+      }
+    } catch (e) {
       this.setState({isSaving: false});
       return toastr.error(e);
     }
@@ -83,8 +80,12 @@ export class ParentDetails extends React.Component {
     return (
       <Modal dimmer open className="topic-detail" size="small">
         <Modal.Header>
-          {/* <span> 'Edit Parent' </span> */}
-    <span> <Icon name="edit"/>Edit Parent:&nbsp;&nbsp; <span style={{textTransform: 'capitalize'}}> {this.state.FirstName} {this.state.LastName} </span> </span>
+          <span>
+            <Icon name="edit"/>Edit Parent:&nbsp;&nbsp;
+            <span style={{textTransform: 'capitalize'}}> 
+              {this.state.FirstName} {this.state.LastName}
+            </span> 
+          </span>
           <Icon onClick={this.onClose} className="close-icn" name="close" />
         </Modal.Header>
         <Modal.Content>

@@ -330,13 +330,18 @@ class AdminController extends BaseController {
       req.body.isTeacher,
       req.body.isAdminOfficer,
       req.body.isPrincipal
-    );
+    ); 
     res.send({success: result})
   }
 
   async removeStudent(req, res) {
+    const student = await Student.findById(req.body.ID);
     try {
       await Student.remove(req.body.ID);
+      await User.checkIfStillParent(student.Parent1);
+      if (student.Parent2) {
+        await User.checkIfStillParent(student.Parent2);
+      }      
       res.send({success: true});
     } catch(error) {
       res.send({
@@ -345,6 +350,20 @@ class AdminController extends BaseController {
       });
     }
   }
+
+  async createClass(req, res) {
+    const result = await ClassModel.createClass(req.body.coordinatorId);
+    res.send({
+      success: true,
+      id: result.id
+    });
+  }
+
+  async deleteClass(req, res) {
+    const result = await ClassModel.deleteClass(req.body.id);
+    res.send({success: result});
+  }
+  
 }
 
 export default new AdminController();

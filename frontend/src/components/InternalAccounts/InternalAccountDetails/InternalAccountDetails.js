@@ -22,7 +22,6 @@ class InternalAccountDetails extends React.Component {
 
     isSaving: false,
     errors: {},
-
   };
 
   componentDidMount() {
@@ -69,7 +68,7 @@ class InternalAccountDetails extends React.Component {
     }
 
     this.setState({isSaving: true});
-    const {params} = this.props.match;
+    
     try {
       const userData = {
         SSN:this.state.ssn.trim(),
@@ -90,21 +89,15 @@ class InternalAccountDetails extends React.Component {
         isTeacher: this.state.IsTeacher,
         isAdminOfficer: this.state.IsAdminOfficer,
         isPrincipal: this.state.IsPrincipal
-
       };
 
-      if(!this.state.userID){
+      if (!this.state.userID) {
         await api.sysadmin.createUser(userData);
         toastr.success(`User created successfully.`);
       }
-      else{
-        const reqResult = await api.sysadmin.updateUser(userDataForEdit);
-        //if(reqResult.data.Success){
-          toastr.success('User updated successfully.');
-        /*} 
-        else{
-          toastr.error(reqResult.data.Message);
-        }  */
+      else {
+        await api.sysadmin.updateUser(userDataForEdit);
+        toastr.success('User updated successfully.');
       }
     } catch (e) {
       this.setState({isSaving: false});
