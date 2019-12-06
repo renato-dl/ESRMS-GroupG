@@ -1,5 +1,5 @@
 import React from 'react';
-import {TeacherGradeDetails} from '../components/TeacherGrade/GradeDetail/GradeDetail';
+import TeacherGradeDetails from '../components/TeacherGrade/TeacherGrade';
 import {ApplicationStoreContext} from '../store';
 import {getRouterPropsForTest} from '../utils';
 import {shallow} from 'enzyme';
