@@ -546,6 +546,58 @@ describe('Tests about the insertion of internal account by admin', () => {
 
   });
 
+  test('Cannot insert more than one principal', async ()=>{
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = false;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = true;
+    let insertPrincipal = null;
+
+    const checkIfExistingPrincipal = await User.isThereAlreadyAPrincipal();
+    if(!checkIfExistingPrincipal){
+
+      insertPrincipal =  await User.insertInternalAccountData( 
+          testFirstName, 
+          testLastName, 
+          testEmail, 
+          testSSN, 
+          testPassword,
+          testIsTeacher,
+          testIsAdminOfficer,
+          testIsPrincipal
+        );
+
+      expect(insertPrincipal).toEqual({
+          id: expect.anything()
+      });
+
+    }
+    try {
+
+      await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        "new@example.com", 
+        "LRNMRC79A02L219E", 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+      );      
+    }
+    catch(error) {
+      if(insertPrincipal) {
+        await User.remove(insertPrincipal.id);
+      }
+
+      expect(error).toHaveProperty('message', 'There is already a principal');
+    }
+  }); 
+
 }); 
 
 describe('Tests about editing internal accounts by admin', () => {
@@ -610,6 +662,211 @@ describe('Tests about editing internal accounts by admin', () => {
     //delete result for future tests
     await User.remove(insertResult.id);
   }); 
+
+  test('It should throw an error when removing the role of a teacher assigned to a class  ', async () => {
+
+    // Perform insertion
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    //first insert a new teacher user
+    const insertResult = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(insertResult).toEqual({
+      id: expect.anything()
+    });
+
+    //then asign that teacher to a class
+    
+    const connection = await db.getConnection();
+    const assignTeacherToClass = await connection.query(
+      `INSERT INTO TeacherSubjectClassRelation (SubjectId, ClassId, TeacherId)
+      VALUES (1, 1, ?)`,
+      [insertResult.id]
+
+    );
+    connection.release();
+
+    // Edit the teacher role
+   try{
+      const editResult = await User.editInternalAccount(
+        insertResult.id,
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        false,
+        true,
+        testIsPrincipal
+      );
+
+   }catch(error){
+    expect(error).toHaveProperty('message', 'User has associated classes, teacher role cannot be removed');
+    
+    //delete result for future tests
+    await connection.query(
+      `DELETE FROM TeacherSubjectClassRelation
+      WHERE ID = ?`,
+      [assignTeacherToClass.insertId]
+    );
+    connection.release();
+    await User.remove(insertResult.id);
+   }
+  });
+  
+  test('It should throw an error when removing the role of a teacher who is a coordinator', async () => {
+
+    // Perform insertion
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    //first insert a new teacher user
+    const insertResult = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(insertResult).toEqual({
+      id: expect.anything()
+    });
+
+    //then assign teacher as a coordinator in a class
+    const connection = await db.getConnection();
+    const assignCoordinator = await connection.query(
+      `INSERT INTO Classes (CreationYear, Name, CoordinatorId)
+      VALUES (1, 1, ?)`,
+      [insertResult.id]
+
+    );
+    connection.release();
+
+  // Edit the teacher role
+   try{
+      const editResult = await User.editInternalAccount(
+        insertResult.id,
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        false,
+        true,
+        testIsPrincipal
+      );
+
+   }catch(error){
+    expect(error).toHaveProperty('message', 'User is class coordinator, teacher role cannot be removed');
+
+    //delete result for future tests
+    const connection = await db.getConnection();
+    await connection.query(
+      `DELETE FROM Classes
+      WHERE ID = ?`,
+      [assignCoordinator.insertId]
+    );
+    connection.release();
+    await User.remove(insertResult.id);
+   }
+  });
+  
+  test('It should throw an error when adding an user with a principal role and there is already one principal', async () => {
+
+    // Perform insertion
+    const otherPrincipal = await User.isThereAlreadyAPrincipal();
+    let insertResultFirst = null;
+    let insertResultSecond = null;
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = false;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = true;
+    
+    if (!otherPrincipal) {  
+      //first insert a new principal user
+      insertResultFirst = await User.insertInternalAccountData( 
+          testFirstName, 
+          testLastName, 
+          testEmail, 
+          testSSN, 
+          testPassword,
+          testIsTeacher,
+          testIsAdminOfficer,
+          testIsPrincipal
+      );
+
+      expect(insertResultFirst).toEqual({
+        id: expect.anything()
+      });
+
+      insertResultSecond = await User.insertInternalAccountData( 
+        "new", 
+        "user", 
+        "newuser@example.com", 
+        "LRNMRC79A02L219E", 
+        testPassword,
+        true,
+        testIsAdminOfficer,
+        false
+    );
+
+    expect(insertResultSecond).toEqual({
+      id: expect.anything()
+    });
+  }
+
+  // Edit the new user role to principal
+   try{
+      await User.editInternalAccount(
+        insertResultSecond.id,
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        true,
+        false,
+        true
+      );
+
+   }catch(error){
+    expect(error).toHaveProperty('message', 'There is already a principal');
+    //delete result for future tests
+
+    if(insertResultFirst && insertResultSecond){
+      await User.remove(insertResultFirst.id);
+      await User.remove(insertResultSecond.id);
+    }
+  }
+
+  });
 
 }); 
 
