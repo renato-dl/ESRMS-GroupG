@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './GradeDetail.scss';
 import {Button, Modal, Form, LabelDetail, Icon} from 'semantic-ui-react';
 import DatePicker from "react-datepicker";
-import NumberInput from 'semantic-ui-react-numberinput';
+import NumericInput from 'react-numeric-input';
 import "react-datepicker/dist/react-datepicker.css";
 import { api } from '../../../services/api';
 import * as toastr from 'toastr';
@@ -64,7 +64,7 @@ export class GradeDetail extends Component {
 
   changeValue = (studentId, mark) => {
     const marks = this.state.studentMarks;
-    marks.set(studentId, mark);    
+    marks.set(studentId, mark);
     this.setState({ studentMarks: marks });
   }
 
@@ -72,13 +72,13 @@ export class GradeDetail extends Component {
     if (this.state.isSaving) {
       return;
     }
-    this.setState({isSaving: true});
+    this.setState({ isSaving: true });
 
     const allMarks = this.state.studentMarks;
 
     allMarks.forEach(async (key, value) => {
-      if(key != "0"){
-        try{
+      if (key >= 2) {
+        try {
           let correctedDate = this.state.date;
           correctedDate = correctedDate.toUTCString();
           const request = {
@@ -90,16 +90,16 @@ export class GradeDetail extends Component {
             type: this.state.type
           }
           const response = await api.teacher.addMark(request);
-          if(response){
+          if(response) {
             toastr.success('Grade added successfully!');
           }
-        }
-        catch(e){
+        } catch(e) {
           this.setState({isSaving: false});
           toastr.error(e);
         }        
       }
     });
+
     this.setState({isSaving: false});
     this.props.onSave();
   }
@@ -146,13 +146,12 @@ export class GradeDetail extends Component {
               this.state.students.map((eStudent, index) =>  
                 <Form.Field key={index} className="student-grade">
                   <label>{ eStudent.FirstName } { eStudent.LastName }</label>
-                  <NumberInput 
+                  <NumericInput 
                     className="numberInput" 
                     valueType="decimal" 
-                    minValue={2} 
-                    maxValue={10} 
-                    stepAmount={0.25} 
-                    allowEmptyValue 
+                    min={0} 
+                    max={10} 
+                    step={0.25}
                     value={this.state.studentMarks.get(eStudent.ID)}
                     onChange={(e) => {this.changeValue(eStudent.ID, e)} }
                   />                   

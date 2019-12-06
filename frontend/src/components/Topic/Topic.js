@@ -11,6 +11,7 @@ import moment from 'moment';
 import TopicDetails from './TopicDetail/TopicDetails';
 import TopicDelete from './TopicDetail/TopicDelete';
 import { NoData } from '../NoData/NoData';
+import Tooltip from '../Tooltip/Tooltip';
 
 export class Topic extends React.Component{
     constructor(props) {
@@ -89,9 +90,18 @@ export class Topic extends React.Component{
                   <Table.Cell textAlign="left">{ topic.TopicDescription }</Table.Cell>
                   <Table.Cell textAlign="left" width={2}>{ moment(topic.TopicDate).format('LL') }</Table.Cell>
                   <Table.Cell textAlign="left" className="edit-cell" width={1}>
-                    <span onClick={() =>this.editTopic(topic)}><Icon name="edit" /> Edit</span>
-                    <br/>
-                    <span onClick={()=>this.deleteTopic(topic)}><Icon name="delete" /> Delete</span>
+                    <Tooltip 
+                      text="Edit topic" 
+                      trigger={
+                        <Icon onClick={() =>this.editTopic(topic)} name="edit" />
+                      }
+                    />
+                    <Tooltip 
+                      text="Delete topic" 
+                      trigger={
+                        <Icon onClick={() =>this.deleteTopic(topic)} name="delete" />
+                      }
+                    />
                   </Table.Cell>
                 </Table.Row>
               )}
