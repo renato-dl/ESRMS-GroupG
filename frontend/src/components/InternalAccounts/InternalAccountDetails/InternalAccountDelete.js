@@ -65,11 +65,9 @@ export class InternalAccountDelete extends Component {
       <Modal dimmer open className="account-detail" size="small">
         <Header icon='archive' content='Delete user account' onClick={this.onClose}/>
         <Modal.Content>
-        <p>
-            Are you sure you want to delete this user account?
-        </p>
-        <p>Full name: {this.state.name} {this.state.surname}</p>
-        <p>Email: {this.state.email}</p>
+        <h3>Are you sure you want to delete this user account?</h3>
+        <p><b>Full name:</b> {this.state.name} {this.state.surname}</p>
+        <p><b>Email:</b> {this.state.email}</p>
         </Modal.Content>
         <Modal.Actions>
         <Button basic color='red' onClick={this.onClose}>

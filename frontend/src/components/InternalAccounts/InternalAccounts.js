@@ -10,9 +10,7 @@ import './InternalAccountDetails/InternalAccountDetails.scss'
 import { NoData } from '../NoData/NoData';
 import InternalAccountDetails from './InternalAccountDetails/InternalAccountDetails';
 import InternalAccountDelete from './InternalAccountDetails/InternalAccountDelete';
-import { Topic } from '../Topic/Topic';
-
-
+import Tooltip from '../Tooltip/Tooltip';
 
 export class InternalAccounts extends Component {
     constructor(props) {
@@ -23,8 +21,7 @@ export class InternalAccounts extends Component {
           isInternalAccountDetailsOpen: false,
           editingUser: null,
           selectedUser: null, 
-          deleteUserOpen: false, 
-          selectedUser: null
+          deleteUserOpen: false
         }
     }
 
@@ -91,42 +88,59 @@ export class InternalAccounts extends Component {
                 <Table.Body>
                 {this.state.authUsers.map((user, index) =>
                     <Table.Row key={index}>
-                    <Table.Cell textAlign="left" width={1}>{ index + 1 }</Table.Cell>
-                    <Table.Cell textAlign="left">{ user.FirstName }</Table.Cell>
-                    <Table.Cell textAlign="left">{ user.LastName }</Table.Cell>
-                    <Table.Cell textAlign="left">{ user.SSN }</Table.Cell>
-    
-                    <Table.Cell textAlign="left">{ user.eMail }</Table.Cell>
-                    
-                <Table.Cell textAlign="left" className="rolesLables">
-                  { user.IsTeacher ? <Label horizontal color="teal" className="rolesLables">Teacher</Label> : ""}
-                  { user.IsAdminOfficer ? <Label horizontal color="orange" className="rolesLables">Secretary Officer</Label> : ""} 
-                  { user.IsPrincipal ? <Label horizontal color="red" className="rolesLables" >Principal</Label> : ""}  
-                  { user.IsSysAdmin ? <Label horizontal color="black" className="rolesLables">System Admin</Label> : ""}
-                  { user.IsParent ? <Label horizontal color="blue" className="rolesLables" >Parent</Label> : ""}  
-                </Table.Cell>
- 
-                    <Table.Cell textAlign="left" width={2}>{ moment(user.CreatedOn).format('LL') }</Table.Cell>
-                    
-                    <Table.Cell textAlign="center" className="edit-cell" width={1}>
-                    <Icon name="delete" className = "deleteIcon" onClick={()=>this.deleteUser(user)}/> &nbsp;
-                    <Icon name="edit" className = "editIcon" onClick={()=>this.editUser(user)}/> 
-                  </Table.Cell>
-    
+                      <Table.Cell textAlign="left" width={1}>{ index + 1 }</Table.Cell>
+                      <Table.Cell textAlign="left">{ user.FirstName }</Table.Cell>
+                      <Table.Cell textAlign="left">{ user.LastName }</Table.Cell>
+                      <Table.Cell textAlign="left">{ user.SSN }</Table.Cell>
+      
+                      <Table.Cell textAlign="left">{ user.eMail }</Table.Cell>
+                      
+                      <Table.Cell textAlign="left" className="rolesLables">
+                        { user.IsTeacher ? <Label horizontal color="teal" className="rolesLables">Teacher</Label> : ""}
+                        { user.IsAdminOfficer ? <Label horizontal color="orange" className="rolesLables">Secretary Officer</Label> : ""} 
+                        { user.IsPrincipal ? <Label horizontal color="red" className="rolesLables" >Principal</Label> : ""}  
+                        { user.IsSysAdmin ? <Label horizontal color="black" className="rolesLables">System Admin</Label> : ""}
+                        { user.IsParent ? <Label horizontal color="blue" className="rolesLables" >Parent</Label> : ""}  
+                      </Table.Cell>
+  
+                      <Table.Cell textAlign="left" width={2}>{ moment(user.CreatedOn).format('LL') }</Table.Cell>
+                      
+                      <Table.Cell textAlign="center" className="edit-cell" width={1}>
+                        <Tooltip 
+                          text="Edit account"
+                          trigger={
+                            <Icon 
+                              name="edit" 
+                              className="editIcon" 
+                              onClick={()=>this.editUser(user)}
+                            /> 
+                          }
+                        />
+                        <Tooltip 
+                          text="Delete account"
+                          trigger={
+                            <Icon 
+                              name="delete" 
+                              className="deleteIcon"
+                              onClick={()=>this.deleteUser(user)}
+                            /> 
+                          }
+                        />
+                      </Table.Cell>
                     </Table.Row>
                 )}
                 </Table.Body>
             </Table>
     
             {this.state.isInternalAccountDetailsOpen &&
-               <InternalAccountDetails
+              <InternalAccountDetails
                 user={this.state.editingUser}
                 onClose={this.onInternalAccountDetailsClose}
                 onSave={() => {
                   this.fetchUsers();
                   this.onInternalAccountDetailsClose();
-                    }}
-                />
+                }}
+              />
             }
             {this.state.deleteUserOpen &&
             <InternalAccountDelete
@@ -150,7 +164,7 @@ export class InternalAccounts extends Component {
     
             <button className="ui vk button" onClick={this.addUser}>
               <i className="user plus icon"></i>
-               Add User
+              Add User
             </button>
           <NoData/>
           {this.state.isInternalAccountDetailsOpen &&
@@ -161,7 +175,7 @@ export class InternalAccounts extends Component {
                   this.fetchUsers();
                   this.onInternalAccountDetailsClose();
                 }}
-              /> 
+            /> 
           }
         </Container>
       );

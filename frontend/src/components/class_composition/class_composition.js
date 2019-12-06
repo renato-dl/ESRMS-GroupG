@@ -5,7 +5,7 @@ import ClassCompositionDetail from './ClassCompositionDetail/ClassCompositionDet
 import { NoData } from '../NoData/NoData';
 import './ClassComposition.scss';
 
-export class Class_composition extends React.Component{
+export class ClassComposition extends React.Component{
   constructor(props) {
     super(props);
     this.state = {

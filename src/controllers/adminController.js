@@ -330,7 +330,7 @@ class AdminController extends BaseController {
       req.body.isTeacher,
       req.body.isAdminOfficer,
       req.body.isPrincipal
-    );
+    ); 
     res.send({success: result})
   }
 
