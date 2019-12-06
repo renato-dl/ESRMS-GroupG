@@ -19,7 +19,7 @@ export class ConfigParent extends React.Component{
     //const {params} = this.props.match;
     const response = await api.admin.getAuthParentList();
     if (response) {
-        console.log(response);
+      //console.log(response);
       this.setState({ authParents: response.data });
     }
   };
