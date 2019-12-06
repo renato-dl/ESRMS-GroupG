@@ -556,7 +556,6 @@ describe('Tests about the insertion of internal account by admin', () => {
     const testIsAdminOfficer = false;
     const testIsPrincipal = true;
     let insertPrincipal = null;
-   
 
     const checkIfExistingPrincipal = await User.isThereAlreadyAPrincipal();
     if(!checkIfExistingPrincipal){
@@ -799,6 +798,7 @@ describe('Tests about editing internal accounts by admin', () => {
     // Perform insertion
     const otherPrincipal = await User.isThereAlreadyAPrincipal();
     let insertResultFirst = null;
+    let insertResultSecond = null;
     const testFirstName = 'Joe';
     const testLastName = 'Kernel';
     const testEmail = 'joekernel@gmail.com';
@@ -824,27 +824,43 @@ describe('Tests about editing internal accounts by admin', () => {
       expect(insertResultFirst).toEqual({
         id: expect.anything()
       });
+
+      insertResultSecond = await User.insertInternalAccountData( 
+        "new", 
+        "user", 
+        "newuser@example.com", 
+        "LRNMRC79A02L219E", 
+        testPassword,
+        true,
+        testIsAdminOfficer,
+        false
+    );
+
+    expect(insertResultSecond).toEqual({
+      id: expect.anything()
+    });
   }
 
-  // Edit the user role to principal
+  // Edit the new user role to principal
    try{
       await User.editInternalAccount(
-        insertResultFirst.id,
+        insertResultSecond.id,
         testFirstName, 
         testLastName, 
         testEmail, 
         testSSN, 
         true,
         false,
-        testIsPrincipal
+        true
       );
 
    }catch(error){
     expect(error).toHaveProperty('message', 'There is already a principal');
     //delete result for future tests
-    
-    if(insertResultFirst){
+
+    if(insertResultFirst && insertResultSecond){
       await User.remove(insertResultFirst.id);
+      await User.remove(insertResultSecond.id);
     }
   }
 
