@@ -41,10 +41,18 @@ class Grade extends Model {
       throw new Error('Missing or invalid student id');
     }
 
-    if (!grade) {
+    const parsedGrade = parseFloat(grade);
+    if(isNaN(parsedGrade)){
       throw new Error('Missing or invalid grade');
     }
+    if ( parsedGrade < 0 || parsedGrade > 10 ) {
+      throw new Error('Invalid grade');
+    }
+    if((parsedGrade * 100) % 25 != 0){
+      throw new Error('Invalid grade');
+    }
 
+    
     if (!type) {
       throw new Error('Missing or invalid type');
     }

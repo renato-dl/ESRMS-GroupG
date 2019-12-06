@@ -145,7 +145,7 @@ test("it should throw Error with message \'Missing or invalid studentId' when th
 
 });
 
-test("it should throw Error with message \'Missing or invalid studentId' when the grade is not passed", async() =>{
+test("it should throw Error with message \'Missing or invalid grade' when the grade is not passed", async() =>{
   const subjectId = "1";
   const studentId = "868d6ec1dfc8467f6d260c48b5620543"
   const type = "Oral";
@@ -162,10 +162,29 @@ test("it should throw Error with message \'Missing or invalid studentId' when th
     expect(error).toBeInstanceOf(Error);
     expect(error).toHaveProperty('message', 'Missing or invalid grade');
   }
-
 });
 
-test("it should throw Error with message \'Missing or invalid studentId' when the type is not passed", async() =>{
+test("it should throw Error with message \'Missing or invalid grade' when the grade is not passed", async() =>{
+  const subjectId = "1";
+  const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+  const grade = 6.35;
+  const type = "Oral";
+  
+  try{
+    const result = await Grade.addGrade(
+      subjectId,
+      studentId,
+      grade,
+      type
+  );
+
+  }catch(error){
+    expect(error).toBeInstanceOf(Error);
+    expect(error).toHaveProperty('message', 'Invalid grade');
+  }
+});
+
+test("it should throw Error with message \'Missing or invalid type' when the type is not passed", async() =>{
   const subjectId = "1";
   const studentId = "868d6ec1dfc8467f6d260c48b5620543"
   const grade = "6.0";
