@@ -7,8 +7,9 @@ import {ParentDetails} from './EditStudentParentData/ParentDetails/ParentDetails
 import './admin_StudentsEnrollment.scss'
 import { DeleteStudentModal } from './DeleteStudent/DeleteStudent';
 import * as toastr from 'toastr';
+import Tooltip from '../../Tooltip/Tooltip';
 
-export class admin_StudentsEnrollment extends Component {
+export class AdminStudentsEnrollment extends Component {
     constructor(props) {
         super(props);
     
@@ -25,19 +26,18 @@ export class admin_StudentsEnrollment extends Component {
             deleteStudentModalOpen: false,
             deleteStudentData: null,
         }
-      }
+    }
 
-      fetchStudents= async () =>{
-        const {params} = this.props.match;
+    fetchStudents= async () =>{
         const response = await api.admin.getStudents();
-        console.log(response)
         if (response) {
-           this.setState({student_info:response.data})
-          }    
-      };
-      async componentDidMount(){
-        this.fetchStudents()
-      };
+            this.setState({student_info:response.data})
+        }    
+    };
+
+    async componentDidMount(){
+        await this.fetchStudents()
+    };
 
     //Opens Add Student Modal = AddNewStudent.js component
     addNewStudent = () => {
@@ -48,28 +48,34 @@ export class admin_StudentsEnrollment extends Component {
         this.setState({open_AddModal: false});
     };
 
-    renderParent_FirstName=(student,number)=>{
-        if(student.secondParent&&number==2)
-            return <Table.Cell>{ student.secondParent.FirstName }  </Table.Cell>
-        else if(student.firstParent&&number==1)
-            return <Table.Cell>{ student.firstParent.FirstName }  </Table.Cell>
-        else return <Table.Cell>  </Table.Cell>
+    renderParent_FirstName = (student, number) => {
+        if (student.secondParent && parseInt(number) === 2) {
+            return <Table.Cell>{ student.secondParent.FirstName }</Table.Cell>
+        } else if (student.firstParent && parseInt(number) === 1) {
+            return <Table.Cell>{ student.firstParent.FirstName }</Table.Cell>
+        } else {
+            return <Table.Cell />
+        }
     };
 
-    renderParent_LastName=(student,number)=>{
-        if(student.secondParent&&number==2)
-            return <Table.Cell>{ student.secondParent.LastName }  </Table.Cell>
-        else if(student.firstParent&&number==1)
-            return <Table.Cell>{ student.firstParent.LastName }  </Table.Cell>
-        else return <Table.Cell>  </Table.Cell>
+    renderParent_LastName=(student, number)=>{
+        if (student.secondParent && parseInt(number) === 2) {
+            return <Table.Cell>{ student.secondParent.LastName }</Table.Cell>
+        } else if (student.firstParent && parseInt(number) === 1) {
+            return <Table.Cell>{ student.firstParent.LastName }</Table.Cell>
+        } else {
+            return <Table.Cell></Table.Cell>
+        }
     };
 
-    renderParent_eMail=(student,number)=>{
-        if(student.secondParent&&number==2)
-            return <Table.Cell>{ student.secondParent.eMail }  </Table.Cell>
-        else if(student.firstParent&&number==1)
-            return <Table.Cell>{ student.firstParent.eMail }  </Table.Cell>
-        else return <Table.Cell>  </Table.Cell>
+    renderParent_eMail=(student, number) => {
+        if(student.secondParent && parseInt(number) === 2) {
+            return <Table.Cell>{ student.secondParent.eMail }</Table.Cell>
+        } else if(student.firstParent && parseInt(number) === 1) {
+            return <Table.Cell>{ student.firstParent.eMail }</Table.Cell>
+        } else {
+            return <Table.Cell />
+        }
     };
     
     editStudent=(data)=>{
@@ -106,9 +112,7 @@ export class admin_StudentsEnrollment extends Component {
     }
 
     onDeleteStudent = async () => {
-        console.log(this.state.deleteStudentData);
         const response = await api.admin.removeStudent(this.state.deleteStudentData.ID);
-        console.log(response);
         this.onDeleteStudentModalClose();
 
         if (response.data.success) {
@@ -120,6 +124,7 @@ export class admin_StudentsEnrollment extends Component {
     };
 
     render() {
+        console.log(this.state.student_info);
         return (
             <Container className="contentContainer">
                 <h3 className="contentHeader">
@@ -136,8 +141,6 @@ export class admin_StudentsEnrollment extends Component {
                 <Icon name="upload"/>
                 Upload Excel File
             </Button> */}
-            <h3 />
-
             <div className='Student_admin'>
             <Table  compact textAlign='center' color="grey" collapsing>
               <Table.Header >
@@ -148,7 +151,7 @@ export class admin_StudentsEnrollment extends Component {
                     <Table.Row>
                         <Table.HeaderCell>FirstName  </Table.HeaderCell>
                         <Table.HeaderCell>LastName </Table.HeaderCell>
-                        <Table.HeaderCell>ClassId </Table.HeaderCell>
+                        <Table.HeaderCell>Class </Table.HeaderCell>
                         <Table.HeaderCell className='right-border'></Table.HeaderCell>
                         <Table.HeaderCell>FirstName </Table.HeaderCell>
                         <Table.HeaderCell >LastName </Table.HeaderCell>
@@ -168,24 +171,60 @@ export class admin_StudentsEnrollment extends Component {
                  <Table.Cell>{ student.studentInfo.ClassId }</Table.Cell>
                  <Table.Cell textAlign="center" className="edit-cell right-border" width={1}>
                      <div style={{display: 'flex'}}>
-                        <Icon name="edit" className="enrlStudEditIcon" onClick={() =>this.editStudent(student)}/> {/* Edit */}
-                        <Icon name="delete" className="enrlStudDeleteIcon" onClick={() =>this.deleteStudent(student)}/> {/* Delete */}
+                        <Tooltip 
+                            text="Edit student"
+                            trigger={
+                                <Icon 
+                                    name="edit" 
+                                    className="enrlStudEditIcon" 
+                                    onClick={() =>this.editStudent(student)}
+                                />
+                            }
+                        />
+                        <Tooltip 
+                            text="Delete student"
+                            trigger={
+                                <Icon 
+                                    name="delete" 
+                                    className="enrlStudDeleteIcon" 
+                                    onClick={() =>this.deleteStudent(student)}
+                                />
+                            }
+                        />
                      </div>
                   </Table.Cell>
                   {this.renderParent_FirstName(student,1)}
                   {this.renderParent_LastName(student,1)}
                    {this.renderParent_eMail(student,1)}
-                 <Table.Cell textAlign="center" className="edit-cell right-border" width={1}>
-                    <Icon name="edit" className="enrlStudEditIcon" onClick={() =>this.editParent(student.firstParent)}/> {/* Edit */}
+                  <Table.Cell textAlign="center" className="edit-cell right-border" width={1}>
+                    <Tooltip 
+                        text="Edit parent"
+                        trigger={
+                            <Icon 
+                                name="edit" 
+                                className="enrlStudEditIcon" 
+                                onClick={() =>this.editParent(student.firstParent)}
+                            />
+                        }
+                    />
                   </Table.Cell>
                  {this.renderParent_FirstName(student,2)}
                  {this.renderParent_LastName(student,2)}
                  {this.renderParent_eMail(student,2)}
                  <Table.Cell textAlign="center" className="edit-cell" width={1}>
                      
-                 {student.secondParent &&
-                 <Icon name="edit"className="enrlStudEditIcon" onClick={() =>this.editParent(student.secondParent)}> {/* Edit */} </Icon>
-                 }
+                    {student.secondParent &&
+                        <Tooltip 
+                            text="Edit parent"
+                            trigger={
+                                <Icon 
+                                    name="edit"
+                                    className="enrlStudEditIcon" 
+                                    onClick={() =>this.editParent(student.secondParent)} 
+                                />
+                            }
+                        />
+                    }
                  </Table.Cell>
              </Table.Row>
            )} 
@@ -212,25 +251,25 @@ export class admin_StudentsEnrollment extends Component {
                 </Modal>
             }
             {this.state.editingStudent &&
-            <StudentDetails
-              studentInfo={this.state.editingStudent}
-              parentInfo={this.state.editingStudentParent}
-              parentInfo2={this.state.editingStudentParent2}
-              onClose={this.onStudentDetailClose}
-              onSave={() => {
-                this.fetchStudents();
-                this.onStudentDetailClose();
-              }} 
-            />
-          }
-           {this.state.editingParent &&
-                <ParentDetails
-                parentInfo={this.state.editingParent}
-                onClose={this.onParentDetailClose}
+                <StudentDetails
+                studentInfo={this.state.editingStudent}
+                parentInfo={this.state.editingStudentParent}
+                parentInfo2={this.state.editingStudentParent2}
+                onClose={this.onStudentDetailClose}
                 onSave={() => {
                     this.fetchStudents();
-                    this.onParentDetailClose();
-                }}
+                    this.onStudentDetailClose();
+                }} 
+                />
+            }
+           {this.state.editingParent &&
+                <ParentDetails
+                    parentInfo={this.state.editingParent}
+                    onClose={this.onParentDetailClose}
+                    onSave={() => {
+                        this.fetchStudents();
+                        this.onParentDetailClose();
+                    }} 
                 />
             }
 
@@ -246,4 +285,4 @@ export class admin_StudentsEnrollment extends Component {
     }
 }
 
-export default admin_StudentsEnrollment
+export default AdminStudentsEnrollment;
