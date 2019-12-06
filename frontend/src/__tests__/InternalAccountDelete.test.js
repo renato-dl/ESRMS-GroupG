@@ -1,24 +1,23 @@
 import React from 'react';
 import {getRouterPropsForTest} from '../utils';
 import {shallow} from 'enzyme';
-import ClassCompositionDetail from '../components/ClassComposition/ClassCompositionDetail/ClassCompositionDetail';
+import InternalAccountDelete from '../components/InternalAccounts/InternalAccountDetails/InternalAccountDelete';
 import { api } from '../services/api';
 
-describe('Testing ClassCompositionDetail component', () => {
+describe('Testing InternalAccountDelete component', () => {
   
-  test('Test if class composition detail component is rendered', async () => {
+  test('Test if internal account delete component is rendered', async () => {
     const loginData = {
       email: "admin@phonyschool.com",
       password: "EasyPassAdmin123",
     };
 
     const response = await api.auth.login(loginData);
-    //console.log(response);
+    
     if (response.data.token) {
-      //wconsole.log(response.data.token);
       localStorage.setItem("token", JSON.stringify(response.data.token));
       shallow(
-        <ClassCompositionDetail {...getRouterPropsForTest()} />
+        <InternalAccountDelete {...getRouterPropsForTest()} />
       );
     }
   });
