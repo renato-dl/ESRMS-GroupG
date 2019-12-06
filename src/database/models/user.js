@@ -369,9 +369,8 @@ class User extends Model {
       if (hasClass) {
         throw new Error('User has associated classes, teacher role cannot be removed');
       }
-      const isCoordinator = await this.isCoordinator(accountId);
+      const isCoordinator = await this.isCoordinator(userId);
       if (isCoordinator) {
-        connection.release();
         throw new Error ('User is class coordinator, teacher role cannot be removed');
       }
     }
