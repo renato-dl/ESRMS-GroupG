@@ -44,8 +44,8 @@ class TopicDetails extends React.Component {
     }
 
     this.setState({isSaving: true});
-
     const {params} = this.props.match;
+
     try {
       const topicData = {
         topicId: this.state.topicID,
@@ -56,23 +56,20 @@ class TopicDetails extends React.Component {
         topicDate: this.state.date.toUTCString()
       };
 
-      if(!this.state.topicID){
-        await api.teacher.saveTopic(
-          topicData
-        );
+      if(!this.state.topicID) {
+        await api.teacher.saveTopic(topicData);
         toastr.success(`Topic ${this.state.topicID ? 'updated' : 'added'} successfully.`);
-      }
-      else{
-        const reqResult = await api.teacher.updateTopic(
-          topicData
-        );  
-        if(reqResult.data.Success){
+      } else {
+        const reqResult = await api.teacher.updateTopic(topicData);  
+        
+        if (reqResult.data.Success) {
           toastr.success('Topic updated successfully.');
-        }
-        else{
+        } else {
           toastr.error(reqResult.data.Message);
+          this.setState({isSaving: false});
+          return;
         }
-      }      
+      }
     } catch (e) {
       this.setState({isSaving: false});
       return toastr.error(e);

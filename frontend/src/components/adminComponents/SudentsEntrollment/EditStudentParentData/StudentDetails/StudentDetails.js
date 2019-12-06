@@ -5,25 +5,28 @@ import "react-datepicker/dist/react-datepicker.css";
 import {api} from '../../../../../services/api';
 import { withRouter } from "react-router";
 import * as toastr from 'toastr';
+import { SSNRegexp } from '../../../../../utils';
 
 export class StudentDetails extends React.Component {
   constructor(props) {
     super(props);
-  this.state = {
-    ID:null,
-    FirstName: null,
-    LastName:null,
-    Gender:null,
-    BirthDate: new Date(),
-    SSN:null,
-    Parent1Id:null,
-    Parent2Id:null,
-    isSaving: false
-  }};
+
+    this.state = {
+      ID:null,
+      FirstName: null,
+      LastName:null,
+      Gender:null,
+      BirthDate: new Date(),
+      SSN:null,
+      Parent1Id:null,
+      Parent2Id:null,
+      isSaving: false,
+      errors: {}
+    }
+  };
 
 
-  componentDidMount() {
-    console.log(this.props)
+  componentDidMount() { 
     const {studentInfo} = this.props;
 
     if (studentInfo) {
@@ -36,8 +39,8 @@ export class StudentDetails extends React.Component {
         BirthDate: new Date(studentInfo.BirthDate),
         Parent1Id:this.props.parentInfo.ID
       });
-      if(this.props.parentInfo2)
-      {
+
+      if(this.props.parentInfo2) {
         this.setState({Parent2Id:this.props.parentInfo2.ID})
       }
     }
@@ -57,6 +60,11 @@ export class StudentDetails extends React.Component {
       return;
     }
 
+    const hasErrors = this.validateFields();
+    if (hasErrors) {
+      return;
+    }
+
     this.setState({isSaving: true});
 
     try {
@@ -69,19 +77,15 @@ export class StudentDetails extends React.Component {
         BirthDate: this.state.BirthDate.toUTCString(),
         Parent1Id:this.state.Parent1Id,
         Parent2Id:this.state.Parent2Id
-        //Parent1Id:'9e412480-4287-4b62-a1ba-a8dcb03cdd41'
       };
-        const reqResult = await api.admin.updateStudent(
-            studentData
-        );  
-        if(reqResult.data.success){
+        const reqResult = await api.admin.updateStudent(studentData);
+
+        if (reqResult.data.success) {
           toastr.success('Student updated successfully.');
-        }
-        else{
+        } else {
           toastr.error(reqResult.data.Message);
         }
-      }      
-    catch (e) {
+    } catch (e) {
       this.setState({isSaving: false});
       return toastr.error(e);
     }
@@ -89,6 +93,17 @@ export class StudentDetails extends React.Component {
     this.setState({isSaving: false});
     this.props.onSave();
   };
+
+  validateFields = () => {
+    const errors = {...this.state.errors};
+
+    errors['FirstName'] = !this.state.FirstName;
+    errors['LastName'] = !this.state.LastName;
+    errors['SSN'] = !SSNRegexp.test(this.state.SSN);
+
+    this.setState({errors});
+    return !!Object.keys(errors).filter((e) => errors[e]).length;
+  }; 
 
   onClose = () => {
     if (this.state.isSaving) {
@@ -102,12 +117,18 @@ export class StudentDetails extends React.Component {
     return (
       <Modal dimmer open className="topic-detail" size="small">
         <Modal.Header>
-    <span> <Icon name="edit"/>Edit Student:&nbsp;&nbsp; <span style={{textTransform: 'capitalize'}}> {this.state.FirstName} {this.state.LastName} </span> </span>
+          <span>
+            <Icon name="edit"/>Edit Student:&nbsp;&nbsp; 
+            <span style={{textTransform: 'capitalize'}}> 
+              {this.state.FirstName} {this.state.LastName}
+            </span> 
+          </span>
           <Icon onClick={this.onClose} className="close-icn" name="close" />
         </Modal.Header>
         <Modal.Content>
           <Form loading={this.state.isSaving}>
             <Form.Input
+              error={this.state.errors['FirstName']}
               name="FirstName"
               label='Student FirstName'
               placeholder='Student FirstName'
@@ -115,6 +136,7 @@ export class StudentDetails extends React.Component {
               onChange={this.handleInputChange}
             />
             <Form.Input
+              error={this.state.errors['LastName']}
               name="LastName"
               label='Student LastName'
               placeholder='Student LastName'
@@ -123,6 +145,7 @@ export class StudentDetails extends React.Component {
             />
             <Form.Group widths='equal'>
               <Form.Select
+                error={this.state.errors['Gender']}
                 name="Gender"
                 label="Gender"
                 options={[
@@ -141,19 +164,13 @@ export class StudentDetails extends React.Component {
                 />
               </Form.Field>
               <Form.Input
-              name="SSN"
-              label='SSN'
-              placeholder='SSN'
-              value={this.state.SSN}
-              onChange={this.handleInputChange}
-            />
-            {/* <Form.Input
-              name="Parent2Id"
-              label='Parent2Id'
-              placeholder='Parent2Id'
-              value={this.state.Parent2Id}
-              onChange={this.handleInputChange}
-            /> */}
+                error={this.state.errors['SSN']}
+                name="SSN"
+                label='SSN'
+                placeholder='SSN'
+                value={this.state.SSN}
+                onChange={this.handleInputChange}
+              />
             </Form.Group>
           </Form>
         </Modal.Content>
