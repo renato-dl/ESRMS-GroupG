@@ -65,6 +65,12 @@ class Student extends Model {
 
     const date = moment.utc(birthDate);
 
+    const result = await this.findBySSN(SSN);
+
+    if (result.length != 0) {
+      throw new Error('There is already a student with the specified SSN');
+    }
+
     const result = await this.update(studentId, {
       FirstName: firstName,
       LastName: lastName,
