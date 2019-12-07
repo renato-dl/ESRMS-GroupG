@@ -156,7 +156,7 @@ class Class extends Model {
     if (hasStudents) {
       throw new Error('Cannot delete a class with students');
     }
-    const isLastClass = this.isLastClass(classId);
+    const isLastClass = await this.isLastClass(classId);
     if (!isLastClass) {
       throw new Error('Only the most recently created class can be deleted');
     }
