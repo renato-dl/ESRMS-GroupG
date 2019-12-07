@@ -132,7 +132,7 @@ export class GradeUpdate extends Component {
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button  positive onClick={this.onSave} disabled={this.updated || (this.state.value === null || (parseFloat(this.state.value) < 0.00))}>
+        <Button  positive onClick={this.onSave} disabled={this.updated || (this.state.value === null || (parseFloat(this.state.value) < 0.00) || (parseFloat(this.state.value) > 10.00))}>
           <Icon name='checkmark' /> Update Grade
         </Button>
 
