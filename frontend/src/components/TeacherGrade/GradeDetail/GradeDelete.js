@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './GradeDetail.scss';
-import {Button, Modal, Header, Icon} from 'semantic-ui-react';
+import {Button, Modal, Icon} from 'semantic-ui-react';
 import moment from 'moment';
 import * as toastr from 'toastr';
 import {api} from '../../../services/api';
@@ -81,13 +81,13 @@ export class GradeDelete extends Component {
     return (
       <Modal dimmer open className="topic-detail" size="small">
         <Modal.Header>
-          <span><Icon name="archive"/>&nbsp;Delete Grade</span>
+          <span>Delete Grade</span>
           <Icon onClick={this.onClose} className="archive" name="close" />
         </Modal.Header>
         <Modal.Content>
-        <p>
+        <h3>
             Are you sure you want to delete this grade?
-        </p>
+        </h3>
         <p>Student: {this.state.name} {this.state.surname}</p>
         <p>{this.state.type} {this.state.value}</p>
         <p>Date: { moment(this.state.date).format('LL')}</p>
