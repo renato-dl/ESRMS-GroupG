@@ -9,7 +9,7 @@ describe('Testing GradeDelete component', () => {
   test('Test if grade delete component is rendered', async () => {
     const loginData = {
       email: "giulia.tesori@gmail.com",
-      password: "easypass",
+      password: "easypass"
     };
 
     const response = await api.auth.login(loginData);
