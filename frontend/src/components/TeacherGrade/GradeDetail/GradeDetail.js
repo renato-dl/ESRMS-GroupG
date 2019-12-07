@@ -38,7 +38,7 @@ export class GradeDetail extends Component {
           students: allStudents.data
         });
         allStudents.data.forEach(element => {
-          studentsMap.set(element.ID, "0");          
+          studentsMap.set(element.ID, "");          
         });
         this.setState({
           studentMarks: studentsMap
@@ -77,27 +77,32 @@ export class GradeDetail extends Component {
     const allMarks = this.state.studentMarks;
 
     allMarks.forEach(async (key, value) => {
-      if (key >= 2) {
-        try {
-          let correctedDate = this.state.date;
-          correctedDate = correctedDate.toUTCString();
-          const request = {
-            subjectId: this.state.subjectId,
-            studentId: value,
-            classId: this.state.classId,
-            grade: key,
-            gradeDate: correctedDate,
-            type: this.state.type
-          }
-          const response = await api.teacher.addMark(request);
-          if(response) {
-            toastr.success('Grade added successfully!');
-          }
-        } catch(e) {
-          this.setState({isSaving: false});
-          toastr.error(e);
-        }        
-      }
+      if(key){
+        if (key >= 0) {
+          try {
+            let correctedDate = this.state.date;
+            correctedDate = correctedDate.toUTCString();
+            const request = {
+              subjectId: this.state.subjectId,
+              studentId: value,
+              classId: this.state.classId,
+              grade: key,
+              gradeDate: correctedDate,
+              type: this.state.type
+            }
+            const response = await api.teacher.addMark(request);
+            if(response) {
+              toastr.success('Grade added successfully!');
+            }
+          } catch(e) {
+            this.setState({isSaving: false});
+            toastr.error(e);
+          }        
+        }
+        else{
+          toastr.error("Invalid grade!");
+        }
+      }      
     });
 
     this.setState({isSaving: false});
