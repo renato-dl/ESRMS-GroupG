@@ -27,7 +27,7 @@ export const ParentMenu = (props) => {
               Assignments
             </Menu.Item>
             
-            <Menu.Item as={Link} to={`/parent/student/${selectedChildID}/attendance`}>
+            {/* <Menu.Item as={Link} to={`/parent/student/${selectedChildID}/attendance`}>
               <Icon name='calendar check outline'/>
               Attendance
             </Menu.Item>
@@ -35,7 +35,7 @@ export const ParentMenu = (props) => {
             <Menu.Item as={Link} to={`/parent/student/${selectedChildID}/study-plan`}>
               <Icon name='file alternate outline'/>
               Study Plan
-            </Menu.Item>
+            </Menu.Item> */}
           </>
         }
       </>

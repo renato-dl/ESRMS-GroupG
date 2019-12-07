@@ -23,10 +23,10 @@ export const TeacherMenu = (props) => {
         <Icon name='sort numeric up' />
         Marks
       </Menu.Item> */}
-      <Menu.Item as={Link} to='/teacher/presence'>
+      {/* <Menu.Item as={Link} to='/teacher/presence'>
         <Icon name='check' />
         Present/Absent records
-      </Menu.Item>
+      </Menu.Item> */}
     </>
   );
 }
