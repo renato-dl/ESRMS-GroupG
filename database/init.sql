@@ -20,9 +20,9 @@ CREATE TABLE `Assignments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `Assignments` (`ID`, `SubjectId`, `ClassId`, `Title`, `Description`, `DueDate`, `CreatedOn`) VALUES
-(1, 1, 1, 'Geometry problems', 'Probblems # 15 to 22 page 145', '2019-12-18 00:00:00', '2019-12-04 10:27:02'),
-(2, 3, 1, 'Kinematics problems', 'Exercises 15 to 19 page 87', '2019-12-15 00:00:00', '2019-12-04 10:27:02'),
-(3, 3, 1, 'Kinematics', 'Chapter 3, paragraphs 4 to 8', '2019-12-15 00:00:00', '2019-12-04 10:27:02');
+(1, 1, 1, 'Geometry problems', 'Problems # 15 to 22 page 145', '2019-12-18 00:00:00', '2019-12-07 09:29:16'),
+(2, 3, 1, 'Kinematics problems', 'Exercises 15 to 19 page 87', '2019-12-15 00:00:00', '2019-12-07 09:29:16'),
+(3, 3, 1, 'Kinematics', 'Chapter 3, paragraphs 4 to 8', '2019-12-15 00:00:00', '2019-12-07 09:29:16');
 
 CREATE TABLE `Classes` (
   `ID` int(10) UNSIGNED NOT NULL,
@@ -67,11 +67,11 @@ CREATE TABLE `Students` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `Students` (`ID`, `FirstName`, `LastName`, `SSN`, `BirthDate`, `Parent1`, `Parent2`, `ClassId`, `CreatedOn`, `Gender`) VALUES
-('266667153e975bbf735b89d4b03d9f93', 'Sara', 'Lorenzini', 'LRNSRA05E59L219Q', '2005-05-19 00:00:00', '9d64fa59c91d9109b11cd9e05162c675', '202db8275d3c06e6ce3fe7a47b30e0fe', 1, '2019-12-04 10:27:02', 'F'),
-('7460aba98f7291ee69fcfdd17274c3a1', 'Martina', 'Menzi', 'MNZMTN05H41L219C', '2005-06-01 00:00:00', '32d905eaa2770b66baf20282dff09191', NULL, 1, '2019-12-04 10:27:02', 'F'),
-('7f32bd55-9222-4dde-9cf4-fb1edb5148cc', 'Giorgino', 'Di Giorgio', 'PVMVRY91A12L533C', '2005-02-11 00:00:00', '6d361d43-1308-4ac6-95ab-580138de9141', NULL, 2, '2019-12-04 10:27:02', 'M'),
-('868d6ec1dfc8467f6d260c48b5620543', 'Gianluca', 'Menzi', 'MNZGLC05H01L219X', '2005-06-01 00:00:00', '32d905eaa2770b66baf20282dff09191', NULL, 1, '2019-12-04 10:27:02', 'M'),
-('aa49b76d-0308-44ce-a111-dcf31fd7678c', 'Gioia', 'Di Gioia', 'YQUFNS90T41F804P', '2005-01-25 00:00:00', '9e412480-4287-4b62-a1ba-a8dcb03cdd41', NULL, 2, '2019-12-04 10:27:02', 'F');
+('266667153e975bbf735b89d4b03d9f93', 'Sara', 'Lorenzini', 'LRNSRA05E59L219Q', '2005-05-19 00:00:00', '9d64fa59c91d9109b11cd9e05162c675', '202db8275d3c06e6ce3fe7a47b30e0fe', 1, '2019-12-07 09:29:16', 'F'),
+('7460aba98f7291ee69fcfdd17274c3a1', 'Martina', 'Menzi', 'MNZMTN05H41L219C', '2005-06-01 00:00:00', '32d905eaa2770b66baf20282dff09191', NULL, 1, '2019-12-07 09:29:16', 'F'),
+('7f32bd55-9222-4dde-9cf4-fb1edb5148cc', 'Giorgino', 'Di Giorgio', 'PVMVRY91A12L533C', '2005-02-11 00:00:00', '6d361d43-1308-4ac6-95ab-580138de9141', NULL, 2, '2019-12-07 09:29:16', 'M'),
+('868d6ec1dfc8467f6d260c48b5620543', 'Gianluca', 'Menzi', 'MNZGLC05H01L219X', '2005-06-01 00:00:00', '32d905eaa2770b66baf20282dff09191', NULL, 1, '2019-12-07 09:29:16', 'M'),
+('aa49b76d-0308-44ce-a111-dcf31fd7678c', 'Gioia', 'Di Gioia', 'YQUFNS90T41F804P', '2005-01-25 00:00:00', '9e412480-4287-4b62-a1ba-a8dcb03cdd41', NULL, 2, '2019-12-07 09:29:16', 'F');
 
 CREATE TABLE `Subjects` (
   `ID` int(10) UNSIGNED NOT NULL,
@@ -108,9 +108,9 @@ CREATE TABLE `Topics` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `Topics` (`ID`, `TeacherSubjectClassRelationId`, `Title`, `TopicDescription`, `TopicDate`, `CreatedOn`) VALUES
-(1, 1, 'Expressions', 'Part 1', '2019-10-07 00:00:00', '2019-12-04 10:27:02'),
-(2, 1, 'Expressions', 'Part 2', '2019-10-14 00:00:00', '2019-12-04 10:27:02'),
-(3, 1, 'Expressions', 'Part 3', '2019-10-21 00:00:00', '2019-12-04 10:27:02');
+(1, 1, 'Expressions', 'Part 1', '2019-10-07 00:00:00', '2019-12-07 09:29:16'),
+(2, 1, 'Expressions', 'Part 2', '2019-10-14 00:00:00', '2019-12-07 09:29:16'),
+(3, 1, 'Expressions', 'Part 3', '2019-10-21 00:00:00', '2019-12-07 09:29:16');
 
 CREATE TABLE `Users` (
   `ID` varchar(255) NOT NULL,
@@ -128,15 +128,15 @@ CREATE TABLE `Users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `Users` (`ID`, `eMail`, `Password`, `FirstName`, `LastName`, `SSN`, `CreatedOn`, `IsAdminOfficer`, `IsSysAdmin`, `IsParent`, `IsTeacher`, `IsPrincipal`) VALUES
-('202db8275d3c06e6ce3fe7a47b30e0fe', 'marco.lorenzini@gmail.com', '$2b$12$lRM2s7FJ/PwuBgRBAroCSu5.1OGw4E8a2U7lCWoeIBEjM.PLV2/GC', 'Marco', 'Lorenzini', 'LRNMRC76A02L219A', '2019-12-04 10:27:02', 0, 0, 1, 0, 0),
-('205db8275d3c06e6ce3fe7a47b30e0fe', 'admin@phonyschool.com', '$2b$12$iBXqQTrKqK2mJN9QeK/quegADfPLGAje9plF3y4LopGkoyGMv0fvm', 'Marta', 'Peradotto', 'PRDMRT71D51L219E', '2019-12-04 10:27:02', 1, 1, 0, 0, 0),
-('26ce21c0-8d32-41d1-8d07-b4994fa53edf', 'paola.depaola@phonyschool.com', '$2b$12$i4Y71iavFVXY9rKcTMnx3un.auMTJHsQ2tWg0UNSTI1uz/b6phh2.', 'Paola', 'De Paola', 'TXCRDF77T22B735U', '2019-12-04 10:27:02', 0, 0, 0, 1, 0),
-('32d905eaa2770b66baf20282dff09191', 'lucia.verdi@gmail.com', '$2b$12$52kzJ0z2V6TbzW0GW2K1duje6s/TSziz8XFdtygbS0aAxlBT.XlWG', 'Lucia', 'Verdi', 'VRDLCU75A41L219F', '2019-12-04 10:27:02', 0, 0, 1, 0, 0),
-('6d361d43-1308-4ac6-95ab-580138de9141', 'giorgio.digiorgio@parentsunited.com', '$2b$12$yYDFMhPnFAklNZAbs/YsVeEAitmqaYFfZS4IQlRRZjsT6KKVhMyYa', 'Giorgio', 'Di Giorgio', 'PVDZRN27M04G189V', '2019-12-04 10:27:02', 0, 0, 1, 1, 0),
-('6e5c9976f5813e59816b40a814e29899', 'giulia.tesori@gmail.com', '$2b$12$IHuGw5wBaoRS9jNgBMq6beWGFA610Jhh2Ay13ryZLB9O90NF2LJju', 'Giulia', 'Tesori', 'TSRGLI74R52L219F', '2019-12-04 10:27:02', 0, 0, 0, 1, 0),
-('9d64fa59c91d9109b11cd9e05162c675', 'nadia.rossi@gmail.com', '$2b$12$Kmk9kh943Xk0kAg19H02ueleTSSFYjgmlwPzCKaATjWqXLzVin2wu', 'Nadia', 'Rossi', 'RSSNDA76A41L219U', '2019-12-04 10:27:02', 0, 0, 1, 0, 0),
-('9e412480-4287-4b62-a1ba-a8dcb03cdd41', 'maria.demaria@parentsunited.com', '$2b$12$ZjMCbihVFl9WlqyoKr9r2eQmcbuGJktyFpLEpsmwnl7g59FisD/le', 'Maria', 'De Maria', 'FGTHCF68M46G424G', '2019-12-04 10:27:02', 0, 0, 1, 0, 0),
-('d5799583-42e3-4818-a073-449fc8f1b7e8', 'luca.deluca@phonyschool.com', '$2b$12$9NdgM8A54E5vQKYbGtYjMuqBdP0Ykp0LD.aPFI5twe5nGRxJKEFdi', 'Luca', 'De Luca', 'WRVKBU59R17L237H', '2019-12-04 10:27:02', 0, 0, 0, 1, 0);
+('202db8275d3c06e6ce3fe7a47b30e0fe', 'marco.lorenzini@gmail.com', '$2b$12$zQpAirPbNGF0erFoadsyKeZdE87Y2QEvFqNTAiMj113DSFSR70Rnm', 'Marco', 'Lorenzini', 'LRNMRC76A02L219A', '2019-12-07 09:29:16', 0, 0, 1, 0, 0),
+('205db8275d3c06e6ce3fe7a47b30e0fe', 'admin@phonyschool.com', '$2b$12$27/jWKKEOoiYztmwsTO1AeAfjRisWc/0smVXCao63uAXLdCiXMt.i', 'Marta', 'Peradotto', 'PRDMRT71D51L219E', '2019-12-07 09:29:16', 1, 1, 0, 0, 0),
+('26ce21c0-8d32-41d1-8d07-b4994fa53edf', 'paola.depaola@phonyschool.com', '$2b$12$uV91JXw3DMdewU6Hjh5pM.9EetUkyyUCNHxiSNU2/4KD4apN2hGgq', 'Paola', 'De Paola', 'TXCRDF77T22B735U', '2019-12-07 09:29:16', 0, 0, 0, 1, 0),
+('32d905eaa2770b66baf20282dff09191', 'lucia.verdi@gmail.com', '$2b$12$kJ/ZfsvbIUgE/RmpSTv8TekY7gB//SjWfrzbVdmU/HQf0UWOiVLGO', 'Lucia', 'Verdi', 'VRDLCU75A41L219F', '2019-12-07 09:29:16', 0, 0, 1, 0, 0),
+('6d361d43-1308-4ac6-95ab-580138de9141', 'giorgio.digiorgio@parentsunited.com', '$2b$12$/Yaqrn7prQd.aTQYn6FfKeqK4qaT8eDMXu7xS04e9lhOJUSWzY7rC', 'Giorgio', 'Di Giorgio', 'PVDZRN27M04G189V', '2019-12-07 09:29:16', 0, 0, 1, 1, 0),
+('6e5c9976f5813e59816b40a814e29899', 'giulia.tesori@gmail.com', '$2b$12$wxAnRc/px3orbzinHBbNRu51cmMgRN2L6k3ouBFeBFYig2.oTqsxi', 'Giulia', 'Tesori', 'TSRGLI74R52L219F', '2019-12-07 09:29:16', 0, 0, 0, 1, 0),
+('9d64fa59c91d9109b11cd9e05162c675', 'nadia.rossi@gmail.com', '$2b$12$KMeaf7v7MJSVAsVMGFOAjOzDu2hgX6c87Q9zGQrKAIUY4171OkPm.', 'Nadia', 'Rossi', 'RSSNDA76A41L219U', '2019-12-07 09:29:16', 0, 0, 1, 0, 0),
+('9e412480-4287-4b62-a1ba-a8dcb03cdd41', 'maria.demaria@parentsunited.com', '$2b$12$6gz.4ugWzXAzserSyXKMOuuKqP7TqVJ5GYAagGweZvOjH/MlJVfw.', 'Maria', 'De Maria', 'FGTHCF68M46G424G', '2019-12-07 09:29:16', 0, 0, 1, 0, 0),
+('d5799583-42e3-4818-a073-449fc8f1b7e8', 'luca.deluca@phonyschool.com', '$2b$12$e8uIYzf8Sw6hL3mCcE3TGuylyuEi3nliR0Eqic/o/lG7NSyP/5M3e', 'Luca', 'De Luca', 'WRVKBU59R17L237H', '2019-12-07 09:29:16', 0, 0, 0, 1, 0);
 
 
 ALTER TABLE `Assignments`
@@ -182,19 +182,19 @@ ALTER TABLE `Assignments`
   MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 ALTER TABLE `Classes`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 ALTER TABLE `Grades`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 ALTER TABLE `Subjects`
   MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 ALTER TABLE `TeacherSubjectClassRelation`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 ALTER TABLE `Topics`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 
 ALTER TABLE `Assignments`
