@@ -114,14 +114,14 @@ export class FormParentDetails extends Component {
       const idData = {target:{value: onresult.ID}};
       const ssnData = {target:{value: onresult.SSN}};
 
-      if(e.target.name === "P1"){
+      if(this.state.currentSSNSearch === 1){
         this.props.handleChange('p1_SSN')(ssnData); 
         this.props.handleChange('p1_ID')(idData);
         this.props.handleChange('p1_FirstName')(empty);
         this.props.handleChange('p1_LastName')(empty);
         this.props.handleChange('p1_Email')(empty);
 
-      }else if(e.target.name === "P2"){
+      }else if(this.state.currentSSNSearch === 2){
         this.props.handleChange('p2_SSN')(ssnData); 
         this.props.handleChange('p2_ID')(idData);
         this.props.handleChange('p2_FirstName')(empty);
@@ -130,11 +130,11 @@ export class FormParentDetails extends Component {
       }
     }else{
 
-      if(e.target.name === "P1"){
+      if(this.state.currentSSNSearch === 1){
         this.props.handleChange('p1_SSN')(e); 
         this.props.handleChange('p1_ID')(empty);
 
-      }else if(e.target.name === "P2"){
+      }else if(this.state.currentSSNSearch === 2){
         this.props.handleChange('p2_SSN')(e); 
         this.props.handleChange('p2_ID')(empty);
       }
