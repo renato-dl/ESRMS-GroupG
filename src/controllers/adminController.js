@@ -81,7 +81,7 @@ class AdminController extends BaseController {
           parent2Insert = true;
         } else {
           parent2 = req.body.secondParent.ID;
-          await User.makeParentIfNotAlready(parent1);
+          await User.makeParentIfNotAlready(parent2);
         }
       } else {
         parent2 = null;
