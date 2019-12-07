@@ -443,7 +443,12 @@ class User extends Model {
   async checkIfStillParent(userId) {
     const hasChildren = await this.hasChildren(userId);
     if (!hasChildren) {
-      await this.update(userId, {IsParent: 0});
+      const user = await this.findById(userId);
+      if (user.IsTeacher == 1 || user.IsPrincipal == 1 || IsAdminOfficer ==1) {
+        await this.update(userId, {IsParent: 0});
+      } else {
+        await this.remove(userId);
+      }
     }
   }
 
