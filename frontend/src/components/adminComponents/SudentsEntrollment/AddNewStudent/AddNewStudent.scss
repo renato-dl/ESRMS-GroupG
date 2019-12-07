@@ -73,11 +73,14 @@ border: 2px solid blue
     color:#9f3a38;
     margin:0
 }
-.errorSNN > * {
+.errorSNN {
     border:1px solid #e0b4b4;
     border-radius: 5px;
-    background: #fff6f6;
+    background-color: #fff6f6;
     color: #9f3a38!important;
+    input[type=text].prompt{
+        background-color: #fff6f6;
+    }
 }
 
 .knownDetails{
