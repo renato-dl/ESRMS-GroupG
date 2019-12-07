@@ -67,7 +67,7 @@ class Student extends Model {
 
     const SSNresult = await this.findBySSN(SSN);
 
-    if (SSNresult.length != 0) {
+    if (SSNresult[0].ID != studentId) {
       throw new Error('There is already a student with the specified SSN');
     }
 
