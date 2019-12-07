@@ -219,7 +219,7 @@ export class FormParentDetails extends Component {
 
     render() {
       //for sharing props with FormStudentDetails state
-      const {values, handleChange} = this.props;
+      const {values} = this.props;
 
       const { isLoading_P1, isLoading_P2, p1_SSN, p2_SSN, results_P1, results_P2 } = this.state
 
@@ -309,6 +309,7 @@ export class FormParentDetails extends Component {
             <Accordion.Content active={values.activeIndex === 1}>
                 <>
                 <Form.Field>
+                  <p className="infoText"><Icon name="info"/> Please keep closed this field if you don't want to insert Second Parent data.</p>
                   <Grid>
                     <Grid.Column>
                         {/* <label><b>SSN</b></label> */}
