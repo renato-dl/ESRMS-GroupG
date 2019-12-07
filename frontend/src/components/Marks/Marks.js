@@ -40,7 +40,7 @@ export class Marks extends React.Component{
 
 
   render(){
-    console.log(this.props.match)
+    // console.log(this.props.match)
     if(this.state.marks.length){
       return (
         <Container className="contentContainer">
