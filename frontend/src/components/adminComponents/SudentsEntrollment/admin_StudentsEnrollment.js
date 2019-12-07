@@ -141,7 +141,7 @@ export class AdminStudentsEnrollment extends Component {
                 <Icon name="upload"/>
                 Upload Excel File
             </Button> */}
-            <div className='Student_admin'>
+            <h4/><div className='Student_admin'>
             <Table  compact textAlign='center' color="grey" collapsing>
               <Table.Header >
                    <Table.Row >
