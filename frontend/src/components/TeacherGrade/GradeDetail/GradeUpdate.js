@@ -53,7 +53,7 @@ export class GradeUpdate extends Component {
   };
 
   changeValue = (mark) => {
-    this.setState({ value: mark });
+    this.setState({ value: mark, updated: true });
   }
 
   onSave = async () => {
@@ -95,7 +95,7 @@ export class GradeUpdate extends Component {
     return (
       <Modal dimmer open className="grade-detail" size="small">
       <Modal.Header>
-        Add Grades
+        Update grade
         <Icon onClick={this.onClose} className="close-icn" name="close" />
       </Modal.Header>
       <Modal.Content>
@@ -132,7 +132,7 @@ export class GradeUpdate extends Component {
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button  positive onClick={this.onSave} disabled={this.updated || (!this.state.value || this.state.value < 2)}>
+        <Button  positive onClick={this.onSave} disabled={this.updated || (!this.state.value || (parseFloat(this.state.value) < 0.00))}>
           <Icon name='checkmark' /> Update Grade
         </Button>
 
