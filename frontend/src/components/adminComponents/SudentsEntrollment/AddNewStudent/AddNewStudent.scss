@@ -71,6 +71,7 @@ border: 2px solid blue
 }
 .error{
     color:#9f3a38;
+    margin:0
 }
 .errorSNN > * {
     border:1px solid #e0b4b4;
@@ -92,4 +93,7 @@ border: 2px solid blue
     i{
         margin-bottom:5px;
     }
+}
+.infoText{
+    color: #9f3a38!important;
 }

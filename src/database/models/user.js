@@ -207,6 +207,21 @@ class User extends Model {
 
     await this.validateUserData(firstName, lastName, eMail, SSN);
 
+    const connection = await this.db.getConnection();
+
+    const selectResult = await connection.query(
+      `SELECT COUNT(*) AS count
+      FROM Users
+      WHERE (SSN = ? OR eMail = ?) AND ID != ?;`,
+      [SSN, eMail, parentId]
+    );
+
+    connection.release();
+
+    if (selectResult[0].count != 0) {
+      throw new Error('SSN or eMail already used by other account');
+    }
+
     //update of data
     
     const result = await this.update(parentId, {
@@ -363,7 +378,6 @@ class User extends Model {
       throw new Error('User is not an internal user');
     }
 
-    // TODO: test
     if (user.IsTeacher == 1 && isTeacher == false) {
       const hasClass = await this.hasClass(userId);
       if (hasClass) {
@@ -381,6 +395,22 @@ class User extends Model {
       }
     }
     
+    const connection = await this.db.getConnection();
+
+    const selectResult = await connection.query(
+      `SELECT COUNT(*) AS count
+      FROM Users
+      WHERE (SSN = ? OR eMail = ?) AND ID != ?;`,
+      [SSN, eMail, userId]
+    );
+
+    connection.release();
+
+    if (selectResult[0].count != 0) {
+      throw new Error('SSN or eMail already used by other account');
+    }
+
+
     await this.update(userId, {
       eMail: eMail,
       IsTeacher: isTeacher,
@@ -413,7 +443,12 @@ class User extends Model {
   async checkIfStillParent(userId) {
     const hasChildren = await this.hasChildren(userId);
     if (!hasChildren) {
-      await this.update(userId, {IsParent: 0});
+      const user = await this.findById(userId);
+      if (user.IsTeacher == 1 || user.IsPrincipal == 1 || user.IsAdminOfficer == 1) {
+        await this.update(userId, {IsParent: 0});
+      } else {
+        await this.remove(userId);
+      }
     }
   }
 

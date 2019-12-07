@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import '../AddNewStudent.scss'
 import {SSNRegexp} from '../../../../../utils';
+import validator from 'validator';
 
 import {Button, Icon, Form, Accordion, Search, Grid, Header} from 'semantic-ui-react'
 
@@ -52,7 +53,7 @@ export class FormParentDetails extends Component {
   state = this.props.values;
  
   isEmptyStr(str) {
-    return (!str || 0 === str.length);
+    return (!str || 0 === str.length || str === undefined);
   }
 
   back = e => {
@@ -75,14 +76,14 @@ export class FormParentDetails extends Component {
     let parent_errors = this.state.parent_errors;
 
     parent_errors['p1_SSN'] = (this.isEmptyStr(this.state.p1_ID) ? !SSNRegexp.test(this.state.p1_SSN.trim()) : false);
-    //parent_errors['p1_Email'] = (this.isEmptyStr(this.state.p1_ID) ? !validator.isEmail(this.props.p1_Email) : false);
+    parent_errors['p1_Email'] = (this.isEmptyStr(this.state.p1_ID) ? !validator.isEmail(this.state.p1_Email) : false);
     
 
     parent_errors['p2_SSN'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? !SSNRegexp.test(this.state.p2_SSN.trim()) : false);
-    //parent_errors['p2_Email'] = (this.state.activeIndex===1 && this.isEmptyStr(this.props.p2_ID) ? !validator.isEmail(this.props.p2_Email) : false);
+    parent_errors['p2_Email'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? !validator.isEmail(this.state.p2_Email) : false);
 
-    //parent_errors['p2_FirstName'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? this.isEmptyStr(this.state.p2_FirstName) : false); 
-    //parent_errors['p2_LastName'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? this.isEmptyStr(this.state.p2_LastName) : false); 
+    parent_errors['p2_FirstName'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? this.isEmptyStr(this.state.p2_FirstName) : false); 
+    parent_errors['p2_LastName'] = (this.state.activeIndex===1 && this.isEmptyStr(this.state.p2_ID) ? this.isEmptyStr(this.state.p2_LastName) : false); 
     
     const hasErrorsParent = !!Object.keys(parent_errors).filter((e) => parent_errors[e]).length;
     return [hasErrorsParent, parent_errors];
@@ -97,6 +98,11 @@ export class FormParentDetails extends Component {
       }
   }
 
+  handleChngeBothStates = (e, {name, value}) => {
+      this.setState({[name]:value});
+      this.props.handleChange(name)(e);
+  }
+  
 //----Wrong but fast :D
   onSSNandIDChange = (e, onresult) => {
     const empty = {target:{value:""}};
@@ -213,7 +219,7 @@ export class FormParentDetails extends Component {
 
     render() {
       //for sharing props with FormStudentDetails state
-      const {values, handleChange} = this.props;
+      const {values} = this.props;
 
       const { isLoading_P1, isLoading_P2, p1_SSN, p2_SSN, results_P1, results_P2 } = this.state
 
@@ -229,8 +235,7 @@ export class FormParentDetails extends Component {
               <Grid.Column>
                   {/* <label><b>SSN</b></label> */}
                   {!this.state.parent_errors['p1_SSN'] && <label><b>SSN</b></label>}
-                  {this.state.parent_errors['p1_SSN'] &&
-                  <p className="error"><b>SSN</b></p>}
+                  {this.state.parent_errors['p1_SSN'] &&<p className="error"><b>SSN</b></p>}
 
                 <Search
                   className = {!this.state.parent_errors['p1_SSN'] ? "" : 'errorSNN'}
@@ -263,14 +268,16 @@ export class FormParentDetails extends Component {
                   name='p1_FirstName'
                   defaultValue = {values.p1_FirstName}
                   //defaultValue = {this.state.p1_FirstName}
-                  onChange={handleChange('p1_FirstName')}
+                  //onChange={handleChange('p1_FirstName')}
+                  onChange={this.handleChngeBothStates}
                 />
                 <Form.Input
                   label='Last Name' placeholder='Last Name'
                   name='p1_LastName'
                   defaultValue = {values.p1_LastName}
                   //defaultValue = {this.state.p1_LastName}
-                  onChange={handleChange('p1_LastName')}
+                  //onChange={handleChange('p1_LastName')}
+                  onChange={this.handleChngeBothStates}
                 />
               </Form.Group>
               <Form.Input
@@ -280,7 +287,8 @@ export class FormParentDetails extends Component {
                   error={this.state.parent_errors['p1_Email']}
                   defaultValue = {values.p1_Email}
                   //defaultValue = {this.state.p1_Email}
-                  onChange={handleChange('p1_Email')}
+                  //onChange={handleChange('p1_Email')}
+                  onChange={this.handleChngeBothStates}
               />
             </>
             }
@@ -301,13 +309,13 @@ export class FormParentDetails extends Component {
             <Accordion.Content active={values.activeIndex === 1}>
                 <>
                 <Form.Field>
+                  <p className="infoText"><Icon name="info"/> Please keep closed this field if you don't want to insert Second Parent data.</p>
                   <Grid>
                     <Grid.Column>
                         {/* <label><b>SSN</b></label> */}
                         {!this.state.parent_errors['p2_SSN'] && <label><b>SSN</b></label>}
-                        {this.state.parent_errors['p2_SSN'] &&
-                        <p className="error"><b>SSN</b></p>}
-                      
+                        {this.state.parent_errors['p2_SSN'] && <p className="error"><b>SSN</b></p>}
+                        
                       <Search
                         className = {!this.state.parent_errors['p2_SSN'] ? "" : 'errorSNN'}
                         name="P2"
@@ -339,7 +347,8 @@ export class FormParentDetails extends Component {
                     error={this.state.parent_errors['p2_Email']}
                     name="p2_Email"
                     defaultValue = {values.p2_Email}
-                    onChange={handleChange('p2_Email')}
+                    //onChange={handleChange('p2_Email')}
+                    onChange={this.handleChngeBothStates}
                   />
 
                   <Form.Input
@@ -347,14 +356,16 @@ export class FormParentDetails extends Component {
                     error={this.state.parent_errors['p2_FirstName']}
                     name='p2_FirstName'
                     defaultValue = {values.p2_FirstName}
-                    onChange={handleChange('p2_FirstName')}
+                    //onChange={handleChange('p2_FirstName')}
+                    onChange={this.handleChngeBothStates}
                   />
                   <Form.Input
                     label='Last Name' placeholder='Last Name'
                     error={this.state.parent_errors['p2_LastName']}
                     name='p2_LastName'
                     defaultValue = {values.p2_LastName}
-                    onChange={handleChange('p2_LastName')}
+                    //onChange={handleChange('p2_LastName')}
+                    onChange={this.handleChngeBothStates}
                   />
                 </Form.Group>
                 </>

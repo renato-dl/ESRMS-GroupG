@@ -68,7 +68,7 @@ export class TopicDelete extends Component {
     return (
       <Modal dimmer open className="topic-detail" size="small">
         <Modal.Header>
-          <span>Delete topic</span>
+          <span><Icon name="archive"/>&nbsp;Delete topic</span>
           <Icon onClick={this.onClose} className="archive" name="close" />
         </Modal.Header>
         <Modal.Content>

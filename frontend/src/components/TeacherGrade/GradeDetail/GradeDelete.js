@@ -79,8 +79,11 @@ export class GradeDelete extends Component {
 
   render() {
     return (
-      <Modal dimmer open className="grade-detail" size="small">
-        <Header icon='archive' content='Delete Grade' onClick={this.onClose}/>
+      <Modal dimmer open className="topic-detail" size="small">
+        <Modal.Header>
+          <span><Icon name="archive"/>&nbsp;Delete Grade</span>
+          <Icon onClick={this.onClose} className="archive" name="close" />
+        </Modal.Header>
         <Modal.Content>
         <p>
             Are you sure you want to delete this grade?
