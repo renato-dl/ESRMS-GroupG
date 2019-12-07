@@ -207,6 +207,21 @@ class User extends Model {
 
     await this.validateUserData(firstName, lastName, eMail, SSN);
 
+    const connection = await this.db.getConnection();
+
+    const selectResult = await connection.query(
+      `SELECT COUNT(*) AS count
+      FROM Users
+      WHERE (SSN = ? OR eMail = ?) AND ID != ?;`,
+      [SSN, eMail, parentId]
+    );
+
+    connection.release();
+
+    if (selectResult[0].count != 0) {
+      throw new Error('SSN or eMail already used by other account');
+    }
+
     //update of data
     
     const result = await this.update(parentId, {
