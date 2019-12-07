@@ -76,6 +76,8 @@ export class GradeDetail extends Component {
 
     const allMarks = this.state.studentMarks;
 
+    let gradeRequests = [];
+
     allMarks.forEach(async (key, value) => {
       if(key){
         if (key >= 0) {
@@ -90,10 +92,7 @@ export class GradeDetail extends Component {
               gradeDate: correctedDate,
               type: this.state.type
             }
-            const response = await api.teacher.addMark(request);
-            if(response) {
-              toastr.success('Grade added successfully!');
-            }
+            gradeRequests.push(request);
           } catch(e) {
             this.setState({isSaving: false});
             toastr.error(e);
@@ -104,6 +103,16 @@ export class GradeDetail extends Component {
         }
       }      
     });
+
+    const gradePromises = gradeRequests.map((req) => api.teacher.addMark(req));
+    try{
+      await Promise.all(gradePromises);
+      toastr.success("Grade(s) added successfully!");
+    }
+    catch(e){
+      this.setState({isSaving: false});
+      toastr.error(e);
+    }
 
     this.setState({isSaving: false});
     this.props.onSave();
