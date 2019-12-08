@@ -166,7 +166,7 @@ class Class extends Model {
   }
   async getTeachingClasses(teacherId) {
     if(!teacherId){
-      throw new Error('Missing teacher id');
+      throw new Error('Missing or invalid teacher id');
     }
     let query = `
       SELECT DISTINCT C.ID, C.CreationYear, C.Name
