@@ -186,6 +186,11 @@ class TeacherController extends BaseController {
     res.send(students);
   }
 
+  async getClasses(req, res) {
+    const classes = await Class.getTeachingClasses(req.user.ID)
+    res.send(classes);
+  }
+
 }
 
 export default new TeacherController();

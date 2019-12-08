@@ -164,8 +164,25 @@ class Class extends Model {
     return true;
 
   }
- 
+  async getTeachingClasses(teacherId) {
+    if(!teacherId){
+      throw new Error('Missing teacher id');
+    }
+    let query = `
+      SELECT DISTINCT C.ID, C.CreationYear, C.Name
+      FROM Classes C, TeacherSubjectClassRelation tscr
+      WHERE C.ID = tscr.ClassId AND tscr.TeacherId = ?`;
 
+    const connection = await this.db.getConnection();
+    const results = await connection.query(query, [teacherId]);
+    connection.release();
+
+    if(!results.length){
+      return {message: "No Entity found"};
+    }else{
+      return results;
+    }
+  }
 }
 
 export default new Class();
