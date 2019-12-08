@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Button, Modal, Header, Icon} from 'semantic-ui-react'
+import {Button, Modal, Icon} from 'semantic-ui-react'
 import "./InternalAccountDetails.scss";
 import {api} from '../../../services/api';
 import * as toastr from 'toastr';
@@ -63,7 +63,10 @@ export class InternalAccountDelete extends Component {
   render() {
     return (
       <Modal dimmer open className="account-detail" size="small">
-        <Header icon='archive' content='Delete user account' onClick={this.onClose}/>
+        <Modal.Header>
+          <span>Delete user account</span>
+          <Icon onClick={this.onClose} className="archive deleteIconModal" name="close" />
+        </Modal.Header>
         <Modal.Content>
         <h3>Are you sure you want to delete this user account?</h3>
         <p><b>Full name:</b> {this.state.name} {this.state.surname}</p>

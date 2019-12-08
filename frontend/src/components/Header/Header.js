@@ -8,33 +8,10 @@ import './Header.scss';
 
 export const Header = withRouter(({history, ...props}) => {
   const trigger = (
-    <span style={{color:"#DBFDFC"}}><Icon name='user' />
-    {/* Hi Bob &nbsp; */}
+    <span style={{color:"#DBFDFC"}}>
+      <Icon name='user' />
     </span>
   );
-  
-
-  const getOptions = () => {
-    const options = [
-      { key: 'signOut', text: 'Sign Out', value: 2 }
-    ];
-
-    const hasMultipleRoles = !!localStorage.getItem('roles');
-    if (hasMultipleRoles) {
-      options.unshift({ key: 'SwitchAccount', text: 'Switch Account', value: 1 });
-      options.unshift({ key: 'empty', text: '', value: 0 });
-    }
-
-    return options;
-  }
-
-  const handleChange = (e, {value}) => {
-    if (value === 1) {
-      switchAccount();
-    } else if (value === 2) {
-      logOut();
-    }
-  }
 
   const switchAccount = () => {
     history.push("/roles");
@@ -44,8 +21,11 @@ export const Header = withRouter(({history, ...props}) => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("roles");
+    localStorage.removeItem("serializedState");
     window.location.replace("/login");
   };
+
+  const hasMultipleRoles = !!localStorage.getItem('roles');
 
   return (
     <SemanticHeader className="app-header">
@@ -55,11 +35,12 @@ export const Header = withRouter(({history, ...props}) => {
       </div>
 
       <div className="headerToolbarFiled">
-        <Dropdown
-          trigger={trigger} 
-          options={getOptions()} 
-          onChange={handleChange}
-        />
+        <Dropdown trigger={trigger}>
+          <Dropdown.Menu>
+            {hasMultipleRoles && <Dropdown.Item text='Switch account' onClick={switchAccount} />}
+            <Dropdown.Item text='Logout' onClick={logOut} />
+          </Dropdown.Menu>
+        </Dropdown>
       </div>
 
     </SemanticHeader>

@@ -43,7 +43,7 @@ export class BaseAPIService {
         }
 
         if (error.response.status === UNAUTHORIZED) {
-          console.log('Unauthorized user....');
+          //console.log('Unauthorized user....');
           // maybe show some alert to the user
         }
 

@@ -1,16 +1,20 @@
 import React from 'react'
-import {Header, Button, Modal, Icon} from 'semantic-ui-react'
+import { Button, Modal, Icon} from 'semantic-ui-react';
+import '../admin_StudentsEnrollment.scss'
 import "react-datepicker/dist/react-datepicker.css";
 
 export class DeleteStudentModal extends React.Component {
   render() {
     return (
       <Modal dimmer open className="grade-detail" size="small">
-        <Header icon='archive' content='Delete Student' onClick={this.onClose}/>
+        <Modal.Header>
+          <span>Delete Student</span>
+          <Icon onClick={this.props.onClose} className="archive deleleIcon" name="close" />
+        </Modal.Header>
         <Modal.Content>
-          <p>
+          <h3>
             Are you sure you want to delete {this.props.student.FirstName} {this.props.student.LastName}?
-          </p>
+          </h3>
         </Modal.Content>
         <Modal.Actions>
         <Button basic color='red' onClick={this.props.onClose}>

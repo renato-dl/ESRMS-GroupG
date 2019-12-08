@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './GradeDetail.scss';
 import {Button, Modal, Form, LabelDetail, Icon} from 'semantic-ui-react';
-import NumberInput from 'semantic-ui-react-numberinput';
+import NumericInput from 'react-numeric-input';
 import moment from 'moment';
 import * as toastr from 'toastr';
 import {api} from '../../../services/api';
@@ -53,7 +53,7 @@ export class GradeUpdate extends Component {
   };
 
   changeValue = (mark) => {
-    this.setState({ value: mark });
+    this.setState({ value: mark, updated: true });
   }
 
   onSave = async () => {
@@ -95,7 +95,7 @@ export class GradeUpdate extends Component {
     return (
       <Modal dimmer open className="grade-detail" size="small">
       <Modal.Header>
-        Add Grades
+        Update grade
         <Icon onClick={this.onClose} className="close-icn" name="close" />
       </Modal.Header>
       <Modal.Content>
@@ -119,13 +119,12 @@ export class GradeUpdate extends Component {
           </Form.Group>
               <Form.Field className="student-grade">
                 <label>{ this.state.name } { this.state.surname }</label>
-                <NumberInput 
+                <NumericInput 
                   className="numberInput" 
                   valueType="decimal" 
-                  minValue={2} 
-                  maxValue={10} 
-                  stepAmount={0.25} 
-                  allowEmptyValue 
+                  min={0} 
+                  max={10} 
+                  step={0.25}
                   value={this.state.value}
                   onChange={(e) => {this.changeValue(e)} }
                 />                   
@@ -133,7 +132,7 @@ export class GradeUpdate extends Component {
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button  positive onClick={this.onSave} disabled={this.updated}>
+        <Button  positive onClick={this.onSave} disabled={this.updated || (this.state.value === null || (parseFloat(this.state.value) < 0.00) || (parseFloat(this.state.value) > 10.00))}>
           <Icon name='checkmark' /> Update Grade
         </Button>
 

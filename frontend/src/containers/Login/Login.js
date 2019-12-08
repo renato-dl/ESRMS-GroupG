@@ -84,7 +84,7 @@ export class Login extends React.Component {
             const response = await api.auth.login(loginData);
             // check for error response 
             
-            console.log(response);
+            //console.log(response);
             
             if (response.data.token) {
                 localStorage.setItem("token", JSON.stringify(response.data.token));

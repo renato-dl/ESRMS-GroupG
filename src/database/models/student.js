@@ -32,6 +32,12 @@ class Student extends Model {
     
     await this.validateStudentData(firstName, lastName, SSN, gender, birthDate, parent1, parent2);
 
+    const result = await this.findBySSN(SSN);
+
+    if (result.length != 0) {
+      throw new Error('There is already a student with the specified SSN');
+    }
+
     const id = uuid();
 
     const date = moment.utc(birthDate);
@@ -58,6 +64,12 @@ class Student extends Model {
     await this.validateStudentData(firstName, lastName, SSN, gender, birthDate, parent1, parent2);
 
     const date = moment.utc(birthDate);
+
+    const SSNresult = await this.findBySSN(SSN);
+
+    if (SSNresult.length != 0 && SSNresult[0].ID != studentId) {
+      throw new Error('There is already a student with the specified SSN');
+    }
 
     const result = await this.update(studentId, {
       FirstName: firstName,
@@ -249,6 +261,17 @@ class Student extends Model {
     }
     return false;
 
+  }
+
+  async findBySSN(SSN) {
+    const connection = await this.db.getConnection();
+    const result = await connection.query(`
+      SELECT *
+      FROM ${this.tableName}
+      WHERE SSN = ?
+    `, [SSN]);
+    connection.release();
+    return result;
   }
 }
 

@@ -72,12 +72,10 @@ export class TopicDelete extends Component {
           <Icon onClick={this.onClose} className="archive" name="close" />
         </Modal.Header>
         <Modal.Content>
-        <p>
-            Are you sure you want to delete this topic?
-        </p>
-        <p>Title: {this.state.title}</p>
-        <p>Description: {this.state.description}</p>
-        <p>Date: { moment(this.state.date).format('LL')}</p>
+        <h3>Are you sure you want to delete this topic?</h3>
+        <p><b>Title:</b> {this.state.title}</p>
+        <p><b>Description:</b> {this.state.description}</p>
+        <p><b>Date:</b> { moment(this.state.date).format('LL')}</p>
         </Modal.Content>
         <Modal.Actions>
         <Button basic color='red' onClick={this.onClose}>
