@@ -88,7 +88,6 @@ class Topic extends Model {
   async editTopic(teacherId, topicId, topicTitle, topicDescription, topicDate) {
     const editTopicResult = {};
     try{      
-      const connection = await this.db.getConnection();
       // validate teacher
       const teacherValidation = await this.validateTeacherForTopicUpdate(teacherId, topicId);
       if(!teacherValidation){
@@ -109,6 +108,7 @@ class Topic extends Model {
       }
 
       const date = moment.utc(topicDate);
+      const connection = await this.db.getConnection();
       const updateResult = await connection.query(
         `update ${this.tableName} 
         set Title = ?, TopicDescription = ?, TopicDate = ?

@@ -71,12 +71,16 @@ border: 2px solid blue
 }
 .error{
     color:#9f3a38;
+    margin:0
 }
-.errorSNN > * {
-    border:1px solid #e0b4b4;
-    border-radius: 5px;
-    background: #fff6f6;
+.errorSNN {
     color: #9f3a38!important;
+    input[type=text].prompt{
+        color: #9f3a38!important;
+        border:1px solid #e0b4b4;
+        background-color: #fff6f6;
+    }
+    i{color: #9f3a38!important;}
 }
 
 .knownDetails{
@@ -92,4 +96,7 @@ border: 2px solid blue
     i{
         margin-bottom:5px;
     }
+}
+.infoText{
+    color: #9f3a38!important;
 }

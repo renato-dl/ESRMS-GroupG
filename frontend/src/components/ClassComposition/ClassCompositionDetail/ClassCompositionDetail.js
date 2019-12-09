@@ -29,7 +29,7 @@ export class ClassCompositionDetail extends Component {
       ];
 
       const [toEnrollStudents, alreadyEnrolledStudents] = await Promise.all(apis);
-      console.log(toEnrollStudents, alreadyEnrolledStudents);
+      // console.log(toEnrollStudents, alreadyEnrolledStudents);
 
       this.setState({
         students: toEnrollStudents.data,

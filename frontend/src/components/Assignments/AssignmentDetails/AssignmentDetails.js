@@ -11,7 +11,7 @@ export const AssignmentDetails = (props) => (
     </Modal.Header>
     <Modal.Content>
       <h3>Subject: <span>{props.assignment.Name}</span></h3>
-      <h3>Assigment title: <span>{props.assignment.Title}</span></h3>
+      <h3>Assignment title: <span>{props.assignment.Title}</span></h3>
       <h3>Assignment description: <span>{props.assignment.Description}</span></h3>
       <h3>Due date: <span>{moment(props.assignment.DueDate).format('MMMM Do')}</span></h3>
     </Modal.Content>

@@ -47,44 +47,47 @@ class AdminController extends BaseController {
     let parent2Insert = false;
     let parent1Password, parent2Password = null;
 
-    if (!req.body.hasOwnProperty('firstParent')) {
-      res.status(422).send({ success: false, error: 'Missing first parent' });
-      return;
-    } else {
-      if (!req.body.firstParent.hasOwnProperty('ID')) {
-        parent1Password = genRandomString(8);
-        parent1 = (await User.insertParentData(
-          req.body.firstParent.FirstName,
-          req.body.firstParent.LastName,
-          req.body.firstParent.Email,
-          req.body.firstParent.SSN,
-          parent1Password
-        )).id;
-        parent1Insert = true;
-      } else {
-        parent1 = req.body.firstParent.ID;
-        await User.makeParentIfNotAlready(parent1);
-      }
-    }
-    if (req.body.hasOwnProperty('secondParent')) {
-      if (!req.body.secondParent.hasOwnProperty('ID')) {
-        parent2Password = genRandomString(8);
-        parent2 = (await User.insertParentData(
-          req.body.secondParent.FirstName,
-          req.body.secondParent.LastName,
-          req.body.secondParent.Email,
-          req.body.secondParent.SSN,
-          parent2Password
-        )).id;
-        parent2Insert = true;
-      } else {
-        parent2 = req.body.secondParent.ID;
-        await User.makeParentIfNotAlready(parent1);
-      }
-    } else {
-      parent2 = null;
-    }
     try {
+
+      if (!req.body.hasOwnProperty('firstParent')) {
+        res.status(422).send({ success: false, error: 'Missing first parent' });
+        return;
+      } else {
+        if (!req.body.firstParent.hasOwnProperty('ID')) {
+          parent1Password = genRandomString(8);
+          parent1 = (await User.insertParentData(
+            req.body.firstParent.FirstName,
+            req.body.firstParent.LastName,
+            req.body.firstParent.Email,
+            req.body.firstParent.SSN,
+            parent1Password
+          )).id;
+          parent1Insert = true;
+        } else {
+          parent1 = req.body.firstParent.ID;
+          await User.makeParentIfNotAlready(parent1);
+        }
+      }
+      if (req.body.hasOwnProperty('secondParent')) {
+        if (!req.body.secondParent.hasOwnProperty('ID')) {
+          parent2Password = genRandomString(8);
+          parent2 = (await User.insertParentData(
+            req.body.secondParent.FirstName,
+            req.body.secondParent.LastName,
+            req.body.secondParent.Email,
+            req.body.secondParent.SSN,
+            parent2Password
+          )).id;
+          parent2Insert = true;
+        } else {
+          parent2 = req.body.secondParent.ID;
+          await User.makeParentIfNotAlready(parent2);
+        }
+      } else {
+        parent2 = null;
+      }
+
+
       const result = await Student.insertStudent(
         req.body.studentInfo.FirstName,
         req.body.studentInfo.LastName,

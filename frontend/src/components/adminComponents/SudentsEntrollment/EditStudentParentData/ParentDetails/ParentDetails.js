@@ -4,6 +4,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import {api} from '../../../../../services/api';
 import { withRouter } from "react-router";
 import * as toastr from 'toastr';
+import { SSNRegexp } from '../../../../../utils';
+import validator from 'validator';
 
 export class ParentDetails extends React.Component {
   constructor(props) {
@@ -15,7 +17,8 @@ export class ParentDetails extends React.Component {
       LastName:null,
       eMail:null,
       SSN:null,
-      isSaving: false
+      isSaving: false,
+      errors: {}
     }
   };
 
@@ -39,6 +42,11 @@ export class ParentDetails extends React.Component {
   onSave = async () => {
     console.log(this.props)
     if (this.state.isSaving) {
+      return;
+    }
+
+    const hasErrors = this.validateFields();
+    if (hasErrors) {
       return;
     }
 
@@ -76,6 +84,18 @@ export class ParentDetails extends React.Component {
     this.props.onClose();
   };
 
+  validateFields = () => {
+    const errors = {...this.state.errors};
+
+    errors['FirstName'] = !this.state.FirstName;
+    errors['LastName'] = !this.state.LastName;
+    errors['eMail'] = !validator.isEmail(this.state.eMail);
+    errors['SSN'] = !SSNRegexp.test(this.state.SSN);
+
+    this.setState({errors});
+    return !!Object.keys(errors).filter((e) => errors[e]).length;
+  }; 
+
   render() {
     return (
       <Modal dimmer open className="topic-detail" size="small">
@@ -91,6 +111,7 @@ export class ParentDetails extends React.Component {
         <Modal.Content>
           <Form loading={this.state.isSaving}>
             <Form.Input
+              error={this.state.errors['FirstName']}
               name="FirstName"
               label='Parent FirstName'
               placeholder='Parent FirstName'
@@ -98,6 +119,7 @@ export class ParentDetails extends React.Component {
               onChange={this.handleInputChange}
             />
             <Form.Input
+              error={this.state.errors['FirstName']}
               name="LastName"
               label='Parent LastName'
               placeholder='Parent LastName'
@@ -105,6 +127,7 @@ export class ParentDetails extends React.Component {
               onChange={this.handleInputChange}
             />
             <Form.Input
+              error={this.state.errors['eMail']}
               name="eMail"
               label='Parent eMail'
               placeholder='Parent eMail'
@@ -112,6 +135,7 @@ export class ParentDetails extends React.Component {
               onChange={this.handleInputChange}
             />
             <Form.Input
+              error={this.state.errors['SSN']}
               name="SSN"
               label='Parent SSN'
               placeholder='Parent SSN'

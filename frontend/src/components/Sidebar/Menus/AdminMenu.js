@@ -21,7 +21,7 @@ export const AdminMenu = (props) => (
       <Icon name='users' />
       Parents' Access
     </Menu.Item> */}
-    <Menu.Item as={Link} to='/admin/Class_composition'>
+    <Menu.Item as={Link} to='/admin/ClassComposition'>
       <Icon name='linode' />
       Class Compositions
     </Menu.Item>

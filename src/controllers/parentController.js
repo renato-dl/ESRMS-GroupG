@@ -2,6 +2,7 @@ import {BaseController} from "./baseController";
 import Student from "../database/models/student";
 import Grade from '../database/models/grade';
 import Assignment from '../database/models/assignment';
+import Attendance from '../database/models/attendance';
 
 class ParentController extends BaseController {
 
@@ -19,7 +20,10 @@ class ParentController extends BaseController {
     res.send(grades);
   }
 
-  async assigmentsByStudentId(req, res) {
+  async assignmentsByStudentId(req, res) {
+    if (!req.query.studentId) {
+      throw new Error('Missing or invalid studentId');
+    }
     if (!await Student.checkIfRelated(req.query.studentId, req.user.ID)) {
       res.send(401);
       return;
@@ -32,6 +36,23 @@ class ParentController extends BaseController {
     );
 
     res.send(assignments);
+  }
+  
+  async attendanceByStudentId(req, res) {
+    if (!req.query.studentId) {
+      throw new Error('Missing or invalid studentId');
+    }
+    if (!await Student.checkIfRelated(req.query.studentId, req.user.ID)) {
+      res.send(401);
+      return;
+    }
+    const attendance = await Attendance.findByStudentId(
+      req.query.studentId, 
+      {from: req.query.fromDate, to: req.query.toDate},
+      {page: req.query.page, pageSize: req.query.pageSize}
+    );
+
+    res.send(attendance);
   }
 }
 

@@ -5,8 +5,11 @@ import {Icon, Container} from 'semantic-ui-react';
 import moment from 'moment';
 import { AssignmentDetails } from './AssignmentDetails/AssignmentDetails';
 import { Calendar } from '../Calendar/Calendar';
+import {ApplicationStoreContext} from '../../store';
 
-export class Assignments extends React.Component{
+export class Assignments extends React.Component {
+  static contextType = ApplicationStoreContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -22,8 +25,8 @@ export class Assignments extends React.Component{
   }
 
   fetchAssignments = async (from, to) => {
-    const student = JSON.parse(localStorage.getItem('selectedChild'));
-    const response = await api.parent.getChildAssignments(this.props.match.params.studentID || student, from , to);
+    const student = this.context.state.parent.selectedStudent.ID;
+    const response = await api.parent.getChildAssignments(student, from , to);
 
     if (response) {
       this.setState({
@@ -60,7 +63,7 @@ export class Assignments extends React.Component{
       <Container className="contentContainer">
         <h3 className="contentHeader"> 
           <Icon name='braille'/> 
-          {this.state.studentName ? this.state.studentName + "'s" : 'Student'} assignments
+          {this.context.state.parent ? this.context.state.parent.selectedStudent.FirstName + "'s" : 'Student'} assignments
         </h3>
 
         <div className="calendarContainer">
