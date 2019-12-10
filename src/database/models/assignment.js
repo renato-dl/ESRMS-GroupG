@@ -37,7 +37,6 @@ class Assignment extends Model {
     }
     return results;
   }
-
   async addAssignment(subjectId, classId, title, description, dueDate){
 
     if (!subjectId) {
@@ -82,6 +81,37 @@ class Assignment extends Model {
       id: result
     }
 
+  }
+  async findByClassAndSubject(classId, subjectId, dateRange, pagination) {
+    if (!classId) throw new Error('Missing or invalid class id');
+    if (!subjectId) throw new Error('Missing or invalid subject id');
+    
+    const connection = await this.db.getConnection();
+    let query;
+
+    if (dateRange.from && dateRange.to) {
+        query =`SELECT ID, Title, Description, DueDate  
+        FROM Assignments
+        WHERE ClassId = ? AND SubjectId = ?
+        AND DueDate >= ? AND DueDate <= ?
+        ORDER BY A.DueDate`;
+    } else {
+        query =`SELECT ID, Title, Description, DueDate  
+        FROM Assignments
+        WHERE ClassId = ? AND SubjectId = ?
+        ORDER BY DueDate`;
+    }
+    if (pagination) {
+      query += ` ${this.db.getPaginationQuery(pagination)}`
+    }
+
+    const results = await connection.query(query,  [classId, subjectId, dateRange.from, dateRange.to]);
+    connection.release();
+
+    if (!results.length) {
+      return [];
+    }
+    return results;
   }
 }
 export default new Assignment();
