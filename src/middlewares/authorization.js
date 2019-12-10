@@ -1,11 +1,12 @@
 export const Authorization = (roles) => {
   return (req, res, next) => {
 
-    let isAuthorized = true;
+    let isAuthorized = false;
     
     roles.forEach((role) => {
-      if (!req.user[role]) {
-        isAuthorized = false;
+      if (req.user[role]) {
+        isAuthorized = true;
+        return;
       }
     })
 
