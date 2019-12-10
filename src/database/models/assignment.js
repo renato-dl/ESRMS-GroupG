@@ -36,5 +36,11 @@ class Assignment extends Model {
     }
     return results;
   }
+
+  async addAssignment(subjectId, classId, title, description, dueDate){
+    //todo
+
+
+  }
 }
 export default new Assignment();

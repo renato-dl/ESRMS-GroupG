@@ -5,6 +5,7 @@ import Class from '../database/models/class';
 import TCSR from '../database/models/teacherClassSubject';
 import Grade from '../database/models/grade';
 import Student from '../database/models/student';
+import Assignment from '../database/models/assignment';
 
 class TeacherController extends BaseController {
 
@@ -191,6 +192,26 @@ class TeacherController extends BaseController {
     res.send(classes);
   }
 
+  // POST /teacher/assignment
+  // Body: subjectId, classId, Title, Description, DueDate
+  async addAssignment(req, res) {
+    if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
+      req.user.ID,
+      req.body.subjectId, 
+      req.body.classId)
+      ){
+        res.send(401);
+        return;
+    } 
+    const result = await Assignment.addAssignment(
+      req.body.subjectId,
+      req.body.classId,
+      req.body.title,
+      req.body.description,
+      req.body.DueDate
+     );
+    res.send({success: true, id: result.id});
+  }
 }
 
 export default new TeacherController();
