@@ -1,4 +1,5 @@
 import {Model} from './base';
+import moment from 'moment';
 
 class Assignment extends Model {
   constructor() {
@@ -38,8 +39,43 @@ class Assignment extends Model {
   }
 
   async addAssignment(subjectId, classId, title, description, dueDate){
-    //todo
 
+    if (!subjectId) {
+      throw new Error('Missing or invalid subject id');
+    }
+
+    if (!classId) {
+      throw new Error('Missing or invalid class id');
+    }
+    
+    if (!title) {
+      throw new Error('Missing or invalid title');
+    }
+
+    if (!description) {
+      throw new Error('Missing or invalid description');
+    }
+
+    const date = moment.utc(dueDate);
+    if (!date.isValid()) {
+      throw new Error('Invalid assignment date');
+    }
+
+    if (date.isBefore(moment().utc(), 'day')) {
+      throw new Error('Past assignment dueDate');
+    }
+
+    const result = await this.create({
+      SubjectId: subjectId,
+      ClassId: classId,
+      Title: title,
+      Description: description,
+      DueDate: date.format(this.db.getDateFormatString())
+    });
+
+    return {
+      id: result
+    }
 
   }
 }
