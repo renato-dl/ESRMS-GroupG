@@ -94,7 +94,7 @@ class Assignment extends Model {
         FROM Assignments
         WHERE ClassId = ? AND SubjectId = ?
         AND DueDate >= ? AND DueDate <= ?
-        ORDER BY A.DueDate`;
+        ORDER BY DueDate`;
     } else {
         query =`SELECT ID, Title, Description, DueDate  
         FROM Assignments

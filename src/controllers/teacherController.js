@@ -214,8 +214,7 @@ class TeacherController extends BaseController {
   }
 
  /* GET /teacher/assignments
- Query: classId, subjectId, dateRange, paging
- */
+ Query: classId, subjectId, dateRange, paging */
   async assignmentsByClassAndSubject(req, res) {
     if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
       req.user.ID,
