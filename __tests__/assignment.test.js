@@ -59,6 +59,162 @@ describe("Tests about visualization of assignments by a parent", () => {
 
 });
 
+describe("Tests about visualization of assignments by a teacher", () => {
+
+    test('It should return the list of assignments for a given class and subject', async () => {
+        const subjectId = 1;
+        const title = "Test title";
+        const description ="Test description"
+        const dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+        const expectDate = new Date(dueDate);
+        
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : subjectId,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+          subjectId,
+          createClass.id,
+          title,
+          description,
+          dueDate.format()
+        );
+    
+        expect(insertAssignment.id).not.toBeNaN();
+        const testResult = await Assignment.findByClassAndSubject(
+            createClass.id,
+            subjectId,
+            {}, 
+            {}
+        );
+        expect(testResult).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining(
+                    {
+                        ID : insertAssignment.id,
+                        Title : title,
+                        Description : description,
+                        DueDate : expectDate
+                    }
+                    )
+                ])
+        );
+    
+        //clean db for future tests
+        await Assignment.remove(insertAssignment.id);
+        await TCS.remove(insertRelation)
+        await Class.remove(createClass.id);
+        await User.remove(insertTeacher.id);
+
+    });
+  
+    test('Should throw Error with message \'Missing or invalid class id\'', async () => {
+        try {
+            await Assignment.findByClassAndSubject(
+                undefined,
+                1,
+                {}, 
+                {}
+            );
+        } catch(error) {
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Missing or invalid class id');
+        }
+    });
+
+    test('Should throw Error with message \'Missing or invalid subject id\'', async () => {
+
+        const subjectId = 1;
+        const title = "Test title";
+        const description ="Test description"
+        const dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : subjectId,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        try {
+            await Assignment.findByClassAndSubject(
+                createClass.id,
+                undefined,
+                {}, 
+                {}
+            );
+        } catch(error) {
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Missing or invalid subject id');
+            await TCS.remove(insertRelation)
+            await Class.remove(createClass.id);
+            await User.remove(insertTeacher.id);
+        }
+    });
+
+  
+
+});
+  
+
 describe("Tests about insertion of an assignment by a teacher", () => {
     
     test("It should add correctly an assignment", async() =>{
