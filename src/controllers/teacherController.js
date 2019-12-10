@@ -187,7 +187,7 @@ class TeacherController extends BaseController {
   }
 
   async getClasses(req, res) {
-    const classes = await Class.getTeachingClasses(req.user.ID)
+    const classes = await TCSR.getTeachingClasses(req.user.ID)
     res.send(classes);
   }
 
