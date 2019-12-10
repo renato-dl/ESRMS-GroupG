@@ -51,8 +51,9 @@ class Grade extends Model {
     if((parsedGrade * 100) % 25 != 0){
       throw new Error('Invalid grade');
     }
-
-    
+    if (!gradeDate) {
+      throw new Error('Missing or invalid grade date');
+    }
     if (!type) {
       throw new Error('Missing or invalid type');
     }

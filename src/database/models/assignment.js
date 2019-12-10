@@ -56,13 +56,18 @@ class Assignment extends Model {
       throw new Error('Missing or invalid description');
     }
 
+    if (!dueDate) {
+      throw new Error('Missing or invalid due date');
+    }
+
     const date = moment.utc(dueDate);
+    console.log(date);
     if (!date.isValid()) {
       throw new Error('Invalid assignment date');
     }
 
     if (date.isBefore(moment().utc(), 'day')) {
-      throw new Error('Past assignment dueDate');
+      throw new Error('Past assignment due date');
     }
 
     const result = await this.create({

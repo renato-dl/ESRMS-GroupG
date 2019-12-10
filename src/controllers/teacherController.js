@@ -208,7 +208,7 @@ class TeacherController extends BaseController {
       req.body.classId,
       req.body.title,
       req.body.description,
-      req.body.DueDate
+      req.body.dueDate
      );
     res.send({success: true, id: result.id});
   }
