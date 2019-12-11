@@ -19,6 +19,10 @@ router.patch('/grade', Authorization(['IsTeacher']), TeacherController.processRe
 router.get('/students', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'getStudents'));
 
 router.get('/classes', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'getClasses'));
+router.post('/assignment', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'addAssignment'));
+router.delete('/assignment', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'deleteAssignment'));
+router.patch('/assignment', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'updateAssignment'));
+router.get('/assignments', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'assignmentsByClassAndSubject'));
 
 router.post('/absence', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'registerSingleAbsence'));
 router.post('/absences', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'registerBulkAbsence'));

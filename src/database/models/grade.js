@@ -51,14 +51,17 @@ class Grade extends Model {
     if((parsedGrade * 100) % 25 != 0){
       throw new Error('Invalid grade');
     }
-
-    
+    if (!gradeDate) {
+      throw new Error('Missing or invalid grade date');
+    }
     if (!type) {
       throw new Error('Missing or invalid type');
     }
 
     const date = moment.utc(gradeDate);
-    if (!date.isValid()) {
+    const dayOfWeek = moment.utc(gradeDate).isoWeekday();
+
+    if (!date.isValid() || dayOfWeek == 7) {
       throw new Error('Invalid grade date');
     }
 

@@ -7,6 +7,7 @@ import Grade from '../database/models/grade';
 import Student from '../database/models/student';
 import StudentAttendance from '../database/models/studentAttendance';
 import ClassAttendance from '../database/models/classAttendance';
+import Assignment from '../database/models/assignment';
 
 class TeacherController extends BaseController {
 
@@ -163,7 +164,7 @@ class TeacherController extends BaseController {
       return;
     }
     
-    const result = await Grade.remove(
+    await Grade.remove(
       req.body.ID
     );
 
@@ -243,6 +244,87 @@ class TeacherController extends BaseController {
     res.send(result);
   }
 
+  // POST /teacher/assignment
+  // Body: subjectId, classId, Title, Description, DueDate
+  async addAssignment(req, res) {
+    if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
+      req.user.ID,
+      req.body.subjectId, 
+      req.body.classId)
+      ){
+        res.send(401);
+        return;
+    } 
+    const result = await Assignment.addAssignment(
+      req.body.subjectId,
+      req.body.classId,
+      req.body.title,
+      req.body.description,
+      req.body.dueDate
+     );
+    res.send({success: true, id: result.id});
+  }
+
+  // PATCH /teacher/assignment
+  // Body: classId, subjectId, assignmentId, title, description, dueDate
+  async updateAssignment(req, res) {
+    const teacherTeachesInClass = await TCSR.checkIfTeacherTeachesSubjectInClass(
+      req.user.ID,
+      req.body.subjectId, 
+      req.body.classId
+    );
+
+    const isAssignmentFromTeacher = await Assignment.checkIfAssignmentIsFromTeacher(req.body.assignmentId, req.user.ID);
+
+    if(!teacherTeachesInClass || !isAssignmentFromTeacher) {
+      res.send(401);
+      return;
+    } 
+
+    const success = await Assignment.updateAssignment(
+      req.body.assignmentId,
+      req.body.title,
+      req.body.description,
+      req.body.dueDate
+    );
+
+    res.send({ success });
+  }
+
+
+
+ /* GET /teacher/assignments
+ Query: classId, subjectId, dateRange, paging */
+  async assignmentsByClassAndSubject(req, res) {
+    if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
+      req.user.ID,
+      req.query.subjectId,
+      req.query.classId
+    )) {
+      res.send(401);
+      return;
+    }
+    res.send(await Assignment.findByClassAndSubject(
+      req.query.classId,
+      req.query.subjectId,
+      {from: req.query.fromDate, to: req.query.toDate},
+      {page: req.query.page, pageSize: req.query.pageSize}
+    ));
+  }
+
+  //DELETE /teacher/assignment
+  //Body: ID
+  async deleteAssignment(req, res) {
+    if(!await Assignment.checkIfAssignmentIsFromTeacher(req.body.ID, req.user.ID)){
+      res.send(401);
+      return;
+    }
+    await Assignment.remove(
+      req.body.ID
+    );
+
+    res.send({success: true});
+  }
 }
 
 export default new TeacherController();
