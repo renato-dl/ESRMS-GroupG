@@ -59,8 +59,8 @@ class Grade extends Model {
     }
 
     const date = moment.utc(gradeDate);
-    const dayOfWeek = moment.utc(dueDate).isoWeekday();
-    
+    const dayOfWeek = moment.utc(gradeDate).isoWeekday();
+
     if (!date.isValid() || dayOfWeek == 7) {
       throw new Error('Invalid grade date');
     }
