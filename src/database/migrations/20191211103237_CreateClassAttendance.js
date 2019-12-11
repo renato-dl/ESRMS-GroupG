@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-  return knex.schema.createTable('ClassAttendanceRecord', function (table) {
+  return knex.schema.createTable('ClassAttendance', function (table) {
     table.increments('ID').unsigned().primary();
     table.integer('ClassId').unsigned().notNullable();
     table.datetime('Date').notNullable();
@@ -11,5 +11,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists('ClassAttendanceRecord');
+  return knex.schema.dropTableIfExists('ClassAttendance');
 };

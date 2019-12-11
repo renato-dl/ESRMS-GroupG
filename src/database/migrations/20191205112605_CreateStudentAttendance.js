@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-  return knex.schema.createTable('AttendanceRegistry', function (table) {
+  return knex.schema.createTable('StudentAttendance', function (table) {
     table.increments('ID').unsigned().primary();
     table.string('StudentId').notNullable();
     table.datetime('Date').notNullable();
@@ -17,5 +17,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists('AttendanceRegistry');
+  return knex.schema.dropTableIfExists('StudentAttendance');
 };

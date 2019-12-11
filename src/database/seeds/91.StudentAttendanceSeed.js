@@ -1,10 +1,10 @@
 
 exports.seed = function(knex) {
   // Deletes ALL existing entries
-  return knex('AttendanceRegistry').del()
+  return knex('StudentAttendance').del()
     .then(function () {
       // Inserts seed entries
-      return knex('AttendanceRegistry').insert([
+      return knex('StudentAttendance').insert([
         { // absence
           StudentId: '868d6ec1dfc8467f6d260c48b5620543',
           Date: '2019-12-10',
