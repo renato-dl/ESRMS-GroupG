@@ -30,7 +30,7 @@ export class Model {
    */
   async findAll(pagination) {
     const connection = await this.db.getConnection();
-    let query = `SELECT * FROM ${this.tableName} ORDER BY IsImportant DESC, DueDate ASC`;
+    let query = `SELECT * FROM ${this.tableName}`;
 
     if (pagination) {
       query += ` ${this.db.getPaginationQuery(pagination)}`
