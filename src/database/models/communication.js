@@ -1,11 +1,12 @@
 import {Model} from './base';
+import moment from 'moment';
 
 class Communication extends Model {
   constructor() {
     super('Communications');
   }
 
-  validteTitleAndDescription(title, description) {
+  validateFields(title, description) {
     if (!title || !description) {
       throw new Error('Please provide a valid title and description.');
     }
@@ -15,21 +16,27 @@ class Communication extends Model {
     }
   }
 
-  async add(Title, Description) {
-    this.validteTitleAndDescription(Title, Description);
+  async add(Title, Description, IsImportant, DueDate) {
+    this.validateFields(Title, Description);
+    IsImportant = !!IsImportant;
+    
+    const format = this.db.getDateFormatString();
+    DueDate = DueDate ? moment.utc(DueDate).format(format) : moment.utc(format);
 
-    const communicationID = await this.create({ Title, Description });
+    const communicationID = await this.create({ Title, Description, IsImportant, DueDate });
     return await this.findById(communicationID);
   }
 
-  async update(id, Title, Description) {
+  async update(id, Title, Description, IsImportant, DueDate) {
     if (!id) {
       throw new Error('Please provide a valid id.');
     }
+    
+    this.validateFields(Title, Description);
+    const format = this.db.getDateFormatString();
+    DueDate = DueDate ? moment.utc(DueDate).format(format) : moment.utc(format);
 
-    this.validteTitleAndDescription(Title, Description);
-
-    const updated = await super.update(id, { Title, Description });
+    const updated = await super.update(id, { Title, Description, IsImportant, DueDate });
     
     if (updated) {
       return await super.findById(id);

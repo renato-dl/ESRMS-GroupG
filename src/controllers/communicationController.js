@@ -9,12 +9,23 @@ class CommunicationController extends BaseController {
   }
 
   async add(req, res) {
-    const communication = await CommunicationModel.add(req.body.title, req.body.description);
+    const communication = await CommunicationModel.add(
+      req.body.title, 
+      req.body.description, 
+      req.body.isImportant,
+      req.body.dueDate
+    );
     res.send({ communication });
   }
 
   async update(req, res) {
-    const communication = await CommunicationModel.update(req.params.id, req.body.title, req.body.description);
+    const communication = await CommunicationModel.update(
+      req.params.id, 
+      req.body.title, 
+      req.body.description,
+      req.body.isImportant,
+      req.body.dueDate
+    );
 
     if (!communication) {
       return res.send({ success: false, message: "Couldn't update communication. Please try again later." });
