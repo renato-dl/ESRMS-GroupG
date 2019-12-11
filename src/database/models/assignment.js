@@ -102,7 +102,7 @@ class Assignment extends Model {
     const dayOfWeek = moment.utc(dueDate).isoWeekday();
 
     if (!date.isValid() || dayOfWeek == 7) {
-      throw new Error('Invalid assignment date');
+      throw new Error('Invalid assignment due date');
     }
 
     if (!date.isAfter(moment().utc(), 'day')) {

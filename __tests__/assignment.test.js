@@ -794,11 +794,389 @@ describe("Tests about edition of an assignment by a teacher", () => {
 
     });
 
+    test("It should throw an error when passed assignment id is missing or invalid", async() =>{
+
+        const title = "Test title";
+        const description ="Test description"
+        let dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+        
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
+        
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : 1,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        try {    
+        //update assignment
+        await Assignment.updateAssignment(
+            undefined,
+            title,
+            description,
+            dueDate.format()
+        );
+        } catch(error) {
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Missing or invalid assignment id');
+            
+            //clean db for future tests
+            await TCS.remove(insertRelation)
+            await Class.remove(createClass.id);
+            await User.remove(insertTeacher.id);
+
+        }
+    });
+
+    test("It should throw an error when passed tile is missing or invalid", async() =>{
+        const title = "Test title";
+        const description ="Test description"
+        let dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+        
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
+        
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : 1,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+            1,
+            createClass.id,
+            title,
+            description,
+            dueDate.format()
+        );
+        expect(insertAssignment.id).not.toBeNaN();
+
+        try {   
+        //update assignment
+        await Assignment.updateAssignment(
+            insertAssignment.id,
+            undefined,
+            description,
+            dueDate.format()
+        );
+        } catch(error) {
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Missing or invalid title');
+            
+            //clean db for future tests
+            await Assignment.remove(insertAssignment.id);
+            await TCS.remove(insertRelation)
+            await Class.remove(createClass.id);
+            await User.remove(insertTeacher.id);
+        }
+    });
+
+    test("It should throw an error when passed description is missing or invalid", async() =>{
+        const title = "Test title";
+        const description ="Test description"
+        let dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+        
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
+        
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : 1,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+            1,
+            createClass.id,
+            title,
+            description,
+            dueDate.format()
+        );
+        expect(insertAssignment.id).not.toBeNaN();
+
+        try {   
+        //update assignment
+        await Assignment.updateAssignment(
+            insertAssignment.id,
+            title,
+            undefined,
+            dueDate.format()
+        );
+        } catch(error) {
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Missing or invalid description');
+            
+            //clean db for future tests
+            await Assignment.remove(insertAssignment.id);
+            await TCS.remove(insertRelation)
+            await Class.remove(createClass.id);
+            await User.remove(insertTeacher.id);
+        }
+    });
+
+    test("It should throw an error when passed due date is missing or invalid", async() =>{
+        const title = "Test title";
+        const description ="Test description"
+        let dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+        
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
+        
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : 1,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+            1,
+            createClass.id,
+            title,
+            description,
+            dueDate.format()
+        );
+        expect(insertAssignment.id).not.toBeNaN();
+
+        try {   
+        //update assignment
+        await Assignment.updateAssignment(
+            insertAssignment.id,
+            title,
+            description,
+            undefined
+        );
+        } catch(error) {
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Missing or invalid due date');
+            
+            //clean db for future tests
+            await Assignment.remove(insertAssignment.id);
+            await TCS.remove(insertRelation)
+            await Class.remove(createClass.id);
+            await User.remove(insertTeacher.id);
+        }
+    });
+
+    test("It should throw an error when passed due date is invalid", async() =>{
+        const title = "Test title";
+        const description ="Test description"
+        let dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+        
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
+        
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : 1,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+            1,
+            createClass.id,
+            title,
+            description,
+            dueDate.format()
+        );
+        expect(insertAssignment.id).not.toBeNaN();
+
+        try {   
+        //update assignment
+        dueDate.subtract('1', 'days');
+        await Assignment.updateAssignment(
+            insertAssignment.id,
+            title,
+            description,
+            dueDate.format()
+        );
+        } catch(error) {
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toHaveProperty('message', 'Invalid assignment due date');
+            
+            //clean db for future tests
+            await Assignment.remove(insertAssignment.id);
+            await TCS.remove(insertRelation)
+            await Class.remove(createClass.id);
+            await User.remove(insertTeacher.id);
+        }
+   
+   
+   
+    });
+
+
+
+    
+
+    
     
 
 });
-
-
 
 describe('Test weather a teacher is authorized to access a given assignment', () => {
 
