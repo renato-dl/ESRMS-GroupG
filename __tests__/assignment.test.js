@@ -688,3 +688,152 @@ describe("Tests about insertion of an assignment by a teacher", () => {
 
 
 });
+
+describe('Test wether a theacher is authorized to access a given assignment', () => {
+
+    test('It should return true', async () => {
+
+        const subjectId = 1;
+        const title = "Test title";
+        const description ="Test description"
+        const dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : 1,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+          subjectId,
+          createClass.id,
+          title,
+          description,
+          dueDate.format()
+        );
+    
+        expect(insertAssignment.id).not.toBeNaN();
+
+        const auth = await Assignment.checkIfAssignmentIsFromTeacher(insertAssignment.id, insertTeacher.id);
+        expect(auth).toBe(true);
+        
+        //clean db for future tests
+        await Assignment.remove(insertAssignment.id);
+        await TCS.remove(insertRelation)
+        await Class.remove(createClass.id);
+        await User.remove(insertTeacher.id);
+    });
+  
+    test('It throw an error about invalid teacher id', async () => {
+      try {
+        await Assignment.checkIfAssignmentIsFromTeacher(1, null);
+      } catch(error) {
+        expect(error).toHaveProperty('message', 'Missing or invalid teacher id');
+      }
+    });
+  
+    test('It throw an error about invalid teacher id', async () => {
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : 1,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+    });
+        try {
+            await Assignment.checkIfAssignmentIsFromTeacher(undefined, insertTeacher.id);
+        } catch(error) {
+            expect(error).toHaveProperty('message', 'Missing or invalid assignment id');
+            await TCS.remove(insertRelation);
+            await Class.remove(createClass.id);
+            await User.remove(insertTeacher.id);
+        }
+        });
+    
+    test('It should return false', async () => {
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : 1,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        const auth = await Assignment.checkIfAssignmentIsFromTeacher(1000, insertTeacher.id);
+        expect(auth).toBe(false);
+        await TCS.remove(insertRelation);
+        await Class.remove(createClass.id);
+        await User.remove(insertTeacher.id);
+
+    });
+  
+});

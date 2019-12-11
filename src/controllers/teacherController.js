@@ -162,7 +162,7 @@ class TeacherController extends BaseController {
       return;
     }
     
-    const result = await Grade.remove(
+    await Grade.remove(
       req.body.ID
     );
 
@@ -230,6 +230,20 @@ class TeacherController extends BaseController {
       {from: req.query.fromDate, to: req.query.toDate},
       {page: req.query.page, pageSize: req.query.pageSize}
     ));
+  }
+
+  //DELETE /teacher/assignment
+  //Body: ID
+  async deleteAssignment(req, res) {
+    if(!await Assignment.checkIfAssignmentIsFromTeacher(req.body.ID, req.user.ID)){
+      res.send(401);
+      return;
+    }
+    await Assignment.remove(
+      req.body.ID
+    );
+
+    res.send({success: true});
   }
 }
 
