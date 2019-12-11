@@ -65,12 +65,20 @@ describe("Tests about visualization of assignments by a teacher", () => {
         const subjectId = 1;
         const title = "Test title";
         const description ="Test description"
-        const dueDate = moment.utc().set({
+        let dueDate = moment.utc().set({
             "hour": 0,
             "minute": 0, 
             "second": 0, 
             "millisecond" : 0
         });
+
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+        
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
+        
         const expectDate = new Date(dueDate);
         
         //first add new teacher
@@ -295,14 +303,6 @@ describe("Tests about visualization of assignments by a teacher", () => {
     test('Should throw Error with message \'Missing or invalid subject id\'', async () => {
 
         const subjectId = 1;
-        const title = "Test title";
-        const description ="Test description"
-        const dueDate = moment.utc().set({
-            "hour": 0,
-            "minute": 0, 
-            "second": 0, 
-            "millisecond" : 0
-        });
 
         //first add new teacher
         const insertTeacher = await User.insertInternalAccountData( 
@@ -357,13 +357,20 @@ describe("Tests about insertion of an assignment by a teacher", () => {
         const subjectId = 1;
         const title = "Test title";
         const description ="Test description"
-        const dueDate = moment.utc().set({
+        let dueDate = moment.utc().set({
             "hour": 0,
             "minute": 0, 
             "second": 0, 
             "millisecond" : 0
         });
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
         const expectDate = new Date(dueDate);
+
         //first add new teacher
         const insertTeacher = await User.insertInternalAccountData( 
             "Joe", 
@@ -424,14 +431,19 @@ describe("Tests about insertion of an assignment by a teacher", () => {
 
         const title = "Test title";
         const description ="Test description"
-        const dueDate = moment.utc().set({
+        let dueDate = moment.utc().set({
             "hour": 0,
             "minute": 0, 
             "second": 0, 
             "millisecond" : 0
         });
-        const expectDate = new Date(dueDate);
-
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+        
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
+        
         //first add new teacher
         const insertTeacher = await User.insertInternalAccountData( 
             "Joe", 
@@ -468,7 +480,7 @@ describe("Tests about insertion of an assignment by a teacher", () => {
             createClass.id,
             title,
             description,
-            expectDate
+            dueDate.format()
         );
         } catch(error) {
             expect(error).toBeInstanceOf(Error);
@@ -486,14 +498,19 @@ describe("Tests about insertion of an assignment by a teacher", () => {
         const subjectId = 1;
         const title = "Test title";
         const description ="Test description"
-        const dueDate = moment.utc().set({
+        let dueDate = moment.utc().set({
             "hour": 0,
             "minute": 0, 
             "second": 0, 
             "millisecond" : 0
         });
-        const expectDate = new Date(dueDate);
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
         
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
+
         try {    
             //insert assignment
             await Assignment.addAssignment(
@@ -501,7 +518,7 @@ describe("Tests about insertion of an assignment by a teacher", () => {
                 undefined,
                 title,
                 description,
-                expectDate
+                dueDate.format()
             );
         } catch(error) {
             expect(error).toBeInstanceOf(Error);
@@ -512,13 +529,18 @@ describe("Tests about insertion of an assignment by a teacher", () => {
     test("It should throw an error when passed title is missing or invalid", async() =>{
         const subjectId = 1;
         const description ="Test description"
-        const dueDate = moment.utc().set({
+        let dueDate = moment.utc().set({
             "hour": 0,
             "minute": 0, 
             "second": 0, 
             "millisecond" : 0
         });
-        const expectDate = new Date(dueDate);
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+        
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
 
         //first add new teacher
         const insertTeacher = await User.insertInternalAccountData( 
@@ -556,7 +578,7 @@ describe("Tests about insertion of an assignment by a teacher", () => {
             createClass.id,
             undefined,
             description,
-            expectDate
+            dueDate.format()
         );
         } catch(error) {
             expect(error).toBeInstanceOf(Error);
@@ -573,13 +595,18 @@ describe("Tests about insertion of an assignment by a teacher", () => {
     test("It should throw an error when passed description is missing or invalid", async() =>{
         const subjectId = 1;
         const title = "Test title";
-        const dueDate = moment.utc().set({
+        let dueDate = moment.utc().set({
             "hour": 0,
             "minute": 0, 
             "second": 0, 
             "millisecond" : 0
         });
-        const expectDate = new Date(dueDate);
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+        
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
 
         //first add new teacher
         const insertTeacher = await User.insertInternalAccountData( 
@@ -617,7 +644,7 @@ describe("Tests about insertion of an assignment by a teacher", () => {
             createClass.id,
             title,
             undefined,
-            expectDate
+            dueDate.format()
         );
         } catch(error) {
             expect(error).toBeInstanceOf(Error);
@@ -686,22 +713,112 @@ describe("Tests about insertion of an assignment by a teacher", () => {
         }
     });
 
+});
+
+describe("Tests about edition of an assignment by a teacher", () => {
+    
+    test("It should update correctly an assignment", async() =>{
+        const subjectId = 1;
+        const title = "Test title";
+        const description ="Test description"
+
+        let dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+        
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
+
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : 1,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+          subjectId,
+          createClass.id,
+          title,
+          description,
+          dueDate.format()
+        );
+
+        expect(insertAssignment.id).not.toBeNaN();
+
+        //update assignment
+        const testUpdate = await Assignment.updateAssignment(
+            insertAssignment.id,
+            "New title",
+            "New description",
+            dueDate.format()
+            
+        );
+
+        expect(testUpdate).toBe(true);
+
+        //clean db for future tests
+        await Assignment.remove(insertAssignment.id);
+        await TCS.remove(insertRelation)
+        await Class.remove(createClass.id);
+        await User.remove(insertTeacher.id);
+
+    });
+
+    
 
 });
 
-describe('Test wether a theacher is authorized to access a given assignment', () => {
+
+
+describe('Test weather a teacher is authorized to access a given assignment', () => {
 
     test('It should return true', async () => {
 
         const subjectId = 1;
         const title = "Test title";
         const description ="Test description"
-        const dueDate = moment.utc().set({
+        let dueDate = moment.utc().set({
             "hour": 0,
             "minute": 0, 
             "second": 0, 
             "millisecond" : 0
         });
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+        
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
 
         //first add new teacher
         const insertTeacher = await User.insertInternalAccountData( 

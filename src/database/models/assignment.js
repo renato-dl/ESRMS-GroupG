@@ -66,8 +66,8 @@ class Assignment extends Model {
       throw new Error('Invalid assignment date');
     }
 
-    if (date.isBefore(moment().utc(), 'day')) {
-      throw new Error('Past assignment due date');
+    if (!date.isAfter(moment().utc(), 'day')) {
+      throw new Error('Invalid assignment due date');
     }
 
     const result = await this.create({
@@ -105,8 +105,8 @@ class Assignment extends Model {
       throw new Error('Invalid assignment date');
     }
 
-    if (date.isBefore(moment().utc(), 'day')) {
-      throw new Error('Past assignment due date');
+    if (!date.isAfter(moment().utc(), 'day')) {
+      throw new Error('Invalid assignment due date');
     }
 
     return this.update(assId, {
