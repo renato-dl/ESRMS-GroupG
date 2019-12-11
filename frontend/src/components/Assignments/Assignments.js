@@ -4,8 +4,8 @@ import './Assignments.scss';
 import {Icon, Container} from 'semantic-ui-react';
 import moment from 'moment';
 import { AssignmentDetails } from './AssignmentDetails/AssignmentDetails';
-import { Calendar } from '../Calendar/Calendar';
 import {ApplicationStoreContext} from '../../store';
+import { Calendar } from '../Calendar/Calendar';
 
 export class Assignments extends React.Component {
   static contextType = ApplicationStoreContext;
@@ -33,7 +33,7 @@ export class Assignments extends React.Component {
         assignmentsForCalendar: response.data.map((assignment) => {
           return {
             id: assignment.ID,
-            title: `${assignment.Description}`,
+            title: `${assignment.Name}: ${assignment.Title}`,
             start: new Date(assignment.DueDate),
             end: new Date(assignment.DueDate)
           }
@@ -58,6 +58,17 @@ export class Assignments extends React.Component {
     await this.fetchAssignments(from, to);
   }
 
+  // NOTE: This is an example of how to add a class to the event and style it.
+  // please assign your custom class name and also don't forget to add the style to Calendar.scss and global.scss
+  eventPropGetter = (event) => {
+    const colors = ['red', 'blue', 'orange'];
+    const dateNumber = moment(event.end).date();
+    const randomIndex = parseInt((dateNumber + (Math.random() * 10)) % colors.length);
+    const className = colors[randomIndex];
+
+    return { className: className };
+  }
+
   render() {
     return (
       <Container className="contentContainer">
@@ -67,7 +78,8 @@ export class Assignments extends React.Component {
         </h3>
 
         <div className="calendarContainer">
-          <Calendar 
+          <Calendar
+            eventPropGetter={this.eventPropGetter}
             events={this.state.assignmentsForCalendar}
             onDoubleClickEvent={this.handleEventClick}
             onNavigate={this.onNavigate}
