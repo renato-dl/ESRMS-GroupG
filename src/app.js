@@ -5,6 +5,7 @@ import indexRouter from './routes/index';
 import parentRouter from './routes/parent';
 import teacherRouter from './routes/teacher';
 import adminRouter from './routes/admin';
+import communicationRouter from './routes/communication';
 import {config} from './config';
 import cors from 'cors';
 import { AuthenticationService } from './services/authenticationService';
@@ -53,7 +54,7 @@ export class Application {
     this.app.use(`${config.env.api_prefix}/parent`, Authentication.authenticate(), parentRouter);
     this.app.use(`${config.env.api_prefix}/teacher`, Authentication.authenticate(), teacherRouter);
     this.app.use(`${config.env.api_prefix}/admin`, Authentication.authenticate(), adminRouter);
-
+    this.app.use(`${config.env.api_prefix}/communication`, Authentication.authenticate(), communicationRouter);
   }
 
   // sends back the index.html for the client if none of the routes is matched
