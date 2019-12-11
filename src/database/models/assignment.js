@@ -60,8 +60,9 @@ class Assignment extends Model {
     }
 
     const date = moment.utc(dueDate);
+    const dayOfWeek = moment.utc(dueDate).isoWeekday();
 
-    if (!date.isValid()) {
+    if (!date.isValid() || dayOfWeek == 7) {
       throw new Error('Invalid assignment date');
     }
 
@@ -82,6 +83,39 @@ class Assignment extends Model {
     }
 
   }
+
+  updateAssignment(assId, title, description, dueDate) {
+    if (!assId) {
+      throw new Error('Missing or invalid assignment id');
+    }
+    if (!title) {
+      throw new Error('Missing or invalid title');
+    }
+    if (!description) {
+      throw new Error('Missing or invalid description');
+    }
+    if(!dueDate){
+      throw new Error('Missing or invalid due date');
+    }
+
+    const date = moment.utc(dueDate);
+    const dayOfWeek = moment.utc(dueDate).isoWeekday();
+
+    if (!date.isValid() || dayOfWeek == 7) {
+      throw new Error('Invalid assignment date');
+    }
+
+    if (date.isBefore(moment().utc(), 'day')) {
+      throw new Error('Past assignment due date');
+    }
+
+    return this.update(assId, {
+        Title: title,
+        Description: description,
+        DueDate: date.format(this.db.getDateFormatString())
+      })
+  }
+
   async findByClassAndSubject(classId, subjectId, dateRange, pagination) {
     if (!classId) throw new Error('Missing or invalid class id');
     if (!subjectId) throw new Error('Missing or invalid subject id');

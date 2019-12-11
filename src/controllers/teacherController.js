@@ -213,6 +213,34 @@ class TeacherController extends BaseController {
     res.send({success: true, id: result.id});
   }
 
+  // PATCH /teacher/assignment
+  // Body: classId, subjectId, assignmentId, title, description, dueDate
+  async updateAssignment(req, res) {
+    const teacherTeachesInClass = await TCSR.checkIfTeacherTeachesSubjectInClass(
+      req.user.ID,
+      req.body.subjectId, 
+      req.body.classId
+    );
+
+    const isAssignmentFromTeacher = await Assignment.checkIfAssignmentIsFromTeacher(req.body.assignmentId, req.user.ID);
+
+    if(!teacherTeachesInClass || !isAssignmentFromTeacher) {
+      res.send(401);
+      return;
+    } 
+
+    const success = await Assignment.updateAssignment(
+      req.body.assignmentId,
+      req.body.title,
+      req.body.description,
+      req.body.dueDate
+    );
+
+    res.send({ success });
+  }
+
+
+
  /* GET /teacher/assignments
  Query: classId, subjectId, dateRange, paging */
   async assignmentsByClassAndSubject(req, res) {
