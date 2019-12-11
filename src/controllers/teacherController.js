@@ -212,6 +212,25 @@ class TeacherController extends BaseController {
      );
     res.send({success: true, id: result.id});
   }
+
+ /* GET /teacher/assignments
+ Query: classId, subjectId, dateRange, paging */
+  async assignmentsByClassAndSubject(req, res) {
+    if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
+      req.user.ID,
+      req.query.subjectId,
+      req.query.classId
+    )) {
+      res.send(401);
+      return;
+    }
+    res.send(await Assignment.findByClassAndSubject(
+      req.query.classId,
+      req.query.subjectId,
+      {from: req.query.fromDate, to: req.query.toDate},
+      {page: req.query.page, pageSize: req.query.pageSize}
+    ));
+  }
 }
 
 export default new TeacherController();
