@@ -8,6 +8,7 @@ exports.up = function(knex) {
       table.text('Description').notNullable();
       table.datetime('DueDate').notNullable();
       table.timestamp('CreatedOn').defaultTo(knex.fn.now()).notNullable();
+      table.text('AttachmentFile');
 
       table.foreign('SubjectId').references('Subjects.ID');
       table.foreign('ClassId').references('Classes.ID');
