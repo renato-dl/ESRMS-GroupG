@@ -69,7 +69,10 @@
       "/frontend/",
       "/dist/",
       "/node_modules/"
-    ],
-    "reporters": ["default",  "jest-sonar"]
+    ]
+  },
+  "jestSonar": {
+    "reportPath": "coverage",
+    "reportFile": "test-reporter.xml"
   }
 }
