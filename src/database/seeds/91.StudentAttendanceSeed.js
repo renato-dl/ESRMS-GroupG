@@ -1,12 +1,12 @@
 
 exports.seed = function(knex) {
   // Deletes ALL existing entries
-  return knex('AttendanceRegistry').del()
+  return knex('StudentAttendance').del()
     .then(function () {
       // Inserts seed entries
-      return knex('AttendanceRegistry').insert([
+      return knex('StudentAttendance').insert([
         { // absence
-          StudentID: '868d6ec1dfc8467f6d260c48b5620543',
+          StudentId: '868d6ec1dfc8467f6d260c48b5620543',
           Date: '2019-12-10',
           EntryTeacherId: '26ce21c0-8d32-41d1-8d07-b4994fa53edf',
           LateEntry: null,
@@ -15,7 +15,7 @@ exports.seed = function(knex) {
           
         },
         { // late entry (secod hour)
-          StudentID: '868d6ec1dfc8467f6d260c48b5620543',
+          StudentId: '868d6ec1dfc8467f6d260c48b5620543',
           Date: '2019-12-11',
           LateEntry: '2h',
           EntryTeacherId: '6d361d43-1308-4ac6-95ab-580138de9141',
@@ -23,7 +23,7 @@ exports.seed = function(knex) {
           ExitTeacherId: null
         },
         { // late entry (within 10m of first hour) + early exit
-          StudentID: '868d6ec1dfc8467f6d260c48b5620543',
+          StudentId: '868d6ec1dfc8467f6d260c48b5620543',
           Date: '2019-12-12',
           LateEntry: '1h',
           EntryTeacherId: '6e5c9976f5813e59816b40a814e29899',

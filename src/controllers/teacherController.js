@@ -5,6 +5,8 @@ import Class from '../database/models/class';
 import TCSR from '../database/models/teacherClassSubject';
 import Grade from '../database/models/grade';
 import Student from '../database/models/student';
+import StudentAttendance from '../database/models/studentAttendance';
+import ClassAttendance from '../database/models/classAttendance';
 import Assignment from '../database/models/assignment';
 
 class TeacherController extends BaseController {
@@ -188,8 +190,58 @@ class TeacherController extends BaseController {
   }
 
   async getClasses(req, res) {
-    const classes = await Class.getTeachingClasses(req.user.ID)
+    const classes = await TCSR.getTeachingClasses(req.user.ID)
     res.send(classes);
+  }
+
+  /*
+  async registerSingleAbsence(req, res) {
+    const result = await StudentAttendance.registerSingleAbsence(
+      req.body.studentId,
+      req.user.ID
+    );
+    res.send({
+      success: true,
+      id: result.id
+    });
+  }
+  */
+
+  async registerBulkAbsence(req, res) {
+    if (!req.body.students) {
+      throw new Error('Missing students array');
+    }
+    const students = await Student.findByClassId(req.body.classId);
+    for (let i=0; i< req.body.students.length; i++) {
+      const found = students.find(element => {
+        return element.StudentId == req.body.students[i];
+      })
+      if (!found) {
+        throw new Error('One or more students do not belong to provided class')
+      }
+    }
+    await ClassAttendance.registerAttendanceForToday(req.body.classId);
+    const result = await StudentAttendance.registerBulkAbsence(
+      req.body.students,
+      req.user.ID
+    );
+    res.send({
+      success: true,
+      affectedRows: result.affectedRows
+    });
+  }
+
+  async getAttendance(req, res) {
+    const isRegistered = await ClassAttendance.hasAttendanceBeenRegistered(req.query.classId, req.query.date);
+    let result = {};
+    if (!isRegistered) {
+      result.rollCall = false;
+      result.students = await Student.findByClassId(req.query.classId);
+    } else {
+      result.rollCall = true;
+      result.students = await StudentAttendance.getDailyAttendanceByClassId(req.query.classId, req.query.date);
+    }
+    res.send(result);
   }
 
   // POST /teacher/assignment
