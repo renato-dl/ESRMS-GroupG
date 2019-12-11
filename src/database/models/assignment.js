@@ -60,7 +60,7 @@ class Assignment extends Model {
     }
 
     const date = moment.utc(dueDate);
-    console.log(date);
+
     if (!date.isValid()) {
       throw new Error('Invalid assignment date');
     }
@@ -112,6 +112,25 @@ class Assignment extends Model {
       return [];
     }
     return results;
+  }
+  async checkIfAssignmentIsFromTeacher(assId, teacherId) {
+    if (!assId) throw new Error('Missing or invalid assignment id');
+    if (!teacherId) throw new Error('Missing or invalid teacher id');
+
+    const connenction = await this.db.getConnection();
+    const result = await connenction.query(
+      `SELECT COUNT(*) AS count
+      FROM Assignments A, TeacherSubjectClassRelation tscr
+      WHERE A.ClassId = tscr.ClassId
+      AND tscr.SubjectId = A.SubjectId
+      AND tscr.TeacherId = ? AND A.ID = ?`,
+      [teacherId, assId]
+    );
+    connenction.release();
+    if (result[0].count == 1) {
+      return true;
+    }
+    return false;
   }
 }
 export default new Assignment();
