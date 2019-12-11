@@ -1,5 +1,5 @@
 
-import Attendance from '../src/database/models/attendance';
+import StudentAttendance from '../src/database/models/studentAttendance';
 import User from '../src/database/models/user';
 import Student from '../src/database/models/student';
 import moment from 'moment';
@@ -72,7 +72,7 @@ describe("Tests about the visualization of parent's child attendance ", () => {
         const date = new Date('2019-11-03T00:00:00.000Z');
         const time = "10:00:00";
         
-        const insertAttendance = await Attendance.create({
+        const insertAttendance = await StudentAttendance.create({
             "StudentId" : insertStudent.id,
             "Date" : date,
             "LateEntry" : "1h",
@@ -82,7 +82,7 @@ describe("Tests about the visualization of parent's child attendance ", () => {
         }
        );
 
-       const checkChildAttendance = await Attendance.findByStudentId(insertStudent.id, {});
+       const checkChildAttendance = await StudentAttendance.findByStudentId(insertStudent.id, {});
        expect(checkChildAttendance).not.toBeNull();
        expect(checkChildAttendance).toHaveLength(1);
        expect(checkChildAttendance).toEqual(
@@ -101,7 +101,7 @@ describe("Tests about the visualization of parent's child attendance ", () => {
                     }
    )]));
         //clean db for future tests
-       await Attendance.remove(insertAttendance);
+       await StudentAttendance.remove(insertAttendance);
        await User.remove(insertEntryTeacher.id);
        await User.remove(insertExitTeacher.id);
        await Student.remove(insertStudent.id);
@@ -177,7 +177,7 @@ describe("Tests about the visualization of parent's child attendance ", () => {
         const time1 = "10:00:00";
         const time2 = "11:30:00";
         
-        const insertAttendance1 = await Attendance.create({
+        const insertAttendance1 = await StudentAttendance.create({
             "StudentId" : insertStudent.id,
             "Date" : date1,
             "LateEntry" : "1h",
@@ -188,7 +188,7 @@ describe("Tests about the visualization of parent's child attendance ", () => {
        );
 
 
-       const insertAttendance2 = await Attendance.create({
+       const insertAttendance2 = await StudentAttendance.create({
         "StudentId" : insertStudent.id,
         "Date" : date2,
         "LateEntry" : "1h",
@@ -198,7 +198,7 @@ describe("Tests about the visualization of parent's child attendance ", () => {
     }
    );
 
-       const checkChildAttendance = await Attendance.findByStudentId(
+       const checkChildAttendance = await StudentAttendance.findByStudentId(
            insertStudent.id, {date1,date2});
 
        expect(checkChildAttendance).not.toBeNull();
@@ -230,8 +230,8 @@ describe("Tests about the visualization of parent's child attendance ", () => {
                     
    )]));
         //clean db for future tests
-       await Attendance.remove(insertAttendance1);
-       await Attendance.remove(insertAttendance2);
+       await StudentAttendance.remove(insertAttendance1);
+       await StudentAttendance.remove(insertAttendance2);
        await User.remove(insertEntryTeacher.id);
        await User.remove(insertExitTeacher.id);
        await Student.remove(insertStudent.id);
@@ -240,7 +240,7 @@ describe("Tests about the visualization of parent's child attendance ", () => {
     });
 
     test("It should show an empty list when passed student Id has not any attendance record", async () => {
-       const checkChildAttendance = await Attendance.findByStudentId(
+       const checkChildAttendance = await StudentAttendance.findByStudentId(
            "notExistingStudentID", {});
        expect(checkChildAttendance).not.toBeNull();
        expect(checkChildAttendance).toHaveLength(0);
@@ -249,7 +249,7 @@ describe("Tests about the visualization of parent's child attendance ", () => {
 
     test('It should throw an error when the passed studentId is missing or invalid', async () =>{
         try{
-            await Attendance.findByStudentId();
+            await StudentAttendance.findByStudentId();
 
         }catch(error){
             expect(error).toBeInstanceOf(Error);
