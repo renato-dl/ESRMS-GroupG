@@ -2,7 +2,7 @@ import {BaseController} from "./baseController";
 import Student from "../database/models/student";
 import Grade from '../database/models/grade';
 import Assignment from '../database/models/assignment';
-import Attendance from '../database/models/attendance';
+import StudentAttendance from '../database/models/studentAttendance';
 
 class ParentController extends BaseController {
 
@@ -46,7 +46,7 @@ class ParentController extends BaseController {
       res.send(401);
       return;
     }
-    const attendance = await Attendance.findByStudentId(
+    const attendance = await StudentAttendance.findByStudentId(
       req.query.studentId, 
       {from: req.query.fromDate, to: req.query.toDate},
       {page: req.query.page, pageSize: req.query.pageSize}

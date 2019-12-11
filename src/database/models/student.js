@@ -273,6 +273,27 @@ class Student extends Model {
     connection.release();
     return result;
   }
+
+  async findByClassId(classId) {
+    if (!classId) {
+      throw new Error('Missing or invalid classId')
+    }
+    const connection = await this.db.getConnection();
+    let result
+    try {
+      result = await connection.query(`
+        SELECT ID AS StudentId, FirstName, LastName
+        FROM ${this.tableName}
+        WHERE ClassId = ?
+        ORDER BY LastName, FirstName
+      `, [classId]);}
+    catch(error) {
+      console.log(error);
+    } finally {
+      connection.release();
+    }
+    return result;
+  }
 }
 
 export default new Student();
