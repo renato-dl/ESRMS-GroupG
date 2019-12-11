@@ -239,16 +239,12 @@ class TeacherController extends BaseController {
       res.send(401);
       return;
     }
-
     await Assignment.remove(
       req.body.ID
     );
 
     res.send({success: true});
   }
-
-
-
 }
 
 export default new TeacherController();
