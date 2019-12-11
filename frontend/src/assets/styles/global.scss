@@ -97,3 +97,22 @@
         margin-right: auto!important;
     }
 }
+
+// FOR THE CALENDAR...
+.rbc-event {
+    &.default-event {
+        background: #008272 !important;
+    }
+
+    &.red {
+        background: red !important;
+    }
+    
+    &.blue {
+        background: blue !important;
+    }
+    
+    &.orange {
+        background: orange !important;
+    }
+}
