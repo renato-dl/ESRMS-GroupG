@@ -15,5 +15,6 @@ router.delete('/grade', Authorization(['IsTeacher']), TeacherController.processR
 router.patch('/grade', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'updateGrade'));
 router.get('/students', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'getStudents'));
 router.get('/classes', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'getClasses'));
+router.post('/assignment', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'addAssignment'));
 
 export default router;
