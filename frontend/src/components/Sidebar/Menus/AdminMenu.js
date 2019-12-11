@@ -25,6 +25,10 @@ export const AdminMenu = (props) => (
       <Icon name='linode' />
       Class Compositions
     </Menu.Item>
+    <Menu.Item as={Link} to='/admin/communications'>
+      <Icon name='bullhorn' />
+      Communications
+    </Menu.Item>
     {/* <Menu.Item as={Link} to='/accounts'>
       <Icon name='wrench' />
       Internal Accounts Setup
