@@ -89,13 +89,19 @@ export class ChildAttendance extends React.Component{
       const to = moment(data).endOf('month').endOf('day').toDate().toISOString();
       await this.fetchAttendance(from, to);
     } 
+
     eventPropGetter = (event) => {
-      const colors = ['red', 'blue', 'yellow'];
-      const dateNumber = moment(event.end).date();
-      const randomIndex = parseInt((dateNumber + (Math.random() * 10)) % colors.length);
-      const className = colors[randomIndex];
-  
-      return { className: className };
+      const status=event.title;
+      if(status=='Absence')
+      return {className:'red'};
+      else if(status=='LateEntry'||status=='EarlyExit')
+      return {className:'orange'}
+      else return {className:'blue'}
+      
+      // const dateNumber = moment(event.end).date();
+      // const randomIndex = parseInt((dateNumber + (Math.random() * 10)) % colors.length);
+      // const className = colors[randomIndex];
+      // return { className: className };
     }
 
     render(){
@@ -134,6 +140,14 @@ export class ChildAttendance extends React.Component{
             onClose={this.closeAttendanceModal}
           />
         }
+
+        {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='EarlyExit'&&
+          <AttendanceDetailsEarlyexit
+            attendance={this.state.attendanceDataForModal}
+            onClose={this.closeAttendanceModal}
+          />
+        }
+        
       </Container>
       )
     }

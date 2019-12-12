@@ -1,0 +1,10 @@
+.rbc-row-segment, .rbc-event {
+    outline: none !important;
+
+    &:active, &:focus {
+        outline: none !important;
+    }
+}
+.calendarContainer {
+    background: #fff;
+}
