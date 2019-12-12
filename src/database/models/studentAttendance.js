@@ -163,7 +163,7 @@ class StudentAttendance extends Model {
     const dateStr = dateObj.format(this.db.getDateFormatString());
     const query = `
       SELECT
-        S.ID AS StudentId,
+        S.ID AS SId,
         S.FirstName,
         S.LastName,
         A.*
@@ -185,7 +185,7 @@ class StudentAttendance extends Model {
     }
     const newRes = result.map(element => {
       let newElement = {};
-      newElement.StudentId = element.StudentId;
+      newElement.StudentId = element.SId;
       newElement.FirstName = element.FirstName;
       newElement.LastName = element.LastName;
       newElement.Present = false;
@@ -196,7 +196,7 @@ class StudentAttendance extends Model {
           newElement.Present = true;
           newElement.LateEntry = element.LateEntry;
         }
-        if (element.LateEntry) {
+        if (element.EarlyExit) {
           newElement.Present = true;
           newElement.EarlyExit = element.EarlyExit;
         }
