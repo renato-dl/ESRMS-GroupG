@@ -33,6 +33,7 @@ import {AdminStudentsEnrollment} from '../../components/adminComponents/SudentsE
 import {TeacherGrade} from '../../components/TeacherGrade/TeacherGrade';
 import { PrivateRoute } from '../../components/PrivateRoute/PrivateRoute';
 import { Assignments } from '../../components/Assignments/Assignments';
+import {ChildAttendance} from '../../components/ChildAttendance/ChildAttendance'
 import { Communications } from '../../components/adminComponents/Communications/Communications';
 
 export class App extends React.Component {
@@ -61,6 +62,7 @@ export class App extends React.Component {
               <PrivateRoute exact path="/parent/student/:studentID" component={Student} />
               <PrivateRoute exact path="/parent/student/:studentID/marks" component={Marks}/>
               <PrivateRoute exact path="/parent/student/:studentID/assignments" component={Assignments}/>
+              <PrivateRoute exact path="/parent/student/:studentID/attendance" component={ChildAttendance}/>
               
               <PrivateRoute exact path="/teacher" component={Teacher}/>
               <PrivateRoute exact path="/teacher/subjects" component={Teacher}/>

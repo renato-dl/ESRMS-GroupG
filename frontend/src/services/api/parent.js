@@ -18,4 +18,8 @@ export class ParentAPIService extends BaseAPIService {
     return this.get(`/parent/assignments?studentId=${studentID}&from=${from}&to=${to}`);
   }
 
+  getChildAttendance(studentID, from, to) {
+    return this.get(`/parent/attendance?studentId=${studentID}&fromDate=${from}&toDate=${to}`);
+  }
+
 }
