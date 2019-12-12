@@ -183,7 +183,6 @@ class StudentAttendance extends Model {
     } finally {
       connection.release();
     }
-    console.log(result)
     const newRes = result.map(element => {
       let newElement = {};
       newElement.StudentId = element.StudentId;
@@ -226,7 +225,7 @@ class StudentAttendance extends Model {
         hour = '2h';
         break;
     }
-    const todayStr = moment().format('YYYY-MM-DD');
+    const todayStr = moment().utc().format('YYYY-MM-DD');
     const existingRecord = await this.findByStudentId(studentId, {
       from: todayStr,
       to: todayStr
@@ -238,11 +237,58 @@ class StudentAttendance extends Model {
       throw new Error('Student is not registered as absent');
     }
     
-    const todayStr2 = moment().format(this.db.getDateFormatString());
+    const todayStr2 = moment().utc().format(this.db.getDateFormatString());
     const query = `
       UPDATE ${this.tableName}
       SET LateEntry = '${hour}', EntryTeacherId = ?
       WHERE StudentId = ? AND Date = '${todayStr2}' 
+    `;
+    const connection = await this.db.getConnection();
+    let result;
+    try {
+      result = await connection.query(query, [teacherId, studentId]);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      connection.release();
+    }
+    return {affectedRows: result.affectedRows}
+  }
+
+  async registerEarlyExit(studentId, teacherId) {
+    if (!studentId) {
+      throw new Error('Missing or invalid studentId');
+    }
+    if (!teacherId) {
+      throw new Error('Missing or invalid teacherId');
+    }
+    const today = moment().utc();
+    const date = today.format('YYYY-MM-DD');
+    const time = today.format('HH:mm');
+    const existingRecord = await this.findByStudentId(studentId, {
+      from: date,
+      to: date
+    });
+    if (existingRecord.length == 0) { // present
+      const result = await this.create({
+        StudentId: studentId,
+        Date: today.format(this.db.getDateFormatString()),
+        EarlyExit: time,
+        ExitTeacherId: teacherId
+      });
+      return {id: result};
+    }
+    if (existingRecord[0].LateEntry == null) { // absent
+      throw new Error('Student is registered as absent');
+    }
+    if (existingRecord[0].EarlyExit != null) { // already out
+      throw new Error('There is already an early exit record');
+    }
+    // present with late entry
+    const query = `
+      UPDATE ${this.tableName}
+      SET EarlyExit = '${time}', ExitTeacherId = ?
+      WHERE StudentId = ? AND Date = '${date}' 
     `;
     const connection = await this.db.getConnection();
     let result;

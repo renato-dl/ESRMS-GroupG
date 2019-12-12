@@ -28,5 +28,6 @@ router.post('/absence', Authorization(['IsTeacher']), TeacherController.processR
 router.post('/absences', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'registerBulkAbsence'));
 router.get('/attendance', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'getAttendance'));
 router.post('/late_entry', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'registerLateEntry'));
+router.post('/early_exit', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'registerEarlyExit'));
 
 export default router;
