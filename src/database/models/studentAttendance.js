@@ -1,7 +1,8 @@
 import {Model} from './base';
 import User from './user';
 import moment from 'moment';
-import Student from './student'
+import {getHour} from '../../services/schoolHours';
+import { get } from 'http';
 
 class StudentAttendance extends Model {
   constructor() {
@@ -206,6 +207,55 @@ class StudentAttendance extends Model {
     });
     return newRes;
   }
+
+  async registerLateEntry(studentId, teacherId) {
+    if (!studentId) {
+      throw new Error('Missing or invalid studentId');
+    }
+    if (!teacherId) {
+      throw new Error('Missing or invalid teacherId');
+    }
+    let hour;
+    switch(getHour()) {
+      case 0:
+        throw new Error('Attendance record editing is not permitted at this time')
+      case 1:
+        hour = '1h';
+        break;
+      case 2:
+        hour = '2h';
+        break;
+    }
+    const todayStr = moment().format('YYYY-MM-DD');
+    const existingRecord = await this.findByStudentId(studentId, {
+      from: todayStr,
+      to: todayStr
+    });
+    if (existingRecord.length == 0) {
+      throw new Error('Student is not registered as absent');
+    }
+    if (existingRecord[0].LateEntry != null || existingRecord[0].EarlyExit != null) {
+      throw new Error('Student is not registered as absent');
+    }
+    
+    const todayStr2 = moment().format(this.db.getDateFormatString());
+    const query = `
+      UPDATE ${this.tableName}
+      SET LateEntry = '${hour}', EntryTeacherId = ?
+      WHERE StudentId = ? AND Date = '${todayStr2}' 
+    `;
+    const connection = await this.db.getConnection();
+    let result;
+    try {
+      result = await connection.query(query, [teacherId, studentId]);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      connection.release();
+    }
+    return {affectedRows: result.affectedRows}
+  }
+
 }
 
 export default new StudentAttendance();

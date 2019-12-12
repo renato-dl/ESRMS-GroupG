@@ -207,6 +207,17 @@ class TeacherController extends BaseController {
   }
   */
 
+  /* POST /teacher/absences
+   * Body:
+    {
+     "classId": 2,
+     "students":
+     [
+       "7f32bd55-9222-4dde-9cf4-fb1edb5148cc",
+       "aa49b76d-0308-44ce-a111-dcf31fd7678c"	
+     ]
+    }
+   */ 
   async registerBulkAbsence(req, res) {
     if (!req.body.students) {
       throw new Error('Missing students array');
@@ -231,6 +242,15 @@ class TeacherController extends BaseController {
     });
   }
 
+  async registerLateEntry(req, res) {
+    const result = await StudentAttendance.registerLateEntry(req.body.studentId, req.user.ID);
+    res.send({
+      success: true,
+      affectedRows: result.affectedRows
+    });
+  }
+
+  // GET teacher/attendance?classId=1&date=2019-12-09T00:00:00.000Z
   async getAttendance(req, res) {
     const isRegistered = await ClassAttendance.hasAttendanceBeenRegistered(req.query.classId, req.query.date);
     let result = {};
