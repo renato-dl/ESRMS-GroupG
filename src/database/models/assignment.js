@@ -37,7 +37,7 @@ class Assignment extends Model {
     }
     return results;
   }
-  async addAssignment(subjectId, classId, title, description, dueDate){
+  async addAssignment(subjectId, classId, title, description, dueDate, filename){
 
     if (!subjectId) {
       throw new Error('Missing or invalid subject id');
@@ -75,7 +75,8 @@ class Assignment extends Model {
       ClassId: classId,
       Title: title,
       Description: description,
-      DueDate: date.format(this.db.getDateFormatString())
+      DueDate: date.format(this.db.getDateFormatString()),
+      AttachmentFile: filename
     });
 
     return {
@@ -112,7 +113,8 @@ class Assignment extends Model {
     return this.update(assId, {
         Title: title,
         Description: description,
-        DueDate: date.format(this.db.getDateFormatString())
+        DueDate: date.format(this.db.getDateFormatString()),
+        AttachmentFile: filename
       })
   }
 

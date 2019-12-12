@@ -8,6 +8,7 @@ import Student from '../database/models/student';
 import StudentAttendance from '../database/models/studentAttendance';
 import ClassAttendance from '../database/models/classAttendance';
 import Assignment from '../database/models/assignment';
+import path, { dirname } from 'path';
 
 class TeacherController extends BaseController {
 
@@ -260,7 +261,8 @@ class TeacherController extends BaseController {
       req.body.classId,
       req.body.title,
       req.body.description,
-      req.body.dueDate
+      req.body.dueDate,
+      req.file.filename
      );
     res.send({success: true, id: result.id});
   }
@@ -271,7 +273,7 @@ class TeacherController extends BaseController {
     const teacherTeachesInClass = await TCSR.checkIfTeacherTeachesSubjectInClass(
       req.user.ID,
       req.body.subjectId, 
-      req.body.classId
+      req.body.classId,
     );
 
     const isAssignmentFromTeacher = await Assignment.checkIfAssignmentIsFromTeacher(req.body.assignmentId, req.user.ID);
@@ -285,7 +287,8 @@ class TeacherController extends BaseController {
       req.body.assignmentId,
       req.body.title,
       req.body.description,
-      req.body.dueDate
+      req.body.dueDate,
+      req.file.filename
     );
 
     res.send({ success });
@@ -324,6 +327,16 @@ class TeacherController extends BaseController {
     );
 
     res.send({success: true});
+  }
+
+  async getAssignmentFile(req, res){
+    const fileName = req.query.file;
+    if(!fileName){
+      throw new Error("File name is required");
+    }
+
+    const filePath = path.join(__dirname, "../../", "uploads", "b5901c4f636250eb1008-Article Text-4742-1-10-20131007.pdf");
+    res.sendFile(filePath)
   }
 }
 
