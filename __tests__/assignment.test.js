@@ -116,7 +116,8 @@ describe("Tests about visualization of assignments by a teacher", () => {
           createClass.id,
           title,
           description,
-          dueDate.format()
+          dueDate.format(),
+          null
         );
     
         expect(insertAssignment.id).not.toBeNaN();
@@ -192,7 +193,8 @@ describe("Tests about visualization of assignments by a teacher", () => {
           createClass.id,
           title1,
           description1,
-          dueDate1
+          dueDate1,
+          null
         );
     
         expect(insertAssignment1.id).not.toBeNaN();
@@ -203,7 +205,8 @@ describe("Tests about visualization of assignments by a teacher", () => {
             createClass.id,
             title2,
             description2,
-            dueDate2
+            dueDate2,
+            null
           );
       
         expect(insertAssignment2.id).not.toBeNaN();
@@ -406,7 +409,8 @@ describe("Tests about insertion of an assignment by a teacher", () => {
           createClass.id,
           title,
           description,
-          dueDate.format()
+          dueDate.format(),
+          null
         );
     
         expect(insertAssignment.id).not.toBeNaN();
@@ -480,7 +484,8 @@ describe("Tests about insertion of an assignment by a teacher", () => {
             createClass.id,
             title,
             description,
-            dueDate.format()
+            dueDate.format(),
+            null
         );
         } catch(error) {
             expect(error).toBeInstanceOf(Error);
@@ -518,7 +523,8 @@ describe("Tests about insertion of an assignment by a teacher", () => {
                 undefined,
                 title,
                 description,
-                dueDate.format()
+                dueDate.format(),
+                null
             );
         } catch(error) {
             expect(error).toBeInstanceOf(Error);
@@ -578,7 +584,8 @@ describe("Tests about insertion of an assignment by a teacher", () => {
             createClass.id,
             undefined,
             description,
-            dueDate.format()
+            dueDate.format(),
+            null
         );
         } catch(error) {
             expect(error).toBeInstanceOf(Error);
@@ -644,7 +651,8 @@ describe("Tests about insertion of an assignment by a teacher", () => {
             createClass.id,
             title,
             undefined,
-            dueDate.format()
+            dueDate.format(),
+            null
         );
         } catch(error) {
             expect(error).toBeInstanceOf(Error);
@@ -699,7 +707,8 @@ describe("Tests about insertion of an assignment by a teacher", () => {
             createClass.id,
             title,
             description,
-            undefined
+            undefined,
+            null
         );
         } catch(error) {
             expect(error).toBeInstanceOf(Error);
@@ -770,7 +779,8 @@ describe("Tests about edition of an assignment by a teacher", () => {
           createClass.id,
           title,
           description,
-          dueDate.format()
+          dueDate.format(),
+          null
         );
 
         expect(insertAssignment.id).not.toBeNaN();
@@ -780,7 +790,8 @@ describe("Tests about edition of an assignment by a teacher", () => {
             insertAssignment.id,
             "New title",
             "New description",
-            dueDate.format()
+            dueDate.format(),
+            null
             
         );
 
@@ -847,7 +858,8 @@ describe("Tests about edition of an assignment by a teacher", () => {
             undefined,
             title,
             description,
-            dueDate.format()
+            dueDate.format(),
+            null
         );
         } catch(error) {
             expect(error).toBeInstanceOf(Error);
@@ -913,7 +925,8 @@ describe("Tests about edition of an assignment by a teacher", () => {
             createClass.id,
             title,
             description,
-            dueDate.format()
+            dueDate.format(),
+            null
         );
         expect(insertAssignment.id).not.toBeNaN();
 
@@ -923,7 +936,8 @@ describe("Tests about edition of an assignment by a teacher", () => {
             insertAssignment.id,
             undefined,
             description,
-            dueDate.format()
+            dueDate.format(),
+            null
         );
         } catch(error) {
             expect(error).toBeInstanceOf(Error);
@@ -989,7 +1003,8 @@ describe("Tests about edition of an assignment by a teacher", () => {
             createClass.id,
             title,
             description,
-            dueDate.format()
+            dueDate.format(),
+            null
         );
         expect(insertAssignment.id).not.toBeNaN();
 
@@ -999,7 +1014,8 @@ describe("Tests about edition of an assignment by a teacher", () => {
             insertAssignment.id,
             title,
             undefined,
-            dueDate.format()
+            dueDate.format(),
+            null
         );
         } catch(error) {
             expect(error).toBeInstanceOf(Error);
@@ -1065,7 +1081,8 @@ describe("Tests about edition of an assignment by a teacher", () => {
             createClass.id,
             title,
             description,
-            dueDate.format()
+            dueDate.format(),
+            null
         );
         expect(insertAssignment.id).not.toBeNaN();
 
@@ -1075,7 +1092,8 @@ describe("Tests about edition of an assignment by a teacher", () => {
             insertAssignment.id,
             title,
             description,
-            undefined
+            undefined,
+            null
         );
         } catch(error) {
             expect(error).toBeInstanceOf(Error);
@@ -1141,7 +1159,8 @@ describe("Tests about edition of an assignment by a teacher", () => {
             createClass.id,
             title,
             description,
-            dueDate.format()
+            dueDate.format(),
+            null
         );
         expect(insertAssignment.id).not.toBeNaN();
 
@@ -1152,7 +1171,8 @@ describe("Tests about edition of an assignment by a teacher", () => {
             insertAssignment.id,
             title,
             description,
-            dueDate.format()
+            dueDate.format(),
+            null
         );
         } catch(error) {
             expect(error).toBeInstanceOf(Error);
@@ -1233,7 +1253,8 @@ describe('Test weather a teacher is authorized to access a given assignment', ()
           createClass.id,
           title,
           description,
-          dueDate.format()
+          dueDate.format(),
+          null
         );
     
         expect(insertAssignment.id).not.toBeNaN();
