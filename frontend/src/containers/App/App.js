@@ -34,6 +34,7 @@ import {TeacherGrade} from '../../components/TeacherGrade/TeacherGrade';
 import { PrivateRoute } from '../../components/PrivateRoute/PrivateRoute';
 import { Assignments } from '../../components/Assignments/Assignments';
 import {ChildAttendance} from '../../components/ChildAttendance/ChildAttendance'
+import { Communications } from '../../components/adminComponents/Communications/Communications';
 
 export class App extends React.Component {
   static contextType = ApplicationStoreContext;
@@ -72,6 +73,7 @@ export class App extends React.Component {
               <PrivateRoute exact path="/admin/configParent" component={ConfigParent}/>
               <PrivateRoute exact path="/admin/ClassComposition" component={ClassComposition}/>
               <PrivateRoute exact path="/admin/enrollStudents" component={AdminStudentsEnrollment}/>
+              <PrivateRoute exact path="/admin/communications" component={Communications}/> 
 
               <PrivateRoute exact path="/sysadmin" component={SysAdmin}/>
               <PrivateRoute exact path="/sysadmin/accounts" component={InternalAccounts}/>

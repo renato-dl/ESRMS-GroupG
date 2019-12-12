@@ -108,12 +108,14 @@ describe('Tests about insertion of a grade by teacher', () => {
     const studentId = "868d6ec1dfc8467f6d260c48b5620543"
     const grade = "6.0";
     const type = "Oral";
+    const date = moment.utc();
     
     try{
       const result = await Grade.addGrade(
         undefined,
         studentId,
         grade,
+        date.format(),
         type
     );
 
@@ -129,12 +131,14 @@ test("it should throw Error with message \'Missing or invalid studentId' when th
   const subjectId = "1";
   const grade = "6.0";
   const type = "Oral";
+  const date = moment.utc();
   
   try{
     const result = await Grade.addGrade(
       subjectId,
       undefined,
       grade,
+      date.format(),
       type
   );
 
@@ -149,12 +153,14 @@ test("it should throw Error with message \'Missing or invalid grade' when the gr
   const subjectId = "1";
   const studentId = "868d6ec1dfc8467f6d260c48b5620543"
   const type = "Oral";
+  const date = moment.utc();
   
   try{
     const result = await Grade.addGrade(
       subjectId,
       studentId,
       undefined,
+      date.format(),
       type
   );
 
@@ -164,17 +170,42 @@ test("it should throw Error with message \'Missing or invalid grade' when the gr
   }
 });
 
-test("it should throw Error with message \'Missing or invalid grade' when the grade is not passed", async() =>{
+
+test("it should throw Error with message \'Missing or invalid grade date' when the grade is not passed", async() =>{
+  const subjectId = "1";
+  const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+  const grade = "6.0"
+  const type = "Oral";
+
+  try{
+    const result = await Grade.addGrade(
+      subjectId,
+      studentId,
+      grade,
+      undefined,
+      type
+  );
+
+  }catch(error){
+    expect(error).toBeInstanceOf(Error);
+    expect(error).toHaveProperty('message', 'Missing or invalid grade date');
+  }
+});
+
+
+test("it should throw Error with message \'Invalid grade' when the grade is not valid", async() =>{
   const subjectId = "1";
   const studentId = "868d6ec1dfc8467f6d260c48b5620543"
   const grade = 6.35;
   const type = "Oral";
+  const date = moment.utc();
   
   try{
     const result = await Grade.addGrade(
       subjectId,
       studentId,
       grade,
+      date.format,
       type
   );
 
@@ -188,12 +219,14 @@ test("it should throw Error with message \'Missing or invalid type' when the typ
   const subjectId = "1";
   const studentId = "868d6ec1dfc8467f6d260c48b5620543"
   const grade = "6.0";
+  const date = moment.utc();
   
   try{
     const result = await Grade.addGrade(
       subjectId,
       studentId,
       grade,
+      date.format,
       undefined
   );
 

@@ -15,7 +15,7 @@
     "clean": "rimraf dist",
     "build": "babel ./src --out-dir ./dist",
     "prod": "cross-env NODE_ENV=production npm-run-all clean build server:prod",
-    "test": "jest __tests__ --run-in-band --silent",
+    "test": "jest __tests__ --run-in-band --silent --coverage",
     "watch": "nodemon"
   },
   "dependencies": {
@@ -54,6 +54,7 @@
     "@babel/preset-env": "^7.7.1",
     "@types/jest": "^24.0.23",
     "@types/knex": "^0.16.1",
+    "jest-sonar": "^0.2.4",
     "nodemon": "^1.19.4"
   },
   "env": {
@@ -69,5 +70,9 @@
       "/dist/",
       "/node_modules/"
     ]
+  },
+  "jestSonar": {
+    "reportPath": "coverage",
+    "reportFile": "test-reporter.xml"
   }
 }

@@ -10,10 +10,12 @@ export const AttendanceDetails = (props) => (
       <Icon onClick={props.onClose} className="close-icn" name="close" />
     </Modal.Header>
     <Modal.Content>
-      <h3>Subject: <span>{props.attendance.Name}</span></h3>
-      <h3>Assigment title: <span>{props.attendance.Title}</span></h3>
-      <h3>Assignment description: <span>{props.attendance.Description}</span></h3>
-      <h3>Due date: <span>{moment(props.attendance.DueDate).format('MMMM Do')}</span></h3>
+      <h3>Date: <span>{props.attendance.Date}</span></h3>
+      <h3>Status: <span>{props.attendance.title}</span></h3>
+      <h3>LateEntry: <span>{props.attendance.LateEntry}</span></h3> 
+      <h3>EntryTeacherName: <span>{props.attendance.EntryTeacherName}</span></h3>
+      <h3>EarlyExit: <span>{props.attendance.EarlyExit}</span></h3>
+      <h3>ExitTeacherName: <span>{props.attendance.ExitTeacherName}</span></h3>
     </Modal.Content>
     <Modal.Actions>
       <Button positive onClick={props.onClose}>

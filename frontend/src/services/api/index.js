@@ -3,6 +3,7 @@ import { ParentAPIService } from './parent';
 import {TeacherAPIService} from './teacher'
 import { AdminAPIService } from './admin';
 import { SysAdminAPIService } from './sysadmin';
+import { CommunicationAPIService } from './communication';
 class Api {
   
   constructor() {
@@ -11,6 +12,7 @@ class Api {
     this.teacher = new TeacherAPIService();
     this.admin = new AdminAPIService();
     this.sysadmin = new SysAdminAPIService();
+    this.communication = new CommunicationAPIService();
   }
 
 }

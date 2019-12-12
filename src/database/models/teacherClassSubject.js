@@ -1,4 +1,5 @@
 import {Model} from './base';
+import Class from './class';
 
 class TCSR extends Model {
   constructor() {
@@ -24,6 +25,30 @@ class TCSR extends Model {
     }
     return false;
 
+  }
+
+  async getTeachingClasses(teacherId) {
+    if(!teacherId){
+      throw new Error('Missing or invalid teacher id');
+    }
+    let query = `
+      SELECT DISTINCT ClassId
+      FROM ${this.tableName}
+      WHERE TeacherId = ?`;
+
+    const connection = await this.db.getConnection();
+    const results = await connection.query(query, [teacherId]);
+    connection.release();
+
+    await Promise.all(results.map(async element =>{
+      let newElement = element;
+      const name = await Class.getClassNameById(element.ClassId);
+      newElement.ClassName = name;
+      return newElement;
+    }));
+
+    return results;
+    
   }
 
 }

@@ -1,0 +1,38 @@
+.communication-details {
+  h3 {
+    span {
+      font-weight: normal !important;
+    }
+  }
+
+  .header {
+    i {
+      float: right;
+      cursor: pointer;
+    }
+  }
+
+  textarea {
+    resize: none !important;
+    height: 175px;
+  }
+
+  .communication-extra {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 0 !important;
+
+    .date-picker {
+      display: flex;
+      align-content: center;
+      align-items: center;
+  
+      .react-datepicker-wrapper {
+        input {
+          height: 51px !important;
+        }
+      }
+    }
+  }
+}
