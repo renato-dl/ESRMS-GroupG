@@ -97,11 +97,6 @@ export class ChildAttendance extends React.Component{
       else if(status=='LateEntry'||status=='EarlyExit')
       return {className:'orange'}
       else return {className:'blue'}
-      
-      // const dateNumber = moment(event.end).date();
-      // const randomIndex = parseInt((dateNumber + (Math.random() * 10)) % colors.length);
-      // const className = colors[randomIndex];
-      // return { className: className };
     }
 
     render(){
