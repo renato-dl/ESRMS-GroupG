@@ -262,7 +262,7 @@ class TeacherController extends BaseController {
       req.body.title,
       req.body.description,
       req.body.dueDate,
-      req.file.filename
+      req.file ? req.file.filename : null
      );
     res.send({success: true, id: result.id});
   }
@@ -274,6 +274,7 @@ class TeacherController extends BaseController {
       req.user.ID,
       req.body.subjectId, 
       req.body.classId,
+      
     );
 
     const isAssignmentFromTeacher = await Assignment.checkIfAssignmentIsFromTeacher(req.body.assignmentId, req.user.ID);
@@ -288,7 +289,7 @@ class TeacherController extends BaseController {
       req.body.title,
       req.body.description,
       req.body.dueDate,
-      req.file.filename
+      req.file ? req.file.filename : null
     );
 
     res.send({ success });
@@ -330,13 +331,21 @@ class TeacherController extends BaseController {
   }
 
   async getAssignmentFile(req, res){
-    const fileName = req.query.file;
-    if(!fileName){
-      throw new Error("File name is required");
+    const id = req.query.ID;
+    
+    if(!id){
+      throw new Error("Missing or invalid assignment id");
     }
 
-    const filePath = path.join(__dirname, "../../", "uploads", "b5901c4f636250eb1008-Article Text-4742-1-10-20131007.pdf");
+    if(!await Assignment.checkIfAssignmentIsFromTeacher(id, req.user.ID)){
+      res.send(401);
+      return;
+    }
+
+    const assignment = await Assignment.findById(id);
+    const filePath = path.join(__dirname, "../../", "uploads", assignment.AttachmentFile);
     res.sendFile(filePath)
+
   }
 }
 

@@ -85,7 +85,7 @@ class Assignment extends Model {
 
   }
 
-  updateAssignment(assId, title, description, dueDate) {
+  updateAssignment(assId, title, description, dueDate, filename) {
     if (!assId) {
       throw new Error('Missing or invalid assignment id');
     }
