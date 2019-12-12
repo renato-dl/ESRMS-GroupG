@@ -8,6 +8,7 @@ import Student from '../database/models/student';
 import StudentAttendance from '../database/models/studentAttendance';
 import ClassAttendance from '../database/models/classAttendance';
 import Assignment from '../database/models/assignment';
+import path, { dirname } from 'path';
 import moment from 'moment';
 import db from '../database';
 
@@ -302,7 +303,8 @@ class TeacherController extends BaseController {
       req.body.classId,
       req.body.title,
       req.body.description,
-      req.body.dueDate
+      req.body.dueDate,
+      req.file ? req.file.filename : null
      );
     res.send({success: true, id: result.id});
   }
@@ -313,7 +315,8 @@ class TeacherController extends BaseController {
     const teacherTeachesInClass = await TCSR.checkIfTeacherTeachesSubjectInClass(
       req.user.ID,
       req.body.subjectId, 
-      req.body.classId
+      req.body.classId,
+      
     );
 
     const isAssignmentFromTeacher = await Assignment.checkIfAssignmentIsFromTeacher(req.body.assignmentId, req.user.ID);
@@ -327,7 +330,8 @@ class TeacherController extends BaseController {
       req.body.assignmentId,
       req.body.title,
       req.body.description,
-      req.body.dueDate
+      req.body.dueDate,
+      req.file ? req.file.filename : null
     );
 
     res.send({ success });
@@ -366,6 +370,30 @@ class TeacherController extends BaseController {
     );
 
     res.send({success: true});
+  }
+
+  async getAssignmentFile(req, res){
+    const id = req.query.ID;
+    
+    if(!id){
+      throw new Error("Missing or invalid assignment id");
+    }
+
+    if(!await Assignment.checkIfAssignmentIsFromTeacher(id, req.user.ID)){
+      res.sendStatus(401);
+      return;
+    }
+
+    const assignment = await Assignment.findById(id);
+    const attachFile = assignment.AttachmentFile;
+    if(attachFile == null){
+      res.sendStatus(404);
+      return;
+    }
+
+    const filePath = path.join(__dirname, "../../", "uploads", assignment.AttachmentFile);
+    res.sendFile(filePath)
+
   }
 }
 
