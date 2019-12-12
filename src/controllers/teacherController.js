@@ -338,16 +338,17 @@ class TeacherController extends BaseController {
     }
 
     if(!await Assignment.checkIfAssignmentIsFromTeacher(id, req.user.ID)){
-      res.send(401);
+      res.sendStatus(401);
       return;
     }
 
     const assignment = await Assignment.findById(id);
     const attachFile = assignment.AttachmentFile;
     if(attachFile == null){
-      res.send(404);
+      res.sendStatus(404);
+      return;
     }
-    
+
     const filePath = path.join(__dirname, "../../", "uploads", assignment.AttachmentFile);
     res.sendFile(filePath)
 
