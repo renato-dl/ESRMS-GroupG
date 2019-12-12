@@ -8,6 +8,8 @@ import Student from '../database/models/student';
 import StudentAttendance from '../database/models/studentAttendance';
 import ClassAttendance from '../database/models/classAttendance';
 import Assignment from '../database/models/assignment';
+import moment from 'moment';
+import db from '../database';
 
 class TeacherController extends BaseController {
 
@@ -248,6 +250,26 @@ class TeacherController extends BaseController {
       success: true,
       affectedRows: result.affectedRows
     });
+  }
+
+  async registerEarlyExit(req, res) {
+    if(!req.body.studentId) {
+      throw new Error('Missing or invalid studentId');
+    }
+    const student = await Student.findById(req.body.studentId);
+    const date = moment().utc().format(db.getDateFormatString());
+    const isAlreadyRegistered = await ClassAttendance.hasAttendanceBeenRegistered(student.ClassId, date);
+    if (!isAlreadyRegistered) {
+      throw new Error('Roll call has not been done yet today for selected class')
+    }
+    const result = await StudentAttendance.registerEarlyExit(req.body.studentId, req.user.ID);
+    let response = {success: true};
+    if (result.hasOwnProperty('id')) {
+      response.id = result.id;
+    } else {
+      response.affectedRows = result.affectedRows;
+    }
+    res.send(response);
   }
 
   // GET teacher/attendance?classId=1&date=2019-12-09T00:00:00.000Z

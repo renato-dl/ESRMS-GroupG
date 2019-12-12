@@ -5,7 +5,7 @@ exports.up = function(knex) {
     table.string('StudentId').notNullable();
     table.datetime('Date').notNullable();
     table.enu('LateEntry', ['1h', '2h']);
-    table.string('EntryTeacherId').notNullable();
+    table.string('EntryTeacherId');
     table.time('EarlyExit');
     table.string('ExitTeacherId');
 
