@@ -21,5 +21,8 @@ export const config = {
   jwt: {
     secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_TTL
+  },
+  school: {
+    school_start: process.env.SCHOOL_START_UTC
   }
 }

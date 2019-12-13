@@ -60,4 +60,16 @@ export class TeacherAPIService extends BaseAPIService {
   deleteAssignment(id){
     return this.delete(`/teacher/assignemnt?ID=${id}`);
   }
+
+  getTeacherClasses(){
+    return this.get(`/teacher/classes`);
+  }
+
+  getTeacherAttendance(cId, date){
+    return this.get(`/teacher/attendance?classId=${cId}&date=${date}`);
+  }
+
+  registerBulkAbsence(data){
+    return this.post('teacher/absences', data)
+  }
 }

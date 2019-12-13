@@ -46,7 +46,6 @@ class ClassAttendance extends Model {
     }
     const date = moment().utc().format(this.db.getDateFormatString());
     const isAlreadyRegistered = await this.hasAttendanceBeenRegistered(classId, date);
-    console.log(isAlreadyRegistered)
     if (isAlreadyRegistered) {
       throw new Error('Attendance already registered for specified class and date');
     }
