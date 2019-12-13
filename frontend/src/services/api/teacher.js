@@ -41,4 +41,8 @@ export class TeacherAPIService extends BaseAPIService {
   deleteMark(data){
     return this.delete('/teacher/grade', data);
   }
+
+  getTeacherClasses(){
+    return this.get(`/teacher/classes`);
+  }
 }
