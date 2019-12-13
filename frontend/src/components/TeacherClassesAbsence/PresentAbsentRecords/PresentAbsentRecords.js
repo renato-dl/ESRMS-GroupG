@@ -3,6 +3,7 @@ import { api } from '../../../services/api';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import './PresentAbsentRecords.scss';
+import ConfirmationModal from './RecordDetails/ConfirmationModal';
 import * as toastr from 'toastr';
 import {Container, Icon, Label, Table, Button, Checkbox} from 'semantic-ui-react';
 
@@ -23,12 +24,21 @@ export class PresentAbsentRecords extends Component {
         this.state = {
             classId:null,
             className:null,
+            studentId:null,
+            studentName:null,
+            studentSurname:null,
             isSaving:false,
-
             date:new Date(),
             attendanceList:[],
             absentStudArr:[],
-            rollCall:true
+            rollCall:true,
+
+            IsAbsenceRecord:false,
+            IsLateEntryRecord:false,
+            IsEarlyExitRecord:false,
+
+            IsConfirmationOpen:false
+
           }
          
       }
@@ -101,64 +111,49 @@ export class PresentAbsentRecords extends Component {
         this.setState({ absentStudArr : absentStudents })
     }
 
+    onConfirmationModalClose = () => {
+        this.setState({IsConfirmationOpen: false});
+    }
     
     submitAbsentStudents = async () => {
-        if (this.state.isSaving) {
-        return;
-        }
+        this.setState({
+            IsAbsenceRecord:true,
+            IsLateEntryRecord:false,
+            IsEarlyExitRecord:false,
 
-        this.setState({isSaving: true});
-
-        const data = {
-            classId: this.state.classId,
-            students: this.state.absentStudArr
-        }
-
-        try {
-        await api.teacher.registerBulkAbsence(data);
-            toastr.success("Absent Students are registered!"); 
-        } catch(e) {
-            toastr.error(e);
-        }
-
-        this.setState({ 
-            isSaving: false,
-            absentStudArr:[]
-        });
-        await this.fetchAttendance();
+            IsConfirmationOpen:true
+        })
     }
 
     RecordLateEntry = async (student) => {
-        if (this.state.isSaving) {return;}
-        this.setState({isSaving: true});
+        this.setState({
+            studentId: student.StudentId,
+            studentName: student.FirstName,
+            studentSurname: student.LastName,   
 
-        const data = {studentId: student.StudentId}
-        try {
-            await api.teacher.recordLateEntry(data);
-                toastr.success("Student Information is updated!"); 
-        } catch(e) {
-            toastr.error(e);
-        }
-    
-        this.setState({isSaving: false});
-        await this.fetchAttendance();
+            IsAbsenceRecord:false,
+            IsLateEntryRecord:true,
+            IsEarlyExitRecord:false,
+
+            IsConfirmationOpen:true
+        
+        });
     }
 
     RecordEarlyExit = async (student) => {
-        if (this.state.isSaving) {return;}
-        this.setState({isSaving: true});
+        this.setState({
+            studentId: student.StudentId,
+            studentName: student.FirstName,
+            studentSurname: student.LastName,   
 
-        const data = {studentId: student.StudentId}
-        try {
-            await api.teacher.recordEarlyExit(data);
-                toastr.success("Student Information is updated!"); 
-        } catch(e) {
-            toastr.error(e);
-        }
-    
-        this.setState({isSaving: false});
-        await this.fetchAttendance();
-    }
+            IsAbsenceRecord:false,
+            IsLateEntryRecord:false,
+            IsEarlyExitRecord:true,
+
+            IsConfirmationOpen:true
+        
+        });
+    } 
     
     render() {
         return (
@@ -244,6 +239,17 @@ export class PresentAbsentRecords extends Component {
                 }
                 </Table>
 
+
+                {this.state.IsConfirmationOpen &&
+                <ConfirmationModal
+                    dat = {this.state}
+                    onClose={this.onConfirmationModalClose}
+                    onSave={() => {
+                        this.fetchAttendance();
+                        this.onConfirmationModalClose();
+                    }}
+                />
+                }
             </Container>
         )
     }
