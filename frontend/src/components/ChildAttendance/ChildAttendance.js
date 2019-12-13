@@ -32,8 +32,28 @@ export class ChildAttendance extends React.Component{
         const response = await api.parent.getChildAttendance(student, from , to);
           console.log(response)
           if (response) {
+           let attendances = response.data.reduce((allAttendances, attendance) => {
+             if( attendance.LateEntry && attendance.EarlyExit){
+               const firstAttendance = { ID: attendance.ID,
+                Date: new Date(attendance.Date),
+                title: "Early exit",
+                EarlyExit: attendance.EarlyExit,
+                ExitTeacherName: attendance.ExitTeacherName};
+                const secondAttendance = { ID: attendance.ID,
+                  Date: new Date(attendance.Date),
+                  title: "Late entry",
+                  LateEntry: attendance.LateEntry,
+                  EntryTeacherName: attendance.EntryTeacherName};
+                allAttendances.push(firstAttendance, secondAttendance);
+             }
+             else{
+              allAttendances.push(attendance);
+             }
+             
+             return allAttendances;
+           }, []);
            this.setState({
-            attendanceForCalendar: response.data.map((attendance) => {
+            attendanceForCalendar: attendances.map((attendance) => {
               return {
                 id: attendance.ID,
                 start: new Date(attendance.Date),
