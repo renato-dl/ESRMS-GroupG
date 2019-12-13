@@ -75,15 +75,18 @@ export class PresentAbsentRecords extends Component {
     getIcon(present, LateEntry, EarlyExit){
         let icn;
         switch(true) {
-            case present == true && LateEntry == undefined && EarlyExit == undefined:
+            case present === true && LateEntry === undefined && EarlyExit === undefined:
                 icn = 'checkmark';
             break;
-            case present == false :
+            case present === false :
                 icn = 'delete';
             break;
-            case LateEntry != undefined || EarlyExit != undefined:
+            /* case LateEntry !== undefined || EarlyExit !== undefined:
                 icn = 'clock outline';
-            break;   
+            break; */  
+            default :
+            icn = 'clock outline';
+            break 
         }
         return icn;
     }
@@ -166,10 +169,10 @@ export class PresentAbsentRecords extends Component {
                     <Table.Cell>{student.LastName}</Table.Cell>
                     {this.state.rollCall  && 
                         <Table.Cell textAlign="left" width={4} className='attendanceCell'>
-                        {student.Present !=undefined && <Icon name={this.getIcon(student.Present, student.LateEntry, student.EarlyExit)}/>}
-                        {student.LateEntry && <Label basic pointing = "left" color="grey">Late Entry: {student.LateEntry}</Label>}
-                        {student.EarlyExit && <Label basic pointing = "left" color="brown">Early Exit: {student.EarlyExit}</Label>}
-                        {student.Present==undefined && <Label basic color="grey">No records</Label>}
+                        {student.LateEntry === undefined && student.EarlyExit === undefined && <Icon name={this.getIcon(student.Present, student.LateEntry, student.EarlyExit)}/>}
+                        {student.LateEntry && <Label basic color="red" size="large"><Icon name="clock outline"/>Late Entry: {student.LateEntry}</Label>}
+                        {student.EarlyExit && <Label basic color="red" size="large"><Icon name="hourglass half"/> Early Exit: {student.EarlyExit}</Label>}
+                        {student.Present===undefined && <Label basic color="grey">No records</Label>}
                         </Table.Cell>
                     }
                     {!this.state.rollCall &&
@@ -189,7 +192,7 @@ export class PresentAbsentRecords extends Component {
                     <Button onClick={this.submitAbsentStudents}
                         floated='right'icon labelPosition='left'
                         color="green" size='small'>
-                        <Icon name='checkmark icon' /> Submit
+                        <Icon name='checkmark' /> Submit
                     </Button>
                     </Table.HeaderCell>
                 </Table.Row>
