@@ -45,4 +45,8 @@ export class TeacherAPIService extends BaseAPIService {
   getTeacherClasses(){
     return this.get(`/teacher/classes`);
   }
+
+  getTeacherAttendance(cId, date){
+    return this.get(`/teacher/attendance?classId=${cId}&date=${date}`);
+  }
 }
