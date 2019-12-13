@@ -24,7 +24,6 @@ import {Topic}  from'../../components/Topic/Topic';
 import {TeacherClasses}  from'../../components/TeacherClassesAbsence/TeacherClasses';
 import {TeacherGrade} from '../../components/TeacherGrade/TeacherGrade';
 import {PresentAbsentRecords}  from'../../components/TeacherClassesAbsence/PresentAbsentRecords/PresentAbsentRecords';
-import {TeacherGrade} from '../../components/TeacherGrade/TeacherGrade';
 import {TeacherAssignments} from '../../components/TeacherAssignments/TeacherAssignments';
 
 //*** SYSTEM Administrator Components */
