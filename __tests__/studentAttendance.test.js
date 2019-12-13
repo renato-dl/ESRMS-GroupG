@@ -6,6 +6,7 @@ import moment from 'moment';
 import Class from '../src/database/models/class';
 import uuid from 'uuid';
 import db from '../src/database'
+import {config} from '../src/config';
 
 describe("Tests about the visualization of parent's child attendance ", () => {
 
@@ -684,6 +685,341 @@ describe("registerBulkAbsence",() => {
       await StudentAttendance.remove(a1);
       // remove students
       await Student.remove(s2Id);
+      await Student.remove(s1Id);
+
+      // remove class
+      await Class.remove(classId);
+
+      // remove user
+      await User.remove(userId);
+    }
+
+  });
+
+});
+
+describe("registerLateEntry",() => {
+  /*
+   * 1h (ok)
+   * 2h (ok)
+   * missing studentid
+   * missing teacherid
+   * outside of time range
+   * student present
+   * student present with late entry or early exit  
+   */
+
+  test("It should perform the update (1h)", async () => {
+    //Setup school start time
+    config.school.school_start = moment().utc().subtract(10, 'minutes').format('HH:mm');
+    // Create teacher/parent
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: 'abc@cba.ab',
+      SSN: 'SCIWWN72A14H620P',
+      Password: 'pass',
+      FirstName: 'Teach',
+      LastName: 'Er',
+      IsTeacher: 1,
+      IsParent: 1
+    });
+
+    // Create class
+    const classId = await Class.create({
+      CreationYear: moment().utc().format('YYYY'),
+      Name: 'ì',
+      CoordinatorId: userId
+    });
+
+    // Create student
+    const s1Id = uuid.v4();
+    await Student.create({
+      ID: s1Id,
+      FirstName: 'AAA',
+      LastName: 'AAA',
+      SSN: 'ZZGSCD71A54Z325N',
+      BirthDate: '2013-05-11',
+      Parent1: userId,
+      ClassId: classId,
+      Gender: 'M'
+    });
+    
+    // Create absence
+    const date = moment().utc().format(db.getDateFormatString());
+    const attendance = await StudentAttendance.create({
+      StudentId: s1Id,
+      Date: date,
+      LateEntry: null,
+      EntryTeacherId: userId,
+      EarlyExit: null,
+      ExitTeacherId: null
+    });
+
+    const result = await StudentAttendance.registerLateEntry(s1Id, userId);
+    expect(result.affectedRows).toBe(1);
+
+    const query = `
+      SELECT *
+      FROM StudentAttendance
+      WHERE StudentId = ? AND Date = ?
+    `;
+    const connection = await db.getConnection();
+    let queryResult;
+    try {
+      queryResult = await connection.query(query, [s1Id, date]);
+    } finally {
+      connection.release();
+    }
+
+    expect(queryResult).toHaveLength(1);
+    expect(queryResult[0].LateEntry).toEqual('1h');
+    expect(queryResult[0].EntryTeacherId).toEqual(userId);
+    expect(queryResult[0].EarlyExit).toBeNull();
+    expect(queryResult[0].ExitTeacherId).toBeNull();
+
+    // remove attendance
+    await StudentAttendance.remove(attendance);
+
+    // remove student
+    await Student.remove(s1Id);
+
+    // remove class
+    await Class.remove(classId);
+
+    // remove user
+    await User.remove(userId);
+  });
+
+  test("It should perform the update (2h)", async () => {
+    //Setup school start time
+    config.school.school_start = moment().utc().subtract(80, 'minutes').format('HH:mm');
+    // Create teacher/parent
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: 'abc@cba.ab',
+      SSN: 'SCIWWN72A14H620P',
+      Password: 'pass',
+      FirstName: 'Teach',
+      LastName: 'Er',
+      IsTeacher: 1,
+      IsParent: 1
+    });
+
+    // Create class
+    const classId = await Class.create({
+      CreationYear: moment().utc().format('YYYY'),
+      Name: 'ì',
+      CoordinatorId: userId
+    });
+
+    // Create student
+    const s1Id = uuid.v4();
+    await Student.create({
+      ID: s1Id,
+      FirstName: 'AAA',
+      LastName: 'AAA',
+      SSN: 'ZZGSCD71A54Z325N',
+      BirthDate: '2013-05-11',
+      Parent1: userId,
+      ClassId: classId,
+      Gender: 'M'
+    });
+
+    // Create absence
+    const date = moment().utc().format(db.getDateFormatString());
+    const attendance = await StudentAttendance.create({
+      StudentId: s1Id,
+      Date: date,
+      LateEntry: null,
+      EntryTeacherId: userId,
+      EarlyExit: null,
+      ExitTeacherId: null
+    });
+
+    const result = await StudentAttendance.registerLateEntry(s1Id, userId);
+    expect(result.affectedRows).toBe(1);
+
+    const query = `
+      SELECT *
+      FROM StudentAttendance
+      WHERE StudentId = ? AND Date = ?
+    `;
+    const connection = await db.getConnection();
+    let queryResult;
+    try {
+      queryResult = await connection.query(query, [s1Id, date]);
+    } finally {
+      connection.release();
+    }
+
+    expect(queryResult).toHaveLength(1);
+    expect(queryResult[0].LateEntry).toEqual('2h');
+    expect(queryResult[0].EntryTeacherId).toEqual(userId);
+    expect(queryResult[0].EarlyExit).toBeNull();
+    expect(queryResult[0].ExitTeacherId).toBeNull();
+
+    // remove attendance
+    await StudentAttendance.remove(attendance);
+
+    // remove student
+    await Student.remove(s1Id);
+
+    // remove class
+    await Class.remove(classId);
+
+    // remove user
+    await User.remove(userId);
+  });
+
+  test("It should throw an error about studentId", async () => {
+  
+    try {
+      await StudentAttendance.registerLateEntry(null, 'TeacherId');
+    } catch (error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid studentId');
+    }
+
+    
+  });
+
+  test("It should throw an error about teacherId", async () => {
+
+    try {
+      await StudentAttendance.registerLateEntry('StudentId', undefined);
+    } catch (error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid teacherId');
+    }
+
+
+  });
+
+  test("It should throw an error about time", async () => {
+    //Setup school start time
+    config.school.school_start = moment().utc().subtract(3, 'hours').format('HH:mm');
+
+    try {
+      await StudentAttendance.registerLateEntry('StudentId', 'TeacherId');
+    } catch (error) {
+      expect(error).toHaveProperty('message', 'Attendance record editing is not permitted at this time');
+    }
+
+
+  }); 
+  
+  test("It should throw an error about student not being absent (present)", async () => {
+    //Setup school start time
+    config.school.school_start = moment().utc().subtract(10, 'minutes').format('HH:mm');
+    // Create teacher/parent
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: 'abc@cba.ab',
+      SSN: 'SCIWWN72A14H620P',
+      Password: 'pass',
+      FirstName: 'Teach',
+      LastName: 'Er',
+      IsTeacher: 1,
+      IsParent: 1
+    });
+
+    // Create class
+    const classId = await Class.create({
+      CreationYear: moment().utc().format('YYYY'),
+      Name: 'ì',
+      CoordinatorId: userId
+    });
+
+    // Create student
+    const s1Id = uuid.v4();
+    await Student.create({
+      ID: s1Id,
+      FirstName: 'AAA',
+      LastName: 'AAA',
+      SSN: 'ZZGSCD71A54Z325N',
+      BirthDate: '2013-05-11',
+      Parent1: userId,
+      ClassId: classId,
+      Gender: 'M'
+    });
+
+    //Student is present
+
+    try {
+      await StudentAttendance.registerLateEntry(s1Id, userId);
+    } catch(error) {
+      expect(error).toHaveProperty('message', 'Student is not registered as absent');
+    } finally {
+      // remove student
+      await Student.remove(s1Id);
+
+      // remove class
+      await Class.remove(classId);
+
+      // remove user
+      await User.remove(userId);
+    }
+    
+  });
+
+  test("It should throw an error about student not being absent (late entry)", async () => {
+    //Setup school start time
+    config.school.school_start = moment().utc().subtract(10, 'minutes').format('HH:mm');
+    // Create teacher/parent
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: 'abc@cba.ab',
+      SSN: 'SCIWWN72A14H620P',
+      Password: 'pass',
+      FirstName: 'Teach',
+      LastName: 'Er',
+      IsTeacher: 1,
+      IsParent: 1
+    });
+
+    // Create class
+    const classId = await Class.create({
+      CreationYear: moment().utc().format('YYYY'),
+      Name: 'ì',
+      CoordinatorId: userId
+    });
+
+    // Create student
+    const s1Id = uuid.v4();
+    await Student.create({
+      ID: s1Id,
+      FirstName: 'AAA',
+      LastName: 'AAA',
+      SSN: 'ZZGSCD71A54Z325N',
+      BirthDate: '2013-05-11',
+      Parent1: userId,
+      ClassId: classId,
+      Gender: 'M'
+    });
+
+    //Student is present with late entry
+    const date = moment().utc().format(db.getDateFormatString());
+    const attendance = await StudentAttendance.create({
+      StudentId: s1Id,
+      Date: date,
+      LateEntry: '1h',
+      EntryTeacherId: userId,
+      EarlyExit: null,
+      ExitTeacherId: null
+    });
+
+
+    try {
+      await StudentAttendance.registerLateEntry(s1Id, userId);
+    } catch(error) {
+      expect(error).toHaveProperty('message', 'Student is not registered as absent');
+    } finally {
+      // remove attendance
+      await StudentAttendance.remove(attendance);
+
+      // remove student
       await Student.remove(s1Id);
 
       // remove class
