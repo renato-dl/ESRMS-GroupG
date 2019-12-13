@@ -1,7 +1,8 @@
 .attendanceCell {
     .checkmark.icon{color:green}
     .delete.icon{color:#EA4335}
-    .clock.outline.icon{color:#EF806F}
+    .clock.outline.icon{color:#EF806F;margin-bottom:3px}
+    .hourglass.half.icon{color:#EF806F;margin:0 11px 3px 2px}
     .icon{margin: 8px 0 8px 0; cursor:default}
-    .label{margin-bottom: 5px!important;cursor:default}
+    .label{margin: 0 10px 5px 0; border:0px!important; padding:0; cursor:default; width:100%!important}
 }
