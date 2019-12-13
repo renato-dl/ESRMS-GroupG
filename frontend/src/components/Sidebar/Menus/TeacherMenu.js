@@ -17,11 +17,11 @@ export const TeacherMenu = (props) => {
       </Menu.Item>
       <Menu.Item as={Link} to={`/teacher`}>
         <Icon name='book' />
-        Subjects
+        Teaching Activity
       </Menu.Item>
       <Menu.Item as={Link} to='/teacher/classes'>
         <Icon name='group' />
-        Classes
+        Attendance Register
       </Menu.Item> 
       {/* <Menu.Item as={Link} to='/teacher/marks'>
         <Icon name='sort numeric up' />
