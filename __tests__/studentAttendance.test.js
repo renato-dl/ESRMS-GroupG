@@ -1032,3 +1032,331 @@ describe("registerLateEntry",() => {
   });
 
 });
+
+describe("registerEarlyExit",() => {
+  /*
+   * student present (ok)
+   * student present with late entry (ok)
+   * missing studentid
+   * missing teacherid
+   * student absent (error)
+   * student with already early exit 
+   */
+
+  test("It should perform the insertion (student present)", async () => {
+    //Setup school start time
+    config.school.school_start = moment().utc().subtract(10, 'minutes').format('HH:mm');
+    // Create teacher/parent
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: 'abc@cba.ab',
+      SSN: 'SCIWWN72A14H620P',
+      Password: 'pass',
+      FirstName: 'Teach',
+      LastName: 'Er',
+      IsTeacher: 1,
+      IsParent: 1
+    });
+
+    // Create class
+    const classId = await Class.create({
+      CreationYear: moment().utc().format('YYYY'),
+      Name: 'ì',
+      CoordinatorId: userId
+    });
+
+    // Create student
+    const s1Id = uuid.v4();
+    await Student.create({
+      ID: s1Id,
+      FirstName: 'AAA',
+      LastName: 'AAA',
+      SSN: 'ZZGSCD71A54Z325N',
+      BirthDate: '2013-05-11',
+      Parent1: userId,
+      ClassId: classId,
+      Gender: 'M'
+    });
+  
+
+    const result = await StudentAttendance.registerEarlyExit(s1Id, userId);
+    expect(result).toEqual({id: expect.anything()});
+
+    const query = `
+      SELECT *
+      FROM StudentAttendance
+      WHERE StudentId = ? AND Date = ?
+    `;
+    const date = moment().utc().format(db.getDateFormatString());
+    const connection = await db.getConnection();
+    let queryResult;
+    try {
+      queryResult = await connection.query(query, [s1Id, date]);
+    } finally {
+      connection.release();
+    }
+
+    const now = moment().utc();
+    expect(queryResult).toHaveLength(1);
+    expect(queryResult[0].LateEntry).toBeNull();
+    expect(queryResult[0].EntryTeacherId).toBeNull();
+    expect(
+      moment.utc(queryResult[0].EarlyExit, 'HH:mm:ss').isSame(now, 'minute')).toBe(true);
+    expect(queryResult[0].ExitTeacherId).toEqual(userId);
+
+    
+    // remove attendance
+    await StudentAttendance.remove(result.id);
+
+    // remove student
+    await Student.remove(s1Id);
+
+    // remove class
+    await Class.remove(classId);
+
+    // remove user
+    await User.remove(userId);
+  });
+
+  test("It should perform the update (student present with late entry)", async () => {
+    //Setup school start time
+    config.school.school_start = moment().utc().subtract(10, 'minutes').format('HH:mm');
+    // Create teacher/parent
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: 'abc@cba.ab',
+      SSN: 'SCIWWN72A14H620P',
+      Password: 'pass',
+      FirstName: 'Teach',
+      LastName: 'Er',
+      IsTeacher: 1,
+      IsParent: 1
+    });
+
+    // Create class
+    const classId = await Class.create({
+      CreationYear: moment().utc().format('YYYY'),
+      Name: 'ì',
+      CoordinatorId: userId
+    });
+
+    // Create student
+    const s1Id = uuid.v4();
+    await Student.create({
+      ID: s1Id,
+      FirstName: 'AAA',
+      LastName: 'AAA',
+      SSN: 'ZZGSCD71A54Z325N',
+      BirthDate: '2013-05-11',
+      Parent1: userId,
+      ClassId: classId,
+      Gender: 'M'
+    });
+
+    // Create attendance
+    const date = moment().utc().format(db.getDateFormatString());
+    const attendance = await StudentAttendance.create({
+      StudentId: s1Id,
+      Date: date,
+      LateEntry: '1h',
+      EntryTeacherId: userId,
+      EarlyExit: null,
+      ExitTeacherId: null
+    });
+
+    const result = await StudentAttendance.registerEarlyExit(s1Id, userId);
+    expect(result).toEqual({affectedRows: 1});
+
+    const query = `
+      SELECT *
+      FROM StudentAttendance
+      WHERE StudentId = ? AND Date = ?
+    `;
+    const connection = await db.getConnection();
+    let queryResult;
+    try {
+      queryResult = await connection.query(query, [s1Id, date]);
+    } finally {
+      connection.release();
+    }
+
+    const now = moment().utc();
+    expect(queryResult).toHaveLength(1);
+    expect(queryResult[0].LateEntry).toEqual('1h');
+    expect(queryResult[0].EntryTeacherId).toEqual(userId);
+    expect(
+      moment.utc(queryResult[0].EarlyExit, 'HH:mm:ss').isSame(now, 'minute')).toBe(true);
+    expect(queryResult[0].ExitTeacherId).toEqual(userId);
+
+
+    // remove attendance
+    await StudentAttendance.remove(attendance);
+
+    // remove student
+    await Student.remove(s1Id);
+
+    // remove class
+    await Class.remove(classId);
+
+    // remove user
+    await User.remove(userId);
+  });
+
+  test("It should throw an error about studentId", async () => {
+
+    try {
+      await StudentAttendance.registerEarlyExit(null, 'TeacherId');
+    } catch (error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid studentId');
+    }
+
+
+  });
+
+  test("It should throw an error about teacherId", async () => {
+
+    try {
+      await StudentAttendance.registerEarlyExit('StudentId', undefined);
+    } catch (error) {
+      expect(error).toHaveProperty('message', 'Missing or invalid teacherId');
+    }
+
+
+  });
+
+  test("It should hrow an error about student being absent", async () => {
+    //Setup school start time
+    config.school.school_start = moment().utc().subtract(10, 'minutes').format('HH:mm');
+    // Create teacher/parent
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: 'abc@cba.ab',
+      SSN: 'SCIWWN72A14H620P',
+      Password: 'pass',
+      FirstName: 'Teach',
+      LastName: 'Er',
+      IsTeacher: 1,
+      IsParent: 1
+    });
+
+    // Create class
+    const classId = await Class.create({
+      CreationYear: moment().utc().format('YYYY'),
+      Name: 'ì',
+      CoordinatorId: userId
+    });
+
+    // Create student
+    const s1Id = uuid.v4();
+    await Student.create({
+      ID: s1Id,
+      FirstName: 'AAA',
+      LastName: 'AAA',
+      SSN: 'ZZGSCD71A54Z325N',
+      BirthDate: '2013-05-11',
+      Parent1: userId,
+      ClassId: classId,
+      Gender: 'M'
+    });
+
+    // Create attendance
+    const date = moment().utc().format(db.getDateFormatString());
+    const attendance = await StudentAttendance.create({
+      StudentId: s1Id,
+      Date: date,
+      LateEntry: null,
+      EntryTeacherId: userId,
+      EarlyExit: null,
+      ExitTeacherId: null
+    });
+
+    try {
+      await StudentAttendance.registerEarlyExit(s1Id, userId);
+    } catch (error) {
+      expect(error).toHaveProperty('message', 'Student is registered as absent');
+    } finally {
+      // remove attendance
+      await StudentAttendance.remove(attendance);
+
+      // remove student
+      await Student.remove(s1Id);
+
+      // remove class
+      await Class.remove(classId);
+
+      // remove user
+      await User.remove(userId);
+    }
+  });
+
+  test("It should hrow an error about exit record already exsisting", async () => {
+    //Setup school start time
+    config.school.school_start = moment().utc().subtract(10, 'minutes').format('HH:mm');
+    // Create teacher/parent
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: 'abc@cba.ab',
+      SSN: 'SCIWWN72A14H620P',
+      Password: 'pass',
+      FirstName: 'Teach',
+      LastName: 'Er',
+      IsTeacher: 1,
+      IsParent: 1
+    });
+
+    // Create class
+    const classId = await Class.create({
+      CreationYear: moment().utc().format('YYYY'),
+      Name: 'ì',
+      CoordinatorId: userId
+    });
+
+    // Create student
+    const s1Id = uuid.v4();
+    await Student.create({
+      ID: s1Id,
+      FirstName: 'AAA',
+      LastName: 'AAA',
+      SSN: 'ZZGSCD71A54Z325N',
+      BirthDate: '2013-05-11',
+      Parent1: userId,
+      ClassId: classId,
+      Gender: 'M'
+    });
+
+    // Create attendance
+    const date = moment().utc().format(db.getDateFormatString());
+    const attendance = await StudentAttendance.create({
+      StudentId: s1Id,
+      Date: date,
+      LateEntry: null,
+      EntryTeacherId: null,
+      EarlyExit: moment().utc().subtract(1, 'hours').format('HH:mm:ss'),
+      ExitTeacherId: userId
+    });
+
+    try {
+      await StudentAttendance.registerEarlyExit(s1Id, userId);
+    } catch (error) {
+      expect(error).toHaveProperty('message', 'There is already an early exit record');
+    } finally {
+      // remove attendance
+      await StudentAttendance.remove(attendance);
+
+      // remove student
+      await Student.remove(s1Id);
+
+      // remove class
+      await Class.remove(classId);
+
+      // remove user
+      await User.remove(userId);
+    }
+  });
+  
+
+});

@@ -2,7 +2,6 @@ import {Model} from './base';
 import User from './user';
 import moment from 'moment';
 import {getHour} from '../../services/schoolHours';
-import { get } from 'http';
 
 class StudentAttendance extends Model {
   constructor() {
@@ -278,7 +277,7 @@ class StudentAttendance extends Model {
       });
       return {id: result};
     }
-    if (existingRecord[0].LateEntry == null) { // absent
+    if (existingRecord[0].LateEntry == null && existingRecord[0].EarlyExit == null) { // absent
       throw new Error('Student is registered as absent');
     }
     if (existingRecord[0].EarlyExit != null) { // already out
