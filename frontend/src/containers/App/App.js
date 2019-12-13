@@ -37,7 +37,6 @@ import {ClassComposition} from '../../components/ClassComposition/ClassCompositi
 import {AdminStudentsEnrollment} from '../../components/adminComponents/SudentsEntrollment/admin_StudentsEnrollment';
 
 import { PrivateRoute } from '../../components/PrivateRoute/PrivateRoute';
-import { Assignments } from '../../components/Assignments/Assignments';
 import { Communications } from '../../components/adminComponents/Communications/Communications';
 
 export class App extends React.Component {

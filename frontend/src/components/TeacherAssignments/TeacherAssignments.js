@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { api } from '../../services/api';
 import {
   Icon,
-  Container
+  Container, 
+  Button
 } from 'semantic-ui-react';
 import moment from 'moment';
 import { TeacherAssignmentDetails } from './TeacherAssignmentDetails/TeacherAssignmentDetails';
@@ -62,6 +63,18 @@ export class TeacherAssignments extends Component {
     const assignment = {...this.state.assignments.find((a) => a.ID === data.id)};
     this.setState({ assignmentDataForModal: assignment, isAssignmentOpen: true });
   }
+
+  addAssignment = () => {
+    this.setState({ assignmentDataForModal: null, assignmentModalOpen: false , isAssignmentOpen: true})
+  }
+
+  updateAssignment = (assignment) => {
+    this.setState({ assignmentDataForModal: assignment, assignmentModalOpen: false , isAssignmentOpen: true})
+  }
+
+  deleteAssignment = (assignment) => {
+    this.setState({ assignmentDataForModal: assignment, assignmentModalOpen: false , isAssignmentOpen: true})
+  }
  
   closeAssignmentModal = () => {
     this.setState({ assignmentDataForModal: null, assignmentModalOpen: false , isAssignmentOpen: false})
@@ -91,32 +104,40 @@ export class TeacherAssignments extends Component {
           <Icon name='braille'/> 
           {this.props.match.params.subjectName} assignments
         </h3>
-
+        <Button className="ui vk button" onClick={this.addAssignment}>
+          <i className="plus icon"></i>
+          New
+        </Button>
         <div className="calendarContainer">
           <TeacherAssignmentCalendar
             eventPropGetter={this.eventPropGetter}
             events={this.state.assignmentsForCalendar}
             onDoubleClickEvent={this.handleEventClick}
             onNavigate={this.onNavigate}
-            //onSelectEvent={this.handleSelectEvent}
           />
         </div>
 
         {this.state.assignmentModalOpen && 
           <TeacherAssignmentDetails 
             assignment={this.state.assignmentDataForModal}
+            onUpdate={this.updateAssignment}
+            onDelete={this.deleteAssignment}
             onClose={this.closeAssignmentModal}
           />
         }
 
-        {/* {this.state.isAssignmentOpen &&
+        {this.state.isAssignmentOpen &&
           <TeacherAssignment 
             assignment={this.state.assignmentDataForModal}
             classId={this.state.classID}
             subjectId={this.state.subjectID}
+            onSave={() =>{
+              this.fetchAssignments();
+              this.closeAssignmentModal();
+            }}
             onClose={this.closeAssignmentModal}
           />
-        } */}
+        }
       </Container>
     )
   }

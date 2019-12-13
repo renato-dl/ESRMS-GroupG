@@ -2,6 +2,7 @@ import React from 'react';
 import {Icon, Modal, Button} from 'semantic-ui-react';
 import moment from 'moment';
 import './TeacherAssignmentDetails.scss';
+import { TeacherAssignment } from './TeacherAssignment';
 
 export const TeacherAssignmentDetails = (props) => (
   <Modal dimmer open className="assignment-detail" size="small">
@@ -14,9 +15,12 @@ export const TeacherAssignmentDetails = (props) => (
       <p><b>Due date:</b> <span>{moment(props.assignment.DueDate).format('MMMM Do')}</span></p>
     </Modal.Content>
     <Modal.Actions>
-      <Button positive onClick={props.onClose}>
-        <Icon name='checkmark' /> Close
+      <Button positive onClick={() => props.onUpdate(props.assignment)}>
+        <Icon name='checkmark' /> Edit
       </Button>
-    </Modal.Actions>
-  </Modal>
+      <Button positive onClick={() => props.onDelete(props.assignment)}>
+        <Icon name='checkmark' /> Delete
+      </Button>
+    </Modal.Actions>    
+  </Modal>  
 );

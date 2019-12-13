@@ -39,8 +39,8 @@ export class TeacherAssignment extends Component {
     this.setState({[name]: value});
   };
 
-  handleDateChange = (date) => {
-    this.setState({date});
+  handleDateChange = (duedate) => {
+    this.setState({duedate: duedate});
   };
 
   onSave = async () => {
@@ -49,32 +49,33 @@ export class TeacherAssignment extends Component {
     }
 
     this.setState({isSaving: true});
-    const {params} = this.props.match;
 
     try {
-      const assignmentData = {
-        topicId: this.state.id,
+      const  assignmentData= {
+        assignmentId: this.state.id,
         classId: this.state.classId,
-        subjectId: params.subjectId,
-        topicTitle: this.state.title,
-        topicDescription: this.state.description,
-        topicDate: this.state.duedate.toUTCString()
+        subjectId: this.state.subjectId,
+        title: this.state.title,
+        description: this.state.description,
+        dueDate: this.state.duedate.toUTCString()
       };
 
-    // //   if(!this.state.id) {
-    // //     await api.teacher.saveTopic(topicData);
-    // //     toastr.success(`Topic ${this.state.topicID ? 'updated' : 'added'} successfully.`);
-    // //   } else {
-    // //     const reqResult = await api.teacher.updateTopic(topicData);  
+      if(!this.state.id) {
+        await api.teacher.addAssignment(assignmentData);
+        toastr.success(`Assignment ${this.state.id ? 'updated' : 'added'} successfully.`);
+      } 
+      else {
+        const reqResult = await api.teacher.updateAssignment(assignmentData);  
         
-    // //     if (reqResult.data.Success) {
-    // //       toastr.success('Topic updated successfully.');
-    // //     } else {
-    // //       toastr.error(reqResult.data.Message);
-    // //       this.setState({isSaving: false});
-    // //       return;
-    // //     }
-    //   }
+        if (reqResult.data.success) {
+          toastr.success('Assignment updated successfully.');
+        } 
+        else {
+          toastr.error(reqResult.data.message);
+          this.setState({isSaving: false});
+          return;
+        }
+      }
     } catch (e) {
       this.setState({isSaving: false});
       return toastr.error(e);
@@ -86,9 +87,9 @@ export class TeacherAssignment extends Component {
 
   render() {
     return (
-      <Modal dimmer open className="topic-detail" size="small">
+      <Modal dimmer open className="assignment-detail" size="small">
         <Modal.Header>
-          <span>{this.state.id ? 'Edit assignment' : 'Insert new assignemnt'}</span>
+          <span>{this.state.id ? 'Edit assignment' : 'Insert new assignment'}</span>
           <Icon onClick={this.props.onClose} className="close-icn" name="close" />
         </Modal.Header>
         <Modal.Content>
@@ -108,7 +109,7 @@ export class TeacherAssignment extends Component {
               value={this.state.description}
               onChange={this.handleInputChange}
             />
-            {/* <Form.Group widths='equal'>
+            <Form.Group widths='equal'>
               <Form.Field>
                 <LabelDetail>Assignment due date</LabelDetail>
                 <DatePicker
@@ -117,7 +118,7 @@ export class TeacherAssignment extends Component {
                   minDate={new Date()}
                 />
               </Form.Field>
-            </Form.Group> */}
+            </Form.Group>
           </Form>
         </Modal.Content>
         <Modal.Actions>
