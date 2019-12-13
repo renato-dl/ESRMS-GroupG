@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { api } from '../../../services/api';
-
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
 import './PresentAbsentRecords.scss';
-import {Container, Icon, Label, Table} from 'semantic-ui-react';
+import * as toastr from 'toastr';
+import {Container, Icon, Label, Table, Button, Checkbox} from 'semantic-ui-react';
+
 
 const CustomDateInput = ({ value, onClick }) => (
     <Label color='orange' size="big" onClick={onClick} style={{cursor:'pointer'}}>
@@ -16,23 +16,19 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+
 export class PresentAbsentRecords extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            classID:null,
+            classId:null,
             className:null,
+            isSaving:false,
 
             date:new Date(),
-            attendanceList:[
-                {FirstName:"AAA", LastName: "BBB", SSN: "BDFCGZ82B13E488X", Present:"true", LateEntry: "2h"},
-                {FirstName:"AAA", LastName: "BBB", SSN: "BDFCGZ82B13E488X", Attendance:"0"},
-                {FirstName:"AAA", LastName: "BBB", SSN: "BDFCGZ82B13E488X", Attendance:"2"},
-                {FirstName:"AAA", LastName: "BBB", SSN: "BDFCGZ82B13E488X", Attendance:"3"},
-
-            ],
-            absentStudents:[],
-            rollCall:false
+            attendanceList:[],
+            absentStudArr:[],
+            rollCall:true
           }
          
       }
@@ -43,7 +39,7 @@ export class PresentAbsentRecords extends Component {
 
         this.setState({
             className: cName,
-            classID: cId,
+            classId: cId,
         })
 
         this.fetchAttendance();
@@ -75,9 +71,9 @@ export class PresentAbsentRecords extends Component {
         await sleep(500);
         this.fetchAttendance();
     }
+
     getIcon(present, LateEntry, EarlyExit){
         let icn;
-        // Write your code here
         switch(true) {
             case present == true && LateEntry == undefined && EarlyExit == undefined:
                 icn = 'checkmark';
@@ -90,6 +86,48 @@ export class PresentAbsentRecords extends Component {
             break;   
         }
         return icn;
+    }
+
+    onChecked = (e) => {
+        let absentStudents = [...this.state.absentStudArr];
+    
+        if (!absentStudents.includes(e)) {
+            absentStudents.push(e);
+        }
+        else {
+            absentStudents = absentStudents.filter((s) => s !== e);
+        }
+        
+        this.setState({ absentStudArr : absentStudents })
+        console.log(this.state.absentStudArr)
+    }
+
+    
+    submitAbsentStudents = async () => {
+        if (this.state.isSaving) {
+        return;
+        }
+
+        this.setState({isSaving: true});
+
+        const data = {
+            classId: this.state.classId,
+            students: this.state.absentStudArr
+        }
+
+        console.log(data);
+        try {
+        await api.teacher.registerBulkAbsence(data);
+            toastr.success("Absent Students are registered!"); 
+        } catch(e) {
+            toastr.error(e);
+        }
+
+        this.setState({ 
+            isSaving: false,
+            absentStudArr:[]
+        });
+        await this.fetchAttendance();
     }
 
     
@@ -108,14 +146,14 @@ export class PresentAbsentRecords extends Component {
                 dateFormat="MMMM d, yyyy"
                 maxDate={new Date()}
                 />
-
                 <Table color='teal'>
                 <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell>#</Table.HeaderCell>
                     <Table.HeaderCell>Name</Table.HeaderCell>
                     <Table.HeaderCell>Surname</Table.HeaderCell>
-                    <Table.HeaderCell>Attendance</Table.HeaderCell>
+                    {this.state.rollCall  && <Table.HeaderCell textAlign='left' >Attendance</Table.HeaderCell>}
+                    {!this.state.rollCall && <Table.HeaderCell textAlign='center' >Mark as Absent</Table.HeaderCell>}
                 </Table.Row>
                 </Table.Header>
 
@@ -123,18 +161,40 @@ export class PresentAbsentRecords extends Component {
                 {
                 this.state.attendanceList.map((student, index) =>
                     <Table.Row key = {index}>
-                    <Table.Cell width="1">{index +1}</Table.Cell>
-                    <Table.Cell width="2">{student.FirstName}</Table.Cell>
-                    <Table.Cell width="2">{student.LastName}</Table.Cell>
-                    <Table.Cell width="4" textAlign="left">
-                    {student.Present !=undefined && <Icon name={this.getIcon(student.Present, student.LateEntry, student.EarlyExit)}/>}
-                    {student.LateEntry && <Label basic pointing = "left" color="grey">Late Entry: {student.LateEntry}</Label>}
-                    {student.EarlyExit && <Label basic pointing = "left" color="brown">Early Exit: {student.EarlyExit}</Label>}
-                    {student.Present==undefined && <Label basic color="grey">No records</Label>}
-                    </Table.Cell>
+                    <Table.Cell>{index +1}</Table.Cell>
+                    <Table.Cell>{student.FirstName}</Table.Cell>
+                    <Table.Cell>{student.LastName}</Table.Cell>
+                    {this.state.rollCall  && 
+                        <Table.Cell textAlign="left" width={4} className='attendanceCell'>
+                        {student.Present !=undefined && <Icon name={this.getIcon(student.Present, student.LateEntry, student.EarlyExit)}/>}
+                        {student.LateEntry && <Label basic pointing = "left" color="grey">Late Entry: {student.LateEntry}</Label>}
+                        {student.EarlyExit && <Label basic pointing = "left" color="brown">Early Exit: {student.EarlyExit}</Label>}
+                        {student.Present==undefined && <Label basic color="grey">No records</Label>}
+                        </Table.Cell>
+                    }
+                    {!this.state.rollCall &&
+                        <Table.Cell textAlign="center">
+                        <Checkbox slider onChange={
+                          (e) => this.onChecked(student.StudentId)}/>
+                        </Table.Cell>
+                    }
                     </Table.Row>
                 )}
                 </Table.Body>
+                {!this.state.rollCall &&
+                <Table.Footer fullWidth>
+                <Table.Row>
+                    <Table.HeaderCell />
+                    <Table.HeaderCell colSpan='4'>
+                    <Button onClick={this.submitAbsentStudents}
+                        floated='right'icon labelPosition='left'
+                        color="green" size='small'>
+                        <Icon name='checkmark icon' /> Submit
+                    </Button>
+                    </Table.HeaderCell>
+                </Table.Row>
+                </Table.Footer>
+                }
                 </Table>
 
             </Container>

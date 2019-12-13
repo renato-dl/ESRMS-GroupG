@@ -49,4 +49,8 @@ export class TeacherAPIService extends BaseAPIService {
   getTeacherAttendance(cId, date){
     return this.get(`/teacher/attendance?classId=${cId}&date=${date}`);
   }
+
+  registerBulkAbsence(data){
+    return this.post('teacher/absences', data)
+  }
 }

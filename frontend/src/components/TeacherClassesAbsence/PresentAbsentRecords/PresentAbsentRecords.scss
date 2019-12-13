@@ -1,3 +1,7 @@
-.checkmark.icon{color:green}
-.delete.icon{color:#EA4335}
-.clock.outline.icon{color:#EF806F}
+.attendanceCell {
+    .checkmark.icon{color:green}
+    .delete.icon{color:#EA4335}
+    .clock.outline.icon{color:#EF806F}
+    .icon{margin: 8px 0 8px 0; cursor:default}
+    .label{margin-bottom: 5px!important;cursor:default}
+}
