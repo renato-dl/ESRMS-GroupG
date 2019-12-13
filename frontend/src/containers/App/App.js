@@ -24,6 +24,7 @@ import {Topic}  from'../../components/Topic/Topic';
 import {TeacherClasses}  from'../../components/TeacherClassesAbsence/TeacherClasses';
 import {TeacherGrade} from '../../components/TeacherGrade/TeacherGrade';
 import {PresentAbsentRecords}  from'../../components/TeacherClassesAbsence/PresentAbsentRecords/PresentAbsentRecords';
+import {TeacherAssignments} from '../../components/TeacherAssignments/TeacherAssignments';
 
 //*** SYSTEM Administrator Components */
 import {SysAdmin} from '../SysAdmin/SysAdmin'
@@ -34,8 +35,9 @@ import {Admin} from '../Admin/Admin';
 import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
 import {ClassComposition} from '../../components/ClassComposition/ClassComposition';
 import {AdminStudentsEnrollment} from '../../components/adminComponents/SudentsEntrollment/admin_StudentsEnrollment';
-import { PrivateRoute} from '../../components/PrivateRoute/PrivateRoute';
-import {Communications} from '../../components/adminComponents/Communications/Communications';
+
+import { PrivateRoute } from '../../components/PrivateRoute/PrivateRoute';
+import { Communications } from '../../components/adminComponents/Communications/Communications';
 
 export class App extends React.Component {
   static contextType = ApplicationStoreContext;
@@ -69,6 +71,7 @@ export class App extends React.Component {
               <PrivateRoute exact path="/teacher/subjects" component={Teacher}/>
               <PrivateRoute exact path="/teacher/subjects/:classID/:subjectID/:subjectName/topics" component={Topic}/>
               <PrivateRoute exact path="/teacher/subjects/:classID/:subjectID/:subjectName/TeacherGrade" component={TeacherGrade}/>
+              <PrivateRoute exact path="/teacher/subjects/:classID/:subjectID/:subjectName/assignments" component={TeacherAssignments}/>
               <PrivateRoute exact path="/teacher/classes" component={TeacherClasses}/>
               <PrivateRoute exact path="/teacher/classes/:ClassId/:ClassName/AttendanceRecords" component={PresentAbsentRecords}/>
 

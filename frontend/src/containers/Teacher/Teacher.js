@@ -25,6 +25,10 @@ export class Teacher extends React.Component{
     this.props.history.push(`/teacher/subjects/${classId}/${subjectID}/${subjectName}/TeacherGrade`);
   }
 
+  onSubjectAssignmentClick = (subjectID, subjectName, classId)=>{
+    this.props.history.push(`/teacher/subjects/${classId}/${subjectID}/${subjectName}/assignments`);
+  }
+
     render() {
       
     if(this.state.subjectsList.length){
@@ -54,6 +58,11 @@ export class Teacher extends React.Component{
                                   </Button>
                                   <Button className='Grades'  color='blue' onClick={()=>this.onSubjectGradeClick(subject.subjectId,subject.subject, subject.classId)}>
                                   Grades
+                                  </Button>
+                                  <Button className='Grades'  
+                                  color='blue' 
+                                  onClick={()=>this.onSubjectAssignmentClick(subject.subjectId, subject.subject, subject.classId)}>
+                                  Assignments
                                   </Button>
                                 </div>
                             </List.Description>
