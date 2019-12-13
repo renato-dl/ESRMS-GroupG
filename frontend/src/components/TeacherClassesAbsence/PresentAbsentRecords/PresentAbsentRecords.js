@@ -133,6 +133,37 @@ export class PresentAbsentRecords extends Component {
         await this.fetchAttendance();
     }
 
+    RecordLateEntry = async (student) => {
+        if (this.state.isSaving) {return;}
+        this.setState({isSaving: true});
+
+        const data = {studentId: student.StudentId}
+        try {
+            await api.teacher.recordLateEntry(data);
+                toastr.success("Student Information is updated!"); 
+        } catch(e) {
+            toastr.error(e);
+        }
+    
+        this.setState({isSaving: false});
+        await this.fetchAttendance();
+    }
+
+    RecordEarlyExit = async (student) => {
+        if (this.state.isSaving) {return;}
+        this.setState({isSaving: true});
+
+        const data = {studentId: student.StudentId}
+        try {
+            await api.teacher.recordEarlyExit(data);
+                toastr.success("Student Information is updated!"); 
+        } catch(e) {
+            toastr.error(e);
+        }
+    
+        this.setState({isSaving: false});
+        await this.fetchAttendance();
+    }
     
     render() {
         return (
@@ -149,6 +180,7 @@ export class PresentAbsentRecords extends Component {
                 dateFormat="MMMM d, yyyy"
                 maxDate={new Date()}
                 />
+                {!this.state.rollCall && this.state.date.getDate() !== new Date().getDate() && <h3 style={{color:'#959595'}}><Icon name='database'/>There are no attendance records for selected date </h3>}
                 <Table color='teal'>
                 <Table.Header>
                 <Table.Row>
@@ -156,7 +188,8 @@ export class PresentAbsentRecords extends Component {
                     <Table.HeaderCell>Name</Table.HeaderCell>
                     <Table.HeaderCell>Surname</Table.HeaderCell>
                     {this.state.rollCall  && <Table.HeaderCell textAlign='left' >Attendance</Table.HeaderCell>}
-                    {!this.state.rollCall && <Table.HeaderCell textAlign='center' >Mark as Absent</Table.HeaderCell>}
+                    {!this.state.rollCall && this.state.date.getDate() === new Date().getDate() && <Table.HeaderCell textAlign='center' >Mark as Absent</Table.HeaderCell>}
+                    {this.state.rollCall &&  this.state.date.getDate() === new Date().getDate() && <Table.HeaderCell textAlign='center' >Operations</Table.HeaderCell>}
                 </Table.Row>
                 </Table.Header>
 
@@ -175,16 +208,32 @@ export class PresentAbsentRecords extends Component {
                         {student.Present===undefined && <Label basic color="grey">No records</Label>}
                         </Table.Cell>
                     }
-                    {!this.state.rollCall &&
+                    
+                    {!this.state.rollCall && this.state.date.getDate() === new Date().getDate() &&
                         <Table.Cell textAlign="center">
                         <Checkbox slider onChange={
                           (e) => this.onChecked(student.StudentId)}/>
                         </Table.Cell>
                     }
+                    
+                    {this.state.rollCall && this.state.date.getDate() === new Date().getDate() &&
+                        <Table.Cell textAlign="center">
+                            {!student.Present  && 
+                            <Button color="vk" size="tiny" onClick={()=>this.RecordLateEntry(student)} > 
+                                <Icon name="clock outline"/> 
+                                Record Late Entry
+                            </Button>}
+                            {(student.Present || student.LateEntry)  && 
+                            <Button color="linkedin" size="tiny" onClick={()=>this.RecordEarlyExit(student)}>
+                                <Icon name="hourglass half"/> 
+                                Record Early Exit
+                            </Button>}
+                        </Table.Cell>
+                    }
                     </Table.Row>
                 )}
                 </Table.Body>
-                {!this.state.rollCall &&
+                {!this.state.rollCall && this.state.date.getDate() === new Date().getDate() &&
                 <Table.Footer fullWidth>
                 <Table.Row>
                     <Table.HeaderCell />
