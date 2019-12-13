@@ -41,4 +41,23 @@ export class TeacherAPIService extends BaseAPIService {
   deleteMark(data){
     return this.delete('/teacher/grade', data);
   }
+
+  // assignments
+  getAssignments(classId, subjectId, from, to){
+    return this.get(`/teacher/assignments?subjectId=${subjectId}&classId=${classId}&fromDate=${from}&toDate=${to}`);
+  }
+
+  // subjectId, classId, Title, Description, DueDate
+  addAssignment(data){
+    return this.post('/teacher/assignment', data);
+  }
+
+  // classId, subjectId, assignmentId, title, description, dueDate
+  updateAssignment(data){
+    return this.patch('/teacher/assignment', data);
+  }
+
+  deleteAssignment(id){
+    return this.delete(`/teacher/assignemnt?ID=${id}`);
+  }
 }
