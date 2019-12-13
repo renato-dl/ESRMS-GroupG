@@ -49,8 +49,6 @@ export class PresentAbsentRecords extends Component {
       const cId = this.props.match.params.ClassId;
       const date = this.state.date.toUTCString();
       //const date = this.state.date.toISOString();
-
-      console.log(date)
       try{
         const response = await api.teacher.getTeacherAttendance(cId, date);
         if (response) {
@@ -58,7 +56,6 @@ export class PresentAbsentRecords extends Component {
                 attendanceList:response.data.students, 
                 rollCall: response.data.rollCall
             });
-            console.log(this.state.attendanceList);
         }
       }
       catch(e){
@@ -68,7 +65,7 @@ export class PresentAbsentRecords extends Component {
 
     async setDate(date){
         this.setState({date});
-        await sleep(500);
+        await sleep(10);
         this.fetchAttendance();
     }
 
@@ -102,7 +99,6 @@ export class PresentAbsentRecords extends Component {
         }
         
         this.setState({ absentStudArr : absentStudents })
-        console.log(this.state.absentStudArr)
     }
 
     
@@ -118,7 +114,6 @@ export class PresentAbsentRecords extends Component {
             students: this.state.absentStudArr
         }
 
-        console.log(data);
         try {
         await api.teacher.registerBulkAbsence(data);
             toastr.success("Absent Students are registered!"); 
@@ -218,12 +213,12 @@ export class PresentAbsentRecords extends Component {
                     
                     {this.state.rollCall && this.state.date.getDate() === new Date().getDate() &&
                         <Table.Cell textAlign="center">
-                            {!student.Present  && 
+                            {!student.Present  && student.LateEntry === undefined &&
                             <Button color="vk" size="tiny" onClick={()=>this.RecordLateEntry(student)} > 
                                 <Icon name="clock outline"/> 
                                 Record Late Entry
                             </Button>}
-                            {(student.Present || student.LateEntry)  && 
+                            {(student.Present || student.LateEntry)  && student.EarlyExit === undefined &&
                             <Button color="linkedin" size="tiny" onClick={()=>this.RecordEarlyExit(student)}>
                                 <Icon name="hourglass half"/> 
                                 Record Early Exit
