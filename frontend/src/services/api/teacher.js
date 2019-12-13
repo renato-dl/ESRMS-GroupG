@@ -57,8 +57,9 @@ export class TeacherAPIService extends BaseAPIService {
     return this.patch('/teacher/assignment', data);
   }
 
-  deleteAssignment(id){
-    return this.delete(`/teacher/assignemnt?ID=${id}`);
+  // ID
+  deleteAssignment(data){
+    return this.delete(`/teacher/assignment`, data);
   }
 
   getTeacherClasses(){

@@ -2,7 +2,6 @@ import React from 'react';
 import {Icon, Modal, Button} from 'semantic-ui-react';
 import moment from 'moment';
 import './TeacherAssignmentDetails.scss';
-import { TeacherAssignment } from './TeacherAssignment';
 
 export const TeacherAssignmentDetails = (props) => (
   <Modal dimmer open className="assignment-detail" size="small">

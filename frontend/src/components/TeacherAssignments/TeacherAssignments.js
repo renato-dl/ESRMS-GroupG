@@ -10,6 +10,7 @@ import { TeacherAssignmentDetails } from './TeacherAssignmentDetails/TeacherAssi
 import {ApplicationStoreContext} from '../../store';
 import { TeacherAssignmentCalendar } from './TeacherAssignmentCalendar/TeacherAssignmentCalendar.js';
 import { TeacherAssignment } from './TeacherAssignmentDetails/TeacherAssignment';
+import { TeacherAssignmentDelete } from  './TeacherAssignmentDetails/TeacherAssignmentDelete';
 
 export class TeacherAssignments extends Component {
   static contextType = ApplicationStoreContext;
@@ -22,6 +23,7 @@ export class TeacherAssignments extends Component {
       assignmentModalOpen: false,
       assignmentDataForModal: null,
       isAssignmentOpen: false, 
+      isDeleteOpen: false,
       classID: null, 
       subjectID: null
     }
@@ -73,11 +75,15 @@ export class TeacherAssignments extends Component {
   }
 
   deleteAssignment = (assignment) => {
-    this.setState({ assignmentDataForModal: assignment, assignmentModalOpen: false , isAssignmentOpen: true})
+    this.setState({ assignmentDataForModal: assignment, isDeleteOpen: true, assignmentModalOpen: false , isAssignmentOpen: false})
   }
  
+  closeDeleteModal = () => {
+    this.setState({  assignmentModalOpen: true, isDeleteOpen: false })
+  }
+
   closeAssignmentModal = () => {
-    this.setState({ assignmentDataForModal: null, assignmentModalOpen: false , isAssignmentOpen: false})
+    this.setState({ assignmentDataForModal: null, assignmentModalOpen: false , isAssignmentOpen: false, isDeleteOpen: false })
   }
 
   onNavigate = async (data) => {
@@ -123,6 +129,7 @@ export class TeacherAssignments extends Component {
             onUpdate={this.updateAssignment}
             onDelete={this.deleteAssignment}
             onClose={this.closeAssignmentModal}
+            onDeleteClose={this.closeDeleteModal}
           />
         }
 
@@ -135,6 +142,18 @@ export class TeacherAssignments extends Component {
               this.fetchAssignments();
               this.closeAssignmentModal();
             }}
+            onClose={this.closeAssignmentModal}
+          />
+        }
+
+        {this.state.isDeleteOpen && 
+          <TeacherAssignmentDelete 
+            assignment={this.state.assignmentDataForModal}
+            onSave={() =>{
+              this.fetchAssignments();
+              this.closeAssignmentModal();
+            }}
+            onDeleteClose={this.closeDeleteModal}
             onClose={this.closeAssignmentModal}
           />
         }
