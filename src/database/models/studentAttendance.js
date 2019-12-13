@@ -113,8 +113,8 @@ class StudentAttendance extends Model {
   }
 
   async registerBulkAbsence(students, teacherId) {
-    if (!students) {
-      throw new Error('Missing or invalid student object');
+    if (!students || !Array.isArray(students)) {
+      throw new Error('Missing or invalid student array');
     }
     if (!teacherId) {
       throw new Error('Missing or invalid teacherId');
