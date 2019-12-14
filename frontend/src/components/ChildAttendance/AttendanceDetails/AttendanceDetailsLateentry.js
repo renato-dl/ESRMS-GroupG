@@ -15,10 +15,5 @@ export const AttendanceDetailsLateentry = (props) => (
       <h3>EntryTeacherName: <span>{props.attendance.EntryTeacherName}</span></h3>
       <h3>LateEntry: <span>{props.attendance.LateEntry}</span></h3>
       </Modal.Content>
-    <Modal.Actions>
-      <Button positive onClick={props.onClose}>
-        <Icon name='checkmark' /> Close
-      </Button>
-    </Modal.Actions>
   </Modal>
 );

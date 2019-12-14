@@ -15,10 +15,10 @@ export const AssignmentDetails = (props) => (
       <h3>Assignment description: <span>{props.assignment.Description}</span></h3>
       <h3>Due date: <span>{moment(props.assignment.DueDate).format('MMMM Do')}</span></h3>
     </Modal.Content>
-    <Modal.Actions>
+    {/* <Modal.Actions>
       <Button positive onClick={props.onClose}>
         <Icon name='checkmark' /> Close
       </Button>
-    </Modal.Actions>
+    </Modal.Actions> */}
   </Modal>
 );

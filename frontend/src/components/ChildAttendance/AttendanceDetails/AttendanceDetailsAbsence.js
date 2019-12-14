@@ -15,10 +15,5 @@ export const AttendanceDetailsAbsence = (props) => (
       <h3>Status: <span>{props.attendance.title}</span></h3>
       <h3>RecordTeacherName: <span>{props.attendance.EntryTeacherName}</span></h3>
     </Modal.Content>
-    <Modal.Actions>
-      <Button positive onClick={props.onClose}>
-        <Icon name='checkmark' /> Close
-      </Button>
-    </Modal.Actions>
   </Modal>
 );
