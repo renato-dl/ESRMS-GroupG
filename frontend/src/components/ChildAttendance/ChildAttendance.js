@@ -74,14 +74,14 @@ export class ChildAttendance extends React.Component{
 
     AddNormalLabel= async (from,to)=>{
       var startingDate = moment(from).startOf('day');
-      var pre_date=moment().add(-1, 'days').startOf('day');
+      var pre_date=moment().startOf('day');
       var id_num=this.state.attendanceForCalendar.length;
       while(pre_date>=startingDate)
       {
       if(!this.state.attendanceForCalendar.find((a)=>moment(a.Date).isSame(pre_date,'day')))
       {
         var week_day=moment(pre_date).day()
-        if(week_day!=6&&week_day!=0){
+        if(week_day!=0){
           var element={
             id:++id_num,
             start: new Date(pre_date),
@@ -98,18 +98,18 @@ export class ChildAttendance extends React.Component{
     getDailyStatus =(EarlyExit,LateEntry)=>{
       if(EarlyExit==null&&LateEntry==null)
       {
-      return 'Absence'
+      return 'Absent'
       }
       else if(EarlyExit==null&&LateEntry)
       {
-      return 'LateEntry'
+      return 'Late Entry'
       }
       else if(EarlyExit&&LateEntry==null)
       {
-      return 'EarlyExit'
+      return 'Early Exit'
       }
       else 
-      return 'Normal'
+      return 'Present'
      };
 
     
@@ -129,11 +129,11 @@ export class ChildAttendance extends React.Component{
 
     eventPropGetter = (event) => {
       const status=event.title;
-      if(status=='Absence')
+      if(status=='Absent')
       return {className:'red'};
-      else if(status=='LateEntry')
+      else if(status=='Late Entry')
       return {className:'orange'}
-      else if(status=='EarlyExit')
+      else if(status=='Early Exit')
       return {className:'blue'}
       else return {className:'green'}
     }
@@ -161,14 +161,14 @@ export class ChildAttendance extends React.Component{
             onClose={this.closeAttendanceModal}
           />
         }
-         {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='LateEntry'&&
+         {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='Late Entry'&&
           <AttendanceDetailsLateentry
             attendance={this.state.attendanceDataForModal}
             onClose={this.closeAttendanceModal}
           />
         }
 
-        {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='EarlyExit'&&
+        {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='Early Exit'&&
           <AttendanceDetailsEarlyexit
             attendance={this.state.attendanceDataForModal}
             onClose={this.closeAttendanceModal}
