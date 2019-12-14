@@ -222,27 +222,33 @@ class TeacherController extends BaseController {
     }
    */ 
   async registerBulkAbsence(req, res) {
-    if (!req.body.students) {
-      throw new Error('Missing students array');
+    if (!req.body.students || !Array.isArray(req.body.students)) {
+      throw new Error('Missing or invalid students array');
     }
-    const students = await Student.findByClassId(req.body.classId);
-    for (let i=0; i< req.body.students.length; i++) {
-      const found = students.find(element => {
-        return element.StudentId == req.body.students[i];
-      })
-      if (!found) {
-        throw new Error('One or more students do not belong to provided class')
+    let result = 0;
+    if (req.body.students.length > 0) {
+      const students = await Student.findByClassId(req.body.classId);
+      for (let i=0; i< req.body.students.length; i++) {
+        const found = students.find(element => {
+          return element.StudentId == req.body.students[i];
+        })
+        if (!found) {
+          throw new Error('One or more students do not belong to provided class')
+        }
       }
+      await ClassAttendance.registerAttendanceForToday(req.body.classId);
+      result = (await StudentAttendance.registerBulkAbsence(
+        req.body.students,
+        req.user.ID
+      )).affectedRows;
+    } else {
+      await ClassAttendance.registerAttendanceForToday(req.body.classId);
     }
-    await ClassAttendance.registerAttendanceForToday(req.body.classId);
-    const result = await StudentAttendance.registerBulkAbsence(
-      req.body.students,
-      req.user.ID
-    );
     res.send({
       success: true,
-      affectedRows: result.affectedRows
+      affectedRows: result
     });
+    
   }
 
   async registerLateEntry(req, res) {
