@@ -112,7 +112,7 @@ export class TeacherAssignments extends Component {
         </h3>
         <Button className="ui vk button" onClick={this.addAssignment}>
           <i className="plus icon"></i>
-          New
+          New assignment
         </Button>
         <div className="calendarContainer">
           <TeacherAssignmentCalendar

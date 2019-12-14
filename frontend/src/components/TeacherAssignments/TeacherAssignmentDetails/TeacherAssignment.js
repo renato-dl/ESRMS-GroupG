@@ -122,8 +122,8 @@ export class TeacherAssignment extends Component {
           </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button positive onClick={this.onSave} disabled={!this.state.title || !this.state.description }>
-            <Icon name='checkmark' /> {this.state.id ? 'Edit' : 'Save'}
+          <Button color={this.state.id ? 'yellow' : 'green'}  onClick={this.onSave} disabled={!this.state.title || !this.state.description }>
+            <Icon name={this.state.id ? 'edit' : 'checkmark'}  /> {this.state.id ? 'Edit' : 'Save'}
           </Button>
 
         </Modal.Actions>
