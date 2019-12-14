@@ -29,7 +29,7 @@ export class TeacherClasses extends Component {
                 <Container className="contentContainer">
                     <h3 className="contentHeader">
                       <Icon name='group'/>
-                      Classes
+                      Attendance Register
                     </h3>
 
                     <Card.Group>
@@ -61,7 +61,7 @@ export class TeacherClasses extends Component {
             <Container className="contentContainer">
               <h3 className="contentHeader">
                 <Icon name='group'/>
-                Classes
+                Attendance Register
               </h3>
               <NoData/>
             </Container>

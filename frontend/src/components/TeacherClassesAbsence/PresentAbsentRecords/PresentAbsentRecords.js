@@ -3,6 +3,7 @@ import { api } from '../../../services/api';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import './PresentAbsentRecords.scss';
+import ConfirmationModal from './RecordDetails/ConfirmationModal';
 import * as toastr from 'toastr';
 import {Container, Icon, Label, Table, Button, Checkbox} from 'semantic-ui-react';
 
@@ -23,12 +24,21 @@ export class PresentAbsentRecords extends Component {
         this.state = {
             classId:null,
             className:null,
+            studentId:null,
+            studentName:null,
+            studentSurname:null,
             isSaving:false,
-
             date:new Date(),
             attendanceList:[],
             absentStudArr:[],
-            rollCall:true
+            rollCall:true,
+
+            IsAbsenceRecord:false,
+            IsLateEntryRecord:false,
+            IsEarlyExitRecord:false,
+
+            IsConfirmationOpen:false
+
           }
          
       }
@@ -49,8 +59,6 @@ export class PresentAbsentRecords extends Component {
       const cId = this.props.match.params.ClassId;
       const date = this.state.date.toUTCString();
       //const date = this.state.date.toISOString();
-
-      console.log(date)
       try{
         const response = await api.teacher.getTeacherAttendance(cId, date);
         if (response) {
@@ -58,7 +66,6 @@ export class PresentAbsentRecords extends Component {
                 attendanceList:response.data.students, 
                 rollCall: response.data.rollCall
             });
-            console.log(this.state.attendanceList);
         }
       }
       catch(e){
@@ -68,22 +75,25 @@ export class PresentAbsentRecords extends Component {
 
     async setDate(date){
         this.setState({date});
-        await sleep(500);
+        await sleep(10);
         this.fetchAttendance();
     }
 
     getIcon(present, LateEntry, EarlyExit){
         let icn;
         switch(true) {
-            case present == true && LateEntry == undefined && EarlyExit == undefined:
+            case present === true && LateEntry === undefined && EarlyExit === undefined:
                 icn = 'checkmark';
             break;
-            case present == false :
+            case present === false :
                 icn = 'delete';
             break;
-            case LateEntry != undefined || EarlyExit != undefined:
+            /* case LateEntry !== undefined || EarlyExit !== undefined:
                 icn = 'clock outline';
-            break;   
+            break; */  
+            default :
+            icn = 'clock outline';
+            break 
         }
         return icn;
     }
@@ -99,37 +109,51 @@ export class PresentAbsentRecords extends Component {
         }
         
         this.setState({ absentStudArr : absentStudents })
-        console.log(this.state.absentStudArr)
     }
 
+    onConfirmationModalClose = () => {
+        this.setState({IsConfirmationOpen: false});
+    }
     
     submitAbsentStudents = async () => {
-        if (this.state.isSaving) {
-        return;
-        }
+        this.setState({
+            IsAbsenceRecord:true,
+            IsLateEntryRecord:false,
+            IsEarlyExitRecord:false,
 
-        this.setState({isSaving: true});
-
-        const data = {
-            classId: this.state.classId,
-            students: this.state.absentStudArr
-        }
-
-        console.log(data);
-        try {
-        await api.teacher.registerBulkAbsence(data);
-            toastr.success("Absent Students are registered!"); 
-        } catch(e) {
-            toastr.error(e);
-        }
-
-        this.setState({ 
-            isSaving: false,
-            absentStudArr:[]
-        });
-        await this.fetchAttendance();
+            IsConfirmationOpen:true
+        })
     }
 
+    RecordLateEntry = async (student) => {
+        this.setState({
+            studentId: student.StudentId,
+            studentName: student.FirstName,
+            studentSurname: student.LastName,   
+
+            IsAbsenceRecord:false,
+            IsLateEntryRecord:true,
+            IsEarlyExitRecord:false,
+
+            IsConfirmationOpen:true
+        
+        });
+    }
+
+    RecordEarlyExit = async (student) => {
+        this.setState({
+            studentId: student.StudentId,
+            studentName: student.FirstName,
+            studentSurname: student.LastName,   
+
+            IsAbsenceRecord:false,
+            IsLateEntryRecord:false,
+            IsEarlyExitRecord:true,
+
+            IsConfirmationOpen:true
+        
+        });
+    } 
     
     render() {
         return (
@@ -146,6 +170,7 @@ export class PresentAbsentRecords extends Component {
                 dateFormat="MMMM d, yyyy"
                 maxDate={new Date()}
                 />
+                {!this.state.rollCall && this.state.date.getDate() !== new Date().getDate() && <h3 style={{color:'#959595'}}><Icon name='database'/>There are no attendance records for selected date </h3>}
                 <Table color='teal'>
                 <Table.Header>
                 <Table.Row>
@@ -153,7 +178,8 @@ export class PresentAbsentRecords extends Component {
                     <Table.HeaderCell>Name</Table.HeaderCell>
                     <Table.HeaderCell>Surname</Table.HeaderCell>
                     {this.state.rollCall  && <Table.HeaderCell textAlign='left' >Attendance</Table.HeaderCell>}
-                    {!this.state.rollCall && <Table.HeaderCell textAlign='center' >Mark as Absent</Table.HeaderCell>}
+                    {!this.state.rollCall && this.state.date.getDate() === new Date().getDate() && <Table.HeaderCell textAlign='center' >Mark as Absent</Table.HeaderCell>}
+                    {this.state.rollCall &&  this.state.date.getDate() === new Date().getDate() && <Table.HeaderCell textAlign='center' >Operations</Table.HeaderCell>}
                 </Table.Row>
                 </Table.Header>
 
@@ -166,22 +192,38 @@ export class PresentAbsentRecords extends Component {
                     <Table.Cell>{student.LastName}</Table.Cell>
                     {this.state.rollCall  && 
                         <Table.Cell textAlign="left" width={4} className='attendanceCell'>
-                        {student.Present !=undefined && <Icon name={this.getIcon(student.Present, student.LateEntry, student.EarlyExit)}/>}
-                        {student.LateEntry && <Label basic pointing = "left" color="grey">Late Entry: {student.LateEntry}</Label>}
-                        {student.EarlyExit && <Label basic pointing = "left" color="brown">Early Exit: {student.EarlyExit}</Label>}
-                        {student.Present==undefined && <Label basic color="grey">No records</Label>}
+                        {student.LateEntry === undefined && student.EarlyExit === undefined && <Icon name={this.getIcon(student.Present, student.LateEntry, student.EarlyExit)}/>}
+                        {student.LateEntry && <Label basic color="red" size="large"><Icon name="clock outline"/>Late Entry: {student.LateEntry}</Label>}
+                        {student.EarlyExit && <Label basic color="red" size="large"><Icon name="hourglass half"/> Early Exit: {student.EarlyExit}</Label>}
+                        {student.Present===undefined && <Label basic color="grey">No records</Label>}
                         </Table.Cell>
                     }
-                    {!this.state.rollCall &&
+                    
+                    {!this.state.rollCall && this.state.date.getDate() === new Date().getDate() &&
                         <Table.Cell textAlign="center">
                         <Checkbox slider onChange={
                           (e) => this.onChecked(student.StudentId)}/>
                         </Table.Cell>
                     }
+                    
+                    {this.state.rollCall && this.state.date.getDate() === new Date().getDate() &&
+                        <Table.Cell textAlign="center">
+                            {!student.Present  && student.LateEntry === undefined &&
+                            <Button color="vk" size="tiny" onClick={()=>this.RecordLateEntry(student)} > 
+                                <Icon name="clock outline"/> 
+                                Record Late Entry
+                            </Button>}
+                            {(student.Present || student.LateEntry)  && student.EarlyExit === undefined &&
+                            <Button color="linkedin" size="tiny" onClick={()=>this.RecordEarlyExit(student)}>
+                                <Icon name="hourglass half"/> 
+                                Record Early Exit
+                            </Button>}
+                        </Table.Cell>
+                    }
                     </Table.Row>
                 )}
                 </Table.Body>
-                {!this.state.rollCall &&
+                {!this.state.rollCall && this.state.date.getDate() === new Date().getDate() &&
                 <Table.Footer fullWidth>
                 <Table.Row>
                     <Table.HeaderCell />
@@ -189,7 +231,7 @@ export class PresentAbsentRecords extends Component {
                     <Button onClick={this.submitAbsentStudents}
                         floated='right'icon labelPosition='left'
                         color="green" size='small'>
-                        <Icon name='checkmark icon' /> Submit
+                        <Icon name='checkmark' /> Submit
                     </Button>
                     </Table.HeaderCell>
                 </Table.Row>
@@ -197,6 +239,17 @@ export class PresentAbsentRecords extends Component {
                 }
                 </Table>
 
+
+                {this.state.IsConfirmationOpen &&
+                <ConfirmationModal
+                    dat = {this.state}
+                    onClose={this.onConfirmationModalClose}
+                    onSave={() => {
+                        this.fetchAttendance();
+                        this.onConfirmationModalClose();
+                    }}
+                />
+                }
             </Container>
         )
     }

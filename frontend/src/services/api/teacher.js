@@ -73,4 +73,13 @@ export class TeacherAPIService extends BaseAPIService {
   registerBulkAbsence(data){
     return this.post('teacher/absences', data)
   }
+
+  recordLateEntry(data){
+    return this.post('teacher/late_entry', data)
+  }
+
+  recordEarlyExit(data){
+    return this.post('teacher/early_exit', data)
+  }
+
 }

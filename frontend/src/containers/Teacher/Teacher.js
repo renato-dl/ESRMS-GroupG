@@ -10,11 +10,7 @@ export class Teacher extends React.Component{
   };
 
   async componentDidMount() {
-    const {params} = this.props.match;
-    const teacherID = window.location.href.substr(window.location.href.indexOf('/teacher/') + 9);
-    localStorage.setItem('teacherID', teacherID);
-
-    const response = await api.teacher.getTeacherSubjects(params.teacherID);
+    const response = await api.teacher.getTeacherSubjects();
     if (response) {
       this.setState({ subjectsList: response.data })
     }
@@ -40,7 +36,7 @@ export class Teacher extends React.Component{
           <Container className="contentContainer">
               <h3 className="contentHeader">
                 <Icon name='braille'/>
-                Subjects
+                Teaching Activity
               </h3>
 
               <List relaxed>
@@ -81,7 +77,7 @@ export class Teacher extends React.Component{
       <Container className="contentContainer">
         <h3 className="contentHeader">
           <Icon name='braille'/>
-          Teaching Plan
+          Teaching Activity
         </h3>
         <NoData/>
       </Container>

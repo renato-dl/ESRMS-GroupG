@@ -8,7 +8,6 @@ import {ApplicationStoreContext} from '../../store';
 
 import {AttendanceDetailsAbsence} from'./AttendanceDetails/AttendanceDetailsAbsence'
 import {AttendanceDetailsEarlyexit} from './AttendanceDetails/AttendanceDetailsEarlyexit'
-import {AttendanceDetailsEexitLentry} from'./AttendanceDetails/AttendanceDetailsEexitLentry'
 import {AttendanceDetailsLateentry}from './AttendanceDetails/AttendanceDetailsLateentry'
 
 export class ChildAttendance extends React.Component{
@@ -19,7 +18,8 @@ export class ChildAttendance extends React.Component{
         attendance: [],
         attendanceForCalendar: [],
         attendanceModalOpen: false,
-        attendanceDataForModal: null
+        attendanceDataForModal: null,
+        attendanceNormal:null
       }
     }
 
@@ -30,26 +30,25 @@ export class ChildAttendance extends React.Component{
     fetchAttendance = async (from, to) => {
         const student = this.context.state.parent.selectedStudent.ID;
         const response = await api.parent.getChildAttendance(student, from , to);
-          console.log(response)
           if (response) {
            let attendances = response.data.reduce((allAttendances, attendance) => {
              if( attendance.LateEntry && attendance.EarlyExit){
+               const newLocal = moment.utc(attendance.EarlyExit, 'HH:mm:ss').local().format('HH:mm');
                const firstAttendance = { ID: attendance.ID,
                 Date: new Date(attendance.Date),
                 title: "Early exit",
-                EarlyExit: attendance.EarlyExit,
+                EarlyExit: newLocal,
                 ExitTeacherName: attendance.ExitTeacherName};
                 const secondAttendance = { ID: attendance.ID,
                   Date: new Date(attendance.Date),
                   title: "Late entry",
                   LateEntry: attendance.LateEntry,
                   EntryTeacherName: attendance.EntryTeacherName};
-                allAttendances.push(firstAttendance, secondAttendance);
+                allAttendances.push(secondAttendance,firstAttendance);
              }
              else{
               allAttendances.push(attendance);
              }
-             
              return allAttendances;
            }, []);
            this.setState({
@@ -70,34 +69,52 @@ export class ChildAttendance extends React.Component{
             attendance: this.state.attendanceForCalendar
           })
         }
+        await this.AddNormalLabel(from,to)
       };
 
-
+    AddNormalLabel= async (from,to)=>{
+      var startingDate = moment(from).startOf('day');
+      var pre_date=moment().startOf('day');
+      var id_num=this.state.attendanceForCalendar.length;
+      while(pre_date>=startingDate)
+      {
+      if(!this.state.attendanceForCalendar.find((a)=>moment(a.Date).isSame(pre_date,'day')))
+      {
+        var week_day=moment(pre_date).day()
+        if(week_day!=0){
+          var element={
+            id:++id_num,
+            start: new Date(pre_date),
+            end:new Date(pre_date),
+            title: "Present"}
+            this.state.attendanceForCalendar.push(element)
+         }
+        }
+      pre_date=moment(new Date(pre_date)).add(-1, 'days').startOf('day');
+      }
+      this.setState({attendanceNormal:0})
+    }
 
     getDailyStatus =(EarlyExit,LateEntry)=>{
       if(EarlyExit==null&&LateEntry==null)
       {
-      return 'Absence'
+      return 'Absent'
       }
       else if(EarlyExit==null&&LateEntry)
       {
-      return 'LateEntry'
+      return 'Late Entry'
       }
       else if(EarlyExit&&LateEntry==null)
       {
-      return 'EarlyExit'
+      return 'Early Exit'
       }
-      else if(EarlyExit&&LateEntry)
-      return 'EarlyExit&LateEntry'
       else 
-      return 'Normal'
+      return 'Present'
      };
 
     
     handleEventClick = (data) => {
-      console.log(data)
-        //const attendance = {...this.state.attendance.find((a) => a.ID === data.id)};
-        this.setState({ attendanceDataForModal: data, attendanceModalOpen: true });
+      this.setState({ attendanceDataForModal: data, attendanceModalOpen: true });
       }
     
     closeAttendanceModal = () => {
@@ -112,11 +129,13 @@ export class ChildAttendance extends React.Component{
 
     eventPropGetter = (event) => {
       const status=event.title;
-      if(status=='Absence')
+      if(status=='Absent')
       return {className:'red'};
-      else if(status=='LateEntry'||status=='EarlyExit')
+      else if(status=='Late Entry')
       return {className:'orange'}
-      else return {className:'blue'}
+      else if(status=='Early Exit')
+      return {className:'blue'}
+      else return {className:'green'}
     }
 
     render(){
@@ -134,7 +153,6 @@ export class ChildAttendance extends React.Component{
             onNavigate={this.onNavigate}
             eventPropGetter={this.eventPropGetter}
           />      
-        
           </div>
 
         {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='Absence'&&
@@ -143,20 +161,14 @@ export class ChildAttendance extends React.Component{
             onClose={this.closeAttendanceModal}
           />
         }
-         {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='LateEntry'&&
+         {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='Late Entry'&&
           <AttendanceDetailsLateentry
             attendance={this.state.attendanceDataForModal}
             onClose={this.closeAttendanceModal}
           />
         }
-        {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='EarlyExit&LateEntry'&&
-          <AttendanceDetailsEexitLentry
-            attendance={this.state.attendanceDataForModal}
-            onClose={this.closeAttendanceModal}
-          />
-        }
 
-        {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='EarlyExit'&&
+        {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='Early Exit'&&
           <AttendanceDetailsEarlyexit
             attendance={this.state.attendanceDataForModal}
             onClose={this.closeAttendanceModal}

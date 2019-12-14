@@ -15,10 +15,5 @@ export const AttendanceDetailsEarlyexit = (props) => (
       <h3>ExitTeacherName: <span>{props.attendance.ExitTeacherName}</span></h3>
       <h3>EarlyExit: <span>{props.attendance.EarlyExit}</span></h3>
      </Modal.Content>
-    <Modal.Actions>
-      <Button positive onClick={props.onClose}>
-        <Icon name='checkmark' /> Close
-      </Button>
-    </Modal.Actions>
   </Modal>
 );
