@@ -14,11 +14,11 @@ export const TeacherAssignmentDetails = (props) => (
       <p><b>Due date:</b> <span>{moment(props.assignment.DueDate).format('MMMM Do')}</span></p>
     </Modal.Content>
     <Modal.Actions>
-      <Button positive onClick={() => props.onUpdate(props.assignment)}>
-        <Icon name='checkmark' /> Edit
+      <Button color="yellow" onClick={() => props.onUpdate(props.assignment)}>
+        <Icon name='edit' /> Edit
       </Button>
-      <Button positive onClick={() => props.onDelete(props.assignment)}>
-        <Icon name='checkmark' /> Delete
+      <Button negative onClick={() => props.onDelete(props.assignment)}>
+        <Icon name='remove' /> Delete
       </Button>
     </Modal.Actions>    
   </Modal>  
