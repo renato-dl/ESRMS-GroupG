@@ -25,7 +25,6 @@ export class ChildAttendance extends React.Component{
 
     async componentDidMount() {
         await this.onNavigate(new Date());
-        console.log(this.state.attendanceForCalendar)
       }
     
     fetchAttendance = async (from, to) => {
