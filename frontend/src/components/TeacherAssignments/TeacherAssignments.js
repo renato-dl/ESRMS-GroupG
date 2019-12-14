@@ -119,6 +119,7 @@ export class TeacherAssignments extends Component {
           <i className="plus icon"></i>
           New assignment
         </Button>
+        <br/><br/>
         <div className="calendarContainer">
           <TeacherAssignmentCalendar
             eventPropGetter={this.eventPropGetter}
