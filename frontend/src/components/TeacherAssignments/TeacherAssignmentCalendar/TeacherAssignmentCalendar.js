@@ -28,7 +28,6 @@ export const TeacherAssignmentCalendar = (props) => {
         onDoubleClickEvent={props.onDoubleClickEvent}
         onNavigate={props.onNavigate}
         eventPropGetter={props.eventPropGetter || eventPropGetter}
-        //onSelectEvent={props.onSelectEvent}
       />
   )
 }

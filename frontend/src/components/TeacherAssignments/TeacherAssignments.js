@@ -95,11 +95,16 @@ export class TeacherAssignments extends Component {
   // NOTE: This is an example of how to add a class to the event and style it.
   // please assign your custom class name and also don't forget to add the style to Calendar.scss and global.scss
   eventPropGetter = (event) => {
-    const colors = ['red', 'blue', 'orange'];
-    const dateNumber = moment(event.end).date();
-    const randomIndex = parseInt((dateNumber + (Math.random() * 10)) % colors.length);
-    const className = colors[randomIndex];
-
+    const eventDate = moment(event.end);
+    const startOfWeek = moment().startOf('week');
+    const endOfWeek = moment().endOf('week');
+    let className =  ''
+    if (eventDate.isBefore(startOfWeek))
+      className = 'orange';
+    if (eventDate.isBetween(startOfWeek, endOfWeek))
+      className = 'blue';
+    if(eventDate.isAfter(endOfWeek))
+      className = 'red';
     return { className: className };
   }
 
