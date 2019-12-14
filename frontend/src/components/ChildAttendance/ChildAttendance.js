@@ -33,10 +33,11 @@ export class ChildAttendance extends React.Component{
           if (response) {
            let attendances = response.data.reduce((allAttendances, attendance) => {
              if( attendance.LateEntry && attendance.EarlyExit){
+               const newLocal = moment.utc(attendance.EarlyExit, 'HH:mm:ss').local().format('HH:mm');
                const firstAttendance = { ID: attendance.ID,
                 Date: new Date(attendance.Date),
                 title: "Early exit",
-                EarlyExit: attendance.EarlyExit,
+                EarlyExit: newLocal,
                 ExitTeacherName: attendance.ExitTeacherName};
                 const secondAttendance = { ID: attendance.ID,
                   Date: new Date(attendance.Date),
@@ -85,7 +86,7 @@ export class ChildAttendance extends React.Component{
             id:++id_num,
             start: new Date(pre_date),
             end:new Date(pre_date),
-            title: "Normal"}
+            title: "Present"}
             this.state.attendanceForCalendar.push(element)
          }
         }
