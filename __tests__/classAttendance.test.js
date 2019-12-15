@@ -2,6 +2,7 @@ import User from '../src/database/models/user';
 import Class from '../src/database/models/class';
 import ClassAttendance from '../src/database/models/classAttendance';
 import moment from 'moment';
+import {isSchoolOpen} from '../src/services/schoolHours'
 
 
 describe("Tests about the checking status of roll calls in a class for a given date ", () => {
@@ -253,7 +254,7 @@ describe("Tests about the checking status of roll calls in a class for a given d
 
 describe("Tests about registering roll calls in a class for a given date ", () => {
 
-  test("It should perform correctly the registration", async () =>{
+  test("It should perform correctly the registration or throw an error when school is closed", async () =>{
     
     //first insert a new teacher
     const testFirstName = 'Joe';
@@ -286,37 +287,28 @@ describe("Tests about registering roll calls in a class for a given date ", () =
       id: createClass.id
     });
 
-    //choose a correct date, no Sunday
-    let date = moment.utc().set({
-      "hour": 0,
-      "minute": 0, 
-      "second": 0, 
-      "millisecond" : 0
-    });
+    try {
+      const insertRollCall = await ClassAttendance.registerAttendanceForToday(createClass.id);
+      expect(isSchoolOpen()).not.toBe(true);
 
-    const dayOfWeek = date.isoWeekday();  
-    if(dayOfWeek == 7){
-        date.add(1, 'days'); 
+      const checkRollCall = await ClassAttendance.findById(insertRollCall.id);
+      expect(checkRollCall.ClassId).toBe(createClass.id);
+      expect(moment(createClass.Date).isSame(moment.utc(), 'day')).toBe(true);
+
+      await ClassAttendance.remove(insertRollCall.id);
+    } catch(error) {
+      expect(isSchoolOpen()).toBe(false);
+      expect(error).toHaveProperty("message", "Cannot register attendance when school is closed");
+    } finally {
+      //clean db for future tests
+
+      await Class.remove(createClass.id);
+      await User.remove(insertTeacher.id);
     }
-
-    //insert new row in classAttendance table
-    const insertRollCall = await ClassAttendance.registerAttendanceForToday(createClass.id);
-
-    const checkRollCall = await ClassAttendance.findById(insertRollCall.id);
-
-    expect(checkRollCall).toMatchObject({
-      ClassId: createClass.id,
-      Date: new Date(date)
-    });
-  
-    //clean db for future tests
-    await ClassAttendance.remove(insertRollCall.id);
-    await Class.remove(createClass.id);
-    await User.remove(insertTeacher.id);
 
   });
 
-  test("It should throw an error when a roll call has been done for a class in a date", async () =>{
+  test("It should throw an error when a roll call has been done for a class in a date (if school is open)", async () =>{
     
     //first insert a new teacher
     const testFirstName = 'Joe';
@@ -349,32 +341,28 @@ describe("Tests about registering roll calls in a class for a given date ", () =
       id: createClass.id
     });
 
-    //choose a correct date, no Sunday
-    let date = moment.utc().set({
-      "hour": 0,
-      "minute": 0, 
-      "second": 0, 
-      "millisecond" : 0
-    });
+    let insertRollCall;
+    if (isSchoolOpen()) {
+      //insert new row in classAttendance table
+      insertRollCall = await ClassAttendance.create({
+        ClassId: createClass.id,
+        Date : date.format(ClassAttendance.db.getDateFormatString())
+      });
+    }    
 
-    const dayOfWeek = date.isoWeekday();  
-    if(dayOfWeek == 7){
-        date.add(1, 'days'); 
-    }
-
-    //insert new row in classAttendance table
-    const insertRollCall = await ClassAttendance.create({
-      ClassId: createClass.id,
-      Date : date.format(ClassAttendance.db.getDateFormatString())
-  });
     try{
       await ClassAttendance.registerAttendanceForToday(createClass.id);
 
     }catch(error){
-      expect(error).toHaveProperty("message", "Attendance already registered for specified class and date")
+
+      if (isSchoolOpen()) {
+        expect(error).toHaveProperty("message", "Attendance already registered for specified class and date");
+        await ClassAttendance.remove(insertRollCall);
+      } else {
+        expect(error).toHaveProperty("message", "Cannot register attendance when school is closed");
+      }    
       
       //clean db for future tests
-      await ClassAttendance.remove(insertRollCall);
       await Class.remove(createClass.id);
       await User.remove(insertTeacher.id);
     }
@@ -401,5 +389,6 @@ describe("Tests about registering roll calls in a class for a given date ", () =
       expect(error).toHaveProperty("message", "Missing or invalid classId");
     }
   });
+
 });
 
