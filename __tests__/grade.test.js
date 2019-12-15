@@ -197,6 +197,50 @@ describe('Tests about insertion of a grade by teacher', () => {
     }
   });
 
+  test("it should throw Error with message \'Invalid grade date' when the grade date format is not valid", async() =>{
+    const subjectId = "1";
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = "6.0"
+    const type = "Oral";
+
+    try{
+      const result = await Grade.addGrade(
+        subjectId,
+        studentId,
+        grade,
+        "notADate",
+        type
+    );
+
+    }catch(error){
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toHaveProperty('message', 'Invalid grade date');
+    }
+  });
+
+  test("it should throw Error with message \'Invalid grade date' when the grade date is future", async() =>{
+    const subjectId = "1";
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = "6.0"
+    const type = "Oral";
+    let date = moment.utc();
+    date.add('1', 'days');
+
+    try{
+      const result = await Grade.addGrade(
+        subjectId,
+        studentId,
+        grade,
+        date.format(),
+        type
+    );
+
+    }catch(error){
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toHaveProperty('message', 'Future grade date');
+    }
+  });
+
 
   test("it should throw Error with message \'Invalid grade' when the grade is not valid", async() =>{
     const subjectId = "1";
@@ -205,6 +249,50 @@ describe('Tests about insertion of a grade by teacher', () => {
     const type = "Oral";
     const date = moment.utc();
     
+    try{
+      const result = await Grade.addGrade(
+        subjectId,
+        studentId,
+        grade,
+        date.format,
+        type
+    );
+
+    }catch(error){
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toHaveProperty('message', 'Invalid grade');
+    }
+  });
+
+  test("it should throw Error with message \'Invalid grade' when the grade is not valid (< 0)", async() =>{
+    const subjectId = "1";
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = -1;
+    const type = "Oral";
+    const date = moment.utc();
+
+    try{
+      const result = await Grade.addGrade(
+        subjectId,
+        studentId,
+        grade,
+        date.format,
+        type
+    );
+
+    }catch(error){
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toHaveProperty('message', 'Invalid grade');
+    }
+  });
+  
+  test("it should throw Error with message \'Invalid grade' when the grade is not valid (> 10)", async() =>{
+    const subjectId = "1";
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = 11;
+    const type = "Oral";
+    const date = moment.utc();
+
     try{
       const result = await Grade.addGrade(
         subjectId,
@@ -375,7 +463,6 @@ describe("Tests about updating grades", () => {
     await Grade.remove(result.id);
   });
 
-
   test('It should throw an error when grade id is missing or invalid', async () => {
     const subjectId = 1;
     const studentId = "868d6ec1dfc8467f6d260c48b5620543"
@@ -403,8 +490,6 @@ describe("Tests about updating grades", () => {
     }
   });
 
-
-
   test('It should throw an error when grade is missing or invalid', async () => {
     const subjectId = 1;
     const studentId = "868d6ec1dfc8467f6d260c48b5620543"
@@ -431,9 +516,7 @@ describe("Tests about updating grades", () => {
         await Grade.remove(result.id);
       }
   });
-
-  
-
+ 
   test('It should throw an error when grade is not valid', async () => {
     const subjectId = 1;
     const studentId = "868d6ec1dfc8467f6d260c48b5620543"
@@ -454,6 +537,60 @@ describe("Tests about updating grades", () => {
     const gradeID = result.id;
       try{
         const updateResult = await Grade.updateGrade(gradeID, 6.47, 'Written');   
+      }
+      catch(error){
+        expect(error).toHaveProperty("message", "Invalid grade");
+        await Grade.remove(result.id);
+      }
+  });
+
+  test('It should throw an error when grade is not valid (< 0)', async () => {
+    const subjectId = 1;
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = "6.0";
+    const type = "Oral";
+    const date = moment.utc();
+
+    const result = await Grade.addGrade(
+      subjectId,
+      studentId,
+      grade,
+      date.format(),
+      type
+    );
+
+    expect(result.id).not.toBeNaN();
+    
+    const gradeID = result.id;
+      try{
+        const updateResult = await Grade.updateGrade(gradeID, -1, 'Written');   
+      }
+      catch(error){
+        expect(error).toHaveProperty("message", "Invalid grade");
+        await Grade.remove(result.id);
+      }
+  });
+
+  test('It should throw an error when grade is not valid (> 10)', async () => {
+    const subjectId = 1;
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = "6.0";
+    const type = "Oral";
+    const date = moment.utc();
+
+    const result = await Grade.addGrade(
+      subjectId,
+      studentId,
+      grade,
+      date.format(),
+      type
+    );
+
+    expect(result.id).not.toBeNaN();
+    
+    const gradeID = result.id;
+      try{
+        const updateResult = await Grade.updateGrade(gradeID, 12, 'Written');   
       }
       catch(error){
         expect(error).toHaveProperty("message", "Invalid grade");
@@ -487,6 +624,5 @@ describe("Tests about updating grades", () => {
         await Grade.remove(result.id);
       }
   });
-
 
 });
