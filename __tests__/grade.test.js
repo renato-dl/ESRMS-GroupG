@@ -549,7 +549,7 @@ describe("Tests about updating grades", () => {
     const studentId = "868d6ec1dfc8467f6d260c48b5620543"
     const grade = "6.0";
     const type = "Oral";
-    const date = moment.utc();
+    const date = moment.utc().weekday() == 0 ? moment.utc().subtract(1, 'days') : moment.utc();
 
     const result = await Grade.addGrade(
       subjectId,
@@ -576,7 +576,7 @@ describe("Tests about updating grades", () => {
     const studentId = "868d6ec1dfc8467f6d260c48b5620543"
     const grade = "6.0";
     const type = "Oral";
-    const date = moment.utc();
+    const date = moment.utc().weekday() == 0 ? moment.utc().subtract(1, 'days') : moment.utc();
 
     const result = await Grade.addGrade(
       subjectId,
