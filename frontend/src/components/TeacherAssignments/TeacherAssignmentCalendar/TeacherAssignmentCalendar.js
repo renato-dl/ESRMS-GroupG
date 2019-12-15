@@ -24,11 +24,10 @@ export const TeacherAssignmentCalendar = (props) => {
         views={['month']}
         startAccessor="start"
         endAccessor="end"
-        style={{height: 685}}
+        style={{height: 400}}
         onDoubleClickEvent={props.onDoubleClickEvent}
         onNavigate={props.onNavigate}
         eventPropGetter={props.eventPropGetter || eventPropGetter}
-        //onSelectEvent={props.onSelectEvent}
       />
   )
 }

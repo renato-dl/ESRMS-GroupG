@@ -10,6 +10,7 @@ import { TeacherAssignmentDetails } from './TeacherAssignmentDetails/TeacherAssi
 import {ApplicationStoreContext} from '../../store';
 import { TeacherAssignmentCalendar } from './TeacherAssignmentCalendar/TeacherAssignmentCalendar.js';
 import { TeacherAssignment } from './TeacherAssignmentDetails/TeacherAssignment';
+import { TeacherAssignmentDelete } from  './TeacherAssignmentDetails/TeacherAssignmentDelete';
 
 export class TeacherAssignments extends Component {
   static contextType = ApplicationStoreContext;
@@ -22,6 +23,7 @@ export class TeacherAssignments extends Component {
       assignmentModalOpen: false,
       assignmentDataForModal: null,
       isAssignmentOpen: false, 
+      isDeleteOpen: false,
       classID: null, 
       subjectID: null
     }
@@ -73,11 +75,15 @@ export class TeacherAssignments extends Component {
   }
 
   deleteAssignment = (assignment) => {
-    this.setState({ assignmentDataForModal: assignment, assignmentModalOpen: false , isAssignmentOpen: true})
+    this.setState({ assignmentDataForModal: assignment, isDeleteOpen: true, assignmentModalOpen: false , isAssignmentOpen: false})
   }
  
+  closeDeleteModal = () => {
+    this.setState({  assignmentModalOpen: true, isDeleteOpen: false })
+  }
+
   closeAssignmentModal = () => {
-    this.setState({ assignmentDataForModal: null, assignmentModalOpen: false , isAssignmentOpen: false})
+    this.setState({ assignmentDataForModal: null, assignmentModalOpen: false , isAssignmentOpen: false, isDeleteOpen: false })
   }
 
   onNavigate = async (data) => {
@@ -89,11 +95,16 @@ export class TeacherAssignments extends Component {
   // NOTE: This is an example of how to add a class to the event and style it.
   // please assign your custom class name and also don't forget to add the style to Calendar.scss and global.scss
   eventPropGetter = (event) => {
-    const colors = ['red', 'blue', 'orange'];
-    const dateNumber = moment(event.end).date();
-    const randomIndex = parseInt((dateNumber + (Math.random() * 10)) % colors.length);
-    const className = colors[randomIndex];
-
+    const eventDate = moment(event.end);
+    const startOfWeek = moment().utc().startOf('week');
+    const endOfWeek = moment().utc().endOf('week');
+    let className =  ''
+    if (eventDate.isBefore(startOfWeek))
+      className = 'orange';
+    if (eventDate.isBetween(startOfWeek, endOfWeek))
+      className = 'blue';
+    if(eventDate.isAfter(endOfWeek))
+      className = 'red';
     return { className: className };
   }
 
@@ -106,8 +117,9 @@ export class TeacherAssignments extends Component {
         </h3>
         <Button className="ui vk button" onClick={this.addAssignment}>
           <i className="plus icon"></i>
-          New
+          New assignment
         </Button>
+        <br/><br/>
         <div className="calendarContainer">
           <TeacherAssignmentCalendar
             eventPropGetter={this.eventPropGetter}
@@ -123,6 +135,7 @@ export class TeacherAssignments extends Component {
             onUpdate={this.updateAssignment}
             onDelete={this.deleteAssignment}
             onClose={this.closeAssignmentModal}
+            onDeleteClose={this.closeDeleteModal}
           />
         }
 
@@ -135,6 +148,18 @@ export class TeacherAssignments extends Component {
               this.fetchAssignments();
               this.closeAssignmentModal();
             }}
+            onClose={this.closeAssignmentModal}
+          />
+        }
+
+        {this.state.isDeleteOpen && 
+          <TeacherAssignmentDelete 
+            assignment={this.state.assignmentDataForModal}
+            onSave={() =>{
+              this.fetchAssignments();
+              this.closeAssignmentModal();
+            }}
+            onDeleteClose={this.closeDeleteModal}
             onClose={this.closeAssignmentModal}
           />
         }
