@@ -85,6 +85,8 @@ describe('Tests about the insertion of parent data by admin', () => {
       [result.id]
     );
 
+    connection.release();
+
     expect(queryResult.length).toBe(1);
     expect(queryResult[0].FirstName).toEqual(testFirstName);
     expect(queryResult[0].LastName).toEqual(testLastName);
@@ -202,31 +204,33 @@ describe('Tests about the insertion of parent data by admin', () => {
     );
 
     try{
-      const result = await User.insertParentData(
-          testFirstName, 
-          testLastName, 
-          testEmail, 
-          testSSN, 
-          testPassword
+      await User.insertParentData(
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword
       );
     } catch(error){
       expect(error).toBeInstanceOf(Error);
       expect(error).toHaveProperty('message', 'Parent already in db');
+
+      //delete result for future tests
+      const connection = await db.getConnection();
+      const deleteResultFromUsers = await connection.query(
+        `DELETE
+        FROM Users
+        WHERE ID = ?`,
+        [result.id]
+      );
+
+      expect(deleteResultFromUsers.affectedRows).toBe(1);
+
+      connection.release();
     }
 
 
-    //delete result for future tests
-    const connection = await db.getConnection();
-    const deleteResultFromUsers = await connection.query(
-      `DELETE
-      FROM Users
-      WHERE ID = ?`,
-      [result.id]
-    );
-
-    expect(deleteResultFromUsers.affectedRows).toBe(1);
-
-    connection.release();
+    
   });
 
 });
@@ -700,7 +704,6 @@ describe('Tests about editing internal accounts by admin', () => {
       [insertResult.id]
 
     );
-    connection.release();
 
     // Edit the teacher role
    try{
@@ -1021,7 +1024,6 @@ describe('Tests about deletion of accounts', () =>{
       [result.id]
 
     );
-    connection.release();
 
     try{
       await User.deleteAccount(result.id);
@@ -1037,6 +1039,8 @@ describe('Tests about deletion of accounts', () =>{
         WHERE ID = ?`,
         [assignTeacherToClass.insertId]
       );
+
+      connection.release();
 
       await User.remove(result.id);
     }
@@ -1076,7 +1080,6 @@ describe('Tests about deletion of accounts', () =>{
       [result.id]
 
     );
-    connection.release();
 
     try{
       await User.deleteAccount(result.id);
@@ -1093,49 +1096,11 @@ describe('Tests about deletion of accounts', () =>{
         [assignCoordinator.insertId]
       );
 
+      connection.release();
+
       await User.remove(result.id);
     }
 
-  });
-
-});describe('Tests about classes', () => {
-
-
-  test('It should not throw errors while getting the list of classes', async () => {
-    expect(ClassModel.getClasses()).resolves.not.toThrow();
-  });
-
-  test('It should return the correct class data', async () => {
-    // TODO: retest this after we have a method to create classes
-    const classes = await ClassModel.getClasses();
-    expect(classes).not.toBeNull();
-    expect(classes.length).toBeGreaterThanOrEqual(3);
-    expect(classes).toEqual(
-      expect.arrayContaining(
-        [
-          expect.objectContaining(
-            {
-              "ID": 1,
-              "CreationYear": 2019,
-              "Name": "1A",
-              "Coordinator": "Giulia Tesori"
-            },
-            {
-              "ID": 2,
-              "CreationYear": 2019,
-              "Name": "1B",
-              "Coordinator": "Paola De Paola"
-            },
-            {
-              "ID": 3,
-              "CreationYear": 2019,
-              "Name": "1C",
-              "Coordinator": "Luca De Luca"
-            }
-          )
-        ]
-      )
-    );
   });
 
 });
