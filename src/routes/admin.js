@@ -26,4 +26,6 @@ router.post('/classes/:classID/assign-students', Authorization(['IsSysAdmin']), 
 router.post('/class', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'createClass'));
 router.delete('/class', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'deleteClass'));
 
+router.get('/teachers', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getTeachers'));
+
 export default router;

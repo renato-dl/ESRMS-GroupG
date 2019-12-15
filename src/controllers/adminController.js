@@ -221,7 +221,13 @@ class AdminController extends BaseController {
 
     res.send(classes);
   }
-  
+
+  async getTeachers(req, res) {
+    const teachers = await User.getTeachers({
+      page: req.query.page, pageSize: req.query.pageSize
+    });
+    res.send(teachers);
+  }
 
   async assignStudentsToClass(req, res) {
     const classID = req.params.classID;
@@ -273,8 +279,6 @@ class AdminController extends BaseController {
     
     res.send({success: results});
   }
-
-
 
   async deleteAccount(req, res) {
     const result = await User.deleteAccount(req.body.ID);
