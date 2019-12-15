@@ -5,6 +5,7 @@ import ClassCompositionDetail from './ClassCompositionDetail/ClassCompositionDet
 import { NoData } from '../NoData/NoData';
 import './ClassComposition.scss';
 import {ClassDelete} from './ClassDelete';
+import AddNewClass from './AddNewClass';
 import * as toastr from 'toastr';
 
 export class ClassComposition extends React.Component{
@@ -17,9 +18,10 @@ export class ClassComposition extends React.Component{
       enrolledStudents: [],
       isStudentsOpen: false, 
       deleteClassModalOpen: false,
-      deleteClassData: null
+      deleteClassData: null, 
+      addClassModalOpen: false
+    }
   }
-}
   async componentDidMount(){
     this.fetchClasses();
   }
@@ -39,9 +41,17 @@ export class ClassComposition extends React.Component{
     this.setState({classId: null, className: null, isStudentsOpen: false, deleteClassModalOpen: false});
   };
 
+  addClass = () => {
+    this.setState({addClassModalOpen: true});
+  }  
+
+  onAddClassClose = () => {
+    this.setState({addClassModalOpen: false});
+  }
+
   deleteClass = (data) => {
     this.setState({ deleteClassData: data, deleteClassModalOpen: true });
-  }
+  } 
   
   onDeleteClass = async() => {
     const request = {
@@ -71,10 +81,9 @@ export class ClassComposition extends React.Component{
             <Icon name='braille'/> 
             Class Composition
           </h3>
-          {/* <h2 className="title">Student {this.props.match.params.studentID}'s score:</h2> */}
-          <Button color='red' onClick={this.onDelete}>
-            Delete
-          <Icon className="delete icon" name="delete"/>  
+          <Button color='blue' onClick={this.addClass}>
+            Add class
+          <Icon className="plus icon" name="plus"/>  
           </Button>
           <Table columns={4}>
           <Table.Header>
@@ -126,6 +135,14 @@ export class ClassComposition extends React.Component{
                 onClose={this.onClassDetailClose}
                 onDelete={this.onDeleteClass}
               />
+            }
+            {this.state.addClassModalOpen &&
+            <AddNewClass
+              onClose={this.onAddClassClose}
+              onSave={() =>{
+                this.fetchClasses();
+              }}
+            />
             }
         </Container>
         )
