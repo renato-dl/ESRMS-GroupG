@@ -5,7 +5,7 @@ import ClassComposition from '../components/ClassComposition/ClassComposition';
 
 describe('Testing of  class_composition component (admin page)', () => {
   
-  test('Test if components for delete a topic are rendered', () => {
+  test('Test if components for class composition are rendered', () => {
     shallow(
       <ClassComposition {...getRouterPropsForTest()} >
       </ClassComposition>
