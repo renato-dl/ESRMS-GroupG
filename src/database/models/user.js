@@ -27,12 +27,14 @@ class User extends Model {
 
   async getUserRolesById(userId) {
     const connection = await this.db.getConnection();
-    return connection.query(
+    const result = connection.query(
       `SELECT IsParent, IsTeacher, IsPrincipal, IsAdminOfficer, IsSysAdmin
       FROM Users
       WHERE ID = ?;`,
       [userId]
-    )
+    );
+    connection.release();
+    return result;
   }
   
   async isValidParent(userId) {

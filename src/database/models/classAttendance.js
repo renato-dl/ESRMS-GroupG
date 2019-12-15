@@ -1,5 +1,6 @@
 import {Model} from './base';
 import moment from 'moment';
+import {isSchoolOpen} from '../../services/schoolHours';
 
 class ClassAttendance extends Model {
   constructor() {
@@ -43,6 +44,9 @@ class ClassAttendance extends Model {
   async registerAttendanceForToday(classId) {
     if (!classId) {
       throw new Error('Missing or invalid classId');
+    }
+    if (!isSchoolOpen()) {
+      throw new Error('Cannot register attendance when school is closed');
     }
     const date = moment().utc().format(this.db.getDateFormatString());
     const isAlreadyRegistered = await this.hasAttendanceBeenRegistered(classId, date);

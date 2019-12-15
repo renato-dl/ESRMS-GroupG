@@ -78,28 +78,34 @@ describe('Tests about insertion of a grade by teacher', () => {
     const type = "Oral";
     const date = moment.utc();
 
-    const result = await Grade.addGrade(
-      subjectId,
-      studentId,
-      grade,
-      date.format(),
-      type
-    );
+    try {
+      const result = await Grade.addGrade(
+        subjectId,
+        studentId,
+        grade,
+        date.format(),
+        type
+      );
 
-    expect(result.id).not.toBeNaN();
+      expect(result.id).not.toBeNaN();
 
-    const connection = await db.getConnection();
-    const testResult = await connection.query(
-      `SELECT COUNT(*) AS count
-      FROM Grades
-      WHERE ID = ?`,
-      [result.id]
-    );
+      const connection = await db.getConnection();
+      const testResult = await connection.query(
+        `SELECT COUNT(*) AS count
+        FROM Grades
+        WHERE ID = ?`,
+        [result.id]
+      );
 
-    connection.release();
-    expect(testResult[0].count).toBe(1);
+      connection.release();
+      expect(testResult[0].count).toBe(1);
 
-    await Grade.remove(result.id);
+      await Grade.remove(result.id);
+
+    } catch(error) {
+      expect(error).toHaveProperty('message', 'Invalid grade date')
+    }
+
 
   });
   
@@ -124,118 +130,117 @@ describe('Tests about insertion of a grade by teacher', () => {
     expect(error).toHaveProperty('message', 'Missing or invalid subject id');
   }
   
-});
+  });
 
-
-test("it should throw Error with message \'Missing or invalid studentId' when the studentId is not passed", async() =>{
-  const subjectId = "1";
-  const grade = "6.0";
-  const type = "Oral";
-  const date = moment.utc();
-  
-  try{
-    const result = await Grade.addGrade(
-      subjectId,
-      undefined,
-      grade,
-      date.format(),
-      type
-  );
-
-}catch(error){
-  expect(error).toBeInstanceOf(Error);
-  expect(error).toHaveProperty('message', 'Missing or invalid student id');
-}
-
-});
-
-test("it should throw Error with message \'Missing or invalid grade' when the grade is not passed", async() =>{
-  const subjectId = "1";
-  const studentId = "868d6ec1dfc8467f6d260c48b5620543"
-  const type = "Oral";
-  const date = moment.utc();
-  
-  try{
-    const result = await Grade.addGrade(
-      subjectId,
-      studentId,
-      undefined,
-      date.format(),
-      type
-  );
+  test("it should throw Error with message \'Missing or invalid studentId' when the studentId is not passed", async() =>{
+    const subjectId = "1";
+    const grade = "6.0";
+    const type = "Oral";
+    const date = moment.utc();
+    
+    try{
+      const result = await Grade.addGrade(
+        subjectId,
+        undefined,
+        grade,
+        date.format(),
+        type
+    );
 
   }catch(error){
     expect(error).toBeInstanceOf(Error);
-    expect(error).toHaveProperty('message', 'Missing or invalid grade');
-  }
-});
-
-
-test("it should throw Error with message \'Missing or invalid grade date' when the grade is not passed", async() =>{
-  const subjectId = "1";
-  const studentId = "868d6ec1dfc8467f6d260c48b5620543"
-  const grade = "6.0"
-  const type = "Oral";
-
-  try{
-    const result = await Grade.addGrade(
-      subjectId,
-      studentId,
-      grade,
-      undefined,
-      type
-  );
-
-  }catch(error){
-    expect(error).toBeInstanceOf(Error);
-    expect(error).toHaveProperty('message', 'Missing or invalid grade date');
-  }
-});
-
-
-test("it should throw Error with message \'Invalid grade' when the grade is not valid", async() =>{
-  const subjectId = "1";
-  const studentId = "868d6ec1dfc8467f6d260c48b5620543"
-  const grade = 6.35;
-  const type = "Oral";
-  const date = moment.utc();
-  
-  try{
-    const result = await Grade.addGrade(
-      subjectId,
-      studentId,
-      grade,
-      date.format,
-      type
-  );
-
-  }catch(error){
-    expect(error).toBeInstanceOf(Error);
-    expect(error).toHaveProperty('message', 'Invalid grade');
-  }
-});
-
-test("it should throw Error with message \'Missing or invalid type' when the type is not passed", async() =>{
-  const subjectId = "1";
-  const studentId = "868d6ec1dfc8467f6d260c48b5620543"
-  const grade = "6.0";
-  const date = moment.utc();
-  
-  try{
-    const result = await Grade.addGrade(
-      subjectId,
-      studentId,
-      grade,
-      date.format,
-      undefined
-  );
-
-  }catch(error){
-    expect(error).toBeInstanceOf(Error);
-    expect(error).toHaveProperty('message', 'Missing or invalid type');
+    expect(error).toHaveProperty('message', 'Missing or invalid student id');
   }
 
-});
+  });
+
+  test("it should throw Error with message \'Missing or invalid grade' when the grade is not passed", async() =>{
+    const subjectId = "1";
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const type = "Oral";
+    const date = moment.utc();
+    
+    try{
+      const result = await Grade.addGrade(
+        subjectId,
+        studentId,
+        undefined,
+        date.format(),
+        type
+    );
+
+    }catch(error){
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toHaveProperty('message', 'Missing or invalid grade');
+    }
+  });
+
+
+  test("it should throw Error with message \'Missing or invalid grade date' when the grade is not passed", async() =>{
+    const subjectId = "1";
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = "6.0"
+    const type = "Oral";
+
+    try{
+      const result = await Grade.addGrade(
+        subjectId,
+        studentId,
+        grade,
+        undefined,
+        type
+    );
+
+    }catch(error){
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toHaveProperty('message', 'Missing or invalid grade date');
+    }
+  });
+
+
+  test("it should throw Error with message \'Invalid grade' when the grade is not valid", async() =>{
+    const subjectId = "1";
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = 6.35;
+    const type = "Oral";
+    const date = moment.utc();
+    
+    try{
+      const result = await Grade.addGrade(
+        subjectId,
+        studentId,
+        grade,
+        date.format,
+        type
+    );
+
+    }catch(error){
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toHaveProperty('message', 'Invalid grade');
+    }
+  });
+
+  test("it should throw Error with message \'Missing or invalid type' when the type is not passed", async() =>{
+    const subjectId = "1";
+    const studentId = "868d6ec1dfc8467f6d260c48b5620543"
+    const grade = "6.0";
+    const date = moment.utc();
+    
+    try{
+      const result = await Grade.addGrade(
+        subjectId,
+        studentId,
+        grade,
+        date.format,
+        undefined
+    );
+
+    }catch(error){
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toHaveProperty('message', 'Missing or invalid type');
+    }
+
+  });
 
 });
 
@@ -341,7 +346,7 @@ describe("Tests about updating grades", () => {
     const studentId = "868d6ec1dfc8467f6d260c48b5620543"
     const grade = "6.0";
     const type = "Oral";
-    const date = moment.utc();
+    const date = moment.utc().weekday() == 0 ? moment.utc().subtract(1, 'days') : moment.utc();
 
     const result = await Grade.addGrade(
       subjectId,
@@ -376,7 +381,7 @@ describe("Tests about updating grades", () => {
     const studentId = "868d6ec1dfc8467f6d260c48b5620543"
     const grade = "6.0";
     const type = "Oral";
-    const date = moment.utc();
+    const date = moment.utc().weekday() == 0 ? moment.utc().subtract(1, 'days') : moment.utc();
 
     const result = await Grade.addGrade(
       subjectId,
@@ -388,14 +393,14 @@ describe("Tests about updating grades", () => {
 
     expect(result.id).not.toBeNaN();
     
-    const gradeID = result.id;
-      try{
-        const updateResult = await Grade.updateGrade(undefined, 7.0, 'Written');   
-      }
-      catch(error){
-        expect(error).toHaveProperty("message", "Missing or invalid grade id");
-        await Grade.remove(result.id);
-      }
+    
+    try{
+      const updateResult = await Grade.updateGrade(undefined, 7.0, 'Written');   
+    }
+    catch(error){
+      expect(error).toHaveProperty("message", "Missing or invalid grade id");
+      await Grade.remove(result.id);
+    }
   });
 
 
@@ -405,7 +410,7 @@ describe("Tests about updating grades", () => {
     const studentId = "868d6ec1dfc8467f6d260c48b5620543"
     const grade = "6.0";
     const type = "Oral";
-    const date = moment.utc();
+    const date = moment.utc().weekday() == 0 ? moment.utc().subtract(1, 'days') : moment.utc();
 
     const result = await Grade.addGrade(
       subjectId,
@@ -434,7 +439,7 @@ describe("Tests about updating grades", () => {
     const studentId = "868d6ec1dfc8467f6d260c48b5620543"
     const grade = "6.0";
     const type = "Oral";
-    const date = moment.utc();
+    const date = moment.utc().weekday() == 0 ? moment.utc().subtract(1, 'days') : moment.utc();
 
     const result = await Grade.addGrade(
       subjectId,
@@ -461,7 +466,7 @@ describe("Tests about updating grades", () => {
     const studentId = "868d6ec1dfc8467f6d260c48b5620543"
     const grade = "6.0";
     const type = "Oral";
-    const date = moment.utc();
+    const date = moment.utc().weekday() == 0 ? moment.utc().subtract(1, 'days') : moment.utc();
 
     const result = await Grade.addGrade(
       subjectId,
