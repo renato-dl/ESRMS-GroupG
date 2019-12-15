@@ -6,11 +6,11 @@ import './TeacherAssignmentDetails.scss';
 export const TeacherAssignmentDetails = (props) => (
   <Modal dimmer open className="assignment-detail" size="small">
     <Modal.Header>
-      <span>{props.assignment.Title}</span>
+      <span>{props.assignment ? props.assignment.Title : "none"}</span>
       <Icon onClick={props.onClose} className="close-icn" name="close" />
     </Modal.Header>
     <Modal.Content>
-      <p>{props.assignment.Description}</p>
+      <p>{props.assignment ? props.assignment.Description : "none"}</p>
       <p><b>Due date:</b> <span>{moment(props.assignment.DueDate).format('MMMM Do')}</span></p>
     </Modal.Content>
     <Modal.Actions>

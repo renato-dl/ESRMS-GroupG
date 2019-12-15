@@ -17,12 +17,14 @@ export class TeacherAssignmentDelete extends Component {
 
   componentDidMount() {
     const {assignment} = this.props;
-    this.setState({
-      id: assignment.ID,
-      title: assignment.Title,
-      description: assignment.Description,
-      duedate: new Date(assignment.DueDate)
-    });
+    if(assignment){
+      this.setState({
+        id: assignment.ID,
+        title: assignment.Title,
+        description: assignment.Description,
+        duedate: new Date(assignment.DueDate)
+      });
+    }    
   };
 
   onSave = async () => {
