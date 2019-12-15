@@ -1098,9 +1098,9 @@ describe('Tests about deletion of accounts', () =>{
 
   });
 
-});describe('Tests about classes', () => {
+});
 
-
+describe('Tests about classes', () => {
   test('It should not throw errors while getting the list of classes', async () => {
     expect(ClassModel.getClasses()).resolves.not.toThrow();
   });
@@ -1139,3 +1139,53 @@ describe('Tests about deletion of accounts', () =>{
   });
 
 });
+
+describe('Tests about visualization of teachers data', () => {
+
+  test('It should show data of teachers who are not coordinators', async () =>{
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const result = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(result).toEqual({
+      id: expect.anything()
+    });
+
+    const teachers = await User.getTeachers();
+    expect(teachers).toEqual(
+      expect.arrayContaining(
+          [
+              expect.objectContaining(
+                  {
+                      "ID": result.id,
+                      "FirstName": testFirstName,
+                      "LastName": testLastName,
+                  }
+      )]));
+
+    //delete result for future tests
+    await User.remove(result.id);
+
+  });
+
+  
+
+
+});
+

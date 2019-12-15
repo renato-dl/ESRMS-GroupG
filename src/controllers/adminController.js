@@ -223,9 +223,7 @@ class AdminController extends BaseController {
   }
 
   async getTeachers(req, res) {
-    const teachers = await User.getTeachers({
-      page: req.query.page, pageSize: req.query.pageSize
-    });
+    const teachers = await User.getTeachers();
     res.send(teachers);
   }
 
