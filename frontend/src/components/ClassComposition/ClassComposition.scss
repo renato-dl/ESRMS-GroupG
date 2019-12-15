@@ -2,8 +2,13 @@
   .cog{
     cursor: pointer;
       
-  }
+  } 
   i{
     float: left;
-  }
+  } 
+}
+
+.classDeleteIcon:hover{
+  cursor: pointer;
+  color: red;
 }
