@@ -4,6 +4,9 @@ import {Table, Icon, Container, Button} from 'semantic-ui-react';
 import ClassCompositionDetail from './ClassCompositionDetail/ClassCompositionDetail';
 import { NoData } from '../NoData/NoData';
 import './ClassComposition.scss';
+import {ClassDelete} from './ClassDelete';
+import AddNewClass from './AddNewClass';
+import * as toastr from 'toastr';
 
 export class ClassComposition extends React.Component{
   constructor(props) {
@@ -13,13 +16,20 @@ export class ClassComposition extends React.Component{
       classId: null, 
       className: null, 
       enrolledStudents: [],
-      isStudentsOpen: false
+      isStudentsOpen: false, 
+      deleteClassModalOpen: false,
+      deleteClassData: null, 
+      addClassModalOpen: false
+    }
   }
-}
   async componentDidMount(){
+    this.fetchClasses();
+  }
+
+  async fetchClasses(){
     const response = await api.admin.getClasslist();
     if (response) {
-      console.log(response)
+      //console.log(response)
       this.setState({Class_composition:response.data})
     } 
   }
@@ -28,8 +38,40 @@ export class ClassComposition extends React.Component{
   };
 
   onClassDetailClose = () => {
-    this.setState({classId: null, className: null, isStudentsOpen: false});
+    this.setState({classId: null, className: null, isStudentsOpen: false, deleteClassModalOpen: false});
   };
+
+  addClass = () => {
+    this.setState({addClassModalOpen: true});
+  }  
+
+  onAddClassClose = () => {
+    this.setState({addClassModalOpen: false});
+  }
+
+  deleteClass = (data) => {
+    this.setState({ deleteClassData: data, deleteClassModalOpen: true });
+  } 
+  
+  onDeleteClass = async() => {
+    const request = {
+      id: this.state.deleteClassData.ID
+    }
+    try{
+      const response = await api.admin.deleteClass(request);   
+
+      if (response.data.success) {
+          await this.fetchClasses();
+          toastr.success('Class removed successfully!');
+      } else {
+          toastr.error(response.data.msg);
+      }
+    }
+    catch(e){
+      toastr.error(e);
+    }    
+    this.setState({ deleteClassData: null, deleteClassModalOpen: false })
+  }
 
   render() {
     if(this.state.Class_composition.length) {
@@ -39,7 +81,10 @@ export class ClassComposition extends React.Component{
             <Icon name='braille'/> 
             Class Composition
           </h3>
-          {/* <h2 className="title">Student {this.props.match.params.studentID}'s score:</h2> */}
+          <Button color='blue' onClick={this.addClass}>
+            Add class
+          <Icon className="plus icon" name="plus"/>  
+          </Button>
           <Table columns={4}>
           <Table.Header>
               <Table.Row>
@@ -65,6 +110,10 @@ export class ClassComposition extends React.Component{
                     }}>Students 
                     <Icon className="cog icon" name="cog"/>            
                     </Button>
+                    <Button color='red' onClick={() =>this.deleteClass(data)}>
+                      Delete
+                    <Icon className="delete icon" name="delete"/>  
+                    </Button>
                     </Table.Cell>
               </Table.Row>
             )} 
@@ -79,6 +128,21 @@ export class ClassComposition extends React.Component{
                   this.onClassDetailClose();
                 }}
               />
+            }
+            {this.state.deleteClassModalOpen &&
+              <ClassDelete
+                class={this.state.deleteClassData}
+                onClose={this.onClassDetailClose}
+                onDelete={this.onDeleteClass}
+              />
+            }
+            {this.state.addClassModalOpen &&
+            <AddNewClass
+              onClose={this.onAddClassClose}
+              onSave={() =>{
+                this.fetchClasses();
+              }}
+            />
             }
         </Container>
         )

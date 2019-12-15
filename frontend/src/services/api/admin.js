@@ -58,4 +58,16 @@ export class AdminAPIService extends BaseAPIService {
   removeStudent(studentID) {
     return this.delete('/admin/student', {ID: studentID});
   }
+
+  getTeachers(){
+    return this.get('/admin/teachers');
+  }
+
+  addNewClass(data){
+    return this.post('/admin/class',data);
+  }
+
+  deleteClass(data){
+    return this.delete('/admin/class', data);
+  }
 }

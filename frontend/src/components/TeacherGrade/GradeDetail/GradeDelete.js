@@ -88,9 +88,9 @@ export class GradeDelete extends Component {
         <h3>
             Are you sure you want to delete this grade?
         </h3>
-        <p>Student: {this.state.name} {this.state.surname}</p>
+        <p><b>Student:</b> {this.state.name} {this.state.surname}</p>
         <p>{this.state.type} {this.state.value}</p>
-        <p>Date: { moment(this.state.date).format('LL')}</p>
+        <p><b>Date:</b> { moment(this.state.date).format('LL')}</p>
         </Modal.Content>
         <Modal.Actions>
         <Button basic color='red' onClick={this.onClose}>

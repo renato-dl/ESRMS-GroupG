@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./TeacherAssignmentDetails.scss";
 import {api} from '../../../services/api';
 import * as toastr from 'toastr';
+import moment from 'moment';
 
 export class TeacherAssignment extends Component {
   state = {
@@ -85,6 +86,11 @@ export class TeacherAssignment extends Component {
     this.props.onSave();
   };
 
+  isWeekday = date => {
+    const day = moment(date).day();
+    return day !== 0 && day !== 6;
+  };
+
   render() {
     return (
       <Modal dimmer open className="assignment-detail" size="small">
@@ -116,6 +122,7 @@ export class TeacherAssignment extends Component {
                   selected={this.state.duedate}
                   onChange={this.handleDateChange}
                   minDate={new Date()}
+                  filterDate={this.isWeekday}
                 />
               </Form.Field>
             </Form.Group>
