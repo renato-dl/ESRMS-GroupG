@@ -61,10 +61,12 @@ export class Assignments extends React.Component {
   // NOTE: This is an example of how to add a class to the event and style it.
   // please assign your custom class name and also don't forget to add the style to Calendar.scss and global.scss
   eventPropGetter = (event) => {
-    const colors = ['red', 'blue', 'orange'];
-    const dateNumber = moment(event.end).date();
-    const randomIndex = parseInt((dateNumber + (Math.random() * 10)) % colors.length);
-    const className = colors[randomIndex];
+    const colors = {"Mathematics": 'red', "Physics":'blue'};
+    const title = event.title;
+    const subject = title.substr(0, title.indexOf(':')); 
+    let className = 'green'
+    if (colors[subject])
+      className = colors[subject];
 
     return { className: className };
   }
