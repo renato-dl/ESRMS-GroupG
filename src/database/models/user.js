@@ -486,6 +486,25 @@ class User extends Model {
     }
     return false;
   }
+
+
+  async getTeachers() {
+
+    const connection = await this.db.getConnection();
+    const teachers = await connection.query(
+      `SELECT *
+      FROM Users
+      WHERE isTeacher = true 
+      AND ID NOT IN (SELECT CoordinatorId FROM Classes)`
+    );
+
+    connection.release();
+
+    if(!teachers.length){
+      return {message: "No Entity found"};
+    }
+    return teachers;
+  }
 }
 
 export default new User();
