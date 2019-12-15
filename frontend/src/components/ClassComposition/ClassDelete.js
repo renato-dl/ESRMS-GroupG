@@ -13,7 +13,7 @@ export class ClassDelete extends React.Component {
         </Modal.Header>
         <Modal.Content>
           <h3>
-            Are you sure you want to delete class {this.props.class.Name}?
+            Are you sure you want to delete class {this.props.class ? this.props.class.Name : 'none'}?
           </h3>
         </Modal.Content>
         <Modal.Actions>

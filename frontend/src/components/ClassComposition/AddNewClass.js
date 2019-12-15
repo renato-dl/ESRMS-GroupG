@@ -26,7 +26,7 @@ export class AddNewClass extends Component {
       this.setState({teacherOptions: options})
     }
     catch(e){
-      console.log(e);
+      //console.log(e);
     }
   }
 
