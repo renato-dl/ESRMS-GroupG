@@ -60,10 +60,10 @@ export class TeacherAssignmentDelete extends Component {
         <h3>
             Are you sure you want to delete this assignment?
         </h3>
-        <p>Title: {this.state.title}</p>
-        <p>Description: {this.state.description}</p>
-        <p>Attachment: {this.state.attachment}</p>
-        <p>Due date: { moment(this.state.duedate).format('LL')}</p>
+        <p><b>Title:</b> {this.state.title}</p>
+        <p><b>Description:</b> {this.state.description}</p>
+        <p><b>Attachment:</b> {this.state.attachment}</p>
+        <p><b>Due date:</b> { moment(this.state.duedate).format('LL')}</p>
         </Modal.Content>
         <Modal.Actions>
         <Button basic color='red' onClick={this.props.onDeleteClose}>
