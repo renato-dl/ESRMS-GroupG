@@ -492,7 +492,7 @@ class User extends Model {
 
     const connection = await this.db.getConnection();
     const teachers = await connection.query(
-      `SELECT *
+      `SELECT ID, FirstName, LastName
       FROM Users
       WHERE isTeacher = true 
       AND ID NOT IN (SELECT CoordinatorId FROM Classes)`
