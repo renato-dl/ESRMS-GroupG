@@ -38,6 +38,7 @@ class Topic extends Model {
     );
 
     if(selectResult.length != 1) {
+      connection.release();
       throw new Error('Unauthorized');
     };
 
@@ -67,6 +68,7 @@ class Topic extends Model {
     );
 
     if(checkTopic.length != 1) {
+      connection.release();
       throw new Error('The topic does not exist!');
     };
 

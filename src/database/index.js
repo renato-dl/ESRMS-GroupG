@@ -38,6 +38,18 @@ class Database {
   getDateFormatString() {
     return 'YYYY-MM-DD 00:00:00';
   }
+
+  getActiveConnections() {
+    return this.instance.activeConnections();
+  }
+
+  getTotalConnections() {
+    return this.instance.totalConnections();
+  }
+
+  getIdleConnections() {
+    return this.instance.idleConnections();
+  }
 }
 
 export default new Database();

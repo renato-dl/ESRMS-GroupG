@@ -14,3 +14,11 @@ export function getHour() {
     return 0;
   }
 }
+
+export function isSchoolOpen() {
+  const currentTime = moment.utc();
+  if (currentTime.weekday() == 0) {
+    return false;
+  }
+  return true;
+}
