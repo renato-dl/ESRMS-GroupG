@@ -15,7 +15,7 @@ export class TeacherAssignment extends Component {
     id: null,
     title: '',
     description: '',
-    duedate: new Date(),
+    duedate: moment().add(1, 'days').toDate(),
     classId: '',
     subjectId: '',
     isSaving: false
@@ -124,7 +124,7 @@ export class TeacherAssignment extends Component {
                 <DatePicker
                   selected={this.state.duedate}
                   onChange={this.handleDateChange}
-                  minDate={new Date()}
+                  minDate={moment().add(1, 'days').toDate()}
                   locale="en"
                   filterDate={this.isWeekday}
                 />
