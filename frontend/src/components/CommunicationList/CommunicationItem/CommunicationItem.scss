@@ -4,6 +4,10 @@
   float: left;
   width: 20em;
   position: relative;
+
+  @media only screen and (min-device-width : 30px) and (max-device-width : 1024px) and (orientation : portrait) and (-webkit-min-device-pixel-ratio: 1) {  
+    margin-left: -30px; 
+  }
   
   .wrapper {
     text-decoration:none;
