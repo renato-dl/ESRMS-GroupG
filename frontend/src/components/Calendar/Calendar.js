@@ -4,6 +4,13 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './Calendar.scss';
 
+moment.locale('en', {
+  week: {
+      dow: 1,
+      doy: 1,
+  },
+});
+BigCalendar.momentLocalizer(moment);
 const localizer = BigCalendar.momentLocalizer(moment);
 
 export const Calendar = (props) => {

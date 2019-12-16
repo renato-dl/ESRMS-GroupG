@@ -4,6 +4,14 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './TeacherAssignmentCalendar.scss';
 
+moment.locale('en', {
+    week: {
+        dow: 1,
+        doy: 1,
+    },
+});
+BigCalendar.momentLocalizer(moment);
+
 const localizer = BigCalendar.momentLocalizer(moment);
 
 export const TeacherAssignmentCalendar = (props) => {
