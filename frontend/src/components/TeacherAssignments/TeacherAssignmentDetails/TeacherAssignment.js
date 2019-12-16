@@ -15,7 +15,7 @@ export class TeacherAssignment extends Component {
     id: null,
     title: '',
     description: '',
-    duedate: moment().add(1, 'days').toDate(),
+    date: moment().add(1, 'days').toDate(),
     classId: '',
     subjectId: '',
     isSaving: false
@@ -43,8 +43,8 @@ export class TeacherAssignment extends Component {
     this.setState({[name]: value});
   };
 
-  handleDateChange = (duedate) => {
-    this.setState({duedate: duedate});
+  handleDateChange = (date) => {
+    this.setState({date});
   };
 
   onSave = async () => {
@@ -61,7 +61,7 @@ export class TeacherAssignment extends Component {
         subjectId: this.state.subjectId,
         title: this.state.title,
         description: this.state.description,
-        dueDate: this.state.duedate.toUTCString()
+        dueDate: this.state.date.toUTCString()
       };
 
       if(!this.state.id) {
@@ -122,7 +122,7 @@ export class TeacherAssignment extends Component {
               <Form.Field>
                 <LabelDetail>Assignment due date</LabelDetail>
                 <DatePicker
-                  selected={this.state.duedate}
+                  selected={this.state.date}
                   onChange={this.handleDateChange}
                   minDate={moment().add(1, 'days').toDate()}
                   locale="en"
