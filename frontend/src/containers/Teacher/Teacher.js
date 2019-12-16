@@ -1,8 +1,10 @@
 import React from 'react';
 import { api } from '../../services/api';
-import {Icon,List, Container,Button} from 'semantic-ui-react';
+import {Icon, Container,Button, Card, Image} from 'semantic-ui-react';
 import './Teacher.scss';
 import { NoData } from '../../components/NoData/NoData';
+
+import SubjectIcon from '../../assets/images/subject4.png';
 
 export class Teacher extends React.Component{
   state = {
@@ -39,7 +41,7 @@ export class Teacher extends React.Component{
                 Teaching Activity
               </h3>
 
-              <List relaxed>
+              {/* <List relaxed>
                   {this.state.subjectsList.map((subject, index) =>
                     <List.Item className="myListItem" key={index}>
                         <List.Icon name='book' size='large' verticalAlign='middle' />
@@ -69,7 +71,40 @@ export class Teacher extends React.Component{
                         </List.Content>
                     </List.Item>
                   )}
-              </List>
+              </List> */}
+
+
+
+              <Card.Group>
+                {this.state.subjectsList.map((subject, index) =>
+                    <Card style = {{borderLeft: "5px solid #008272", width:'334px', borderRadius: '0'}} key={index}>
+                        <Card.Content>
+                            <Image
+                            floated='right'
+                            size='mini'
+                            src={SubjectIcon}
+                            />
+                            <Card.Header>{subject.subject.toUpperCase()}</Card.Header>
+                            <Card.Meta><h3>Class: {subject.class}</h3></Card.Meta>
+                        </Card.Content>
+                        <Card.Content extra style={{textAlign:'center'}}>
+                            <Button className='subjectButtons' color='vk'  onClick={() => this.onSubjectClick(subject.subjectId,subject.subject, subject.classId)}>
+                            Topics
+                            </Button>
+                            <Button className='subjectButtons'  
+                            color='vk' 
+                            onClick={()=>this.onSubjectAssignmentClick(subject.subjectId, subject.subject, subject.classId)}>
+                            Assignments
+                            </Button>
+                            <Button className='subjectButtons'  color='vk' onClick={()=>this.onSubjectGradeClick(subject.subjectId,subject.subject, subject.classId)}>
+                            Grades
+                            </Button>
+                        </Card.Content>
+                    </Card>
+                )}
+              </Card.Group>
+
+
           </Container>
       );
     }
