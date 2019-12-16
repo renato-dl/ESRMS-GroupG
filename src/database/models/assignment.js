@@ -126,13 +126,13 @@ class Assignment extends Model {
     let query;
 
     if (dateRange.from && dateRange.to) {
-        query =`SELECT ID, Title, Description, DueDate  
+        query =`SELECT ID, Title, Description, DueDate, AttachmentFile
         FROM Assignments
         WHERE ClassId = ? AND SubjectId = ?
         AND DueDate >= ? AND DueDate <= ?
         ORDER BY DueDate`;
     } else {
-        query =`SELECT ID, Title, Description, DueDate  
+        query =`SELECT ID, Title, Description, DueDate, AttachmentFile  
         FROM Assignments
         WHERE ClassId = ? AND SubjectId = ?
         ORDER BY DueDate`;

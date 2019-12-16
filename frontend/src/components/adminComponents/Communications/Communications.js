@@ -21,7 +21,7 @@ export class Communications extends React.Component {
 
   fetchCommunications = async () => {
     const communications = await api.communication.list();
-    console.log(communications.data.communications);
+
     this.setState({ 
       communications: communications.data.communications, 
       isComminicationInfoModalOpen: false, 

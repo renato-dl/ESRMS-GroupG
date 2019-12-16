@@ -1,5 +1,5 @@
 import React from 'react';
-import {Icon, Modal, Button} from 'semantic-ui-react';
+import {Icon, Modal} from 'semantic-ui-react';
 import moment from 'moment';
 import './AssignmentDetails.scss';
 
