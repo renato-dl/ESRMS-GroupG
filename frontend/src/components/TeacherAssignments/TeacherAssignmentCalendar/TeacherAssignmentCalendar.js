@@ -32,7 +32,7 @@ export const TeacherAssignmentCalendar = (props) => {
         views={['month']}
         startAccessor="start"
         endAccessor="end"
-        style={{height: 400}}
+        style={{height: 'calc(100vh - 240px)', minHeight: '400px'}}
         onDoubleClickEvent={props.onDoubleClickEvent}
         onNavigate={props.onNavigate}
         eventPropGetter={props.eventPropGetter || eventPropGetter}

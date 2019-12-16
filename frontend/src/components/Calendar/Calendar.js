@@ -30,7 +30,7 @@ export const Calendar = (props) => {
         views={['month']}
         startAccessor="start"
         endAccessor="end"
-        style={{height: 685}}
+        style={{height: 'calc(100vh - 230px)', minHeight: '400px'}}
         onDoubleClickEvent={props.onDoubleClickEvent}
         onNavigate={props.onNavigate}
         eventPropGetter={props.eventPropGetter || eventPropGetter}
