@@ -289,7 +289,7 @@ describe("Tests about registering roll calls in a class for a given date ", () =
 
     try {
       const insertRollCall = await ClassAttendance.registerAttendanceForToday(createClass.id);
-      expect(isSchoolOpen()).not.toBe(true);
+      expect(isSchoolOpen()).toBe(true);
 
       const checkRollCall = await ClassAttendance.findById(insertRollCall.id);
       expect(checkRollCall.ClassId).toBe(createClass.id);
@@ -346,7 +346,7 @@ describe("Tests about registering roll calls in a class for a given date ", () =
       //insert new row in classAttendance table
       insertRollCall = await ClassAttendance.create({
         ClassId: createClass.id,
-        Date : date.format(ClassAttendance.db.getDateFormatString())
+        Date : moment.utc().format(ClassAttendance.db.getDateFormatString())
       });
     }    
 
