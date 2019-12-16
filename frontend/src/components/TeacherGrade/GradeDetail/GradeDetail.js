@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import './GradeDetail.scss';
 import {Button, Modal, Form, LabelDetail, Icon} from 'semantic-ui-react';
-import DatePicker from "react-datepicker";
 import NumericInput from 'react-numeric-input';
 import "react-datepicker/dist/react-datepicker.css";
 import { api } from '../../../services/api';
 import * as toastr from 'toastr';
+
+import moment from 'moment';
+import DatePicker , { registerLocale } from "react-datepicker";
+import en from "date-fns/locale/en-GB";
+registerLocale("en", en);
 
 export class GradeDetail extends Component {
   state = {
@@ -126,6 +130,11 @@ export class GradeDetail extends Component {
     this.props.onClose();
   };
 
+  isWeekday = date => {
+    const day = moment(date).day();
+    return day !== 0;
+  };
+
   render() {
     return (
       <Modal dimmer open className="grade-detail" size="small">
@@ -153,6 +162,8 @@ export class GradeDetail extends Component {
                   selected={this.state.date}
                   onChange={this.handleDateChange}
                   maxDate={new Date()}
+                  locale="en"
+                  filterDate={this.isWeekday}
                 />              
               </Form.Field>              
             </Form.Group>
