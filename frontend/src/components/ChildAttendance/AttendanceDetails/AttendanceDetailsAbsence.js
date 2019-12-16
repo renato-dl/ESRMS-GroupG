@@ -12,8 +12,8 @@ export const AttendanceDetailsAbsence = (props) => (
     </Modal.Header>
     <Modal.Content>
       <h3>Date: <span>{moment(props.attendance.Date).format('MMMM Do')}</span></h3>
-      <h3>Status: <span>{props.attendance.title}</span></h3>
-      <h3>RecordTeacherName: <span>{props.attendance.EntryTeacherName}</span></h3>
+      {/* <h3>Status: <span>{props.attendance.title}</span></h3> */}
+      <h3>Registered by teacher:  <span>{props.attendance.EntryTeacherName}</span></h3>
     </Modal.Content>
   </Modal>
 );
