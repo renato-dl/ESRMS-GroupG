@@ -16,14 +16,14 @@ exports.seed = function(knex) {
           ClassId: 1,
           Title: 'Kinematics problems',
           Description: 'Exercises 15 to 19 page 87',
-          DueDate: '2019-12-15 00:00:00'
+          DueDate: '2019-12-17 00:00:00'
         },
         {
           SubjectId: 3,
           ClassId: 1,
           Title: 'Kinematics',
           Description: 'Chapter 3, paragraphs 4 to 8',
-          DueDate: '2019-12-15 00:00:00'
+          DueDate: '2019-12-17 00:00:00'
         },
       ]);
     });
