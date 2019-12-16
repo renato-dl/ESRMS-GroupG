@@ -155,7 +155,7 @@ export class ChildAttendance extends React.Component{
           />      
           </div>
 
-        {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='Absence'&&
+        {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='Absent'&&
           <AttendanceDetailsAbsence
             attendance={this.state.attendanceDataForModal}
             onClose={this.closeAttendanceModal}

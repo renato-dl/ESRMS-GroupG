@@ -11,9 +11,9 @@ export const AttendanceDetailsLateentry = (props) => (
     </Modal.Header>
     <Modal.Content>
       <h3>Date: <span>{moment(props.attendance.Date).format('MMMM Do')}</span></h3>
-      <h3>Status: <span>{props.attendance.LateEntry=='1h'?'With in 10 mins':'Second hour'}</span></h3>
-      <h3>EntryTeacherName: <span>{props.attendance.EntryTeacherName}</span></h3>
-      <h3>LateEntry: <span>{props.attendance.LateEntry}</span></h3>
+      <h3>Status: <span>Late Entry</span></h3>
+      <h3>Entry Teacher Name: <span>{props.attendance.EntryTeacherName}</span></h3>
+      <h3>LateEntry: <span>{props.attendance.LateEntry=='1h'?'With in 10 mins':'Second hour'}</span></h3>
       </Modal.Content>
   </Modal>
 );

@@ -11,8 +11,8 @@ export const AttendanceDetailsEarlyexit = (props) => (
     </Modal.Header>
     <Modal.Content>
       <h3>Date: <span>{moment(props.attendance.Date).format('MMMM Do')}</span></h3>
-      <h3>Status: <span>EarlyExit</span></h3>
-      <h3>ExitTeacherName: <span>{props.attendance.ExitTeacherName}</span></h3>
+      <h3>Status: <span>Early Exit</span></h3>
+      <h3>Exit Teacher Name: <span>{props.attendance.ExitTeacherName}</span></h3>
       <h3>EarlyExit: <span>{props.attendance.EarlyExit}</span></h3>
      </Modal.Content>
   </Modal>
