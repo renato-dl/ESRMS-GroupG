@@ -73,7 +73,9 @@
       "/dist/",
       "/node_modules/"
     ],
-    "setupFilesAfterEnv": ["<rootDir>/src/config/jest.setup.js"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/config/jest.setup.js"
+    ]
   },
   "jestSonar": {
     "reportPath": "coverage",
