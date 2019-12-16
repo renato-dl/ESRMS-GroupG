@@ -59,27 +59,5 @@
       }
     }
 
-    .dropzone {
-      outline: none !important;
-      width: 100%;
-      border: 2px dashed gray;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 65px;
-
-      &.active {
-        border-color: blue;
-      }
-
-      &.reject {
-        border-color: red;
-      }
-
-      &.accept {
-        border-color: green;
-      }
-    }
-  
   }
   

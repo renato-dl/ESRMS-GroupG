@@ -7,9 +7,9 @@ import * as toastr from 'toastr';
 import moment from 'moment';
 import DatePicker , { registerLocale } from "react-datepicker";
 import en from "date-fns/locale/en-GB";
-import Dropzone from 'react-dropzone';
 import mime from 'mime';
 import {FilePreview} from '../../FilePreview/FilePreview.js';
+import {FileUpload} from '../../FileUpload/FileUpload';
 
 registerLocale("en", en);
 
@@ -28,10 +28,6 @@ export class TeacherAssignment extends Component {
 
   onDrop = (files) => {
     this.setState({ file: files[0] });
-  }
-
-  onDropRejected = (files) => {
-    toastr.error(files[0].name + ' is not valid. Please upload a [.doc, .docx, .pdf] file under 5MB.');
   }
 
   componentDidMount() {
@@ -153,35 +149,7 @@ export class TeacherAssignment extends Component {
               </Form.Field>
             </Form.Group>
             <Form.Field>
-            {!this.state.file && !this.state.attachment &&
-              <Dropzone
-                accept={[mime.getType('doc'), mime.getType('docx'), mime.getType('pdf')]} 
-                onDrop={this.onDrop}
-                onDropRejected={this.onDropRejected}
-                maxSize={5 * 1024 * 1024}
-                multiple={false}
-              >
-                {({getRootProps, getInputProps, isDragAccept, isDragActive, isDragReject}) => {
-                  const classNames = ['dropzone'];
-                  if (isDragAccept) {
-                    classNames.push('accept');
-                  } else if (isDragReject) {
-                    classNames.push('reject');
-                  } else if (isDragActive) {
-                    classNames.push('active')
-                  }
-
-                  return (
-                    <section className="container">
-                      <div {...getRootProps({className: classNames.join(' ')})}>
-                        <input {...getInputProps()} />
-                        <p>Drag 'n' drop a file here, or click to select</p>
-                      </div>
-                    </section>
-                  );
-                }}
-            </Dropzone>
-            }
+            {!this.state.file && !this.state.attachment && <FileUpload onDrop={this.onDrop} />}
             {(this.state.file || this.state.attachment) &&
               <FilePreview 
                 type={

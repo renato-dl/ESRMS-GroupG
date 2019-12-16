@@ -15,7 +15,7 @@ const upload = multer({
   fileFilter: (req, file, cb)  =>{
     const isValidType = validateFileType(file.mimetype);
     if(!isValidType){
-      return cb (new Error("Allowed file types are: PDF, DOC, DOCX"), false);
+      return cb (new Error("Allowed file types are: PDF, DOC, DOCX, JPG, JPEG"), false);
     }
 
     cb(null, true);
