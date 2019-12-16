@@ -21,7 +21,7 @@ class Communication extends Model {
     IsImportant = !!IsImportant;
     
     const format = this.db.getDateFormatString();
-    DueDate = DueDate ? moment.utc(DueDate).format(format) : moment.utc(format);
+    DueDate = DueDate ? moment.utc(DueDate).format(format) : moment().utc().format(format);
 
     const communicationID = await this.create({ Title, Description, IsImportant, DueDate });
     return await this.findById(communicationID);

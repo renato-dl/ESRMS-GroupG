@@ -13,7 +13,7 @@ export class CommunicationDetails extends React.Component {
     Title: '',
     Description: '',
     IsImportant: false,
-    DueDate: null,
+    DueDate: new Date(),
     errors: {}
   }
 
@@ -87,7 +87,7 @@ export class CommunicationDetails extends React.Component {
                   placeholderText="Expiration date"
                   name="DueDate"
                   minDate={new Date()}
-                  selected={new Date(this.state.DueDate || Date.now())}
+                  selected={this.state.DueDate}
                   onChange={this.onDateChange}
                   locale="en"
                 />
