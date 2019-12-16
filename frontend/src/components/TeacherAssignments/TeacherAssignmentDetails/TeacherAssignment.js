@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import {Button, Modal, Form, LabelDetail, Icon} from 'semantic-ui-react'
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./TeacherAssignmentDetails.scss";
 import {api} from '../../../services/api';
 import * as toastr from 'toastr';
 import moment from 'moment';
+
+import DatePicker , { registerLocale } from "react-datepicker";
+import en from "date-fns/locale/en-GB";
+registerLocale("en", en);
 
 export class TeacherAssignment extends Component {
   state = {
@@ -88,7 +91,7 @@ export class TeacherAssignment extends Component {
 
   isWeekday = date => {
     const day = moment(date).day();
-    return day !== 0 && day !== 6;
+    return day !== 0;
   };
 
   render() {
@@ -122,6 +125,7 @@ export class TeacherAssignment extends Component {
                   selected={this.state.duedate}
                   onChange={this.handleDateChange}
                   minDate={new Date()}
+                  locale="en"
                   filterDate={this.isWeekday}
                 />
               </Form.Field>

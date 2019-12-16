@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
 import { api } from '../../../services/api';
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import './PresentAbsentRecords.scss';
 import ConfirmationModal from './RecordDetails/ConfirmationModal';
 import * as toastr from 'toastr';
 import moment from 'moment';
 import {Container, Icon, Label, Table, Button, Checkbox} from 'semantic-ui-react';
+
+
+import DatePicker , { registerLocale } from "react-datepicker";
+import en from "date-fns/locale/en-GB";
+registerLocale("en", en);
 
 
 const CustomDateInput = ({ value, onClick }) => (
@@ -155,6 +159,11 @@ export class PresentAbsentRecords extends Component {
         
         });
     } 
+
+    isWeekday = date => {
+        const day = moment(date).day();
+        return day !== 0;
+    };
     
     render() {
         return (
@@ -165,11 +174,13 @@ export class PresentAbsentRecords extends Component {
                 </h3>
 
                 <DatePicker
-                selected={this.state.date}
-                onChange={date => this.setDate(date)}
-                customInput={<CustomDateInput/>}
-                dateFormat="MMMM d, yyyy"
-                maxDate={new Date()}
+                    locale="en"
+                    selected={this.state.date}
+                    onChange={date => this.setDate(date)}
+                    customInput={<CustomDateInput/>}
+                    dateFormat="MMMM d, yyyy"
+                    maxDate={new Date()}
+                    filterDate={this.isWeekday}
                 />
                 {!this.state.rollCall && this.state.date.getDate() !== new Date().getDate() && <h3 style={{color:'#959595'}}><Icon name='database'/>There are no attendance records for selected date </h3>}
                 <Table color='teal'>

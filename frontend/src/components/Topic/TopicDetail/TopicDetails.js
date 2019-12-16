@@ -1,11 +1,15 @@
 import React from 'react'
 import {Button, Modal, Form, LabelDetail, Icon} from 'semantic-ui-react'
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./TopicDetail.scss";
 import {api} from '../../../services/api';
 import { withRouter } from "react-router";
 import * as toastr from 'toastr';
+
+import moment from 'moment';
+import DatePicker , { registerLocale } from "react-datepicker";
+import en from "date-fns/locale/en-GB";
+registerLocale("en", en);
 
 class TopicDetails extends React.Component {
   state = {
@@ -87,6 +91,11 @@ class TopicDetails extends React.Component {
     this.props.onClose();
   };
 
+  isWeekday = date => {
+    const day = moment(date).day();
+    return day !== 0;
+  };
+
   render() {
     return (
       <Modal dimmer open className="topic-detail" size="small">
@@ -118,6 +127,8 @@ class TopicDetails extends React.Component {
                   selected={this.state.date}
                   onChange={this.handleDateChange}
                   maxDate={new Date()}
+                  locale="en"
+                  filterDate={this.isWeekday}
                 />
               </Form.Field>
             </Form.Group>
