@@ -8,7 +8,7 @@ import {
 import moment from 'moment';
 import { TeacherAssignmentDetails } from './TeacherAssignmentDetails/TeacherAssignmentDetails';
 import {ApplicationStoreContext} from '../../store';
-import { TeacherAssignmentCalendar } from './TeacherAssignmentCalendar/TeacherAssignmentCalendar.js';
+import { Calendar } from '../Calendar/Calendar';
 import { TeacherAssignment } from './TeacherAssignmentDetails/TeacherAssignment';
 import { TeacherAssignmentDelete } from  './TeacherAssignmentDetails/TeacherAssignmentDelete';
 
@@ -119,7 +119,7 @@ export class TeacherAssignments extends Component {
         </Button>
         <br/><br/>
         <div className="calendarContainer">
-          <TeacherAssignmentCalendar
+          <Calendar
             eventPropGetter={this.eventPropGetter}
             events={this.state.assignmentsForCalendar}
             onDoubleClickEvent={this.handleEventClick}
@@ -138,7 +138,7 @@ export class TeacherAssignments extends Component {
         }
 
         {this.state.isAssignmentOpen &&
-          <TeacherAssignment 
+          <TeacherAssignment
             assignment={this.state.assignmentDataForModal}
             classId={this.state.classID}
             subjectId={this.state.subjectID}

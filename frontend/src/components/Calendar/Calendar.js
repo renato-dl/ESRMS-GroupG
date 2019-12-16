@@ -22,6 +22,7 @@ export const Calendar = (props) => {
 
   return (
       <BigCalendar.Calendar
+        selectable
         className="big-calendar"
         popup
         localizer={localizer}
@@ -31,7 +32,7 @@ export const Calendar = (props) => {
         startAccessor="start"
         endAccessor="end"
         style={{height: 'calc(100vh - 230px)', minHeight: '400px'}}
-        onDoubleClickEvent={props.onDoubleClickEvent}
+        onSelectEvent={props.onDoubleClickEvent}
         onNavigate={props.onNavigate}
         eventPropGetter={props.eventPropGetter || eventPropGetter}
       />

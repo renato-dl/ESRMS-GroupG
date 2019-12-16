@@ -1,13 +1,13 @@
 import React from 'react';
-import {TeacherAssignmentCalendar} from '../components/TeacherAssignments/TeacherAssignmentCalendar/TeacherAssignmentCalendar';
+import {Calendar} from '../components/Calendar/Calendar';
 import {getRouterPropsForTest} from '../utils';
 import {shallow} from 'enzyme';
 
-describe('Testing TeacherAssignmentCalendar component', () => {
+describe('Testing Calendar component', () => {
   
   test('Test if component is rendered', () => {
     shallow(
-      <TeacherAssignmentCalendar {...getRouterPropsForTest()} />
+      <Calendar {...getRouterPropsForTest()} />
     );
   });
 
