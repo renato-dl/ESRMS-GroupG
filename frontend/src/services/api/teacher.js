@@ -43,7 +43,7 @@ export class TeacherAPIService extends BaseAPIService {
   }
 
   // assignments
-  getAssignments(classId, subjectId, from, to){
+  getAssignments(subjectId, classId, from, to){
     return this.get(`/teacher/assignments?subjectId=${subjectId}&classId=${classId}&fromDate=${from}&toDate=${to}`);
   }
 

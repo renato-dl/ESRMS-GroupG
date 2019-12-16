@@ -118,6 +118,7 @@ export class ConfirmationModal extends React.Component {
                 {this.state.IsLateEntryRecord && <>
                     <Modal.Header>
                         <span>Late Entry Record Confirmation</span>
+                        <Icon onClick={this.onClose} className="archive deleteIconModal" name="close" />
                     </Modal.Header>
                     <Modal.Content>
                         <h3>Are you sure you want to record late entry for  <br/><b>{this.state.studentName} {this.state.studentSurname}?</b></h3>
@@ -127,6 +128,7 @@ export class ConfirmationModal extends React.Component {
                 {this.state.IsEarlyExitRecord && <>
                     <Modal.Header>
                         <span>Early Exit Record Confirmation</span>
+                        <Icon onClick={this.onClose} className="archive deleteIconModal" name="close" />
                     </Modal.Header>
                     <Modal.Content>
                 <h3>Are you sure you want to record Early Exit for <br/><b>{this.state.studentName} {this.state.studentSurname}</b>?</h3>
