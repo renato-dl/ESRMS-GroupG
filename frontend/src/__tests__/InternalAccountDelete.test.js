@@ -3,6 +3,7 @@ import {getRouterPropsForTest} from '../utils';
 import {shallow} from 'enzyme';
 import InternalAccountDelete from '../components/InternalAccounts/InternalAccountDetails/InternalAccountDelete';
 import { api } from '../services/api';
+import {ApplicationStoreContext} from '../store';
 
 describe('Testing InternalAccountDelete component', () => {
   
@@ -17,7 +18,9 @@ describe('Testing InternalAccountDelete component', () => {
     if (response.data.token) {
       localStorage.setItem("token", JSON.stringify(response.data.token));
       shallow(
+        <ApplicationStoreContext.Provider value={{state: {userID: '205db8275d3c06e6ce3fe7a47b30e0fe'}}}>
         <InternalAccountDelete {...getRouterPropsForTest()} />
+        </ApplicationStoreContext.Provider>
       );
     }
   });
