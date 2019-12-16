@@ -1,7 +1,11 @@
 import React from 'react';
 import {Icon, Modal, Button, Form, Segment, Checkbox, Label} from 'semantic-ui-react';
 import './CommunicationDetails.scss';
-import DatePicker from "react-datepicker";
+
+import moment from 'moment';
+import DatePicker , { registerLocale } from "react-datepicker";
+import en from "date-fns/locale/en-GB";
+registerLocale("en", en);
 
 export class CommunicationDetails extends React.Component {
   state = {
@@ -85,6 +89,7 @@ export class CommunicationDetails extends React.Component {
                   minDate={new Date()}
                   selected={new Date(this.state.DueDate || Date.now())}
                   onChange={this.onDateChange}
+                  locale="en"
                 />
               </div>
             </Form.Group>
