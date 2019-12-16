@@ -96,15 +96,13 @@ export class TeacherAssignments extends Component {
   // please assign your custom class name and also don't forget to add the style to Calendar.scss and global.scss
   eventPropGetter = (event) => {
     const eventDate = moment(event.end);
-    const startOfWeek = moment().utc().startOf('week');
-    const endOfWeek = moment().utc().endOf('week');
     let className =  ''
-    if (eventDate.isBefore(startOfWeek))
-      className = 'orange';
-    if (eventDate.isBetween(startOfWeek, endOfWeek))
-      className = 'blue';
-    if(eventDate.isAfter(endOfWeek))
+    if (eventDate.isSameOrBefore(moment(), 'day'))
       className = 'red';
+    else if (eventDate.isBetween(moment(), moment().add(3, 'days'), 'day'))
+      className = 'orange';
+    else
+      className = 'green';
     return { className: className };
   }
 
