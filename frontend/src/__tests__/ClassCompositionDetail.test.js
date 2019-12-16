@@ -3,6 +3,7 @@ import {getRouterPropsForTest} from '../utils';
 import {shallow} from 'enzyme';
 import ClassCompositionDetail from '../components/ClassComposition/ClassCompositionDetail/ClassCompositionDetail';
 import { api } from '../services/api';
+import {ApplicationStoreContext} from '../store';
 
 describe('Testing ClassCompositionDetail component', () => {
   
@@ -18,7 +19,9 @@ describe('Testing ClassCompositionDetail component', () => {
       //wconsole.log(response.data.token);
       localStorage.setItem("token", JSON.stringify(response.data.token));
       shallow(
+        <ApplicationStoreContext.Provider value={{state: {userID: '26ce21c0-8d32-41d1-8d07-b4994fa53edf'}}}>
         <ClassCompositionDetail {...getRouterPropsForTest()} />
+        </ApplicationStoreContext.Provider>
       );
     }
   });
