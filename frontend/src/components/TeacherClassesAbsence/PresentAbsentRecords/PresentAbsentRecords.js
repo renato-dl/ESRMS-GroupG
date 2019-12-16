@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import './PresentAbsentRecords.scss';
 import ConfirmationModal from './RecordDetails/ConfirmationModal';
 import * as toastr from 'toastr';
+import moment from 'moment';
 import {Container, Icon, Label, Table, Button, Checkbox} from 'semantic-ui-react';
 
 
@@ -194,7 +195,7 @@ export class PresentAbsentRecords extends Component {
                         <Table.Cell textAlign="left" width={4} className='attendanceCell'>
                         {student.LateEntry === undefined && student.EarlyExit === undefined && <Icon name={this.getIcon(student.Present, student.LateEntry, student.EarlyExit)}/>}
                         {student.LateEntry && <Label basic color="red" size="large"><Icon name="clock outline"/>Late Entry: {student.LateEntry}</Label>}
-                        {student.EarlyExit && <Label basic color="red" size="large"><Icon name="hourglass half"/> Early Exit: {student.EarlyExit}</Label>}
+                        {student.EarlyExit && <Label basic color="red" size="large"><Icon name="hourglass half"/> Early Exit: {moment.utc(student.EarlyExit, 'HH:mm:ss').local().format('HH:mm')}</Label>}
                         {student.Present===undefined && <Label basic color="grey">No records</Label>}
                         </Table.Cell>
                     }
