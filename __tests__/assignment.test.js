@@ -16,7 +16,7 @@ describe("Tests about visualization of assignments by a parent", () => {
       const assignments = await Assignment.findByStudentId(testStudent, {}, {});
       expect(assignments).not.toBeNull();
       expect(assignments).toHaveLength(3);
-      const date1 = new Date("2019-12-15T00:00:00.000Z");
+      const date1 = new Date("2019-12-17T00:00:00.000Z");
       const date2 = new Date("2019-12-18T00:00:00.000Z");
       expect(assignments).toEqual(
           expect.arrayContaining([
