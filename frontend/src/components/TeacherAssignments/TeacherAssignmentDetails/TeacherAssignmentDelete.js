@@ -22,7 +22,8 @@ export class TeacherAssignmentDelete extends Component {
         id: assignment.ID,
         title: assignment.Title,
         description: assignment.Description,
-        duedate: new Date(assignment.DueDate)
+        duedate: new Date(assignment.DueDate),
+        attachment: assignment.AttachmentFile
       });
     }    
   };
