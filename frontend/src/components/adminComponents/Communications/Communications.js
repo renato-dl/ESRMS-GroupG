@@ -62,9 +62,9 @@ export class Communications extends React.Component {
 
   onCreateOrUpdateCommunication = async (data) => {
     if (data.ID) {
-      await api.communication.update(data.ID, data.Title, data.Description, data.IsImportant, moment.utc(data.DueDate).format());
+      await api.communication.update(data.ID, data.Title, data.Description, data.IsImportant, data.DueDate ? moment.utc(data.DueDate).format() : moment().utc().format());
     } else {
-      await api.communication.add(data.Title, data.Description, data.IsImportant, moment.utc(data.DueDate).format());
+      await api.communication.add(data.Title, data.Description, data.IsImportant, data.DueDate ? moment.utc(data.DueDate).format() : moment().utc().format());
     }
 
     await this.fetchCommunications();
