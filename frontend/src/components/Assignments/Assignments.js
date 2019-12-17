@@ -68,8 +68,6 @@ export class Assignments extends React.Component {
       className = 'orange'
     }
 
-
-
     return { className: className };
   }
 

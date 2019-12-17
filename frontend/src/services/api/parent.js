@@ -22,4 +22,9 @@ export class ParentAPIService extends BaseAPIService {
     return this.get(`/parent/attendance?studentId=${studentID}&fromDate=${from}&toDate=${to}`);
   }
 
+  // assignment file
+  getAssignmentFile(fileID) {
+    return this.get(`/parent/assignment/file?ID=${fileID}`, null, 'arraybuffer');
+  }
+
 }

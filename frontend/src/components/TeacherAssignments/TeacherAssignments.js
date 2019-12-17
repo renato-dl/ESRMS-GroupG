@@ -11,6 +11,7 @@ import {ApplicationStoreContext} from '../../store';
 import { Calendar } from '../Calendar/Calendar';
 import { TeacherAssignment } from './TeacherAssignmentDetails/TeacherAssignment';
 import { TeacherAssignmentDelete } from  './TeacherAssignmentDetails/TeacherAssignmentDelete';
+import fileDownload from 'js-file-download/file-download';
 
 export class TeacherAssignments extends Component {
   static contextType = ApplicationStoreContext;
@@ -77,7 +78,7 @@ export class TeacherAssignments extends Component {
   deleteAssignment = (assignment) => {
     this.setState({ assignmentDataForModal: assignment, isDeleteOpen: true, assignmentModalOpen: false , isAssignmentOpen: false})
   }
- 
+
   closeDeleteModal = () => {
     this.setState({  assignmentModalOpen: true, isDeleteOpen: false })
   }
@@ -104,6 +105,11 @@ export class TeacherAssignments extends Component {
     else
       className = 'green';
     return { className: className };
+  }
+
+  onDownload = async (fileName) => {
+    const response = await api.teacher.getAssignmentFile(fileName);
+    fileDownload(response.data, fileName);
   }
 
   render() {
@@ -134,7 +140,8 @@ export class TeacherAssignments extends Component {
             onDelete={this.deleteAssignment}
             onClose={this.closeAssignmentModal}
             onDeleteClose={this.closeDeleteModal}
-          />
+            onDownload={this.onDownload}
+          /> 
         }
 
         {this.state.isAssignmentOpen &&

@@ -6,6 +6,7 @@ import { api } from '../../../services/api';
 import * as toastr from 'toastr';
 import { CommunicationDetails } from './CommunicationDetails/CommunicationDetails';
 import { CommunicationInfo } from '../../CommunicationList/CommunicationInfo/CommunicationInfo';
+import moment from 'moment';
 
 export class Communications extends React.Component {
   state = {
@@ -21,7 +22,7 @@ export class Communications extends React.Component {
 
   fetchCommunications = async () => {
     const communications = await api.communication.list();
-    console.log(communications.data.communications);
+
     this.setState({ 
       communications: communications.data.communications, 
       isComminicationInfoModalOpen: false, 
@@ -61,9 +62,9 @@ export class Communications extends React.Component {
 
   onCreateOrUpdateCommunication = async (data) => {
     if (data.ID) {
-      await api.communication.update(data.ID, data.Title, data.Description, data.IsImportant, data.DueDate);
+      await api.communication.update(data.ID, data.Title, data.Description, data.IsImportant, moment.utc(data.DueDate).format());
     } else {
-      await api.communication.add(data.Title, data.Description, data.IsImportant, data.DueDate);
+      await api.communication.add(data.Title, data.Description, data.IsImportant, moment.utc(data.DueDate).format());
     }
 
     await this.fetchCommunications();
