@@ -13,13 +13,14 @@ export const FilePreview = (props) => (
       </div>
     </div>
     <div className="buttons">
+      <Button style={{position: 'absolute', visibility: 'hidden', top: 0}} />
       {props.onRemove && 
-        <Button size="tiny" basic color="red" onClick={props.onRemove}>
+        <Button size="tiny" negative color="red" onClick={props.onRemove}>
           <Icon name="remove" /> Remove
         </Button>
       }
       {props.onDownload && 
-        <Button size="tiny"  positive onClick={() => props.onDownload(props.name)}>
+        <Button tabIndex={99} size="tiny"  positive onClick={() => props.onDownload(props.name)}>
           <Icon name="download" />
           Download
         </Button>
