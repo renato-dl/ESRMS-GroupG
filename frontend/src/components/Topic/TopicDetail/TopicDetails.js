@@ -1,11 +1,15 @@
 import React from 'react'
 import {Button, Modal, Form, LabelDetail, Icon} from 'semantic-ui-react'
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./TopicDetail.scss";
 import {api} from '../../../services/api';
 import { withRouter } from "react-router";
 import * as toastr from 'toastr';
+
+import moment from 'moment';
+import DatePicker , { registerLocale } from "react-datepicker";
+import en from "date-fns/locale/en-GB";
+registerLocale("en", en);
 
 class TopicDetails extends React.Component {
   state = {
@@ -44,8 +48,8 @@ class TopicDetails extends React.Component {
     }
 
     this.setState({isSaving: true});
-
     const {params} = this.props.match;
+
     try {
       const topicData = {
         topicId: this.state.topicID,
@@ -56,17 +60,20 @@ class TopicDetails extends React.Component {
         topicDate: this.state.date.toUTCString()
       };
 
-      this.state.topicID ?
-        await api.teacher.updateTopic(
-          params.teacherID,
-          topicData
-        ) :
-        await api.teacher.saveTopic(
-          params.teacherID,
-          topicData
-        );
-
-      toastr.success(`Topic ${this.state.topicID ? 'updated' : 'added'} successfully.`);
+      if(!this.state.topicID) {
+        await api.teacher.saveTopic(topicData);
+        toastr.success(`Topic ${this.state.topicID ? 'updated' : 'added'} successfully.`);
+      } else {
+        const reqResult = await api.teacher.updateTopic(topicData);  
+        
+        if (reqResult.data.Success) {
+          toastr.success('Topic updated successfully.');
+        } else {
+          toastr.error(reqResult.data.Message);
+          this.setState({isSaving: false});
+          return;
+        }
+      }
     } catch (e) {
       this.setState({isSaving: false});
       return toastr.error(e);
@@ -82,6 +89,11 @@ class TopicDetails extends React.Component {
     }
 
     this.props.onClose();
+  };
+
+  isWeekday = date => {
+    const day = moment(date).day();
+    return day !== 0;
   };
 
   render() {
@@ -109,23 +121,14 @@ class TopicDetails extends React.Component {
               onChange={this.handleInputChange}
             />
             <Form.Group widths='equal'>
-              <Form.Select
-                name="class"
-                label="Class"
-                options={[
-                  { key: '1', text: 'Class 1', value: '1' },
-                  { key: '2', text: 'Class 2', value: '2' },
-                  { key: '3', text: 'Class 3', value: '3' },
-                ]}
-                placeholder="Class"
-                value={this.state.class}
-                onChange={this.handleInputChange}
-              />
               <Form.Field>
                 <LabelDetail>Topic date</LabelDetail>
                 <DatePicker
                   selected={this.state.date}
                   onChange={this.handleDateChange}
+                  maxDate={new Date()}
+                  locale="en"
+                  filterDate={this.isWeekday}
                 />
               </Form.Field>
             </Form.Group>

@@ -1,0 +1,49 @@
+.loginContainer{
+    background-color:#f7f7f7;
+    //background-color:#008272;
+    //background-color: #fff;
+    //background: rgba(0,0,0,0.6);
+    max-width: 450px;
+    margin: -60px 15px 0 15px;
+    box-shadow: 4px 3px 6px #888888;
+}
+
+.ui.fluid.button.loginBtn{
+    font-family: sans-serif;
+    background-color:#008272; 
+    color: #DBFDFC
+}
+.ui.fluid.button.loginBtn:hover {opacity:0.8}
+.ui.fluid.button.loginBtn:active {opacity:0.6}
+
+.loginBackground:before{
+    content: '';
+    position:fixed;
+    width:100vw;
+    height:100vh;
+    background-color:#f7f7f7;
+    background: #fff url(../../assets/images/loginBkgr.jpg) no-repeat top center;
+    //background: #fff url(../../assets/images/blurAbstr2.jpg) no-repeat top center;
+    filter: blur(10px);
+    -webkit-filter: blur(10px);
+    background-size: cover;
+}
+
+.ui.stacked.segment:after, .ui.stacked.segment:before, .ui.stacked.segments:after, .ui.stacked.segments:before{
+    width:0!important
+}
+
+.ui.center.aligned.header, .ui.centered.header.loginHeader{
+    //color: #DBFDFC
+    margin-top: 5px; 
+    color: #008272;  
+}
+.errMsg{
+    color:#CB2431
+}
+
+.roles-text {
+    display: flex !important;
+    justify-content: center;
+}
+

@@ -2,11 +2,12 @@ import React from 'react';
 
 export const ApplicationStoreContext = React.createContext();
 
+const deserializedState = localStorage.getItem('serializedState') ? JSON.parse(localStorage.getItem('serializedState')) : null 
+
 const initialState = {
   isUserAuthenticated: false,
-  user: null, // this will be the correct user
   parent: {
-    ID: '9d64fa59c91d9109b11cd9e05162c675',
+    ID: null,
     children: [],
     selectedStudent: []
   }
@@ -14,9 +15,7 @@ const initialState = {
 
 export class ApplicationStore extends React.Component {
   // STORE here all the global state
-  state = {
-    ...initialState
-  };
+  state = deserializedState ? {...deserializedState} : {...initialState};
 
   setSelectedStudent = (studentData) => {
     this.setState((prevState) => {
@@ -27,23 +26,22 @@ export class ApplicationStore extends React.Component {
           selectedStudent: studentData
         }
       }
+    }, () => {
+      localStorage.setItem('serializedState', JSON.stringify(this.state));
     });
   };
 
-  async componentDidMount() {
-
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    console.log(prevState);
-    console.log(prevProps);
+  setAuthentication = (authenticated) => {
+    this.setState({ isUserAuthenticated: authenticated });
+    localStorage.setItem('serializedState', JSON.stringify(this.state));
   }
 
   render() {
     return (
       <ApplicationStoreContext.Provider value={{
         state: this.state,
-        setSelectedStudent: this.setSelectedStudent
+        setSelectedStudent: this.setSelectedStudent,
+        setAuthentication: this.setAuthentication
       }}>
         {this.props.children}
       </ApplicationStoreContext.Provider>

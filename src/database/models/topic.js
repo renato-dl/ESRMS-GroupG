@@ -38,13 +38,14 @@ class Topic extends Model {
     );
 
     if(selectResult.length != 1) {
+      connection.release();
       throw new Error('Unauthorized');
     };
 
     const insertResult = await connection.query(
       `INSERT INTO ${this.tableName} (TeacherSubjectClassRelationId, Title, TopicDescription, TopicDate)
       VALUES (?, ?, ?, ?);`,
-      [selectResult[0].id, topicTitle, topicDescription, date.format(this.db.getDateTimeFormatString())]
+      [selectResult[0].id, topicTitle, topicDescription, date.format(this.db.getDateFormatString())]
     );
 
     connection.release();
@@ -56,10 +57,39 @@ class Topic extends Model {
     return {id: insertResult.insertId};
   }
 
+  async deleteTopic(teacherId, topicId){
+    const connection = await this.db.getConnection();
+    //check if the topic exists
+    const checkTopic = await connection.query(
+      `SELECT TeacherSubjectClassRelationId as id
+      FROM Topics 
+      WHERE ID = ?`,
+      [topicId]
+    );
+
+    if(checkTopic.length != 1) {
+      connection.release();
+      throw new Error('The topic does not exist!');
+    };
+
+    //check if the topic is of that teacher
+    const selectResult = await connection.query(
+      `SELECT tscr.ID
+      FROM TeacherSubjectClassRelation tscr
+      WHERE tscr.ID = ? AND tscr.TeacherId = ?`,
+      [checkTopic[0].id, teacherId]
+    );
+
+    connection.release();
+    if(selectResult.length != 1) {
+      throw new Error('Unauthorized');
+    };
+    await this.remove(topicId);
+  }
+  
   async editTopic(teacherId, topicId, topicTitle, topicDescription, topicDate) {
     const editTopicResult = {};
     try{      
-      const connection = await this.db.getConnection();
       // validate teacher
       const teacherValidation = await this.validateTeacherForTopicUpdate(teacherId, topicId);
       if(!teacherValidation){
@@ -80,11 +110,12 @@ class Topic extends Model {
       }
 
       const date = moment.utc(topicDate);
+      const connection = await this.db.getConnection();
       const updateResult = await connection.query(
         `update ${this.tableName} 
         set Title = ?, TopicDescription = ?, TopicDate = ?
         where id = ?;`,
-        [topicTitle, topicDescription, date.format(this.db.getDateTimeFormatString()), topicId]
+        [topicTitle, topicDescription, date.format(this.db.getDateFormatString()), topicId]
       );
       connection.release();
       if (updateResult.affectedRows != 1) {
@@ -104,6 +135,11 @@ class Topic extends Model {
   }
 
   async findByTeacherClassSubject(teacherId, classId, subjectId, pagination) {
+
+    if (!teacherId) throw new Error('Missing or invalid teacher id');
+    if (!classId) throw new Error('Missing or invalid class id');
+    if (!subjectId) throw new Error('Missing or invalid subject id');
+
     const connection = await this.db.getConnection();
     let sql_query = `SELECT t.ID, t.Title, t.TopicDescription, t.TopicDate 
     FROM TeacherSubjectClassRelation tscr, Topics t

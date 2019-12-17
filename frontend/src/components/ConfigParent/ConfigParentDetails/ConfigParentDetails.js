@@ -117,7 +117,7 @@ class ConfigParentDetails extends React.Component {
             <Form.Input
               error={this.state.errors['email']}
               fluid
-              icon='user'
+              icon='envelope'
               iconPosition='left'
               name="email"
               label='E-mail'

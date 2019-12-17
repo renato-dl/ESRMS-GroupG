@@ -6,14 +6,34 @@ import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 
 import 'semantic-ui-css/semantic.min.css';
 import {App} from './containers/App/App';
-import { LoginParent } from './containers/Login/LoginParent';
+import { Login } from './containers/Login/Login';
+import { Roles } from './containers/Roles/Roles';
 
 render(
   <BrowserRouter>
     <Switch>
+      
+      <Route exact path="/login" component={Login} />
+      <Route exact path="/roles" component={Roles} />
+      
+      <Route exact path="/" render={() => {
+          const role = localStorage.getItem('role');
 
-      <Route exact path="/" render={() => <Redirect to="/parent" />} />
-      <Route exact path="/login" component={LoginParent}/>
+          switch(role) {
+            case 'IsTeacher':
+              return (<Redirect to="/teacher" />);
+            case 'IsParent':
+              return (<Redirect to="/parent" />);
+            case 'IsSysAdmin':
+              return (<Redirect to="/sysadmin" />);
+            case 'IsAdmin':
+              return (<Redirect to="/admin" />);
+            default:
+              return (<Redirect to="/login" />);
+          }
+          
+        }} 
+      />
       <Route path="/" component={App} />
 
     </Switch>

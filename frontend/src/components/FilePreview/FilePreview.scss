@@ -1,0 +1,37 @@
+.file-container {
+  display: flex;
+  flex-flow: column;
+
+  .file {
+    display: flex;
+    flex-flow: column;
+
+    .file-preview {
+      width: 120px;
+      height: 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: green;
+      border-radius: 5px;
+  
+      span {
+        text-transform: uppercase;
+        color: white;
+      }
+  
+      &.pdf {
+        background-color: red;
+      }
+  
+      &.doc, &.docx {
+        background-color: blue;
+      }
+    }
+  }
+
+  .buttons {
+    z-index: initial;
+    margin-top: 5px;
+  }
+}

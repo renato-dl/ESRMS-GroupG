@@ -1,30 +1,48 @@
 import React from 'react';
-import {Header as SemanticHeader, Icon, Dropdown} from 'semantic-ui-react';
+import {Header as SemanticHeader, Icon,Image, Dropdown} from 'semantic-ui-react';
+import {withRouter} from 'react-router-dom';
+import logoImage from '../../assets/images/logo.png';
 import './Header.scss';
 
-const trigger = (
-  <span><Icon name='user' /></span>
-)
 
-const options = [
-  {
-    key: 'user',
-    text: (
-      <span>
-        Signed in as <strong>Bob Smith</strong>
-      </span>
-    ),
-    disabled: true,
-  },
-  { key: 'sign-out', text: 'Sign Out' }
-]
 
-export const Header = (props) => (
-  <SemanticHeader className="app-header">
-    <div className="headerlogoField"><Icon name="leaf" className="logoIcon"/>ESRMS-G</div>
-    <div className="headerToolbarFiled">
-     {/* <Dropdown trigger={trigger} options={options} /> */}
-    </div>
+export const Header = withRouter(({history, ...props}) => {
+  const trigger = (
+    <span style={{color:"#DBFDFC"}}>
+      <Icon name='user' />
+    </span>
+  );
 
-  </SemanticHeader>
-);
+  const switchAccount = () => {
+    history.push("/roles");
+  };
+  
+  const logOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("roles");
+    localStorage.removeItem("serializedState");
+    window.location.replace("/login");
+  };
+
+  const hasMultipleRoles = !!localStorage.getItem('roles');
+
+  return (
+    <SemanticHeader className="app-header">
+      <div className="headerlogoField">
+        <Image src={logoImage} size="tiny"  verticalAlign="bottom"/> 
+        ESRMS-G
+      </div>
+
+      <div className="headerToolbarFiled">
+        <Dropdown trigger={trigger}>
+          <Dropdown.Menu>
+            {hasMultipleRoles && <Dropdown.Item text='Switch account' onClick={switchAccount} />}
+            <Dropdown.Item text='Logout' onClick={logOut} />
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
+
+    </SemanticHeader>
+  );
+});

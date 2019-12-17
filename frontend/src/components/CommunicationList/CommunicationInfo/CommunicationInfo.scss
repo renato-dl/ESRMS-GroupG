@@ -1,0 +1,23 @@
+.communication-info {
+  h3 {
+    span {
+      font-weight: normal !important;
+    }
+  }
+
+  .header {
+    i {
+      float: right;
+      cursor: pointer;
+    }
+  }
+
+  textarea {
+    resize: none !important;
+    height: 175px;
+  }
+  
+  .description {
+    padding: 5px;
+  }
+}

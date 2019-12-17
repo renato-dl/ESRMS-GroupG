@@ -4,11 +4,14 @@ import './Topic.scss';
 import {
   Table,
   Button,
-  Icon
+  Icon,
+  Container
 } from 'semantic-ui-react'
 import moment from 'moment';
 import TopicDetails from './TopicDetail/TopicDetails';
+import TopicDelete from './TopicDetail/TopicDelete';
 import { NoData } from '../NoData/NoData';
+import Tooltip from '../Tooltip/Tooltip';
 
 export class Topic extends React.Component{
     constructor(props) {
@@ -17,36 +20,24 @@ export class Topic extends React.Component{
         subject: null,
         topics: [],
         editingTopic: null,
+        deleteTopicOpen: false, 
+        selectedTopic: null,
         isTopicDetailsOpen: false
       }
     }
     
     async componentDidMount() {
       await this.fetchTopics();
-      await this.fetchSubject();
     }
 
     fetchTopics =  async () => {
       const {params} = this.props.match;
-
-      const response = await api.teacher.getTeacherTopics(params.teacherID, 1, params.subjectID);
+      this.setState({subject: params.subjectName});
+      const response = await api.teacher.getTeacherTopics(params.classID, params.subjectID);
       if (response) {
         this.setState({ topics: response.data, editingTopic: null })
       } 
     }; 
-
-    fetchSubject = async () => {
-      const {params} = this.props.match;
-
-      const response = await api.teacher.getTeacherSubjects(params.teacherID);
-      if (response) {
-        response.data.forEach((subject) => {
-          if (subject.subjectId == params.subjectID) {
-            this.setState({subject});
-          }
-        });
-      }
-    };
 
     addTopic = () => {
       this.setState({isTopicDetailsOpen: true});
@@ -60,20 +51,28 @@ export class Topic extends React.Component{
       this.setState({editingTopic: topic, isTopicDetailsOpen: true});
     };
 
+    // open modal for deleting topic
+    deleteTopic = (topic) =>{
+      this.setState({deleteTopicOpen: true, selectedTopic: topic});
+    }
+    onDeleteTopicClose = () =>{
+      this.setState({deleteTopicOpen: false, selectedTopic: null});
+    }
+
     render(){
       if (this.state.topics.length){
 
       return (
-        <div className="Topic-container contentContainer">
+        <Container className="Topic-container contentContainer">
           <h3 className="contentHeader">
-            <Icon name='braille' size="small" />
-            {this.state.subject ? this.state.subject.subject : ''} topics
+            <Icon name='braille'/>
+            {this.state.subject} topics
           </h3>
           <Button className="ui vk button" onClick={this.addTopic}>
             <Icon name="plus" />
             Add topic
           </Button>
-          <Table celled>
+          <Table celled columns={4}>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell textAlign="left">#</Table.HeaderCell>
@@ -90,8 +89,19 @@ export class Topic extends React.Component{
                   <Table.Cell textAlign="left">{ topic.Title }</Table.Cell>
                   <Table.Cell textAlign="left">{ topic.TopicDescription }</Table.Cell>
                   <Table.Cell textAlign="left" width={2}>{ moment(topic.TopicDate).format('LL') }</Table.Cell>
-                  <Table.Cell textAlign="left" className="edit-cell" onClick={() => this.editTopic(topic)} width={1}>
-                    <Icon name="edit"/> Edit
+                  <Table.Cell textAlign="left" className="edit-cell" width={1}>
+                    <Tooltip 
+                      text="Edit topic" 
+                      trigger={
+                        <Icon onClick={() =>this.editTopic(topic)} name="edit" />
+                      }
+                    />
+                    <Tooltip 
+                      text="Delete topic" 
+                      trigger={
+                        <Icon onClick={() =>this.deleteTopic(topic)} name="delete" />
+                      }
+                    />
                   </Table.Cell>
                 </Table.Row>
               )}
@@ -107,16 +117,26 @@ export class Topic extends React.Component{
               }}
             />
           }
-        </div>
+          {this.state.deleteTopicOpen &&
+            <TopicDelete
+              topic={this.state.selectedTopic}
+              onClose={this.onDeleteTopicClose}
+              onSave={() =>{
+                this.fetchTopics();
+                this.onDeleteTopicClose();
+              }}
+            />
+          }
+        </Container>
       );
 
       }
 
       return(
-        <div className="Topic-container contentContainer">
+        <Container className="Topic-container contentContainer">
           <h3 className="contentHeader">
-            <Icon name='braille' size="small" />
-            {this.state.subject ? this.state.subject.subject : ''} topics
+            <Icon name='braille'/>
+            {this.state.subject} topics
           </h3>
           <Button className="ui vk button" onClick={this.addTopic}>
             <Icon name="plus" />
@@ -135,7 +155,7 @@ export class Topic extends React.Component{
               }}
             />
           }
-        </div>
+        </Container>
       );
     }
 }

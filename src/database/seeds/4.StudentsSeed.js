@@ -36,6 +36,26 @@ exports.seed = function(knex) {
           ClassId: 1,
           Gender: 'F'
         },
+        {
+          ID: '7f32bd55-9222-4dde-9cf4-fb1edb5148cc',
+          FirstName: 'Giorgino',
+          LastName: 'Di Giorgio',
+          SSN: 'PVMVRY91A12L533C',
+          BirthDate: '2005-02-11',
+          Parent1: '6d361d43-1308-4ac6-95ab-580138de9141',
+          ClassId: 2,
+          Gender: 'M'
+        },
+        {
+          ID: 'aa49b76d-0308-44ce-a111-dcf31fd7678c',
+          FirstName: 'Gioia',
+          LastName: 'Di Gioia',
+          SSN: 'YQUFNS90T41F804P',
+          BirthDate: '2005-01-25',
+          Parent1: '9e412480-4287-4b62-a1ba-a8dcb03cdd41',
+          ClassId: 2,
+          Gender: 'F'
+        },
     ]);
     });
 };

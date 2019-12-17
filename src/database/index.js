@@ -9,7 +9,9 @@ class Database {
       database: config.db.database,
       user: config.db.username,
       password: config.db.password,
-      timezone: 'utc'
+      timezone: 'utc',
+      charset: 'UTF8MB4',
+      collation: 'UTF8MB4_UNICODE_CI'
     });
   }
 
@@ -33,8 +35,20 @@ class Database {
     return `LIMIT ${pageSize} OFFSET ${page * pageSize}`;
   }
 
-  getDateTimeFormatString() {
-    return 'YYYY-MM-DD HH:mm:ss';
+  getDateFormatString() {
+    return 'YYYY-MM-DD 00:00:00';
+  }
+
+  getActiveConnections() {
+    return this.instance.activeConnections();
+  }
+
+  getTotalConnections() {
+    return this.instance.totalConnections();
+  }
+
+  getIdleConnections() {
+    return this.instance.idleConnections();
   }
 }
 

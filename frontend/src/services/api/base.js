@@ -16,9 +16,18 @@ export class BaseAPIService {
 
   addRequestInterceptors() {
     this.instance.interceptors.request.use((data) => {
-      // TODO: not useful for now, useful when we will require auth
-      const token = 'test_token';
-      data.headers.Authorization = 'Bearer ' + token;
+      let token = '';
+
+      try {
+        token = JSON.parse(localStorage.getItem("token"));
+      } catch(e) {
+        console.log(e);
+      }
+
+      if (token) {
+        data.headers.Authorization = 'Bearer ' + token;
+      }
+
       return data;
     })
   }
@@ -34,7 +43,7 @@ export class BaseAPIService {
         }
 
         if (error.response.status === UNAUTHORIZED) {
-          console.log('Unauthorized user....');
+          //console.log('Unauthorized user....');
           // maybe show some alert to the user
         }
 
@@ -46,8 +55,8 @@ export class BaseAPIService {
       });
   }
 
-  get(url, params = {}) {
-    return this.instance.get(url, { params });
+  get(url, params = {}, responseType) {
+    return this.instance.get(url, { params, responseType });
   }
 
   post(url, data, params = {}) {

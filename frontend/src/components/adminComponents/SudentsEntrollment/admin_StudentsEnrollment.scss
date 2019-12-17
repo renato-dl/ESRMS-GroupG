@@ -1,0 +1,37 @@
+.right-border{
+    border-right:1px
+    solid lightgrey
+}
+.Student_admin{
+    margin-top:15px;
+    //padding: 5px 0 5px 0;
+    overflow-x: scroll;
+}
+.enrlStudEditIcon, .enrlStudDeleteIcon {
+    color: #4d7198;
+}
+.enrlStudEditIcon:hover{
+    cursor: pointer;
+    color: green;
+}
+
+.deleleIcon{
+  cursor: pointer;
+}
+
+.enrlStudDeleteIcon:hover{
+    cursor: pointer;
+    color: red;
+}
+
+.studentHeader{
+    background-color:#ddd9da!important;
+    font-size: 18px;
+    color:#864031!important;
+    border-right: 1px solid lightgrey;
+}
+.parentHeader{
+    background-color: #e9e7e9!important;
+    color:#864031!important;
+    font-size: 18px;
+}

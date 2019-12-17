@@ -1,6 +1,6 @@
 import React from 'react';
 import { api } from '../../services/api';
-import {Table, Icon} from 'semantic-ui-react';
+import {Table, Icon, Container} from 'semantic-ui-react';
 import moment from 'moment';
 import ConfigParentDetails from "./ConfigParentDetails/ConfigParentDetails"
 import { NoData } from '../NoData/NoData';
@@ -19,7 +19,7 @@ export class ConfigParent extends React.Component{
     //const {params} = this.props.match;
     const response = await api.admin.getAuthParentList();
     if (response) {
-        console.log(response);
+      //console.log(response);
       this.setState({ authParents: response.data });
     }
   };
@@ -39,9 +39,9 @@ export class ConfigParent extends React.Component{
   render() {
     if(this.state.authParents.length){
     return (
-      <div className="contentContainer">
+      <Container className="contentContainer">
         <h3 className="contentHeader">
-          <Icon name='braille' size="small" />
+          <Icon name='braille'/>
           Parents Accounts Configuration
         </h3>
 
@@ -86,13 +86,13 @@ export class ConfigParent extends React.Component{
             }}
           />
         }
-      </div>
+      </Container>
     );
   }
   return(
-    <div className="contentContainer">
+    <Container className="contentContainer">
       <h3 className="contentHeader">
-          <Icon name='braille' size="small" />
+          <Icon name='braille'/>
           Parents Accounts Configuration
         </h3>
 
@@ -110,7 +110,7 @@ export class ConfigParent extends React.Component{
             }}
           />
       }
-    </div>
+    </Container>
   );
   }
 }

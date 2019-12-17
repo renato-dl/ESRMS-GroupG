@@ -1,0 +1,102 @@
+.communication-item {
+  margin-left: 2.5em;
+  margin-bottom: 1.5em;
+  float: left;
+  width: 20em;
+  position: relative;
+
+  @media only screen and (min-device-width : 30px) and (max-device-width : 1024px) and (orientation : portrait) and (-webkit-min-device-pixel-ratio: 1) {  
+    margin-left: -30px; 
+  }
+  
+  .wrapper {
+    text-decoration:none;
+    color: #000;
+    background: #ffc;
+    display: block;
+    height: 17em;
+    width: 20em;
+    padding: 1em;
+    -moz-box-shadow:5px 5px 7px rgba(33,33,33,1);
+    -webkit-box-shadow: 5px 5px 7px rgba(33,33,33,.7);
+    box-shadow: 5px 5px 7px rgba(33,33,33,.5);
+
+    -moz-transition:-moz-transform .15s linear;
+    -o-transition:-o-transform .15s linear;
+    -webkit-transition:-webkit-transform .15s linear;
+    
+    -webkit-transform:rotate(-2deg);
+    -o-transform:rotate(-2deg);
+    -moz-transform:rotate(-2deg);
+
+    &:hover, &:focus {
+      -moz-box-shadow:10px 10px 7px rgba(0,0,0,.7);
+      -webkit-box-shadow: 10px 10px 7px rgba(0,0,0,.7);
+      box-shadow:10px 10px 7px rgba(0,0,0,.7);
+      -webkit-transform: scale(1.25);
+      -moz-transform: scale(1.25);
+      -o-transform: scale(1.25);
+      position:relative;
+      z-index:5;
+    }
+
+    // .icons {
+    //   display: flex;
+    //   position: absolute;
+    //   top: -8px;
+    //   right: -5px;
+    //   z-index: 9;
+
+    //   i {
+    //     font-size: 1.35em;
+    //     cursor: pointer;
+    //     -moz-transition:-moz-transform .15s linear;
+    //     -o-transition:-o-transform .15s linear;
+    //     -webkit-transition:-webkit-transform .15s linear;
+
+    //     &:hover {
+    //       -webkit-transform: scale(1.25);
+    //       -moz-transform: scale(1.25);
+    //       -o-transform: scale(1.25);
+    //     }
+        
+    //     &.delete {
+    //       &:hover {
+    //         color: red;
+    //       }
+    //     }
+
+    //     &.edit {
+    //       &:hover {
+    //         color: #0064b4;
+    //       }
+    //     }
+    //   }
+    // }
+
+    .title {
+      margin: 5px !important;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .description {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: calc(100% - 30px) !important;
+    }
+  }
+
+  &.important {
+    .wrapper {
+      background: #f2711c;
+    }
+  }
+
+  &.expired {
+    .wrapper {
+      opacity: .5;
+    }
+  }
+}

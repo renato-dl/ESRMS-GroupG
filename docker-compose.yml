@@ -1,0 +1,19 @@
+version: '3'
+services:
+  frontend:
+    build: ./frontend
+    ports:
+    - "3000:3000"
+    depends_on:
+    - backend
+  backend:
+    build: .
+    ports:
+    - "4000:4000"
+    depends_on:
+    - db
+    command: ["./wait-for-it.sh", "db:3306", "--", "npm", "run", "prod"]
+  db:
+    build: ./database
+    ports:
+    - "3306:3306"

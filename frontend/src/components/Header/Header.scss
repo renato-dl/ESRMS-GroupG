@@ -7,6 +7,7 @@
   display: flex;
   //align-items: center;
   /* justify-content: center; */
+  background-color: #008272;
   height: 50px;
   margin-bottom:0!important;
 
@@ -19,16 +20,16 @@
 }
 .headerlogoField{
   //color:#DBCA47!important;
-  font-family: Comic Sans MS;
+  //font-family: Comic Sans MS;
   display: flex;
   align-items: center;
   color:#DBFDFC;
   height: inherit;
   width: 448px;
   //width: 150px;
-  background-color: #008272;
-  border-bottom:2px solid #DBCA47;
-  //border-top-left-radius: 15px;
+  //background-color: #008272;
+  //border-bottom:2px solid #DBCA47;
+
   padding-left: 15px;
   .logoIcon{
   color:#DBCA47!important;
@@ -37,7 +38,7 @@
 .headerToolbarFiled{
   height: 100%;
   width: calc(100% - 150px);
-  background-color: #009B8B;
+  //background-color: #008272;// #009B8B;
   padding-left:calc(100% - 400px);;
   display: flex;
   align-items: center;
@@ -49,5 +50,6 @@
 }
 
 .ui.dropdown .menu {
-  left: -130px;
+  //left: -130px;
+  left:-47px;
 }

@@ -1,0 +1,29 @@
+.class-composition-detail {
+  span {
+    margin: auto;
+  }
+  .header {    
+    display: flex !important;
+    justify-content: space-between;
+    text-align: center;
+  
+    .close-icn {
+      &:hover {
+        cursor: pointer;   
+        float: right;     
+      };
+      float: right;
+    }
+  }
+
+  .removed-student {
+    text-decoration: line-through;
+  }
+  .not-removed-student {
+    text-decoration: none;
+  }
+
+  .close-icn{
+    cursor: pointer;
+  }
+}
