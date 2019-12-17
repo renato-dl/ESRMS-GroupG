@@ -3,6 +3,7 @@ import Student from "../database/models/student";
 import Grade from '../database/models/grade';
 import Assignment from '../database/models/assignment';
 import StudentAttendance from '../database/models/studentAttendance';
+import path from 'path';
 
 class ParentController extends BaseController {
 
@@ -30,7 +31,7 @@ class ParentController extends BaseController {
     }
     
     const assignments = await Assignment.findByStudentId(
-      req.query.studentId, 
+      req.query.studentId,  
       {from: req.query.fromDate, to: req.query.toDate},
       {page: req.query.page, pageSize: req.query.pageSize}
     );
@@ -53,6 +54,23 @@ class ParentController extends BaseController {
     );
 
     res.send(attendance);
+  }
+
+  async getAssignmentFile(req, res) {
+    const fileKey = req.query.ID;
+    
+    if (!fileKey) {
+      throw new Error("Missing or invalid assignment id");
+    }
+
+    const assignment = await Assignment.findOne({ AttachmentFile: fileKey });
+    if (!assignment.AttachmentFile) {
+      res.sendStatus(404);
+      return;
+    }
+
+    const filePath = path.join(__dirname, "../../", "uploads", assignment.AttachmentFile);
+    res.download(filePath);
   }
 }
 

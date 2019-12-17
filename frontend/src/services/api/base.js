@@ -55,8 +55,8 @@ export class BaseAPIService {
       });
   }
 
-  get(url, params = {}) {
-    return this.instance.get(url, { params });
+  get(url, params = {}, responseType) {
+    return this.instance.get(url, { params, responseType });
   }
 
   post(url, data, params = {}) {

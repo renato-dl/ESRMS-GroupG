@@ -11,6 +11,7 @@ import Assignment from '../database/models/assignment';
 import path, { dirname } from 'path';
 import moment from 'moment';
 import db from '../database';
+import fs from 'fs';
 
 class TeacherController extends BaseController {
 
@@ -300,9 +301,9 @@ class TeacherController extends BaseController {
       req.user.ID,
       req.body.subjectId, 
       req.body.classId)
-      ){
-        res.send(401);
-        return;
+    ) {
+      res.send(401);
+      return;
     } 
     const result = await Assignment.addAssignment(
       req.body.subjectId,
@@ -311,7 +312,7 @@ class TeacherController extends BaseController {
       req.body.description,
       req.body.dueDate,
       req.file ? req.file.filename : null
-     );
+    );
     res.send({success: true, id: result.id});
   }
 
@@ -322,7 +323,6 @@ class TeacherController extends BaseController {
       req.user.ID,
       req.body.subjectId, 
       req.body.classId,
-      
     );
 
     const isAssignmentFromTeacher = await Assignment.checkIfAssignmentIsFromTeacher(req.body.assignmentId, req.user.ID);
@@ -330,6 +330,17 @@ class TeacherController extends BaseController {
     if(!teacherTeachesInClass || !isAssignmentFromTeacher) {
       res.send(401);
       return;
+    }
+
+    const assignment = await Assignment.findById(req.body.assignmentId);
+    // check and remove the old file
+    if (assignment.AttachmentFile && !req.body.attachmentFile) {
+      const filePath = path.join(__dirname, "../../", "uploads", assignment.AttachmentFile);
+      try {
+        fs.unlinkSync(filePath);
+      } catch(e) {
+        console.log(e);
+      }
     } 
 
     const success = await Assignment.updateAssignment(
@@ -337,15 +348,13 @@ class TeacherController extends BaseController {
       req.body.title,
       req.body.description,
       req.body.dueDate,
-      req.file ? req.file.filename : null
+      req.file ? req.file.filename : req.body.attachmentFile ? req.body.attachmentFile : null 
     );
 
     res.send({ success });
   }
 
-
-
- /* GET /teacher/assignments
+/* GET /teacher/assignments
  Query: classId, subjectId, dateRange, paging */
   async assignmentsByClassAndSubject(req, res) {
     if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
@@ -371,6 +380,16 @@ class TeacherController extends BaseController {
       res.send(401);
       return;
     }
+    const assignment = await Assignment.findById(req.body.ID);
+    if (assignment.AttachmentFile) {
+      const filePath = path.join(__dirname, "../../", "uploads", assignment.AttachmentFile);
+      try {
+        fs.unlinkSync(filePath);
+      } catch(e) {
+        console.log(e);
+      }
+    }
+
     await Assignment.remove(
       req.body.ID
     );
@@ -378,28 +397,26 @@ class TeacherController extends BaseController {
     res.send({success: true});
   }
 
-  async getAssignmentFile(req, res){
-    const id = req.query.ID;
+  async getAssignmentFile(req, res) {
+    const fileKey = req.query.ID;
     
-    if(!id){
+    if (!fileKey) {
       throw new Error("Missing or invalid assignment id");
     }
 
-    if(!await Assignment.checkIfAssignmentIsFromTeacher(id, req.user.ID)){
+    const assignment = await Assignment.findOne({ AttachmentFile: fileKey });
+    if (!await Assignment.checkIfAssignmentIsFromTeacher(assignment.ID, req.user.ID)) {
       res.sendStatus(401);
       return;
-    }
+    } 
 
-    const assignment = await Assignment.findById(id);
-    const attachFile = assignment.AttachmentFile;
-    if(attachFile == null){
+    if (!assignment.AttachmentFile) {
       res.sendStatus(404);
       return;
     }
 
     const filePath = path.join(__dirname, "../../", "uploads", assignment.AttachmentFile);
-    res.sendFile(filePath)
-
+    res.download(filePath);
   }
 }
 
