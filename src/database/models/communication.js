@@ -16,6 +16,24 @@ class Communication extends Model {
     }
   }
 
+  async findAll() {
+    const query = `
+      SELECT *, DATEDIFF(DueDate, CURDATE()) AS diff
+      FROM ${this.tableName}
+      ORDER BY CASE WHEN diff < 0 THEN 1 ELSE 0 END, IsImportant DESC, diff`
+
+      const connection = await this.db.getConnection();
+      let result;
+      try {
+        result = await connection.query(query);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        connection.release();
+      }      
+      return result;
+  }
+
   async add(Title, Description, IsImportant, DueDate) {
     this.validateFields(Title, Description);
     IsImportant = !!IsImportant;
