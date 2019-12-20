@@ -6,5 +6,8 @@ export class AuthAPIService extends BaseAPIService {
   }
   login(data) {
     return this.post(`/login`, data);
+  }
+  changePassword(data) {
+    return this.patch(`/password`, data);
   } 
 }
