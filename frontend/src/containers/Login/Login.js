@@ -10,16 +10,7 @@ export class Login extends React.Component {
         email:'',
         password:'',
         errors: {},
-        showErrMsg: false,
-        showRoleSelection: false,
-
-        roles: [
-            {role: "IsAdminOfficer"},
-            {role: "IsParent"}, 
-            {role: "IsTeacher"},
-            //{role: "IsPrincipal"},
-            //{role: "IsSysAdmin"},
-        ]
+        showErrMsg: false
     };
 
     
@@ -42,6 +33,9 @@ export class Login extends React.Component {
         console.log(role);
         localStorage.setItem("role", role);
         switch(role) {
+            case "IsNew":
+                this.props.history.push('/changePassword');
+                break;
             case "IsParent":
                 this.props.history.push('/parent');
                 break;
@@ -111,53 +105,50 @@ export class Login extends React.Component {
             <>
                 <div className="loginBackground"></div>
                 <Container>
-
-                    {!this.state.showRoleSelection &&
-                        <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
-                            <Grid.Column className="loginContainer" >
-                            <Image src={logoImage} size="small" centered disabled verticalAlign="bottom"/>                       
-                            <Header as='h2'  textAlign='center' className="loginHeader">
-                                Welcome to ESRMS-G
-                            </Header>
-                            
-                            <Form size='large'>
-                                <Segment stacked>
-                                <Form.Input 
-                                    fluid icon='user' 
-                                    iconPosition='left' 
-                                    placeholder='E-mail address' 
-                                    error={this.state.errors['email']}
-                                    name={'email'}
-                                    value={this.state.email}
-                                    onChange={this.handleInputChange}
-                                    
-                                />
-                                <Form.Input
-                                    fluid
-                                    icon='lock'
-                                    iconPosition='left'
-                                    placeholder='Password'
-                                    type='password'
-                                    error={this.state.errors['password']}
-                                    name={'password'}
-                                    value={this.state.password}
-                                    onChange={this.handleInputChange}
-                                />
+                    <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
+                        <Grid.Column className="loginContainer" >
+                        <Image src={logoImage} size="small" centered disabled verticalAlign="bottom"/>                       
+                        <Header as='h2'  textAlign='center' className="loginHeader">
+                            Welcome to ESRMS-G
+                        </Header>
+                        
+                        <Form size='large'>
+                            <Segment stacked>
+                            <Form.Input 
+                                fluid icon='user' 
+                                iconPosition='left' 
+                                placeholder='E-mail address' 
+                                error={this.state.errors['email']}
+                                name={'email'}
+                                value={this.state.email}
+                                onChange={this.handleInputChange}
                                 
-                                {this.state.showErrMsg && 
-                                <p className="errMsg">
-                                    <Icon name="exclamation triangle"/>
-                                    Your login credentials could not be verified, please try again.
-                                </p>}
+                            />
+                            <Form.Input
+                                fluid
+                                icon='lock'
+                                iconPosition='left'
+                                placeholder='Password'
+                                type='password'
+                                error={this.state.errors['password']}
+                                name={'password'}
+                                value={this.state.password}
+                                onChange={this.handleInputChange}
+                            />
+                            
+                            {this.state.showErrMsg && 
+                            <p className="errMsg">
+                                <Icon name="exclamation triangle"/>
+                                Your login credentials could not be verified, please try again.
+                            </p>}
 
-                                <Button fluid size='large' className = "loginBtn" onClick={this.submitLogin}>
-                                    Sign in 
-                                </Button>
-                                </Segment>
-                                </Form>
-                                </Grid.Column>
-                            </Grid>
-                        }
+                            <Button fluid size='large' className = "loginBtn" onClick={this.submitLogin}>
+                                Sign in 
+                            </Button>
+                            </Segment>
+                            </Form>
+                            </Grid.Column>
+                        </Grid>
                 </Container>
             </>
         )

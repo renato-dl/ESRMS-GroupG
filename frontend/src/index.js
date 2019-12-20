@@ -8,6 +8,7 @@ import 'semantic-ui-css/semantic.min.css';
 import {App} from './containers/App/App';
 import { Login } from './containers/Login/Login';
 import { Roles } from './containers/Roles/Roles';
+import { ChangePassword } from './containers/ChangePassword/ChangePassword';
 
 render(
   <BrowserRouter>
@@ -15,6 +16,7 @@ render(
       
       <Route exact path="/login" component={Login} />
       <Route exact path="/roles" component={Roles} />
+      <Route exact path="/changePassword" component={ChangePassword} />
       
       <Route exact path="/" render={() => {
           const role = localStorage.getItem('role');
