@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get('/students', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'studentsByParentId'));
 router.get('/grades', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'gradesByStudentId'));
+router.get('/subjects', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'subjectsByStudentId'));
 router.get('/assignments', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'assignmentsByStudentId'));
 router.get('/assignment/file', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'getAssignmentFile'));
 router.get('/attendance', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'attendanceByStudentId'));

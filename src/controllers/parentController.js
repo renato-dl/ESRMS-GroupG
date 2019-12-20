@@ -1,6 +1,7 @@
 import {BaseController} from "./baseController";
 import Student from "../database/models/student";
 import Grade from '../database/models/grade';
+import Subject from '../database/models/subject';
 import Assignment from '../database/models/assignment';
 import StudentAttendance from '../database/models/studentAttendance';
 import path from 'path';
@@ -20,6 +21,16 @@ class ParentController extends BaseController {
     const grades = await Grade.findByStudentId(req.query.studentId, {page: req.query.page, pageSize: req.query.pageSize});
     res.send(grades);
   }
+
+  async subjectsByStudentId(req, res) {
+    if (!await Student.checkIfRelated(req.query.studentId, req.user.ID)) {
+      res.send(401);
+      return; 
+    }
+    const subjects = await Subject.findByStudentId(req.query.studentId);
+    res.send(subjects);
+  }
+
 
   async assignmentsByStudentId(req, res) {
     if (!req.query.studentId) {
