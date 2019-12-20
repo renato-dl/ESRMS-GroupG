@@ -8,7 +8,7 @@ export function genRandomString (length) {
     .slice(0,length);   /** return required number of characters */
 }
 
-export function createSecurePassword(password) {
+export function hashPassword(password) {
   return bcrypt.hashSync(password, 12);
 }
 
