@@ -75,10 +75,16 @@
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/src/config/jest.setup.js"
+    ],
+    "reporters": [
+      "default",
+      [
+        "jest-sonar",
+        {
+          "outputDirectory": "coverage",
+          "outputName": "test-reporter.xml"
+        }
+      ]
     ]
-  },
-  "jestSonar": {
-    "reportPath": "coverage",
-    "reportFile": "test-reporter.xml"
   }
 }
