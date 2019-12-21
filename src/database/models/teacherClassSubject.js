@@ -51,6 +51,18 @@ class TCSR extends Model {
     
   }
 
+  async createNew(teacherId, subjectId, classId) {
+    const alreadyExists = await this.checkIfTeacherTeachesSubjectInClass(teacherId, subjectId, classId);
+    if (alreadyExists) {
+      throw new Error('Teacher already teaches specified subject in specified class')
+    }
+    return super.create({
+      TeacherId: teacherId,
+      SubjectId: subjectId,
+      ClassId: classId
+    });
+  }
+
 }
 
 export default new TCSR();
