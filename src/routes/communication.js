@@ -2,11 +2,11 @@ import express from 'express';
 import CommunicationController from '../controllers/communicationController';
 import { Authorization } from '../middlewares/authorization';
 
-const router = express.Router();
+const communication = express.Router();
 
-router.get('/', Authorization(['IsAdminOfficer', 'IsParent']), CommunicationController.processRequest.bind(CommunicationController, 'list'));
-router.post('/', Authorization(['IsAdminOfficer']), CommunicationController.processRequest.bind(CommunicationController, 'add'));
-router.patch('/:id', Authorization(['IsAdminOfficer']), CommunicationController.processRequest.bind(CommunicationController, 'update'));
-router.delete('/:id', Authorization(['IsAdminOfficer']), CommunicationController.processRequest.bind(CommunicationController, 'remove'));
+communication.get('/', Authorization(['IsAdminOfficer', 'IsParent']), CommunicationController.processRequest.bind(CommunicationController, 'list'));
+communication.post('/', Authorization(['IsAdminOfficer']), CommunicationController.processRequest.bind(CommunicationController, 'add'));
+communication.patch('/:id', Authorization(['IsAdminOfficer']), CommunicationController.processRequest.bind(CommunicationController, 'update'));
+communication.delete('/:id', Authorization(['IsAdminOfficer']), CommunicationController.processRequest.bind(CommunicationController, 'remove'));
 
-export default router;
+export default communication;

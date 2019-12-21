@@ -2,11 +2,11 @@ import express from 'express';
 import ParentController from '../controllers/parentController';
 import { Authorization } from '../middlewares/authorization';
 
-const router = express.Router();
+const parent = express.Router();
 
-router.get('/students', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'studentsByParentId'));
-router.get('/grades', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'gradesByStudentId'));
-router.get('/assignments', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'assignmentsByStudentId'));
-router.get('/assignment/file', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'getAssignmentFile'));
-router.get('/attendance', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'attendanceByStudentId'));
-export default router;
+parent.get('/students', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'studentsByParentId'));
+parent.get('/grades', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'gradesByStudentId'));
+parent.get('/assignments', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'assignmentsByStudentId'));
+parent.get('/assignment/file', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'getAssignmentFile'));
+parent.get('/attendance', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'attendanceByStudentId'));
+export default parent;

@@ -3,7 +3,6 @@ import uuid from 'uuid/v4';
 import validator from 'validator';
 import {hashPassword} from '../../services/passwordGenerator';
 import {validateSSN} from '../../services/ssnValidator'
-import student from './student';
 
 class User extends Model {
   constructor() {

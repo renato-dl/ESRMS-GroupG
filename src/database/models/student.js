@@ -137,7 +137,7 @@ class Student extends Model {
     }
     
     const connection = await this.db.getConnection();
-    const query = `SELECT ID, FirstName, LastName, Gender
+    let query = `SELECT ID, FirstName, LastName, Gender
     FROM Students
     WHERE ClassId = ?
     ORDER BY LastName`;
@@ -158,7 +158,7 @@ class Student extends Model {
     }
     
     const connection = await this.db.getConnection();
-    const query = `
+    let query = `
       SELECT s.ID, s.FirstName, s.LastName, s.Gender
       FROM TeacherSubjectClassRelation tscr, Students s
       WHERE s.ClassId = ?
