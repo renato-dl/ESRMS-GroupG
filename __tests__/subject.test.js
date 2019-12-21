@@ -1,6 +1,8 @@
 import Class from '../src/database/models/class';
+import User from '../src/database/models/user';
 import Subject from '../src/database/models/subject';
 import TCSR from '../src/database/models/teacherClassSubject'
+import moment from 'moment';
 
 describe('Teacher tests about visualization of the subjects', () => {
   test("It should retrieve the subjects of a given teacher", async() =>{
@@ -25,16 +27,7 @@ describe('Teacher tests about visualization of the subjects', () => {
           ]
         )
      );
-    }
-  );
-
-  test("It should retrieve the class name by its id", async() =>{
-    const classObj = await Class.getClassNameById(1);
-    expect(classObj).not.toBeNull();
-    expect(classObj).toHaveLength(2);
-    expect(classObj).toEqual("1A");
-    }
-  );
+    });
 });
 
 describe("Tests about the visualization of the subjects of a parent's child", () =>{
