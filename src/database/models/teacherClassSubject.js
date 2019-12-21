@@ -40,7 +40,7 @@ class TCSR extends Model {
       [teacherId, classId]
     );
     connenction.release();
-    if (result[0].count == 1) {
+    if (result[0].count > 0) {
       return true;
     }
     return false;
