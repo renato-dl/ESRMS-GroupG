@@ -2,7 +2,7 @@ import React from 'react';
 import {Icon, Modal, Button, Form, Segment, Checkbox, Label} from 'semantic-ui-react';
 import './CommunicationDetails.scss';
 
-import moment from 'moment';
+//import moment from 'moment';
 import DatePicker , { registerLocale } from "react-datepicker";
 import en from "date-fns/locale/en-GB";
 registerLocale("en", en);
