@@ -81,7 +81,7 @@ export class ChildAttendance extends React.Component{
       if(!this.state.attendanceForCalendar.find((a)=>moment(a.Date).isSame(pre_date,'day')))
       {
         var week_day=moment(pre_date).day()
-        if(week_day!=0){
+        if(week_day!==0){
           var element={
             id:++id_num,
             start: new Date(pre_date),
@@ -129,11 +129,11 @@ export class ChildAttendance extends React.Component{
 
     eventPropGetter = (event) => {
       const status=event.title;
-      if(status=='Absent')
+      if(status==='Absent')
       return {className:'red'};
-      else if(status=='Late Entry')
+      else if(status==='Late Entry')
       return {className:'orange'}
-      else if(status=='Early Exit')
+      else if(status==='Early Exit')
       return {className:'blue'}
       else return {className:'green'}
     }
@@ -155,20 +155,20 @@ export class ChildAttendance extends React.Component{
           />      
           </div>
 
-        {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='Absent'&&
+        {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title==='Absent'&&
           <AttendanceDetailsAbsence
             attendance={this.state.attendanceDataForModal}
             onClose={this.closeAttendanceModal}
           />
         }
-         {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='Late Entry'&&
+         {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title==='Late Entry'&&
           <AttendanceDetailsLateentry
             attendance={this.state.attendanceDataForModal}
             onClose={this.closeAttendanceModal}
           />
         }
 
-        {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title=='Early Exit'&&
+        {this.state.attendanceModalOpen && this.state.attendanceDataForModal.title==='Early Exit'&&
           <AttendanceDetailsEarlyexit
             attendance={this.state.attendanceDataForModal}
             onClose={this.closeAttendanceModal}

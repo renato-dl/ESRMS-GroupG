@@ -59,7 +59,7 @@ export class ChangePassword extends React.Component {
 
         if (this.state.newPasswordConfirm.length) { errors['weakMsg'] = errors['newPassword']; }
         if (this.state.newPassword.length) {errors['dmatchMsg'] = errors['newPasswordConfirm'];}
-        errors['sameMsg'] = (this.state.oldPassword === this.state.newPassword && this.state.oldPassword.length != 0);
+        errors['sameMsg'] = (this.state.oldPassword === this.state.newPassword && this.state.oldPassword.length !== 0);
         
         const hasErrors = !!Object.keys(errors).filter((e) => errors[e]).length;
         return [hasErrors, errors];
@@ -93,7 +93,7 @@ export class ChangePassword extends React.Component {
 
             const response = await api.auth.changePassword(dat);
             if(response.data.success){
-                //showw success message .. fake loading 1-2 sec
+                //showw success message .. fakely add loading time
                 setTimeout(this.redirectToLogin, 500);
             }
             
@@ -169,7 +169,7 @@ export class ChangePassword extends React.Component {
                             
                             {this.state.showErrMsg && 
                             <p className="invMsg">
-                                <Icon name="exclamation triangle"/>
+                                <Icon name="exclamation triangle"/> 
                                 Inserted current password is invalid.
                             </p>}
 

@@ -40,7 +40,7 @@ class Topic extends Model {
     if(selectResult.length != 1) {
       connection.release();
       throw new Error('Unauthorized');
-    };
+    }
 
     const insertResult = await connection.query(
       `INSERT INTO ${this.tableName} (TeacherSubjectClassRelationId, Title, TopicDescription, TopicDate)
@@ -70,7 +70,7 @@ class Topic extends Model {
     if(checkTopic.length != 1) {
       connection.release();
       throw new Error('The topic does not exist!');
-    };
+    }
 
     //check if the topic is of that teacher
     const selectResult = await connection.query(
@@ -83,7 +83,7 @@ class Topic extends Model {
     connection.release();
     if(selectResult.length != 1) {
       throw new Error('Unauthorized');
-    };
+    }
     await this.remove(topicId);
   }
   
