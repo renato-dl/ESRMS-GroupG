@@ -6,6 +6,7 @@ class Subject extends Model {
   }
 
   async findByTeacherId(teacherId) {
+    if (!teacherId) throw new Error('Missing or invalid teacher id');
     try{
       const connection = await this.db.getConnection();
       const sql_query = `select s.*, tscr.classid 
