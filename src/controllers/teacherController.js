@@ -4,6 +4,7 @@ import Topic from '../database/models/topic';
 import Class from '../database/models/class';
 import TCSR from '../database/models/teacherClassSubject';
 import Grade from '../database/models/grade';
+import Note from '../database/models/note';
 import Student from '../database/models/student';
 import StudentAttendance from '../database/models/studentAttendance';
 import ClassAttendance from '../database/models/classAttendance';
@@ -433,6 +434,22 @@ class TeacherController extends BaseController {
     const filePath = path.join(__dirname, "../../", "uploads", assignment.AttachmentFile);
     res.download(filePath);
   }
+
+  /* GET /teacher/notes
+ Query: classId, dateRange, paging */
+ async getNotes(req, res) {
+  if(!await TCSR.checkIfTeacherTeachesInClass(req.user.ID, req.query.classId)) {
+    res.send(401);
+    return;
+  }
+  res.send(await Note.findByClassId(
+    req.query.classId,
+    {from: req.query.fromDate, to: req.query.toDate},
+    {page: req.query.page, pageSize: req.query.pageSize}
+  ));
+}
+
+
 }
 
 export default new TeacherController();
