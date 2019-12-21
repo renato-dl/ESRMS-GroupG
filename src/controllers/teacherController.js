@@ -116,7 +116,7 @@ class TeacherController extends BaseController {
 
 
   // POST /teacher/grade
-  // Body: classId, subjectId, studentId, grade, type
+  // Body: classId, subjectId, studentId, grade, type, gradeDate
   async addGrade(req, res) {
     if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
       req.user.ID,
@@ -125,7 +125,22 @@ class TeacherController extends BaseController {
       ){
         res.send(401);
         return;
-    } 
+    }
+    //attendance check
+    const date = moment.utc(req.body.gradeDate);
+
+    const classAttendance = await ClassAttendance.hasAttendanceBeenRegistered(req.body.classId, date);
+    if (!classAttendance) {
+      throw new Error('No attendance info available');
+    }
+    const attendance = await StudentAttendance.findByStudentId(req.body.studentId, {
+      from: date.format('YYYY-MM-DD'),
+      to: date.format('YYYY-MM-DD')
+    });
+    if (attendance.length != 0 && attendance[0].LateEntry == null) {
+      throw new Error('Student is absent');
+    }
+
     const result = await Grade.addGrade(
       req.body.subjectId,
       req.body.studentId,
