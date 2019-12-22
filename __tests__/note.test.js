@@ -1,11 +1,11 @@
-import Assignment from '../src/database/models/assignment';
 import User from '../src/database/models/user';
 import Class from '../src/database/models/class';
 import Student from '../src/database/models/student';
 import Note from '../src/database/models/note';
 import TCS from '../src/database/models/teacherClassSubject';
 import moment from 'moment';
-import student from '../src/database/models/student';
+import db from '../src/database';
+import uuid from 'uuid';
 
 describe("Tests about visualization of a class's notes by a teacher", () => {
 
@@ -896,4 +896,105 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
     });
 
 
+});
+
+describe("findByStudentId", () => {
+
+  test("It should show the notes", async() =>{
+
+    // Create teacher/parent
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: 'abc@cba.ab',
+      SSN: 'SCIWWN72A14H620P',
+      Password: 'pass',
+      FirstName: 'Teach',
+      LastName: 'Er',
+      IsTeacher: 1,
+      IsParent: 1
+    });
+
+    // Create class
+    const classId = await Class.create({
+      CreationYear: moment().utc().format('YYYY'),
+      Name: 'ì',
+      CoordinatorId: userId
+    });
+
+    // Create student
+    const studentId = uuid.v4();
+    await Student.create({
+      ID: studentId,
+      FirstName: 'AAA',
+      LastName: 'AAA',
+      SSN: 'ZZGSCD71A54Z325N',
+      BirthDate: '2013-05-11',
+      Parent1: userId,
+      ClassId: classId,
+      Gender: 'M'
+    });
+
+    //notes
+    const title1 = 'Note1';
+    const desc1 = 'Description of note 1';
+    const date1 = moment.utc('2019-12-10T00:00:00.000Z');
+    const note1 = await Note.create({
+      Title: title1,
+      Description: desc1,
+      StudentId: studentId,
+      TeacherId: userId,
+      Date: date1.format(db.getDateFormatString())
+    });
+
+    const title2 = 'Note2';
+    const desc2 = 'Description of note 2';
+    const date2 = moment.utc('2019-12-12T00:00:00.000Z');
+    const note2 = await Note.create({
+      Title: title2,
+      Description: desc2,
+      StudentId: studentId,
+      TeacherId: userId,
+      Date: date2.format(db.getDateFormatString())
+    });
+
+    const result = await Note.findByStudentId(studentId);
+
+    expect([...result]).toEqual(
+      [
+        {
+          ID: note1,
+          Title: title1,
+          IsSeen: 0,
+          Date: date1.toDate(),
+          FirstName: 'Teach',
+          LastName: 'Er'
+        },
+        {
+          ID: note2,
+          Title: title2,
+          IsSeen: 0,
+          Date: date2.toDate(),
+          FirstName: 'Teach',
+          LastName: 'Er'
+        }
+      ]
+    );
+
+    await Note.remove(note2);
+    await Note.remove(note1);
+    await Student.remove(studentId);
+    await Class.remove(classId);
+    await User.remove(userId);
+  
+  });
+
+  test("Invalid student id", async() =>{
+
+    try {
+      await Note.findByStudentId(undefined);
+    } catch (error) {
+      expect(error).toHaveProperty("message", "Missing or invalid studentId");
+    }
+  });
 });

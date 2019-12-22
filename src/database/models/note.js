@@ -91,7 +91,7 @@ class Note extends Model {
       throw new Error('Missing or invalid studentId');
     }
     const query = `
-      SELECT N.ID, N.Title, N.Date, N.IsSeen, T.LastName, T.FirstName 
+      SELECT N.ID, N.Title, N.Date, N.IsSeen, U.LastName, U.FirstName 
       FROM ${this.tableName} N, Users U
       WHERE N.TeacherId = U.ID AND N.StudentId = ?
     `;
