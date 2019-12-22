@@ -51,16 +51,36 @@ class TCSR extends Model {
     
   }
 
-  async createNew(teacherId, subjectId, classId) {
-    const alreadyExists = await this.checkIfTeacherTeachesSubjectInClass(teacherId, subjectId, classId);
-    if (alreadyExists) {
-      throw new Error('Teacher already teaches specified subject in specified class')
+  async createNew(teacherId, CSPairs) {
+    if (!CSPairs || !Array.isArray(CSPairs)) {
+      throw new Error('Missing or invalid class/subject array');
     }
-    return super.create({
-      TeacherId: teacherId,
-      SubjectId: subjectId,
-      ClassId: classId
+
+    await Promise.all(CSPairs.map(async element => {
+      const alreadyExists = await this.checkIfTeacherTeachesSubjectInClass(teacherId, element.subjectId, element.classId);
+      if (alreadyExists) {
+        throw new Error('Teacher already teaches specified subject in specified class');
+      }
+    }));
+
+    const query = `
+      INSERT INTO ${this.tableName}(TeacherId, SubjectId, ClassId)
+      VALUES (?, ?, ?)
+    `;
+    const values = CSPairs.map(element => {
+      return [teacherId, element.subjectId, element.classId];
     });
+
+    const connection = await this.db.getConnection();
+    let result;
+    try {
+      result = await connection.batch(query, values);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      connection.release();
+    }
+    return {newRecords: result.affectedRows}
   }
 
 }

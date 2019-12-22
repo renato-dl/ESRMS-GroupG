@@ -4,6 +4,7 @@ import User from '../src/database/models/user'
 import uuid from 'uuid';
 import teacherClassSubject from '../src/database/models/teacherClassSubject';
 import moment from 'moment';
+import db from '../src/database';
 
 describe('Tests about getting the teaching classes of a teacher', () =>{
   test('It should return the classes of a teacher', async () =>{
@@ -343,14 +344,76 @@ describe('createNew', () => {
       CoordinatorId: userId
     });
 
-    const result = await TCSR.createNew(userId, 3, classId);
-    
-    const check = await TCSR.findById(result);
-    expect(check.ClassId).toEqual(classId);
-    expect(check.SubjectId).toEqual(3);
-    expect(check.TeacherId).toEqual(userId);
+    const result = await TCSR.createNew(userId, [{classId, subjectId: 3}]);
 
-    await TCSR.remove(result);
+    expect(result.newRecords).toBe(1);
+    
+    const query = 'SELECT * FROM TeacherSubjectClassRelation WHERE TeacherId = ?'
+    const connection = await db.getConnection();
+    let check;
+    try {
+      check = await connection.query(query, [userId]);
+    } finally {
+      connection.release();
+    }
+    expect(check).toHaveLength(1);
+    expect(check[0].ClassId).toEqual(classId);
+    expect(check[0].SubjectId).toEqual(3);
+    expect(check[0].TeacherId).toEqual(userId);
+
+    await TCSR.remove(check[0].ID);
+    await Class.remove(classId);
+    await User.remove(userId);
+
+
+  });
+
+  test('It should make multiple insertions', async () =>{
+    // Create teacher
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: 'abc@cba.ab',
+      SSN: 'SCIWWN72A14H620P',
+      Password: 'pass',
+      FirstName: 'Teach',
+      LastName: 'Er',
+      IsTeacher: 1,
+    });
+
+    // Create class
+    const classId = await Class.create({
+      CreationYear: moment().utc().format('YYYY'),
+      Name: 'ì',
+      CoordinatorId: userId
+    });
+
+    const result = await TCSR.createNew(userId, [
+      {classId, subjectId: 3},
+      {classId, subjectId: 4},
+    ]);
+
+    expect(result.newRecords).toBe(2);
+
+    const query = 'SELECT * FROM TeacherSubjectClassRelation WHERE TeacherId = ?'
+    const connection = await db.getConnection();
+    let check;
+    try {
+      check = await connection.query(query, [userId]);
+    } finally {
+      connection.release();
+    }
+    expect(check).toHaveLength(2);
+    expect(check[0].ClassId).toEqual(classId);
+    expect(check[0].SubjectId).toEqual(3);
+    expect(check[0].TeacherId).toEqual(userId);
+    expect(check[1].ClassId).toEqual(classId);
+    expect(check[1].SubjectId).toEqual(4);
+    expect(check[1].TeacherId).toEqual(userId);
+
+
+    await TCSR.remove(check[0].ID);
+    await TCSR.remove(check[1].ID);
     await Class.remove(classId);
     await User.remove(userId);
 
@@ -377,14 +440,31 @@ describe('createNew', () => {
       CoordinatorId: userId
     });
 
-    const first = await TCSR.createNew(userId, 3, classId);
+    const first = await TCSR.createNew(userId, [
+      {classId, subjectId: 3},
+      {classId, subjectId: 4},
+    ]);
+
 
     try{
-      await TCSR.createNew(userId, 3, classId);
+      await TCSR.createNew(userId, [
+        {classId, subjectId: 2},
+        {classId, subjectId: 4},
+      ]);
     } catch(error) {
       expect(error).toHaveProperty("message", "Teacher already teaches specified subject in specified class");
     } finally {
-      await TCSR.remove(first);
+      const query = 'SELECT * FROM TeacherSubjectClassRelation WHERE TeacherId = ?'
+      const connection = await db.getConnection();
+      let check;
+      try {
+        check = await connection.query(query, [userId]);
+      } finally {
+        connection.release();
+      }
+      expect(check).toHaveLength(2);
+      await TCSR.remove(check[0].ID);
+      await TCSR.remove(check[1].ID);
       await Class.remove(classId);
       await User.remove(userId);
     }
