@@ -102,21 +102,21 @@ class Note extends Model {
       throw new Error('Missing or invalid note date');
     }
 
-    const date = moment.utc(dueDate);
-    const dayOfWeek = moment.utc(dueDate).isoWeekday();
+    const updateDate = moment.utc(date);
+    const dayOfWeek = moment.utc(updateDate).isoWeekday();
 
-    if (!date.isValid() || dayOfWeek == 7) {
+    if (!updateDate.isValid() || dayOfWeek == 7) {
       throw new Error('Invalid note date');
     }
 
-    if (date.isAfter(moment().utc(), 'day')) {
+    if (updateDate.isAfter(moment().utc(), 'day')) {
       throw new Error('Invalid note date');
     }
 
     return this.update(noteId, {
         Title: title,
         Description: description,
-        Date: date.format(this.db.getDateFormatString()),
+        Date: updateDate.format(this.db.getDateFormatString()),
       })
   }
 
