@@ -439,7 +439,7 @@ class TeacherController extends BaseController {
   Query: classId, dateRange, paging */
   async getNotes(req, res) {
     if(!await TCSR.checkIfTeacherTeachesInClass(req.user.ID, req.query.classId)) {
-      res.send(401);
+      res.sendStatus(401);
       return;
     }
     res.send(await Note.findByClassId(
@@ -453,11 +453,12 @@ class TeacherController extends BaseController {
   // Body: classId, Title, Description, StudentId, TeacherId, Date
   async addNote(req, res) {
     
-    if(!await TCSR.checkIfTeacherTeachesInClass(
+    if(!await TCSR.checkIfTeacherTeachesToStudentInClass(
       req.user.ID,
+      req.body.studentId,
       req.body.classId)
     ) {
-      res.send(401);
+      res.sendStatus(401);
       return;
     } 
     const result = await Note.addNote(
