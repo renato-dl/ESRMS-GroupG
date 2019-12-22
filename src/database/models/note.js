@@ -1,4 +1,5 @@
 import {Model} from './base';
+import moment from 'moment';
 
 class Note extends Model {
   constructor() {
@@ -35,6 +36,54 @@ class Note extends Model {
       return {message: "Entity not found"};
     }
     return results;
+  }
+
+  async addNote(title, description, studentId, teacherId, date){
+
+    if (!title) {
+      throw new Error('Missing or invalid title');
+    }
+    
+    if (!description) {
+      throw new Error('Missing or invalid description');
+    }
+
+    if (!studentId) {
+      throw new Error('Missing or invalid student id');
+    }
+
+    if (!teacherId) {
+      throw new Error('Missing or invalid teacher id');
+    }
+
+    if (!date) {
+      throw new Error('Missing or invalid note date');
+    }
+
+    const insertDate = moment.utc(date);
+    const dayOfWeek = moment.utc(date).isoWeekday();
+
+    if (!insertDate.isValid() || dayOfWeek == 7) {
+      throw new Error('Invalid note date');
+    }
+
+    if (insertDate.isAfter(moment().utc(), 'day')) {
+      throw new Error('Invalid note date');
+    }
+
+    const result = await this.create({
+      Title: title,
+      Description: description,
+      StudentId: studentId,
+      TeacherId: teacherId, 
+      Date: insertDate.format(this.db.getDateFormatString()),
+  
+    });
+
+    return {
+      id: result
+    }
+
   }
   
 }

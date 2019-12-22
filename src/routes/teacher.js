@@ -33,6 +33,7 @@ teacher.post('/late_entry', Authorization(['IsTeacher']), TeacherController.proc
 teacher.post('/early_exit', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'registerEarlyExit'));
 
 teacher.get('/notes', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'getNotes'));
+teacher.post('/note', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'addNote'));
 
 
 export default teacher;

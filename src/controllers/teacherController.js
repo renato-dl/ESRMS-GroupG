@@ -436,18 +436,39 @@ class TeacherController extends BaseController {
   }
 
   /* GET /teacher/notes
- Query: classId, dateRange, paging */
- async getNotes(req, res) {
-  if(!await TCSR.checkIfTeacherTeachesInClass(req.user.ID, req.query.classId)) {
-    res.send(401);
-    return;
+  Query: classId, dateRange, paging */
+  async getNotes(req, res) {
+    if(!await TCSR.checkIfTeacherTeachesInClass(req.user.ID, req.query.classId)) {
+      res.send(401);
+      return;
+    }
+    res.send(await Note.findByClassId(
+      req.query.classId,
+      {from: req.query.fromDate, to: req.query.toDate},
+      {page: req.query.page, pageSize: req.query.pageSize}
+    ));
   }
-  res.send(await Note.findByClassId(
-    req.query.classId,
-    {from: req.query.fromDate, to: req.query.toDate},
-    {page: req.query.page, pageSize: req.query.pageSize}
-  ));
-}
+
+  // POST /teacher/note
+  // Body: classId, Title, Description, StudentId, TeacherId, Date
+  async addNote(req, res) {
+    
+    if(!await TCSR.checkIfTeacherTeachesInClass(
+      req.user.ID,
+      req.body.classId)
+    ) {
+      res.send(401);
+      return;
+    } 
+    const result = await Note.addNote(
+      req.body.title,
+      req.body.description,
+      req.body.studentId,
+      req.user.ID,
+      req.body.date,
+    );
+    res.send({success: true, id: result.id});
+  }
 
 
 }
