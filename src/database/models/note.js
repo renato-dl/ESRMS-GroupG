@@ -85,6 +85,28 @@ class Note extends Model {
     }
 
   }
+
+  async findByStudentId(studentId) {
+    if (!studentId) {
+      throw new Error('Missing or invalid studentId');
+    }
+    const query = `
+      SELECT N.ID, N.Title, N.Date, N.IsSeen, T.LastName, T.FirstName 
+      FROM ${this.tableName} N, Users U
+      WHERE N.TeacherId = U.ID AND N.StudentId = ?
+    `;
+    let result;
+    const connection = await this.db.getConnection();
+    try {
+      result = await connection.query(query, studentId);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      connection.release();
+    }
+    return result;
+  }
   
 }
+
 export default new Note();
