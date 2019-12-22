@@ -133,18 +133,19 @@ describe("Tests about visualization of a class's notes by a teacher", () => {
       const title2 = "Test title 2";
       const description2 = "Test description 2";
 
-      const date1 = moment().utc().add(1, 'days').set({
+      let date1 = moment().utc().add(1, 'days').set({
           "hour": 0,
           "minute": 0, 
           "second": 0, 
           "millisecond": 0
-      }); //tomorrow
-      while (date1.isoWeekday() == 6 || date1.isoWeekday() == 7) {
-          date1.add(1, 'days');
+      });
+
+      while (date1.isoWeekday() == 7) {
+          date1.subtract(1, 'days');
       }
-      const date2 = date1.clone().add(1, 'days');
-      while (date2.isoWeekday() == 6 || date2.isoWeekday() == 7) {
-          date2.add(1, 'days');
+      let date2 = date1.clone().add(2, 'days');
+      while (date2.isoWeekday() == 7) {
+          date2.subtract(1, 'days');
       }        
 
       //first add the student
@@ -1085,6 +1086,37 @@ describe("Tests about edition of a note by a teacher", () =>{
         await User.remove(insertTeacher.id);
         await Student.remove(insertStudent.id);
         await User.remove(insertParent.id);
+
+    });
+    
+    test("It should throw an error when noteId is missing or invalid", async() =>{
+        const title = "Test title";
+        const description ="Test description";
+        let date = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        const dayOfWeek = date.isoWeekday();
+
+        if(dayOfWeek == 7){
+            date.subtract(1, 'days'); 
+        }
+        
+        //update note
+        try{
+            await Note.updateNote(
+                undefined,
+                title,
+                description,
+                date.format()
+            )
+
+        }catch(error){
+            expect(error).toHaveProperty("message", "Missing or invalid note id");
+        }
 
     });
 
