@@ -94,6 +94,25 @@ class ParentController extends BaseController {
     const notes = await Note.findByStudentId(req.query.studentId);
     res.send(notes);
   }
+
+  async getNote(req, res) {
+    let note;
+    try {
+      note = await Note.findById(req.body.noteId);
+    } catch (error) {
+      throw new Error('Missing or invalid note id');
+    }
+    const related = await Student.checkIfRelated(note.StudentId, req.user.ID);
+    if (!related) {
+      res.sendStatus(401);
+      return;
+    }
+    res.send({description: note.Description});
+    if (note.IsSeen == 0) {
+      Note.update(req.body.noteId, {IsSeen: 1});
+    }
+  }
+
 }
 
 export default new ParentController();
