@@ -1,10 +1,9 @@
 import React from 'react';
-import {Icon, Modal, Button} from 'semantic-ui-react';
+import {Icon, Modal} from 'semantic-ui-react';
 import moment from 'moment';
 import './AttendanceDetails.scss';
 
 export const AttendanceDetailsAbsence = (props) => (
-  console.log(props),
   <Modal dimmer open className="attendance-detail" size="small">
     <Modal.Header>
       <span>Attendance details</span>

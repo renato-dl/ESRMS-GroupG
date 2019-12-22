@@ -27,6 +27,49 @@ class TCSR extends Model {
 
   }
 
+  async checkIfTeacherTeachesInClass(teacherId, classId) {
+
+    if (!teacherId) throw new Error('Missing or invalid teacher id');
+    if (!classId) throw new Error('Missing or invalid class id');
+
+    const connenction = await this.db.getConnection();
+    const result = await connenction.query(
+      `SELECT COUNT(*) AS count
+      FROM ${this.tableName}
+      WHERE TeacherId = ? AND ClassId = ?`,
+      [teacherId, classId]
+    );
+    connenction.release();
+    if (result[0].count > 0) {
+      return true;
+    }
+    return false;
+
+  }
+
+  async checkIfTeacherTeachesToStudentInClass(teacherId, studentId) {
+
+    if (!teacherId) throw new Error('Missing or invalid teacher id');
+    if (!studentId) throw new Error('Missing or invalid student id');
+
+    const connenction = await this.db.getConnection();
+    const result = await connenction.query(
+      `SELECT COUNT(*) AS count
+      FROM ${this.tableName} tscr, Students s
+      WHERE tscr.ClassId = s.ClassId AND 
+      tscr.TeacherId = ? AND s.ID = ?`,
+      [teacherId, studentId]
+    );
+    connenction.release();
+    if (result[0].count > 0) {
+      return true;
+    }
+    return false;
+
+  }
+
+
+
   async getTeachingClasses(teacherId) {
     if(!teacherId){
       throw new Error('Missing or invalid teacher id');

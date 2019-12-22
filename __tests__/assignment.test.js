@@ -16,7 +16,7 @@ describe("Tests about visualization of assignments by a parent", () => {
       const assignments = await Assignment.findByStudentId(testStudent, {}, {});
       expect(assignments).not.toBeNull();
       expect(assignments).toHaveLength(3);
-      const date1 = new Date("2019-12-15T00:00:00.000Z");
+      const date1 = new Date("2019-12-17T00:00:00.000Z");
       const date2 = new Date("2019-12-18T00:00:00.000Z");
       expect(assignments).toEqual(
           expect.arrayContaining([
@@ -155,8 +155,19 @@ describe("Tests about visualization of assignments by a teacher", () => {
         const title2 = "Test title 2";
         const description2 = "Test description 2";
 
-        const dueDate1 = new Date("2019-12-20T00:00:00.000Z");
-        const dueDate2 = new Date("2019-12-21T00:00:00.000Z");
+        const dueDate1 = moment().utc().add(1, 'days').set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond": 0
+        }); //tomorrow
+        while (dueDate1.isoWeekday() == 6 || dueDate1.isoWeekday() == 7) {
+            dueDate1.add(1, 'days');
+        }
+        const dueDate2 = dueDate1.clone().add(1, 'days');
+        while (dueDate2.isoWeekday() == 6 || dueDate2.isoWeekday() == 7) {
+            dueDate2.add(1, 'days');
+        }        
 
         //first add new teacher
         const insertTeacher = await User.insertInternalAccountData( 
@@ -224,7 +235,7 @@ describe("Tests about visualization of assignments by a teacher", () => {
                         "Description": "Test description", 
                         "ID": insertAssignment1.id, 
                         "Title": "Test title",
-                        "DueDate": dueDate1
+                        "DueDate": dueDate1.toDate()
                     }
                 ),
                 expect.objectContaining(
@@ -232,7 +243,7 @@ describe("Tests about visualization of assignments by a teacher", () => {
                         "Description": "Test description 2", 
                         "ID": insertAssignment2.id, 
                         "Title": "Test title 2",
-                        "DueDate": dueDate2
+                        "DueDate": dueDate2.toDate()
                     }
                 )
             ])
@@ -1277,7 +1288,7 @@ describe('Test weather a teacher is authorized to access a given assignment', ()
       }
     });
   
-    test('It throw an error about invalid teacher id', async () => {
+    test('It throw an error about invalid assignment id', async () => {
         const insertTeacher = await User.insertInternalAccountData( 
             "Joe", 
             "Kernel", 

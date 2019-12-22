@@ -47,6 +47,11 @@ export class TeacherAPIService extends BaseAPIService {
     return this.get(`/teacher/assignments?subjectId=${subjectId}&classId=${classId}&fromDate=${from}&toDate=${to}`);
   }
 
+  // assignment file
+  getAssignmentFile(fileID) {
+    return this.get(`/teacher/assignment/file?ID=${fileID}`, null, 'arraybuffer');
+  }
+
   // subjectId, classId, Title, Description, DueDate
   addAssignment(data){
     return this.post('/teacher/assignment', data);

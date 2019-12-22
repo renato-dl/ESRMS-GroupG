@@ -8,9 +8,10 @@ import {
 import moment from 'moment';
 import { TeacherAssignmentDetails } from './TeacherAssignmentDetails/TeacherAssignmentDetails';
 import {ApplicationStoreContext} from '../../store';
-import { TeacherAssignmentCalendar } from './TeacherAssignmentCalendar/TeacherAssignmentCalendar.js';
+import { Calendar } from '../Calendar/Calendar';
 import { TeacherAssignment } from './TeacherAssignmentDetails/TeacherAssignment';
 import { TeacherAssignmentDelete } from  './TeacherAssignmentDetails/TeacherAssignmentDelete';
+import fileDownload from 'js-file-download/file-download';
 
 export class TeacherAssignments extends Component {
   static contextType = ApplicationStoreContext;
@@ -77,7 +78,7 @@ export class TeacherAssignments extends Component {
   deleteAssignment = (assignment) => {
     this.setState({ assignmentDataForModal: assignment, isDeleteOpen: true, assignmentModalOpen: false , isAssignmentOpen: false})
   }
- 
+
   closeDeleteModal = () => {
     this.setState({  assignmentModalOpen: true, isDeleteOpen: false })
   }
@@ -106,6 +107,11 @@ export class TeacherAssignments extends Component {
     return { className: className };
   }
 
+  onDownload = async (fileName) => {
+    const response = await api.teacher.getAssignmentFile(fileName);
+    fileDownload(response.data, fileName);
+  }
+
   render() {
     return(
       <Container className="contentContainer">
@@ -119,7 +125,7 @@ export class TeacherAssignments extends Component {
         </Button>
         <br/><br/>
         <div className="calendarContainer">
-          <TeacherAssignmentCalendar
+          <Calendar
             eventPropGetter={this.eventPropGetter}
             events={this.state.assignmentsForCalendar}
             onDoubleClickEvent={this.handleEventClick}
@@ -134,11 +140,12 @@ export class TeacherAssignments extends Component {
             onDelete={this.deleteAssignment}
             onClose={this.closeAssignmentModal}
             onDeleteClose={this.closeDeleteModal}
-          />
+            onDownload={this.onDownload}
+          /> 
         }
 
         {this.state.isAssignmentOpen &&
-          <TeacherAssignment 
+          <TeacherAssignment
             assignment={this.state.assignmentDataForModal}
             classId={this.state.classID}
             subjectId={this.state.subjectID}

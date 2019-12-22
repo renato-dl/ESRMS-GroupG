@@ -47,3 +47,16 @@
     justify-content: center;
 }
 
+.chpwdInput input::placeholder {
+    color: #677e91!important;
+    opacity: 1; /* Firefox */
+}
+.invMsg{
+    float:left;
+    text-align: center;
+    width:100%;
+    background: #fff6f6;
+    border:1px solid #e0b4b4;
+    color: #9f3a38;
+}
+

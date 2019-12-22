@@ -13,13 +13,13 @@ class Assignment extends Model {
     let query;
 
     if (dateRange.from && dateRange.to) {
-        query =`SELECT A.ID, SU.Name, A.Title, A.Description, A.DueDate  
+        query =`SELECT A.ID, SU.Name, A.Title, A.Description, A.DueDate, A.AttachmentFile
         FROM Assignments A, Students ST, Subjects SU
         WHERE A.ClassId = ST.ClassId AND A.SubjectId = SU.ID AND ST.ID = ?
         AND A.DueDate >= ? AND A.DueDate <= ?
         ORDER BY A.DueDate`;
     } else {
-        query =`SELECT A.ID, SU.Name, A.Title, A.Description, A.DueDate  
+        query =`SELECT A.ID, SU.Name, A.Title, A.Description, A.DueDate, A.AttachmentFile 
             FROM Assignments A, Students ST, Subjects SU
             WHERE A.ClassId = ST.ClassId AND A.SubjectId = SU.ID AND ST.ID = ?
             ORDER BY A.DueDate`;
@@ -126,13 +126,13 @@ class Assignment extends Model {
     let query;
 
     if (dateRange.from && dateRange.to) {
-        query =`SELECT ID, Title, Description, DueDate  
+        query =`SELECT ID, Title, Description, DueDate, AttachmentFile
         FROM Assignments
         WHERE ClassId = ? AND SubjectId = ?
         AND DueDate >= ? AND DueDate <= ?
         ORDER BY DueDate`;
     } else {
-        query =`SELECT ID, Title, Description, DueDate  
+        query =`SELECT ID, Title, Description, DueDate, AttachmentFile  
         FROM Assignments
         WHERE ClassId = ? AND SubjectId = ?
         ORDER BY DueDate`;

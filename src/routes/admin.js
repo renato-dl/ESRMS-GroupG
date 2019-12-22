@@ -2,30 +2,30 @@ import express from 'express';
 import AdminController from '../controllers/adminController';
 import { Authorization } from '../middlewares/authorization';
 
-const router = express.Router();
+const admin = express.Router();
 
-router.post('/student', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'addStudent'));
-router.patch('/student', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'updateStudent'));
-router.get('/students', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getStudentsData'));
-router.delete('/student', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'removeStudent'));
+admin.post('/student', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'addStudent'));
+admin.patch('/student', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'updateStudent'));
+admin.get('/students', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getStudentsData'));
+admin.delete('/student', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'removeStudent'));
 
-router.patch('/parent', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'updateParent'));
-router.patch('/students/:studentId/updateClassAssignment', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'updateAssignmentStudentsToClass'));
-router.delete('/students/:studentId/removeClassAssignment', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'removeAssignmentStudentsToClass'));
-router.get('/parents', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getParentData'));
-router.get('/find-parents', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getParentsBySSN'));
+admin.patch('/parent', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'updateParent'));
+admin.patch('/students/:studentId/updateClassAssignment', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'updateAssignmentStudentsToClass'));
+admin.delete('/students/:studentId/removeClassAssignment', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'removeAssignmentStudentsToClass'));
+admin.get('/parents', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getParentData'));
+admin.get('/find-parents', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getParentsBySSN'));
 
-router.get('/internal-accounts', Authorization(['IsSysAdmin']), AdminController.processRequest.bind(AdminController, 'getInternalAccountsData'));
-router.post('/internal-account', Authorization(['IsSysAdmin']), AdminController.processRequest.bind(AdminController, 'insertInternalAccount'));
-router.delete('/account', Authorization(['IsSysAdmin']), AdminController.processRequest.bind(AdminController, 'deleteAccount'));
-router.patch('/internal-account', Authorization(['IsSysAdmin']), AdminController.processRequest.bind(AdminController, 'updateInternalAccount'));
+admin.get('/internal-accounts', Authorization(['IsSysAdmin']), AdminController.processRequest.bind(AdminController, 'getInternalAccountsData'));
+admin.post('/internal-account', Authorization(['IsSysAdmin']), AdminController.processRequest.bind(AdminController, 'insertInternalAccount'));
+admin.delete('/account', Authorization(['IsSysAdmin']), AdminController.processRequest.bind(AdminController, 'deleteAccount'));
+admin.patch('/internal-account', Authorization(['IsSysAdmin']), AdminController.processRequest.bind(AdminController, 'updateInternalAccount'));
 
 
-router.get('/classes', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getClasses'));
-router.post('/classes/:classID/assign-students', Authorization(['IsSysAdmin']), AdminController.processRequest.bind(AdminController, 'assignStudentsToClass'));
-router.post('/class', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'createClass'));
-router.delete('/class', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'deleteClass'));
+admin.get('/classes', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getClasses'));
+admin.post('/classes/:classID/assign-students', Authorization(['IsSysAdmin']), AdminController.processRequest.bind(AdminController, 'assignStudentsToClass'));
+admin.post('/class', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'createClass'));
+admin.delete('/class', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'deleteClass'));
 
-router.get('/teachers', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getTeachers'));
+admin.get('/teachers', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getTeachers'));
 
-export default router;
+export default admin;

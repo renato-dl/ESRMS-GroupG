@@ -12,7 +12,7 @@
     border: 0!important;
     border-radius: 0;
     background-color: #F3F2F0;
-    min-height: 100vh;
+    min-height: calc(100vh - 47px);
 
     div.sidebar{background:  #273037;
         border-top:3px solid #DBCA47;

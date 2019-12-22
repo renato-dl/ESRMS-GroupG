@@ -1,7 +1,7 @@
 ---
 name: Task template
 about: Tasks
-title: "[STORY #]"
+title: ''
 labels: TASK
 assignees: ''
 

@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-const createSecurePassword = (password) => {
+const hashPassword = (password) => {
   return bcrypt.hashSync(password, 12);
 }
 
@@ -13,8 +13,9 @@ exports.seed = function(knex) {
         {
           ID: '32d905eaa2770b66baf20282dff09191',
           eMail: 'lucia.verdi@gmail.com',
-          Password: createSecurePassword('easypass'), // 'easypass',
+          Password: hashPassword('easypass'), // 'easypass',
           IsParent: true,
+          IsNew: false,
           FirstName: 'Lucia',
           LastName: 'Verdi',
           SSN: 'VRDLCU75A41L219F'
@@ -22,8 +23,9 @@ exports.seed = function(knex) {
         {
           ID: '202db8275d3c06e6ce3fe7a47b30e0fe',
           eMail: 'marco.lorenzini@gmail.com',
-          Password: createSecurePassword('easypass'), //'easypass',
+          Password: hashPassword('easypass'), //'easypass',
           IsParent: true,
+          IsNew: false,
           FirstName: 'Marco',
           LastName: 'Lorenzini',
           SSN: 'LRNMRC76A02L219A'
@@ -31,8 +33,9 @@ exports.seed = function(knex) {
         {
           ID: '9d64fa59c91d9109b11cd9e05162c675',
           eMail: 'nadia.rossi@gmail.com',
-          Password: createSecurePassword('easypass'), //'easypass',
+          Password: hashPassword('easypass'), //'easypass',
           IsParent: true,
+          IsNew: false,
           FirstName: 'Nadia',
           LastName: 'Rossi',
           SSN: 'RSSNDA76A41L219U'
@@ -40,8 +43,9 @@ exports.seed = function(knex) {
         {
           ID: '6e5c9976f5813e59816b40a814e29899',
           eMail: 'giulia.tesori@gmail.com',
-          Password: createSecurePassword('easypass'), //'easypass',
+          Password: hashPassword('easypass'), //'easypass',
           IsTeacher: true,
+          IsNew: false,
           FirstName: 'Giulia',
           LastName: 'Tesori',
           SSN: 'TSRGLI74R52L219F'
@@ -49,9 +53,10 @@ exports.seed = function(knex) {
         {
           ID: '205db8275d3c06e6ce3fe7a47b30e0fe', 
           eMail: 'admin@phonyschool.com', 
-          Password: createSecurePassword('EasyPassAdmin123'), //'EasyPassAdmin123',
+          Password: hashPassword('EasyPassAdmin123'), //'EasyPassAdmin123',
           IsAdminOfficer: true,
           IsSysAdmin: true,
+          IsNew: false,
           FirstName: 'Marta',
           LastName: 'Peradotto',
           SSN: 'PRDMRT71D51L219E'
@@ -59,8 +64,9 @@ exports.seed = function(knex) {
         {
           ID: '26ce21c0-8d32-41d1-8d07-b4994fa53edf',
           eMail: 'paola.depaola@phonyschool.com',
-          Password: createSecurePassword('easypass'), //'easypass',
+          Password: hashPassword('easypass'), //'easypass',
           IsTeacher: true,
+          IsNew: false,
           FirstName: 'Paola',
           LastName: 'De Paola',
           SSN: 'TXCRDF77T22B735U'
@@ -68,8 +74,9 @@ exports.seed = function(knex) {
         {
           ID: 'd5799583-42e3-4818-a073-449fc8f1b7e8',
           eMail: 'luca.deluca@phonyschool.com',
-          Password: createSecurePassword('easypass'), //'easypass',
+          Password: hashPassword('easypass'), //'easypass',
           IsTeacher: true,
+          IsNew: false,
           FirstName: 'Luca',
           LastName: 'De Luca',
           SSN: 'WRVKBU59R17L237H'
@@ -77,9 +84,10 @@ exports.seed = function(knex) {
         {
           ID: '6d361d43-1308-4ac6-95ab-580138de9141',
           eMail: 'giorgio.digiorgio@parentsunited.com',
-          Password: createSecurePassword('easypass'), //'easypass',
+          Password: hashPassword('easypass'), //'easypass',
           IsParent: true,
           IsTeacher: true,
+          IsNew: false,
           FirstName: 'Giorgio',
           LastName: 'Di Giorgio',
           SSN: 'PVDZRN27M04G189V'
@@ -87,8 +95,9 @@ exports.seed = function(knex) {
         {
           ID: '9e412480-4287-4b62-a1ba-a8dcb03cdd41',
           eMail: 'maria.demaria@parentsunited.com',
-          Password: createSecurePassword('easypass'), //'easypass',
+          Password: hashPassword('easypass'), //'easypass',
           IsParent: true,
+          IsNew: false,
           FirstName: 'Maria',
           LastName: 'De Maria',
           SSN: 'FGTHCF68M46G424G'

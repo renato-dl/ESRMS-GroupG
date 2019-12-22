@@ -22,7 +22,8 @@ export class TeacherAssignmentDelete extends Component {
         id: assignment.ID,
         title: assignment.Title,
         description: assignment.Description,
-        duedate: new Date(assignment.DueDate)
+        duedate: new Date(assignment.DueDate),
+        attachment: assignment.AttachmentFile
       });
     }    
   };
@@ -62,7 +63,7 @@ export class TeacherAssignmentDelete extends Component {
         </h3>
         <p><b>Title:</b> {this.state.title}</p>
         <p><b>Description:</b> {this.state.description}</p>
-        <p><b>Attachment:</b> {this.state.attachment}</p>
+        <p><b>Attachment:</b> {this.state.attachment ? this.state.attachment : '-'}</p>
         <p><b>Due date:</b> { moment(this.state.duedate).format('LL')}</p>
         </Modal.Content>
         <Modal.Actions>

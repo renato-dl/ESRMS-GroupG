@@ -1,9 +1,8 @@
 import {Model} from './base';
 import uuid from 'uuid/v4';
 import validator from 'validator';
-import {createSecurePassword} from '../../services/passwordGenerator';
+import {hashPassword} from '../../services/passwordGenerator';
 import {validateSSN} from '../../services/ssnValidator'
-import student from './student';
 
 class User extends Model {
   constructor() {
@@ -124,7 +123,7 @@ class User extends Model {
 
     //insert of data
     const parentId = uuid();
-    const parentPassword = createSecurePassword(password);
+    const parentPassword = hashPassword(password);
 
     await this.create({
       ID: parentId,
@@ -173,7 +172,7 @@ class User extends Model {
 
     //insert of data
     const userId = uuid();
-    const parentPassword = createSecurePassword(password);
+    const parentPassword = hashPassword(password);
 
     await this.create({
       ID: userId,

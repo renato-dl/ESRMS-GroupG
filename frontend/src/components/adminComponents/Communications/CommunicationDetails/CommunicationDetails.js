@@ -2,7 +2,7 @@ import React from 'react';
 import {Icon, Modal, Button, Form, Segment, Checkbox, Label} from 'semantic-ui-react';
 import './CommunicationDetails.scss';
 
-import moment from 'moment';
+//import moment from 'moment';
 import DatePicker , { registerLocale } from "react-datepicker";
 import en from "date-fns/locale/en-GB";
 registerLocale("en", en);
@@ -87,7 +87,7 @@ export class CommunicationDetails extends React.Component {
                   placeholderText="Expiration date"
                   name="DueDate"
                   minDate={new Date()}
-                  selected={new Date(this.state.DueDate || Date.now())}
+                  selected={this.state.DueDate ? new Date(this.state.DueDate) : new Date()}
                   onChange={this.onDateChange}
                   locale="en"
                 />
