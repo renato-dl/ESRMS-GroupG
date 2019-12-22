@@ -472,3 +472,66 @@ describe('createNew', () => {
   });
 
 });
+
+describe('findAll', () => {
+
+  test('It should return all the relations', async () =>{
+    const fn = 'Teach';
+    const ln = 'Er';
+    // Create teacher
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: 'abc@cba.ab',
+      SSN: 'SCIWWN72A14H620P',
+      Password: 'pass',
+      FirstName: fn,
+      LastName: ln,
+      IsTeacher: 1,
+    });
+
+    // Create class
+    const classId = await Class.create({
+      CreationYear: moment().utc().format('YYYY'),
+      Name: 'ì',
+      CoordinatorId: userId
+    });
+    const className = await Class.getClassNameById(classId);
+
+    await TCSR.createNew(userId, [
+      {classId, subjectId: 3},
+      {classId, subjectId: 4},
+    ]);
+
+    const result = await TCSR.findAll();
+    expect(result).toEqual(
+      expect.arrayContaining([
+        {
+          ID: expect.anything(),
+          LastName: ln,
+          FirstName: fn,
+          Subject: "Physics",
+          ClassName: className
+        },
+        {
+          ID: expect.anything(),
+          LastName: ln,
+          FirstName: fn,
+          Subject: "History",
+          ClassName: className
+        }
+      ])
+    );
+    
+    await Promise.all(result.map(async element => {
+      if (element.ClassName == className) {
+        await TCSR.remove(element.ID);
+      }
+    }));
+    await Class.remove(classId);
+    await User.remove(userId);
+
+
+  });
+
+});

@@ -83,6 +83,39 @@ class TCSR extends Model {
     return {newRecords: result.affectedRows}
   }
 
+  async findAll(pagination) {
+    let query = `
+      SELECT TCSR.ID, T.LastName, T.FirstName, TCSR.ClassId, S.Name AS Subject
+      FROM ${this.tableName} TCSR, Users T, Subjects S
+      WHERE TCSR.TeacherId = T.ID AND TCSR.SubjectId = S.ID
+      ORDER BY T.LastName, T.FirstName, TCSR.ClassId, TCSR.ID
+    `
+    if (pagination) {
+      query += ` ${this.db.getPaginationQuery(pagination)}`
+    }
+
+    const connection = await this.db.getConnection();
+    let results;
+    try {
+      results = await connection.query(query);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      connection.release();
+    }
+    const newResults = await Promise.all(results.map(async element => {
+      let newElement = {};
+      newElement.ID = element.ID;
+      newElement.LastName = element.LastName;
+      newElement.FirstName = element.FirstName;
+      newElement.Subject = element.Subject;
+      const cName = await Class.getClassNameById(element.ClassId);
+      newElement.ClassName = cName;
+      return newElement;
+    }));
+    return newResults;
+  }
+
 }
 
 export default new TCSR();

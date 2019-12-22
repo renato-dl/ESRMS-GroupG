@@ -377,6 +377,11 @@ class AdminController extends BaseController {
       newRecords: result.newRecords
     });
   }
+
+  async getAll(req, res) {
+    const result = await TCSR.findAll(req.query.pagination);
+    res.send(result);
+  }
   
 }
 
