@@ -1288,7 +1288,7 @@ describe('Test weather a teacher is authorized to access a given assignment', ()
       }
     });
   
-    test('It throw an error about invalid teacher id', async () => {
+    test('It throw an error about invalid assignment id', async () => {
         const insertTeacher = await User.insertInternalAccountData( 
             "Joe", 
             "Kernel", 

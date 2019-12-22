@@ -5,7 +5,6 @@ import Student from '../src/database/models/student';
 import Note from '../src/database/models/note';
 import TCS from '../src/database/models/teacherClassSubject';
 import moment from 'moment';
-import student from '../src/database/models/student';
 
 describe("Tests about visualization of a class's notes by a teacher", () => {
 
@@ -385,7 +384,7 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
           id: expect.anything()
         });
 
-        //insert assignment
+        //insert note
         const insertNote = await Note.addNote(
           title,
           description,
@@ -470,7 +469,7 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
           id: expect.anything()
         });
 
-        //insert assignment
+        //insert note
         try{
             await Note.addNote(
             undefined,
@@ -550,7 +549,7 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
           id: expect.anything()
         });
 
-        //insert assignment
+        //insert note
         try{
             await Note.addNote(
             title,
@@ -604,7 +603,7 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
           id: expect.anything()
         });
 
-        //insert assignment
+        //insert note
         try{
             await Note.addNote(
             title,
@@ -665,7 +664,7 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
         );
         expect(insertStudent).toMatchObject({id: expect.anything()});
         
-        //insert assignment
+        //insert note
         try{
             await Note.addNote(
             title,
@@ -731,7 +730,7 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
           id: expect.anything()
         });
 
-        //insert assignment
+        //insert note
         try{
             await Note.addNote(
             title,
@@ -798,7 +797,7 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
           id: expect.anything()
         });
 
-        //insert assignment
+        //insert note
         try{
             await Note.addNote(
             title,
@@ -874,7 +873,7 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
           id: expect.anything()
         });
 
-        //insert assignment
+        //insert note
         try{
             await Note.addNote(
             title,
@@ -897,3 +896,842 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
 
 
 });
+
+describe("Tests about edition of a note by a teacher", () =>{
+
+    test("It should update correctly a note", async() =>{
+        const title = "Test title";
+        const description ="Test description"
+        let date = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        const dayOfWeek = date.isoWeekday();
+
+        if(dayOfWeek == 7){
+            date.subtract(1, 'days'); 
+        }
+
+        //first add the student with parent
+        const testFirstName = 'Antonio';
+        const testLastName = 'De Giovanni';
+        const testSSN = 'TBKHSA93A02F494U';
+        const testBirthDate = moment().utc().subtract(13, 'years');
+        const testGender = 'M';
+
+        const insertParent = await User.insertParentData(
+            'Name',
+            'Lastname',
+            'parent1@parents.com',
+            'FFLPSL33H68A698Z',
+            'Password1'
+        );
+        expect(insertParent).toMatchObject({id: expect.anything()});
+        const insertStudent = await Student.insertStudent(
+            testFirstName,
+            testLastName,
+            testSSN,
+            testGender,
+            testBirthDate,
+            insertParent.id,
+            null
+        );
+        expect(insertStudent).toMatchObject({id: expect.anything()});
+        
+        //then add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //insert assignment
+        const insertNote = await Note.addNote(
+          title,
+          description,
+          insertStudent.id,
+          insertTeacher.id,
+          date.format(),
+        );
+    
+        expect(insertNote.id).not.toBeNaN();
+
+        //then update the note
+        const updateNote = await Note.updateNote(
+            insertNote.id,
+            "new title",
+            "new description",
+            date.format()
+        )
+
+        expect(updateNote).toBe(true);
+
+        //clean db for future tests
+        await Note.remove(insertNote.id);
+        await User.remove(insertTeacher.id);
+        await Student.remove(insertStudent.id);
+        await User.remove(insertParent.id);
+
+    });
+
+    test("It should throw an error when title is missing or invalid", async() =>{
+        const title = "Test title";
+        const description ="Test description";
+        let date = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        const dayOfWeek = date.isoWeekday();
+
+        if(dayOfWeek == 7){
+            date.subtract(1, 'days'); 
+        }
+
+        //first add the student with parent
+        const testFirstName = 'Antonio';
+        const testLastName = 'De Giovanni';
+        const testSSN = 'TBKHSA93A02F494U';
+        const testBirthDate = moment().utc().subtract(13, 'years');
+        const testGender = 'M';
+
+        const insertParent = await User.insertParentData(
+            'Name',
+            'Lastname',
+            'parent1@parents.com',
+            'FFLPSL33H68A698Z',
+            'Password1'
+        );
+        expect(insertParent).toMatchObject({id: expect.anything()});
+        const insertStudent = await Student.insertStudent(
+            testFirstName,
+            testLastName,
+            testSSN,
+            testGender,
+            testBirthDate,
+            insertParent.id,
+            null
+        );
+        expect(insertStudent).toMatchObject({id: expect.anything()});
+        
+        //then add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //insert note
+        const insertNote = await Note.addNote(
+            title,
+            description,
+            insertStudent.id,
+            insertTeacher.id,
+            date.format(),
+        );
+
+        expect(insertNote).toEqual({
+                id: expect.anything()
+        });
+
+        //update note
+        try{
+            await Note.updateNote(
+                insertNote.id,
+                undefined,
+                "new description",
+                date.format()
+            )
+
+        }catch(error){
+            expect(error).toHaveProperty("message", "Missing or invalid title");
+
+            //clean db for future tests
+            await Note.remove(insertNote.id);
+            await User.remove(insertTeacher.id);
+            await Student.remove(insertStudent.id);
+            await User.remove(insertParent.id);
+        }
+
+    });
+
+    test("It should throw an error when description is missing or invalid", async() =>{
+        const title = "Test title";
+        const description ="Test description";
+        let date = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        const dayOfWeek = date.isoWeekday();
+
+        if(dayOfWeek == 7){
+            date.subtract(1, 'days'); 
+        }
+
+        //first add the student with parent
+        const testFirstName = 'Antonio';
+        const testLastName = 'De Giovanni';
+        const testSSN = 'TBKHSA93A02F494U';
+        const testBirthDate = moment().utc().subtract(13, 'years');
+        const testGender = 'M';
+
+        const insertParent = await User.insertParentData(
+            'Name',
+            'Lastname',
+            'parent1@parents.com',
+            'FFLPSL33H68A698Z',
+            'Password1'
+        );
+        expect(insertParent).toMatchObject({id: expect.anything()});
+        const insertStudent = await Student.insertStudent(
+            testFirstName,
+            testLastName,
+            testSSN,
+            testGender,
+            testBirthDate,
+            insertParent.id,
+            null
+        );
+        expect(insertStudent).toMatchObject({id: expect.anything()});
+        
+        //then add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //insert note
+        const insertNote = await Note.addNote(
+            title,
+            description,
+            insertStudent.id,
+            insertTeacher.id,
+            date.format(),
+        );
+
+        expect(insertNote).toEqual({
+                id: expect.anything()
+        });
+
+        //update note
+        try{
+            await Note.updateNote(
+                insertNote.id,
+                "new title",
+                undefined,
+                date.format()
+            )
+
+        }catch(error){
+            expect(error).toHaveProperty("message", "Missing or invalid description");
+
+            //clean db for future tests
+            await Note.remove(insertNote.id);
+            await User.remove(insertTeacher.id);
+            await Student.remove(insertStudent.id);
+            await User.remove(insertParent.id);
+        }
+
+    });
+
+    test("It should throw an error when date is missing or invalid", async() =>{
+        const title = "Test title";
+        const description ="Test description";
+        let date = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        const dayOfWeek = date.isoWeekday();
+
+        if(dayOfWeek == 7){
+            date.subtract(1, 'days'); 
+        }
+
+        //first add the student with parent
+        const testFirstName = 'Antonio';
+        const testLastName = 'De Giovanni';
+        const testSSN = 'TBKHSA93A02F494U';
+        const testBirthDate = moment().utc().subtract(13, 'years');
+        const testGender = 'M';
+
+        const insertParent = await User.insertParentData(
+            'Name',
+            'Lastname',
+            'parent1@parents.com',
+            'FFLPSL33H68A698Z',
+            'Password1'
+        );
+        expect(insertParent).toMatchObject({id: expect.anything()});
+        const insertStudent = await Student.insertStudent(
+            testFirstName,
+            testLastName,
+            testSSN,
+            testGender,
+            testBirthDate,
+            insertParent.id,
+            null
+        );
+        expect(insertStudent).toMatchObject({id: expect.anything()});
+        
+        //then add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //insert note
+        const insertNote = await Note.addNote(
+            title,
+            description,
+            insertStudent.id,
+            insertTeacher.id,
+            date.format(),
+        );
+
+        expect(insertNote).toEqual({
+                id: expect.anything()
+        });
+
+        //update note
+        try{
+            await Note.updateNote(
+                insertNote.id,
+                "new title",
+                "new description",
+                undefined
+            )
+
+        }catch(error){
+            expect(error).toHaveProperty("message", "Missing or invalid note date");
+
+            //clean db for future tests
+            await Note.remove(insertNote.id);
+            await User.remove(insertTeacher.id);
+            await Student.remove(insertStudent.id);
+            await User.remove(insertParent.id);
+        }
+
+    });
+
+    test("It should throw an error when date has invalid format", async() =>{
+        const title = "Test title";
+        const description ="Test description";
+        let date = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        const dayOfWeek = date.isoWeekday();
+
+        if(dayOfWeek == 7){
+            date.subtract(1, 'days'); 
+        }
+
+        //first add the student with parent
+        const testFirstName = 'Antonio';
+        const testLastName = 'De Giovanni';
+        const testSSN = 'TBKHSA93A02F494U';
+        const testBirthDate = moment().utc().subtract(13, 'years');
+        const testGender = 'M';
+
+        const insertParent = await User.insertParentData(
+            'Name',
+            'Lastname',
+            'parent1@parents.com',
+            'FFLPSL33H68A698Z',
+            'Password1'
+        );
+        expect(insertParent).toMatchObject({id: expect.anything()});
+        const insertStudent = await Student.insertStudent(
+            testFirstName,
+            testLastName,
+            testSSN,
+            testGender,
+            testBirthDate,
+            insertParent.id,
+            null
+        );
+        expect(insertStudent).toMatchObject({id: expect.anything()});
+        
+        //then add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //insert note
+        const insertNote = await Note.addNote(
+            title,
+            description,
+            insertStudent.id,
+            insertTeacher.id,
+            date.format(),
+        );
+
+        expect(insertNote).toEqual({
+                id: expect.anything()
+        });
+
+        //update note
+        try{
+            await Note.updateNote(
+                insertNote.id,
+                "new title",
+                "new description",
+                "notvaliddate"
+            )
+
+        }catch(error){
+            expect(error).toHaveProperty("message", "Invalid note date");
+
+            //clean db for future tests
+            await Note.remove(insertNote.id);
+            await User.remove(insertTeacher.id);
+            await Student.remove(insertStudent.id);
+            await User.remove(insertParent.id);
+        }
+
+    });
+
+    test("It should throw an error when date is future", async() =>{
+        const title = "Test title";
+        const description ="Test description";
+        let date = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        const dayOfWeek = date.isoWeekday();
+
+        if(dayOfWeek == 7){
+            date.subtract(1, 'days'); 
+        }
+
+        //first add the student with parent
+        const testFirstName = 'Antonio';
+        const testLastName = 'De Giovanni';
+        const testSSN = 'TBKHSA93A02F494U';
+        const testBirthDate = moment().utc().subtract(13, 'years');
+        const testGender = 'M';
+
+        const insertParent = await User.insertParentData(
+            'Name',
+            'Lastname',
+            'parent1@parents.com',
+            'FFLPSL33H68A698Z',
+            'Password1'
+        );
+        expect(insertParent).toMatchObject({id: expect.anything()});
+        const insertStudent = await Student.insertStudent(
+            testFirstName,
+            testLastName,
+            testSSN,
+            testGender,
+            testBirthDate,
+            insertParent.id,
+            null
+        );
+        expect(insertStudent).toMatchObject({id: expect.anything()});
+        
+        //then add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //insert note
+        const insertNote = await Note.addNote(
+            title,
+            description,
+            insertStudent.id,
+            insertTeacher.id,
+            date.format(),
+        );
+
+        expect(insertNote).toEqual({
+                id: expect.anything()
+        });
+
+        //update note
+        date.add(1, 'days');
+
+        try{
+            await Note.updateNote(
+                insertNote.id,
+                "new title",
+                "new description",
+                date.format(),
+                
+            )
+
+        }catch(error){
+            expect(error).toHaveProperty("message", "Invalid note date");
+
+            //clean db for future tests
+            await Note.remove(insertNote.id);
+            await User.remove(insertTeacher.id);
+            await Student.remove(insertStudent.id);
+            await User.remove(insertParent.id);
+        }
+
+    });
+
+
+});
+
+describe('Test weather a teacher is authorized to access a given note', () => {
+
+    test('It should return true', async () => {
+        const title = "Test title";
+        const description ="Test description"
+        let date = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        const dayOfWeek = date.isoWeekday();
+
+        if(dayOfWeek == 7){
+            date.subtract(1, 'days'); 
+        }
+
+        //first add the student with parent
+        const testFirstName = 'Antonio';
+        const testLastName = 'De Giovanni';
+        const testSSN = 'TBKHSA93A02F494U';
+        const testBirthDate = moment().utc().subtract(13, 'years');
+        const testGender = 'M';
+
+        const insertParent = await User.insertParentData(
+            'Name',
+            'Lastname',
+            'parent1@parents.com',
+            'FFLPSL33H68A698Z',
+            'Password1'
+        );
+        expect(insertParent).toMatchObject({id: expect.anything()});
+        const insertStudent = await Student.insertStudent(
+            testFirstName,
+            testLastName,
+            testSSN,
+            testGender,
+            testBirthDate,
+            insertParent.id,
+            null
+        );
+        expect(insertStudent).toMatchObject({id: expect.anything()});
+        
+        //then add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //insert note
+        const insertNote = await Note.addNote(
+          title,
+          description,
+          insertStudent.id,
+          insertTeacher.id,
+          date.format(),
+        );
+        expect(insertNote.id).not.toBeNaN();
+
+        const testResult = await Note.checkIfNoteIsFromTeacher(
+            insertNote.id,
+            insertTeacher.id
+        )
+        expect(testResult).toBe(true);
+
+        //clean db for future tests
+        await Note.remove(insertNote.id);
+        await User.remove(insertTeacher.id);
+        await Student.remove(insertStudent.id);
+        await User.remove(insertParent.id);
+
+    });
+  
+    test('It should return false', async () => {
+
+        //first add the student with parent
+        const testFirstName = 'Antonio';
+        const testLastName = 'De Giovanni';
+        const testSSN = 'TBKHSA93A02F494U';
+        const testBirthDate = moment().utc().subtract(13, 'years');
+        const testGender = 'M';
+
+        const insertParent = await User.insertParentData(
+            'Name',
+            'Lastname',
+            'parent1@parents.com',
+            'FFLPSL33H68A698Z',
+            'Password1'
+        );
+        expect(insertParent).toMatchObject({id: expect.anything()});
+        const insertStudent = await Student.insertStudent(
+            testFirstName,
+            testLastName,
+            testSSN,
+            testGender,
+            testBirthDate,
+            insertParent.id,
+            null
+        );
+        expect(insertStudent).toMatchObject({id: expect.anything()});
+        
+        //then add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        const testResult = await Note.checkIfNoteIsFromTeacher(
+            100000,
+            insertTeacher.id
+        )
+        expect(testResult).toBe(false);
+
+        //clean db for future tests
+        await User.remove(insertTeacher.id);
+        await Student.remove(insertStudent.id);
+        await User.remove(insertParent.id);
+
+
+    });
+
+    test('It throw an error about missing or invalid teacher id', async () => {
+        const title = "Test title";
+        const description ="Test description"
+        let date = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+
+        const dayOfWeek = date.isoWeekday();
+
+        if(dayOfWeek == 7){
+            date.subtract(1, 'days'); 
+        }
+
+        //first add the student with parent
+        const testFirstName = 'Antonio';
+        const testLastName = 'De Giovanni';
+        const testSSN = 'TBKHSA93A02F494U';
+        const testBirthDate = moment().utc().subtract(13, 'years');
+        const testGender = 'M';
+
+        const insertParent = await User.insertParentData(
+            'Name',
+            'Lastname',
+            'parent1@parents.com',
+            'FFLPSL33H68A698Z',
+            'Password1'
+        );
+        expect(insertParent).toMatchObject({id: expect.anything()});
+        const insertStudent = await Student.insertStudent(
+            testFirstName,
+            testLastName,
+            testSSN,
+            testGender,
+            testBirthDate,
+            insertParent.id,
+            null
+        );
+        expect(insertStudent).toMatchObject({id: expect.anything()});
+        
+        //then add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //insert note
+        const insertNote = await Note.addNote(
+          title,
+          description,
+          insertStudent.id,
+          insertTeacher.id,
+          date.format(),
+        );
+        expect(insertNote.id).not.toBeNaN();
+
+        try {
+        await Note.checkIfNoteIsFromTeacher(insertNote.id, null);
+      } catch(error) {
+        expect(error).toHaveProperty('message', 'Missing or invalid teacher id');
+        
+        //clean db for future tests
+        await Note.remove(insertNote.id);
+        await User.remove(insertTeacher.id);
+        await Student.remove(insertStudent.id);
+        await User.remove(insertParent.id);
+
+      }
+    });
+  
+    test('It throw an error about missing or invalid note id', async () => {
+        
+        //first add the student with parent
+        const testFirstName = 'Antonio';
+        const testLastName = 'De Giovanni';
+        const testSSN = 'TBKHSA93A02F494U';
+        const testBirthDate = moment().utc().subtract(13, 'years');
+        const testGender = 'M';
+
+        const insertParent = await User.insertParentData(
+            'Name',
+            'Lastname',
+            'parent1@parents.com',
+            'FFLPSL33H68A698Z',
+            'Password1'
+        );
+        expect(insertParent).toMatchObject({id: expect.anything()});
+        const insertStudent = await Student.insertStudent(
+            testFirstName,
+            testLastName,
+            testSSN,
+            testGender,
+            testBirthDate,
+            insertParent.id,
+            null
+        );
+        expect(insertStudent).toMatchObject({id: expect.anything()});
+        
+        //then add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+            
+        try {
+          await Note.checkIfNoteIsFromTeacher(null, insertTeacher.id);
+        } catch(error) {
+          expect(error).toHaveProperty('message', 'Missing or invalid note id');
+          
+          //clean db for future tests
+          await User.remove(insertTeacher.id);
+          await Student.remove(insertStudent.id);
+          await User.remove(insertParent.id);
+
+        }
+      });
+    
+});
+

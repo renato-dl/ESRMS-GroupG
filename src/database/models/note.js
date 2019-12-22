@@ -85,6 +85,62 @@ class Note extends Model {
     }
 
   }
+
+  updateNote(noteId, title, description, date) {
+
+    if (!noteId) {
+      throw new Error('Missing or invalid note id');
+    }
+
+    if (!title) {
+      throw new Error('Missing or invalid title');
+    }
+    if (!description) {
+      throw new Error('Missing or invalid description');
+    }
+    if(!date){
+      throw new Error('Missing or invalid note date');
+    }
+
+    const updateDate = moment.utc(date);
+    const dayOfWeek = moment.utc(updateDate).isoWeekday();
+
+    if (!updateDate.isValid() || dayOfWeek == 7) {
+      throw new Error('Invalid note date');
+    }
+
+    if (updateDate.isAfter(moment().utc(), 'day')) {
+      throw new Error('Invalid note date');
+    }
+
+    return this.update(noteId, {
+        Title: title,
+        Description: description,
+        Date: updateDate.format(this.db.getDateFormatString()),
+      })
+  }
+
+
+
+  async checkIfNoteIsFromTeacher(noteId, teacherId) {
+
+    if (!noteId) throw new Error('Missing or invalid note id');
+    if (!teacherId) throw new Error('Missing or invalid teacher id');
+
+    const connenction = await this.db.getConnection();
+    const result = await connenction.query(
+      `SELECT COUNT(*) AS count
+      FROM Notes
+      WHERE ID = ? AND TeacherId = ?`,
+      [noteId, teacherId]
+    );
+    connenction.release();
+    if (result[0].count == 1) {
+      return true;
+    }
+    return false;
+  }
+
   
 }
 export default new Note();
