@@ -122,17 +122,18 @@ class Note extends Model {
 
 
 
-  async checkIfNoteIsFromTeacher(noteId, teacherId) {
+  async checkIfNoteIsFromTeacherToStudent(noteId, studentId, teacherId) {
 
     if (!noteId) throw new Error('Missing or invalid note id');
+    if (!studentId) throw new Error('Missing or invalid student id');
     if (!teacherId) throw new Error('Missing or invalid teacher id');
 
     const connenction = await this.db.getConnection();
     const result = await connenction.query(
       `SELECT COUNT(*) AS count
       FROM Notes
-      WHERE ID = ? AND TeacherId = ?`,
-      [noteId, teacherId]
+      WHERE ID = ? AND StudentId = ? AND TeacherId = ?`,
+      [noteId, studentId, teacherId]
     );
     connenction.release();
     if (result[0].count == 1) {

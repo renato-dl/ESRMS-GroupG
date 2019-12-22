@@ -472,20 +472,22 @@ class TeacherController extends BaseController {
   }
 
   // PATCH /teacher/note
-  // Body: noteId, classId, title, description, date
+  // Body: studentId, noteId, classId, title, description, date
   async updateNote(req, res) {
 
-    const checkTeaching = await TCSR.checkIfTeacherTeachesInClass(
+    const checkTeaching = await TCSR.checkIfTeacherTeachesToStudentInClass(
       req.user.ID,
+      req.body.studentId,
       req.body.classId
     );
 
-    const isNoteFromTeacher = await Note.checkIfNoteIsFromTeacher(
+    const checkNoteTeacherStudent = await Note.checkIfNoteIsFromTeacherToStudent(
       req.body.noteId,
+      req.body.studentId,
       req.user.ID
     );
 
-    if(!checkTeaching || !isNoteFromTeacher) {
+    if(!checkTeaching || !checkNoteTeacherStudent) {
       res.sendStatus(401);
       return;
     }
