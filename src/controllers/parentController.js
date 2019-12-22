@@ -5,6 +5,7 @@ import Subject from '../database/models/subject';
 import Assignment from '../database/models/assignment';
 import StudentAttendance from '../database/models/studentAttendance';
 import path from 'path';
+import Note from '../database/models/note';
 
 class ParentController extends BaseController {
 
@@ -82,6 +83,16 @@ class ParentController extends BaseController {
 
     const filePath = path.join(__dirname, "../../", "uploads", assignment.AttachmentFile);
     res.download(filePath);
+  }
+
+
+  async getNotes(req, res) {
+    const related = await Student.checkIfRelated(req.body.studentId, req.user.ID);
+    if (!related) {
+      throw new Error('Student is not related to user');
+    }
+    const notes = await Note.findByStudentId(req.query.studentId);
+    res.send(notes);
   }
 }
 

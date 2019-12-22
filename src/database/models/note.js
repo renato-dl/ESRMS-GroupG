@@ -86,6 +86,26 @@ class Note extends Model {
 
   }
 
+  async findByStudentId(studentId) {
+    if (!studentId) {
+      throw new Error('Missing or invalid studentId');
+    }
+    const query = `
+      SELECT N.ID, N.Title, N.Date, N.IsSeen, U.LastName, U.FirstName 
+      FROM ${this.tableName} N, Users U
+      WHERE N.TeacherId = U.ID AND N.StudentId = ?
+    `;
+    let result;
+    const connection = await this.db.getConnection();
+    try {
+      result = await connection.query(query, studentId);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      connection.release();
+    }
+    return result;
+  }
   updateNote(noteId, title, description, date) {
 
     if (!noteId) {
@@ -143,4 +163,5 @@ class Note extends Model {
 
   
 }
+
 export default new Note();
