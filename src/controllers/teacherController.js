@@ -492,6 +492,21 @@ class TeacherController extends BaseController {
     );
     res.send({ success });
   }
+
+  //DELETE /teacher/note
+  //Body: ID
+  async deleteNote(req, res) {
+    if(!await Note.checkIfNoteIsFromTeacher(req.body.ID, req.user.ID)){
+      res.sendStatus(401);
+      return;
+    }
+
+    await Note.remove(
+      req.body.ID
+    );
+
+    res.send({success: true});
+  }
 }
 
 export default new TeacherController();
