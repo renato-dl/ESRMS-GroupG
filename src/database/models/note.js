@@ -63,7 +63,7 @@ class Note extends Model {
     const insertDate = moment.utc(date);
     const dayOfWeek = moment.utc(date).isoWeekday();
 
-    if (!insertDate.isValid() || dayOfWeek == 7) {
+    if (!insertDate.isValid() || dayOfWeek == 6 || dayOfWeek == 7 ) {
       throw new Error('Invalid note date');
     }
 
@@ -125,7 +125,7 @@ class Note extends Model {
     const updateDate = moment.utc(date);
     const dayOfWeek = moment.utc(updateDate).isoWeekday();
 
-    if (!updateDate.isValid() || dayOfWeek == 7) {
+    if (!updateDate.isValid() || dayOfWeek == 6 || dayOfWeek == 7) {
       throw new Error('Invalid note date');
     }
 
