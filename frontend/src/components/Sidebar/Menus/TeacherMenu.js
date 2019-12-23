@@ -24,7 +24,7 @@ export const TeacherMenu = (props) => {
         Attendance Register
       </Menu.Item> 
       <Menu.Item as={Link} to='/teacher/classesfornote'>
-        <Icon name='group' />
+        <Icon name='bullhorn' />
         Note Operation
       </Menu.Item> 
       {/* <Menu.Item as={Link} to='/teacher/marks'>
