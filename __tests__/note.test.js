@@ -22,7 +22,10 @@ describe("Tests about visualization of a class's notes by a teacher", () => {
 
       date.add(1, 'days'); 
       const dayOfWeek = date.isoWeekday();
-      
+      if(dayOfWeek == 6){
+        date.add(2, 'days'); 
+      }
+
       if(dayOfWeek == 7){
           date.add(1, 'days'); 
       }
@@ -133,18 +136,18 @@ describe("Tests about visualization of a class's notes by a teacher", () => {
       const title2 = "Test title 2";
       const description2 = "Test description 2";
 
-      let date1 = moment().utc().add(1, 'days').set({
+      let date1 = moment().utc().set({
           "hour": 0,
           "minute": 0, 
           "second": 0, 
           "millisecond": 0
       });
 
-      while (date1.isoWeekday() == 7) {
+      while (date1.isoWeekday() == 6 || date1.isoWeekday() == 7) {
           date1.subtract(1, 'days');
       }
-      let date2 = date1.clone().add(2, 'days');
-      while (date2.isoWeekday() == 7) {
+      let date2 = date1.clone().subtract(1, 'days');
+      while (date2.isoWeekday() == 6 || date2.isoWeekday() == 7) {
           date2.subtract(1, 'days');
       }        
 
@@ -227,7 +230,7 @@ describe("Tests about visualization of a class's notes by a teacher", () => {
 
       const testResult = await Note.findByClassId(
           createClass.id,
-          {from: date1, from: date2}, 
+          {from: date2, from: date1}, 
           {}
       );
       expect(testResult).toEqual(
@@ -340,8 +343,12 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
 
         const dayOfWeek = date.isoWeekday();
 
-        if(dayOfWeek == 7){
+        if(dayOfWeek == 6){
             date.subtract(1, 'days'); 
+        }
+
+        if(dayOfWeek == 7){
+            date.subtract(2, 'days'); 
         }
 
         //first add the student with parent
@@ -425,8 +432,12 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
 
         const dayOfWeek = date.isoWeekday();
 
-        if(dayOfWeek == 7){
+        if(dayOfWeek == 6){
             date.subtract(1, 'days'); 
+        }
+
+        if(dayOfWeek == 7){
+            date.subtract(2, 'days'); 
         }
 
         //first add the student with parent
@@ -505,8 +516,12 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
 
         const dayOfWeek = date.isoWeekday();
 
-        if(dayOfWeek == 7){
+        if(dayOfWeek == 6){
             date.subtract(1, 'days'); 
+        }
+
+        if(dayOfWeek == 7){
+            date.subtract(2, 'days'); 
         }
 
         //first add the student with parent
@@ -585,8 +600,12 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
 
         const dayOfWeek = date.isoWeekday();
 
-        if(dayOfWeek == 7){
+        if(dayOfWeek == 6){
             date.subtract(1, 'days'); 
+        }
+
+        if(dayOfWeek == 7){
+            date.subtract(2, 'days'); 
         }
 
         //first add new teacher
@@ -636,8 +655,12 @@ describe("Tests about insertion of a student's note by a teacher", () =>{
 
         const dayOfWeek = date.isoWeekday();
 
-        if(dayOfWeek == 7){
+        if(dayOfWeek == 6){
             date.subtract(1, 'days'); 
+        }
+
+        if(dayOfWeek == 7){
+            date.subtract(2, 'days'); 
         }
 
         //first add the student with parent
@@ -1014,8 +1037,12 @@ describe("Tests about edition of a note by a teacher", () =>{
 
         const dayOfWeek = date.isoWeekday();
 
-        if(dayOfWeek == 7){
+        if(dayOfWeek == 6){
             date.subtract(1, 'days'); 
+        }
+
+        if(dayOfWeek == 7){
+            date.subtract(2, 'days'); 
         }
 
         //first add the student with parent
@@ -1101,8 +1128,12 @@ describe("Tests about edition of a note by a teacher", () =>{
 
         const dayOfWeek = date.isoWeekday();
 
-        if(dayOfWeek == 7){
+        if(dayOfWeek == 6){
             date.subtract(1, 'days'); 
+        }
+
+        if(dayOfWeek == 7){
+            date.subtract(2, 'days'); 
         }
         
         //update note
@@ -1132,8 +1163,12 @@ describe("Tests about edition of a note by a teacher", () =>{
 
         const dayOfWeek = date.isoWeekday();
 
-        if(dayOfWeek == 7){
+        if(dayOfWeek == 6){
             date.subtract(1, 'days'); 
+        }
+
+        if(dayOfWeek == 7){
+            date.subtract(2, 'days'); 
         }
 
         //first add the student with parent
@@ -1224,10 +1259,13 @@ describe("Tests about edition of a note by a teacher", () =>{
 
         const dayOfWeek = date.isoWeekday();
 
-        if(dayOfWeek == 7){
+        if(dayOfWeek == 6){
             date.subtract(1, 'days'); 
         }
 
+        if(dayOfWeek == 7){
+            date.subtract(2, 'days'); 
+        }
         //first add the student with parent
         const testFirstName = 'Antonio';
         const testLastName = 'De Giovanni';
@@ -1316,8 +1354,12 @@ describe("Tests about edition of a note by a teacher", () =>{
 
         const dayOfWeek = date.isoWeekday();
 
-        if(dayOfWeek == 7){
+        if(dayOfWeek == 6){
             date.subtract(1, 'days'); 
+        }
+
+        if(dayOfWeek == 7){
+            date.subtract(2, 'days'); 
         }
 
         //first add the student with parent
@@ -1408,8 +1450,12 @@ describe("Tests about edition of a note by a teacher", () =>{
 
         const dayOfWeek = date.isoWeekday();
 
-        if(dayOfWeek == 7){
+        if(dayOfWeek == 6){
             date.subtract(1, 'days'); 
+        }
+
+        if(dayOfWeek == 7){
+            date.subtract(2, 'days'); 
         }
 
         //first add the student with parent
@@ -1500,8 +1546,12 @@ describe("Tests about edition of a note by a teacher", () =>{
 
         const dayOfWeek = date.isoWeekday();
 
-        if(dayOfWeek == 7){
+        if(dayOfWeek == 6){
             date.subtract(1, 'days'); 
+        }
+
+        if(dayOfWeek == 7){
+            date.subtract(2, 'days'); 
         }
 
         //first add the student with parent
@@ -1556,7 +1606,7 @@ describe("Tests about edition of a note by a teacher", () =>{
         );
 
         expect(insertNote).toEqual({
-                id: expect.anything()
+            id: expect.anything()
         });
 
         //update note
@@ -1600,8 +1650,12 @@ describe('Test weather a teacher is authorized to access a given note', () => {
 
         const dayOfWeek = date.isoWeekday();
 
-        if(dayOfWeek == 7){
+        if(dayOfWeek == 6){
             date.subtract(1, 'days'); 
+        }
+
+        if(dayOfWeek == 7){
+            date.subtract(2, 'days'); 
         }
 
         //first add the student with parent
@@ -1740,8 +1794,12 @@ describe('Test weather a teacher is authorized to access a given note', () => {
 
         const dayOfWeek = date.isoWeekday();
 
-        if(dayOfWeek == 7){
+        if(dayOfWeek == 6){
             date.subtract(1, 'days'); 
+        }
+
+        if(dayOfWeek == 7){
+            date.subtract(2, 'days'); 
         }
 
         //first add the student with parent
