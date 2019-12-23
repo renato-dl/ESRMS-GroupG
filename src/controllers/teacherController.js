@@ -152,7 +152,7 @@ class TeacherController extends BaseController {
       from: moment.utc(date).format('YYYY-MM-DD'),
       to: moment.utc(date).format('YYYY-MM-DD')
     });
-    if (attendance.length != 0 && attendance[0].LateEntry == null) {
+    if (attendance.length != 0 && attendance[0].LateEntry == null && attendance[0].EarlyExit == null) {
       throw new Error('Student is absent');
     }
   }
