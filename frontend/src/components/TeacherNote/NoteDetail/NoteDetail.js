@@ -123,7 +123,7 @@ export class NoteDetail extends Component {
   }
   isWeekday = date => {
     const day = moment(date).day();
-    return day !== 0;
+    return day !== 0&&day!==6;
   };
 
   onClose = () => {
