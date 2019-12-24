@@ -25,7 +25,8 @@ import {TeacherClasses}  from'../../components/TeacherClassesAbsence/TeacherClas
 import {TeacherGrade} from '../../components/TeacherGrade/TeacherGrade';
 import {PresentAbsentRecords}  from'../../components/TeacherClassesAbsence/PresentAbsentRecords/PresentAbsentRecords';
 import {TeacherAssignments} from '../../components/TeacherAssignments/TeacherAssignments';
-
+import {TeacherClassesNote} from '../../components/TeacherNote/TeacherClassesNote';
+import {TeacherNote} from '../../components/TeacherNote/TeacherNote'
 //*** SYSTEM Administrator Components */
 import {SysAdmin} from '../SysAdmin/SysAdmin'
 import {InternalAccounts} from '../../components/InternalAccounts/InternalAccounts'
@@ -74,6 +75,8 @@ export class App extends React.Component {
               <PrivateRoute exact path="/teacher/subjects/:classID/:subjectID/:subjectName/assignments" component={TeacherAssignments}/>
               <PrivateRoute exact path="/teacher/classes" component={TeacherClasses}/>
               <PrivateRoute exact path="/teacher/classes/:ClassId/:ClassName/AttendanceRecords" component={PresentAbsentRecords}/>
+              <PrivateRoute exact path="/teacher/classesfornote" component={TeacherClassesNote}/>
+              <PrivateRoute exact path="/teacher/classesfornote/:ClassId/:ClassName/TeacherNote" component={TeacherNote}/>
 
               <PrivateRoute exact path="/admin" component={Admin}/>
               <PrivateRoute exact path="/admin/configParent" component={ConfigParent}/>
