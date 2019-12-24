@@ -28,7 +28,7 @@ export class TeacherClassesNote extends Component {
             return (
                 <Container className="contentContainer">
                     <h3 className="contentHeader">
-                      <Icon name='group'/>
+                      <Icon name='bullhorn'/>
                       Note Operation
                     </h3>
 
