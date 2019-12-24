@@ -493,6 +493,8 @@ class TeacherController extends BaseController {
       return;
     }
 
+    await this.attendanceCheck(req.body.date, req.body.studentId);
+
     const success = await Note.updateNote(
       req.body.noteId,
       req.body.title,
