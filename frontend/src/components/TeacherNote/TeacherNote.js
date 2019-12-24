@@ -75,7 +75,8 @@ export class TeacherNote extends React.Component{
         return({color: "#C0C0C0"});
     };
     render(){
-      return (
+      if(this.state.noteList.length){
+         return ( 
         <Container className="Notes-container contentContainer">
         <h3 className="contentHeader">
           <Icon name='braille'/>
@@ -157,5 +158,30 @@ export class TeacherNote extends React.Component{
             />
           }
        </Container>
-     )};
-      }
+     );}
+      return ( 
+        <Container className="Notes-container contentContainer">
+        <h3 className="contentHeader">
+          <Icon name='braille'/>
+          Note Operation
+        </h3>
+        <Button className="ui vk button" onClick={this.addNewNote}>
+            <i className="plus icon"></i>
+            Add Note
+        </Button> 
+        <NoData/>
+
+        {this.state.addNoteOpen &&
+            <NoteDetail
+              classId={this.state.classId}
+              onClose={this.onNoteDetailClose}
+              onSave={() =>{
+                this.fetchNotes();
+                this.onNoteDetailClose();
+              }}
+            />
+          }
+            </Container>
+        ); 
+    } 
+    }
