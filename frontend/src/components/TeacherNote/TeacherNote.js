@@ -170,7 +170,6 @@ export class TeacherNote extends React.Component{
             Add Note
         </Button> 
         <NoData/>
-
         {this.state.addNoteOpen &&
             <NoteDetail
               classId={this.state.classId}
