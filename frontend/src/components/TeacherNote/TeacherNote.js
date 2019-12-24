@@ -19,8 +19,7 @@ export class TeacherNote extends React.Component{
       super(props);
       this.state = {
           noteList:[],
-          subjectID:null,
-          subjectName:null, 
+          studentID:null,
           classId: null, 
           addNoteOpen: false,
           modifyNoteOpen: false, 
@@ -40,6 +39,7 @@ export class TeacherNote extends React.Component{
       fetchNotes = async () =>{    
         const response = await api.teacher.getNotes(this.props.match.params.ClassId);
         if (response) {
+          console.log(response)
             this.setState({noteList:response.data});
         }  }
 
@@ -136,7 +136,7 @@ export class TeacherNote extends React.Component{
            </Table.Body>
           </Table>
           {this.state.modifyNoteOpen &&
-            <NoteUpdate
+            <NoteDetail
               classId={this.state.classId}
               note={this.state.selectedNote}
               onClose={this.onUpdateNoteClose}

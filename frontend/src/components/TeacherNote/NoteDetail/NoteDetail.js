@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './NoteDetail.scss';
-import {Button, Modal, Form, LabelDetail, Icon} from 'semantic-ui-react';
+import {Button, Modal, Form, Dropdown, Icon,LabelDetail} from 'semantic-ui-react';
 import Select from 'react-select'
 import NumericInput from 'react-numeric-input';
 import "react-datepicker/dist/react-datepicker.css";
@@ -19,6 +19,8 @@ export class NoteDetail extends Component {
     noteId:null,
     Title:'',
     Description: '',
+    studentId:'',
+    studentName:'',
     date: new Date(),
     studentList: [],
     options:[],
@@ -26,12 +28,15 @@ export class NoteDetail extends Component {
   };
 
   async componentDidMount() {
-    const classID = this.props.classId;
-
+    if(this.props.note){
     this.setState({
-      classId: classID
-    });
-    
+      noteId: this.props.note.ID,
+      studentId: this.props.note.StudentId,
+      studentName:this.props.note.FirstName+' '+this.props.note.LastName,
+      Title: this.props.note.Title,
+      Description: this.props.note.Description
+    })
+  }
 
     try {
       const classRequest = { classId: this.props.classId };
@@ -53,7 +58,7 @@ export class NoteDetail extends Component {
     } 
   }
 
-  handleInputChange = (e, { name, value }) => {  
+  handleInputChange = (e, { name, value }) => {
     this.setState({[name]: value});
   };
   
@@ -61,19 +66,65 @@ export class NoteDetail extends Component {
     this.setState({type: e.target.textContent});
   };
 
+  handleDateChange = (date) => {
+    this.setState({date});
+  };
+
+  handleSelectChange=(event)=>{
+    console.log(event)
+    this.setState({studentId:event.value});
+    this.setState({studentName:event.label})
+  }
+
   onSave = async () => {
     if (this.state.isSaving) {
       return;
     }
-    this.setState({ isSaving: true });
 
-    const allMarks = this.state.studentMarks;
+    this.setState({isSaving: true});
 
-    let gradeRequests = [];
+    try {
+      const noteData = {
+        title: this.state.Title,
+        description: this.state.Description,
+        date: this.state.date.toUTCString(),
+        studentId:this.state.studentId,
+        noteId: this.state.noteId
+      };
+
+      if(!this.state.noteId) {
+        const reqResult=await api.teacher.saveNote(noteData);
+        if (reqResult.data.success) {
+          toastr.success('Note added successfully.');
+        } 
+        else {
+          toastr.error(reqResult.data.Message);
+          this.setState({isSaving: false});
+          return;
+        }
+      }
+      else {
+        const reqResult = await api.teacher.updateNote(noteData);  
+        if (reqResult.data.success) {
+          toastr.success('Note updated successfully.');
+        } else {
+          toastr.error(reqResult.data.Message);
+          this.setState({isSaving: false});
+          return;
+        }
+      }
+    } catch (e) {
+      this.setState({isSaving: false});
+      return toastr.error(e);
+    }
 
     this.setState({isSaving: false});
     this.props.onSave();
   }
+  isWeekday = date => {
+    const day = moment(date).day();
+    return day !== 0;
+  };
 
   onClose = () => {
     if (this.state.isSaving) {
@@ -92,11 +143,20 @@ export class NoteDetail extends Component {
         </Modal.Header>
         <Modal.Content>
         <Form loading={this.state.isSaving}>
-            <p>StudentName</p>
-             <Select
-            options={this.state.options}
-            defaultValue={'default'}
-            onInputChange={this.handleInputChange}/>
+            <h5>Student Name</h5>
+            {!this.state.noteId?(
+            <Select
+            name='studentId'
+            fluid
+            defaultValue={{value:this.state.studentId,label:this.state.studentName}}
+            onChange={this.handleSelectChange}
+            value={{value:this.state.studentId,label:this.state.studentName}}
+            options={this.state.options}/>
+            ):(
+              <p>{this.state.studentName}</p>
+            )
+            }
+            <p></p>
             <Form.Input
               name="Title"
               label='Title'
@@ -112,7 +172,18 @@ export class NoteDetail extends Component {
               value={this.state.Description}
               onChange={this.handleInputChange}
             />
+             <Form.Field>
+                <LabelDetail>Note date</LabelDetail>  
+                <DatePicker
+                  selected={this.state.date}
+                  onChange={this.handleDateChange}
+                  maxDate={new Date()}
+                  locale="en"
+                  filterDate={this.isWeekday}
+                />              
+                </Form.Field>
         </Form>
+        
         </Modal.Content>
         <Modal.Actions>
         <Button  positive onClick={this.onSave}>

@@ -90,4 +90,15 @@ export class TeacherAPIService extends BaseAPIService {
   getNotes(cId){
     return this.get(`teacher/notes?classId=${cId}`);
   }
+
+  saveNote(data){
+    return this.post('teacher/note', data);
+  }
+
+  updateNote(data) {
+    return this.patch('teacher/note',data);
+  }
+  deleteNote(data){
+    return this.delete(`/teacher/note`, data);
+  }
 }

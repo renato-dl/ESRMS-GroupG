@@ -47,7 +47,7 @@ export class TeacherClassesNote extends Component {
                                 <Button fluid color='orange'
                                 onClick={()=>this.onRecordsClick(cls.ClassId, cls.ClassName)}
                                 >
-                                Operations of notes 
+                                Operations of Notes 
                                 </Button>
                             </Card.Content>
                         </Card>

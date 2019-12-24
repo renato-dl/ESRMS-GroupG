@@ -467,7 +467,7 @@ class TeacherController extends BaseController {
       return;
     }
 
-    await this.attendanceCheck(req.body.gradeDate, req.body.studentId);
+    await this.attendanceCheck(req.body.date, req.body.studentId);
 
     const result = await Note.addNote(
       req.body.title,
