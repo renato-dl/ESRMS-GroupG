@@ -480,7 +480,7 @@ class TeacherController extends BaseController {
   }
 
   // PATCH /teacher/note
-  // Body: studentId, noteId, classId, title, description, date
+  // Body: noteId, title, description, date
   async updateNote(req, res) {
 
     const isNoteFromTeacher = await Note.checkIfNoteIsFromTeacher(
