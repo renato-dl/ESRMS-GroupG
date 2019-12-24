@@ -8,10 +8,9 @@ import {
 } from 'semantic-ui-react'
 import moment from 'moment';
 import { NoData } from '../NoData/NoData';
-// import './TeacherNote.scss';
+import './TeacherNote.scss';
 import Tooltip from '../Tooltip/Tooltip';
 import NoteDetail from './NoteDetail/NoteDetail';
-import NoteUpdate from './NoteDetail/NoteUpdate';
 import NoteDetele from './NoteDetail/NoteDetele';
 
 export class TeacherNote extends React.Component{
@@ -103,7 +102,7 @@ export class TeacherNote extends React.Component{
                   <Table.HeaderCell textAlign="center">Title</Table.HeaderCell>
                   <Table.HeaderCell textAlign="center" >Description</Table.HeaderCell>
                   <Table.HeaderCell textAlign="center">Date</Table.HeaderCell>
-                  <Table.HeaderCell textAlign="center">IsSeen</Table.HeaderCell>
+                  <Table.HeaderCell textAlign="center">Is Seen</Table.HeaderCell>
                   <Table.HeaderCell textAlign="center">Name</Table.HeaderCell>
                   <Table.HeaderCell textAlign="center">Action</Table.HeaderCell> 
               </Table.Row>
@@ -115,16 +114,16 @@ export class TeacherNote extends React.Component{
                   <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.Title } </span></Table.Cell>
                   <Table.Cell textAlign="left" width={6}> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.Description } </span></Table.Cell>
                   <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ moment(note.Date).format('LL')} </span></Table.Cell>
-                  <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.IsSeen }  </span></Table.Cell>
+                  <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.IsSeen?'Yes':'No'}  </span></Table.Cell>
                   <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.FirstName } { note.LastName }  </span> </Table.Cell> 
-                  <Table.Cell textAlign="left">
+                  <Table.Cell textAlign="left" className="edit-cell"> 
                   <Tooltip 
                     text="Edit note"
                     trigger={
                       <Icon name="edit" onClick={() => this.updateNote(note)} />
                     }
                   />
-                  <Tooltip 
+                  <Tooltip  
                     text="Delete note"
                     trigger={
                       <Icon name="delete" onClick={() =>this.deleteNote(note)} />
