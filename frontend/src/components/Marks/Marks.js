@@ -38,6 +38,25 @@ export class Marks extends React.Component{
       return({backgroundColor: "#C6EDBA"});
   };
 
+  marksFormat(num) {
+    if (num == 10.25)
+      return "10 cum laude";
+    else{
+      const val = num.toString();
+      let res = val.split('.');
+      if (res.length > 1){
+        if (res[1] == '5')
+          return res[0] + '½';
+        else if (res[1] == '25')
+          return res[0] + '+';
+        else if (res[1] == '75'){
+          let valInt = parseInt(res[0]);
+          return (valInt + 1) + '-';
+        }            
+      }        
+    }
+    return num;
+  }
 
   render(){
     // console.log(this.props.match)
@@ -61,7 +80,7 @@ export class Marks extends React.Component{
             {this.state.marks.map((mark) =>
               <Table.Row>
                   <Table.Cell>{ mark.Name } </Table.Cell>
-                  <Table.Cell><span className="markField" style={this.styleMarkColor(mark.Grade)}>{ mark.Grade }</span></Table.Cell>
+                  <Table.Cell><span className="markField" style={this.styleMarkColor(mark.Grade)}>{ this.marksFormat(mark.Grade) }</span></Table.Cell>
                   <Table.Cell>{ mark.Type } </Table.Cell>
                   <Table.Cell>{ moment(mark.GradeDate).format('LL')}</Table.Cell>
               </Table.Row>
