@@ -7,9 +7,9 @@ import * as toastr from 'toastr';
 import moment from 'moment';
 import DatePicker , { registerLocale } from "react-datepicker";
 import en from "date-fns/locale/en-GB";
-import mime from 'mime';
 import {FilePreview} from '../../FilePreview/FilePreview.js';
 import {FileUpload} from '../../FileUpload/FileUpload';
+import mime from 'mime';
 
 registerLocale("en", en);
 
@@ -19,15 +19,16 @@ export class TeacherAssignment extends Component {
     title: '',
     description: '',
     date: moment().add(1, 'days').toDate(),
-    attachment: null,
+    attachments: [],
     classId: '',
     subjectId: '',
     isSaving: false,
-    file: null
+    files: []
   };
 
   onDrop = (files) => {
-    this.setState({ file: files[0] });
+    console.log(files);
+    this.setState({ files });
   }
 
   componentDidMount() {
@@ -44,7 +45,7 @@ export class TeacherAssignment extends Component {
         title: assignment.Title,
         description: assignment.Description,
         date: new Date(assignment.DueDate),
-        attachment: assignment.AttachmentFile
+        attachments: assignment.Attachments || []
       });
     }
   }
@@ -73,11 +74,13 @@ export class TeacherAssignment extends Component {
       formData.set('description', this.state.description);
       formData.set('dueDate', this.state.date.toISOString());
       
-      if (this.state.attachment) {
-        formData.set('attachmentFile', this.state.attachment);
+      if (this.state.attachments) {
+        formData.set('attachments', this.state.attachments);
       }
 
-      formData.set('file', this.state.file);
+      this.state.files.forEach((file) => {
+        formData.append('files', file);
+      });
 
       if(!this.state.id) {
         await api.teacher.addAssignment(formData);
@@ -107,8 +110,9 @@ export class TeacherAssignment extends Component {
     return day !== 0;
   };
 
-  onFileRemove = () => {
-    this.setState({ file: null, attachment: null });
+  onFileRemove = (name) => {
+    console.log(name);
+    //this.setState({ file: null, attachments: null });
   }
 
   render() {
@@ -150,17 +154,16 @@ export class TeacherAssignment extends Component {
             </Form.Group>
             <Form.Field>
             {!this.state.file && !this.state.attachment && <FileUpload onDrop={this.onDrop} />}
-            {(this.state.file || this.state.attachment) &&
-              <FilePreview 
-                type={
-                  this.state.file ? mime.getExtension(this.state.file.type) : this.state.attachment.split('.').pop()
-                } 
-                name={
-                  this.state.file ? this.state.file.name : this.state.attachment
-                } 
-                onRemove={this.onFileRemove}
-              />
-            }
+            <div className="files">
+              {this.state.files.map((file) => (
+                  <FilePreview 
+                    type={mime.getExtension(file.type)} 
+                    name={file.name} 
+                    onRemove={this.onFileRemove}
+                  />
+                ))
+              }
+            </div>
             </Form.Field>
           </Form>
         </Modal.Content>
