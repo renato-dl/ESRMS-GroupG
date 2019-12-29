@@ -56,6 +56,26 @@ export class TeacherGrade extends React.Component{
       }           
     }
 
+    marksFormat(num) {
+      if (num == 10.25)
+        return "10 cum laude";
+      else{
+        const val = num.toString();
+        let res = val.split('.');
+        if (res.length > 1){
+          if (res[1] == '5')
+            return res[0] + '½';
+          else if (res[1] == '25')
+            return res[0] + '+';
+          else if (res[1] == '75'){
+            let valInt = parseInt(res[0]);
+            return (valInt + 1) + '-';
+          }            
+        }        
+      }
+      return num;
+    }
+
     // Open modal for adding new marks
     addNewMarks = () => {
       this.setState({addMarksOpen: true});
@@ -127,7 +147,7 @@ export class TeacherGrade extends React.Component{
              <Table.Row key={index}>
                 <Table.Cell>{ mark.FirstName } </Table.Cell>
                 <Table.Cell>{ mark.LastName } </Table.Cell>
-                <Table.Cell><span className="markField" style={this.styleMarkColor(mark.Grade)}>{ mark.Grade }</span></Table.Cell>
+                <Table.Cell><span className="markField" style={this.styleMarkColor(mark.Grade)}>{ this.marksFormat(mark.Grade) }</span></Table.Cell>
                 <Table.Cell>{ mark.Type } </Table.Cell>
                 <Table.Cell>{ moment(mark.GradeDate).format('LL')}</Table.Cell>
                 <Table.Cell >
