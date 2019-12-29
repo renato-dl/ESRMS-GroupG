@@ -12,6 +12,7 @@ import {FileUpload} from '../../FileUpload/FileUpload';
 import mime from 'mime';
 
 registerLocale("en", en);
+const MAX_ALLOWED_FILES = 10;
 
 export class TeacherAssignment extends Component {
   state = {
@@ -23,12 +24,17 @@ export class TeacherAssignment extends Component {
     classId: '',
     subjectId: '',
     isSaving: false,
-    files: []
+    files: [],
   };
 
   onDrop = (files) => {
-    console.log(files);
-    this.setState({ files });
+
+    const currentFilesCount = this.state.files.length + this.state.attachments.length;
+    if (files.length > MAX_ALLOWED_FILES || (currentFilesCount + files.length) > MAX_ALLOWED_FILES) {
+      return toastr.error("Assignment cannot have more than 10 attachments!");
+    }
+
+    this.setState({ files: [...this.state.files, ...files] });
   }
 
   componentDidMount() {
@@ -45,7 +51,7 @@ export class TeacherAssignment extends Component {
         title: assignment.Title,
         description: assignment.Description,
         date: new Date(assignment.DueDate),
-        attachments: assignment.Attachments || []
+        attachments: assignment.files
       });
     }
   }
@@ -74,9 +80,7 @@ export class TeacherAssignment extends Component {
       formData.set('description', this.state.description);
       formData.set('dueDate', this.state.date.toISOString());
       
-      if (this.state.attachments) {
-        formData.set('attachments', this.state.attachments);
-      }
+      formData.set('attachments', JSON.stringify(this.state.attachments || []));
 
       this.state.files.forEach((file) => {
         formData.append('files', file);
@@ -110,12 +114,17 @@ export class TeacherAssignment extends Component {
     return day !== 0;
   };
 
+  onAttachmentRemove = (name) => {
+    this.setState({ attachments: this.state.attachments.filter((a) => a.Name !== name)});
+  };
+
   onFileRemove = (name) => {
-    console.log(name);
-    //this.setState({ file: null, attachments: null });
-  }
+    this.setState({ files: this.state.files.filter((a) => a.name !== name)});
+  };
 
   render() {
+    const currentFilesLength = this.state.files.length + this.state.attachments.length;
+
     return (
       <Modal dimmer open className="assignment-detail" size="small">
         <Modal.Header>
@@ -153,17 +162,27 @@ export class TeacherAssignment extends Component {
               </Form.Field>
             </Form.Group>
             <Form.Field>
-            {!this.state.file && !this.state.attachment && <FileUpload onDrop={this.onDrop} />}
+
+            {(!!this.state.files.length || !!this.state.attachments.length) && <LabelDetail>Attachments</LabelDetail>}
             <div className="files">
               {this.state.files.map((file) => (
-                  <FilePreview 
-                    type={mime.getExtension(file.type)} 
-                    name={file.name} 
-                    onRemove={this.onFileRemove}
-                  />
-                ))
-              }
+                <FilePreview 
+                  type={mime.getExtension(file.type)} 
+                  name={file.name} 
+                  onRemove={this.onFileRemove}
+                />
+              ))}
+              {this.state.attachments.map((file) => (
+                <FilePreview 
+                  type={mime.getExtension(file.Type)} 
+                  name={file.Name} 
+                  onRemove={this.onAttachmentRemove}
+                />
+              ))}
             </div>
+            
+            {currentFilesLength < MAX_ALLOWED_FILES && <FileUpload onDrop={this.onDrop} />}
+
             </Form.Field>
           </Form>
         </Modal.Content>

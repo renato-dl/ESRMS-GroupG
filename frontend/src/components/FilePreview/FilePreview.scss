@@ -7,7 +7,6 @@
   .file {
     display: flex;
     align-content: center;
-    align-items: center;
 
     .file-preview {
       width: 45px;
@@ -35,12 +34,25 @@
 
     .file-name {
       margin-left: 5px;
+      display: flex;
+      align-content: center;
+      align-items: center;
+      padding-right: 10px;
     }
   }
 
-  .buttons {
-    z-index: initial;
-    margin-top: 5px;
-    margin-left: 5px;
+  .icon {
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.3);
+    }
+
+    &.download:hover {
+      color: green;
+    }
+
+    &.remove:hover {
+      color: red;
+    }
   }
 }

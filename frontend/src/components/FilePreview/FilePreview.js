@@ -1,6 +1,8 @@
 import React from 'react';
 import "./FilePreview.scss";
 import { Icon, Button } from 'semantic-ui-react';
+import Tooltip from '../Tooltip/Tooltip';
+
 
 export const FilePreview = (props) => (
   <div className="file-container">
@@ -15,15 +17,20 @@ export const FilePreview = (props) => (
     <div className="buttons">
       <Button style={{position: 'absolute', visibility: 'hidden', top: 0}} />
       {props.onRemove && 
-        <span size="tiny" negative color="red" onClick={() => props.onRemove(props.name)}>
-          <Icon name="remove" />
-        </span>
+        <Tooltip 
+          text="Remove file"
+          trigger={
+            <Icon name="remove" onClick={() => props.onRemove(props.name)} className="icon remove" />
+          }
+        />
       }
       {props.onDownload && 
-        <Button tabIndex={99} size="tiny"  positive onClick={() => props.onDownload(props.name)}>
-          <Icon name="download" />
-          Download
-        </Button>
+        <Tooltip 
+          text="Download file"
+          trigger={
+            <Icon name="download" onClick={() => props.onDownload(props.fileKey)} className="icon download" />
+          }
+        />
       }
     </div>
   </div>
