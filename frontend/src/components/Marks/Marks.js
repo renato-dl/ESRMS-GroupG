@@ -1,7 +1,7 @@
 import React from 'react';
 import { api } from '../../services/api';
 import './Marks.scss';
-import {Table, Icon, Container} from 'semantic-ui-react';
+import {Table, Icon, Container, Dropdown } from 'semantic-ui-react';
 
 import moment from 'moment';
 import { NoData } from '../NoData/NoData';
@@ -10,8 +10,11 @@ export class Marks extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
+      allMarks: [],
       marks: [],
-      studentName: ''
+      studentName: '', 
+      subjects: [],
+      selectedSubj: ''
     }
   }
     
@@ -21,8 +24,18 @@ export class Marks extends React.Component{
     if (response) {
       this.setState({ 
         marks: response.data,
+        allMarks: response.data,
         studentName: student.FirstName
       })
+      let marksSubjects = [];
+      let i = 1;
+      marksSubjects.push({key:0, value:'all', text:'All'});
+      this.state.marks.forEach(function(e){
+        let subj = {key: i, value: e.Name, text: e.Name};
+        i = i + 1;
+        marksSubjects.push(subj);
+      });
+      this.setState({subjects: marksSubjects});
     }
   }
 
@@ -30,6 +43,22 @@ export class Marks extends React.Component{
     console.log(studentID);
     this.props.history.push('/marks')
   };
+
+  onSelect = (event, {value}) => {
+    this.setState({selectedSubj: value});
+    if (value != '' && value != 'all'){
+      let selectedMarks = [];
+      this.state.allMarks.forEach(function(e){
+        if(e.Name == value)
+          selectedMarks.push(e);
+      });
+      this.setState({marks: selectedMarks});
+    }
+    else{
+      const allMarks = this.state.allMarks;
+      this.setState({marks: allMarks});
+    }  
+  }
   
   styleMarkColor(mark) {
     if(mark<6){
@@ -63,10 +92,17 @@ export class Marks extends React.Component{
     if(this.state.marks.length){
       return (
         <Container className="contentContainer">
-          <h3 className="contentHeader"> 
-            <Icon name='braille'/> 
-            {this.state.studentName ? this.state.studentName + "'s" : 'Student'} grades
-          </h3>
+              <h3 className="contentHeader"> 
+              <Icon name='braille'/> 
+              {this.state.studentName ? this.state.studentName + "'s" : 'Student'} grades            
+            </h3>  
+            <Dropdown 
+              selection
+              placeholder='Select subject'
+              value={this.state.selectedSubj}
+              options={this.state.subjects}
+              onChange={this.onSelect}
+            />       
           <Table class='Marks_table' columns={4}>
           <Table.Header>
               <Table.Row>
