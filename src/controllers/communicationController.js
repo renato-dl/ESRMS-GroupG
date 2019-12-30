@@ -8,6 +8,11 @@ class CommunicationController extends BaseController {
     res.send({ communications });
   }
 
+  async listForParent(req, res) {
+    const communications = await CommunicationModel.findAllActive();
+    res.send({ communications });
+  }
+
   async add(req, res) {
     const communication = await CommunicationModel.add(
       req.body.title, 
