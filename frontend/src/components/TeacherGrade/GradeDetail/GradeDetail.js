@@ -175,7 +175,7 @@ export class GradeDetail extends Component {
                     className="numberInput" 
                     valueType="decimal" 
                     min={0} 
-                    max={10} 
+                    max={10.25} 
                     step={0.25}
                     value={this.state.studentMarks.get(eStudent.ID)}
                     onChange={(e) => {this.changeValue(eStudent.ID, e)} }

@@ -13,13 +13,13 @@ class Note extends Model {
     let query;
 
     if (dateRange.from && dateRange.to) {
-        query =`SELECT DISTINCT N.ID, N.Title, N.Description, N.Date, N.IsSeen, S.FirstName, S.LastName
+        query =`SELECT DISTINCT N.ID, N.Title, N.Description, N.Date, N.IsSeen, N.StudentId, S.FirstName, S.LastName
         FROM Notes N, Students S, TeacherSubjectClassRelation tscr
         WHERE N.StudentId = S.ID AND N.TeacherId = tscr.TeacherId AND
         tscr.ClassId = ? AND N.Date >= ? AND N.Date <= ?
         ORDER BY N.Date DESC`;
     } else {
-        query =`SELECT DISTINCT N.ID, N.Title, N.Description, N.Date, N.IsSeen, S.FirstName, S.LastName
+        query =`SELECT DISTINCT N.ID, N.Title, N.Description, N.Date, N.IsSeen, N.StudentId, S.FirstName, S.LastName
         FROM Notes N, Students S,  TeacherSubjectClassRelation tscr
         WHERE N.StudentId = S.ID AND N.TeacherId = tscr.TeacherId AND tscr.ClassId = ?
         ORDER BY N.Date DESC`;

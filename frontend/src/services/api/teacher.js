@@ -86,5 +86,19 @@ export class TeacherAPIService extends BaseAPIService {
   recordEarlyExit(data){
     return this.post('teacher/early_exit', data)
   }
+  
+  getNotes(cId){
+    return this.get(`teacher/notes?classId=${cId}`);
+  }
 
+  saveNote(data){
+    return this.post('teacher/note', data);
+  }
+
+  updateNote(data) {
+    return this.patch('teacher/note',data);
+  }
+  deleteNote(data){
+    return this.delete(`/teacher/note`, data);
+  }
 }
