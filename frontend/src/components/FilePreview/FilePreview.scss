@@ -1,14 +1,16 @@
 .file-container {
   display: flex;
-  flex-flow: column;
+  align-content: center;
+  align-items: center;
+  margin-bottom: 5px;
 
   .file {
     display: flex;
-    flex-flow: column;
+    align-content: center;
 
     .file-preview {
-      width: 120px;
-      height: 120px;
+      width: 45px;
+      height: 25px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -18,6 +20,7 @@
       span {
         text-transform: uppercase;
         color: white;
+        font-size: 10px;
       }
   
       &.pdf {
@@ -28,10 +31,28 @@
         background-color: blue;
       }
     }
+
+    .file-name {
+      margin-left: 5px;
+      display: flex;
+      align-content: center;
+      align-items: center;
+      padding-right: 10px;
+    }
   }
 
-  .buttons {
-    z-index: initial;
-    margin-top: 5px;
+  .icon {
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.3);
+    }
+
+    &.download:hover {
+      color: green;
+    }
+
+    &.remove:hover {
+      color: red;
+    }
   }
 }
