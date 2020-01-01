@@ -5,6 +5,7 @@ import Class from '../database/models/class';
 import TCSR from '../database/models/teacherClassSubject';
 import Grade from '../database/models/grade';
 import Note from '../database/models/note';
+import SupportMaterial from '../database/models/supportMaterial';
 import Student from '../database/models/student';
 import StudentAttendance from '../database/models/studentAttendance';
 import ClassAttendance from '../database/models/classAttendance';
@@ -530,6 +531,27 @@ class TeacherController extends BaseController {
     );
 
     res.send({success: true});
+  }
+
+  // GET /teacher/support-material
+  // Query: subjectId (optional), date (optional), page (optional), pageSize (optional)
+  async getSupportMaterial(req, res) {
+    const supportMaterial = await SupportMaterial.findAll();
+    res.send({ supportMaterial: supportMaterial || [] });
+  }
+
+  // POST /teacher/support-material
+  // Body: subjectId, file
+  async addSupportMaterial(req, res) {
+    const supportMaterial = await SupportMaterial.create();
+    res.send({ supportMaterial: supportMaterial || [] });
+  }
+
+  // DELETE /teacher/support-material
+  // Body: ID
+  async deleteSupportMaterial(req, res) {
+    const supportMaterial = await SupportMaterial.remove(req.body.ID);
+    res.send({ success: true });
   }
 }
 

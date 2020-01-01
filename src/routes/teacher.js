@@ -37,5 +37,9 @@ teacher.post('/note', Authorization(['IsTeacher']), TeacherController.processReq
 teacher.patch('/note', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'updateNote'));
 teacher.delete('/note', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'deleteNote'));
 
+teacher.get('/support-material', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'getSupportMaterial'));
+teacher.post('/support-material', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'addSupportMaterial'));
+teacher.delete('/support-material', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'deletSupportMaterial'));
+
 
 export default teacher;
