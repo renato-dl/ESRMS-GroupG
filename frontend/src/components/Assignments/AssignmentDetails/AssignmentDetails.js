@@ -5,10 +5,10 @@ import './AssignmentDetails.scss';
 import { FilePreview } from '../../FilePreview/FilePreview';
 import {api} from '../../../services/api'
 import fileDownload from 'js-file-download/file-download';
+import mime from 'mime';
 
 export const AssignmentDetails = (props) => {
-  console.log(props);
-
+  
   const handleDownload = async (fileName) => {
     const response = await api.parent.getAssignmentFile(fileName);
     fileDownload(response.data, fileName);
@@ -25,22 +25,19 @@ export const AssignmentDetails = (props) => {
         <h3>Assignment title: <span>{props.assignment.Title}</span></h3>
         <h3>Assignment description: <span>{props.assignment.Description}</span></h3>
         <h3>Due date: <span>{moment(props.assignment.DueDate).format('MMMM Do')}</span></h3>
-        {props.assignment.AttachmentFile && 
+        {!!props.assignment.files.length && 
           <>
             <h3>Attachments:</h3>
-            <FilePreview 
-              type={props.assignment.AttachmentFile.split('.').pop()} 
-              name={props.assignment.AttachmentFile}
-              onDownload={() => handleDownload(props.assignment.AttachmentFile)}
-            />
+            {props.assignment.files.map((file) => (
+              <FilePreview 
+                type={mime.getExtension(file.Type)} 
+                name={file.Name} 
+                onDownload={() => handleDownload(file.Key)}
+              />
+            ))}
           </>
         }
       </Modal.Content>
-      {/* <Modal.Actions>
-        <Button positive onClick={props.onClose}>
-          <Icon name='checkmark' /> Close
-        </Button>
-      </Modal.Actions> */}
     </Modal>
   );
 };

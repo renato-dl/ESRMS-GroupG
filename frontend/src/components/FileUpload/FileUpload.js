@@ -18,7 +18,6 @@ export class FileUpload extends React.Component {
         onDrop={this.props.onDrop}
         onDropRejected={this.onDropRejected}
         maxSize={5 * 1024 * 1024}
-        multiple={false}
       >
         {({getRootProps, getInputProps, isDragAccept, isDragActive, isDragReject}) => {
           const classNames = ['file-upload'];
@@ -34,7 +33,7 @@ export class FileUpload extends React.Component {
             <section className="container">
               <div {...getRootProps({className: classNames.join(' ')})}>
                 <input {...getInputProps()} />
-                <b>Drag 'n' drop a file here, or click to select</b>
+                <b>Drag 'n' drop a file(s) here, or click to select</b>
               </div>
             </section>
           );

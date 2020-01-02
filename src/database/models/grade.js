@@ -139,7 +139,7 @@ class Grade extends Model {
     if(isNaN(parsedGrade)){
       throw new Error('Missing or invalid grade');
     }
-    if ( parsedGrade < 0 || parsedGrade > 10 ) {
+    if ( parsedGrade < 0 || parsedGrade > 10.25 ) {
       throw new Error('Invalid grade');
     }
     if((parsedGrade * 100) % 25 != 0){

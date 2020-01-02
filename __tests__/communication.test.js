@@ -16,6 +16,20 @@ describe("Tests about communications", () => {
         }
     });
 
+    test('It should return the list of all active communications', async () => {
+        const communications = await CommunicationModel.findAllActive();
+        expect(communications).not.toBeNull();
+        
+        if (communications.length) {
+            expect(communications[0].Title).toBeTruthy();
+            expect(communications[0].Title.length).toBeLessThan(255);
+            expect(communications[0].Description).toBeTruthy();
+            expect(communications[0].DueDate).toBeTruthy();
+            expect(moment(communications[0].DueDate).startOf('day').unix()).toBeGreaterThanOrEqual(moment().startOf('day').unix());
+        }
+    });
+
+
     test('It should should create a new communication', async () => {
         const title = "New test communication";
         const description = "New test description";

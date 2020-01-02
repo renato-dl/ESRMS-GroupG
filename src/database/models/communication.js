@@ -20,18 +20,39 @@ class Communication extends Model {
     const query = `
       SELECT *, DATEDIFF(DueDate, CURDATE()) AS diff
       FROM ${this.tableName}
-      ORDER BY CASE WHEN diff < 0 THEN 1 ELSE 0 END, IsImportant DESC, diff`
+      ORDER BY CASE WHEN diff < 0 THEN 1 ELSE 0 END, IsImportant DESC, diff
+    `;
 
-      const connection = await this.db.getConnection();
-      let result;
-      try {
-        result = await connection.query(query);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        connection.release();
-      }      
-      return result;
+    const connection = await this.db.getConnection();
+    let result;
+    try {
+      result = await connection.query(query);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      connection.release();
+    }      
+    return result;
+  }
+
+  async findAllActive() {
+    const query = `
+      SELECT *
+      FROM ${this.tableName}
+      WHERE DueDate >= CURDATE()
+      ORDER BY IsImportant DESC
+    `;
+
+    const connection = await this.db.getConnection();
+    let result;
+    try {
+      result = await connection.query(query);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      connection.release();
+    }      
+    return result;
   }
 
   async add(Title, Description, IsImportant, DueDate) {

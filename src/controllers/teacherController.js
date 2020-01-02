@@ -4,16 +4,31 @@ import Topic from '../database/models/topic';
 import Class from '../database/models/class';
 import TCSR from '../database/models/teacherClassSubject';
 import Grade from '../database/models/grade';
+import Note from '../database/models/note';
 import Student from '../database/models/student';
 import StudentAttendance from '../database/models/studentAttendance';
 import ClassAttendance from '../database/models/classAttendance';
 import Assignment from '../database/models/assignment';
+import File from '../database/models/File';
 import path from 'path';
 import moment from 'moment';
 import db from '../database';
-import fs from 'fs';
 
 class TeacherController extends BaseController {
+
+  async addAttachmentsToAssignment(assignmentId, files) {
+    files = files.map((file) => {
+      return {
+        Key: file.filename,
+        Name: file.originalname,
+        Size: file.size,
+        Type: file.mimetype
+      }
+    });
+
+    const fileIds = await File.createMany(files);
+    await Assignment.addAttachments(assignmentId, fileIds);
+  }
 
   // GET /teacher/subjects
   async subjectsByTeacherId(req, res) {
@@ -115,30 +130,18 @@ class TeacherController extends BaseController {
 
 
   // POST /teacher/grade
-  // Body: classId, subjectId, studentId, grade, type, gradeDate
+  // Body: subjectId, studentId, grade, type, gradeDate
   async addGrade(req, res) {
-    if(!await TCSR.checkIfTeacherTeachesSubjectInClass(
+    if(!await TCSR.checkIfTeacherTeachesToStudent(
       req.user.ID,
-      req.body.subjectId, 
-      req.body.classId)
+      req.body.studentId,
+      req.body.subjectId)
       ){
-        res.send(401);
+        res.sendStatus(401);
         return;
     }
-    //attendance check
-    const date = moment.utc(req.body.gradeDate);
 
-    const classAttendance = await ClassAttendance.hasAttendanceBeenRegistered(req.body.classId, date);
-    if (!classAttendance) {
-      throw new Error('No attendance info available');
-    }
-    const attendance = await StudentAttendance.findByStudentId(req.body.studentId, {
-      from: date.format('YYYY-MM-DD'),
-      to: date.format('YYYY-MM-DD')
-    });
-    if (attendance.length != 0 && attendance[0].LateEntry == null) {
-      throw new Error('Student is absent');
-    }
+    await this.attendanceCheck(req.body.gradeDate, req.body.studentId);
 
     const result = await Grade.addGrade(
       req.body.subjectId,
@@ -148,6 +151,24 @@ class TeacherController extends BaseController {
       req.body.type
      );
     res.send({success: true, id: result.id});
+  }
+
+  async attendanceCheck(date, studentId) {
+    //attendance check
+
+    const student = await Student.findById(studentId);
+
+    const classAttendance = await ClassAttendance.hasAttendanceBeenRegistered(student.ClassId, date);
+    if (!classAttendance) {
+      throw new Error('No attendance info available');
+    }
+    const attendance = await StudentAttendance.findByStudentId(studentId, {
+      from: moment.utc(date).format('YYYY-MM-DD'),
+      to: moment.utc(date).format('YYYY-MM-DD')
+    });
+    if (attendance.length != 0 && attendance[0].LateEntry == null && attendance[0].EarlyExit == null) {
+      throw new Error('Student is absent');
+    }
   }
 
   // PATCH /teacher/grade
@@ -320,15 +341,22 @@ class TeacherController extends BaseController {
       res.send(401);
       return;
     } 
+    
     const result = await Assignment.addAssignment(
       req.body.subjectId,
       req.body.classId,
       req.body.title,
       req.body.description,
-      req.body.dueDate,
-      req.file ? req.file.filename : null
+      req.body.dueDate
     );
-    res.send({success: true, id: result.id});
+
+    const assignmentId = result.id;
+
+    if (req.files.length) {
+      await this.addAttachmentsToAssignment(assignmentId, req.files);
+    }
+
+    res.send({success: true, id: assignmentId});
   }
 
   // PATCH /teacher/assignment
@@ -345,26 +373,23 @@ class TeacherController extends BaseController {
     if(!teacherTeachesInClass || !isAssignmentFromTeacher) {
       res.send(401);
       return;
-    }
-
-    const assignment = await Assignment.findById(req.body.assignmentId);
-    // check and remove the old file
-    if (assignment.AttachmentFile && !req.body.attachmentFile) {
-      const filePath = path.join(__dirname, "../../", "uploads", assignment.AttachmentFile);
-      try {
-        fs.unlinkSync(filePath);
-      } catch(e) {
-        console.log(e);
-      }
     } 
 
     const success = await Assignment.updateAssignment(
       req.body.assignmentId,
       req.body.title,
       req.body.description,
-      req.body.dueDate,
-      req.file ? req.file.filename : req.body.attachmentFile ? req.body.attachmentFile : null 
+      req.body.dueDate
     );
+
+    const attachments = JSON.parse(req.body.attachments);
+
+    // update attachments
+    await Assignment.updateAttachments(req.body.assignmentId, attachments || []);
+    // add the new attachments
+    if (req.files.length) {
+      await this.addAttachmentsToAssignment(req.body.assignmentId, req.files);
+    }
 
     res.send({ success });
   }
@@ -380,6 +405,7 @@ class TeacherController extends BaseController {
       res.send(401);
       return;
     }
+
     res.send(await Assignment.findByClassAndSubject(
       req.query.classId,
       req.query.subjectId,
@@ -395,43 +421,115 @@ class TeacherController extends BaseController {
       res.send(401);
       return;
     }
-    const assignment = await Assignment.findById(req.body.ID);
-    if (assignment.AttachmentFile) {
-      const filePath = path.join(__dirname, "../../", "uploads", assignment.AttachmentFile);
-      try {
-        fs.unlinkSync(filePath);
-      } catch(e) {
-        console.log(e);
-      }
+
+    const attachments = await Assignment.getAttachments(req.body.ID);
+    if (attachments.length) {
+      await File.removeMany(attachments.map((a) => a.ID));
     }
 
-    await Assignment.remove(
-      req.body.ID
-    );
+    await Assignment.remove(req.body.ID);
 
     res.send({success: true});
   }
 
   async getAssignmentFile(req, res) {
     const fileKey = req.query.ID;
-    
     if (!fileKey) {
       throw new Error("Missing or invalid assignment id");
     }
-
-    const assignment = await Assignment.findOne({ AttachmentFile: fileKey });
-    if (!await Assignment.checkIfAssignmentIsFromTeacher(assignment.ID, req.user.ID)) {
-      res.sendStatus(401);
-      return;
-    } 
-
-    if (!assignment.AttachmentFile) {
+    
+    const file = await File.findOne({ Key: fileKey });
+    if (!file) {
       res.sendStatus(404);
       return;
     }
 
-    const filePath = path.join(__dirname, "../../", "uploads", assignment.AttachmentFile);
+    const assignment = await Assignment.findOneByfile(file.ID);
+    if (!assignment || !await Assignment.checkIfAssignmentIsFromTeacher(assignment.ID, req.user.ID)) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const filePath = path.join(__dirname, "../../", "uploads", file.Key);
     res.download(filePath);
+  }
+
+  /* GET /teacher/notes
+  Query: classId, dateRange, paging */
+  async getNotes(req, res) {
+    if(!await TCSR.checkIfTeacherTeachesInClass(req.user.ID, req.query.classId)) {
+      res.sendStatus(401);
+      return;
+    }
+    res.send(await Note.findByClassId(
+      req.query.classId,
+      {from: req.query.fromDate, to: req.query.toDate},
+      {page: req.query.page, pageSize: req.query.pageSize}
+    ));
+  }
+
+  // POST /teacher/note
+  // Body: Title, Description, StudentId, TeacherId, Date
+  async addNote(req, res) {
+    
+    if(!await TCSR.checkIfTeacherTeachesToStudent(
+      req.user.ID,
+      req.body.studentId)
+    ) {
+      res.sendStatus(401);
+      return;
+    }
+
+    await this.attendanceCheck(req.body.date, req.body.studentId);
+
+    const result = await Note.addNote(
+      req.body.title,
+      req.body.description,
+      req.body.studentId,
+      req.user.ID,
+      req.body.date,
+    );
+    res.send({success: true, id: result.id});
+  }
+
+  // PATCH /teacher/note
+  // Body: noteId, title, description, date
+  async updateNote(req, res) {
+
+    const isNoteFromTeacher = await Note.checkIfNoteIsFromTeacher(
+      req.body.noteId,
+      req.user.ID
+    );
+
+    if(!isNoteFromTeacher) {
+      res.sendStatus(401);
+      return;
+    }
+
+    await this.attendanceCheck(req.body.date, req.body.studentId);
+
+    const success = await Note.updateNote(
+      req.body.noteId,
+      req.body.title,
+      req.body.description,
+      req.body.date 
+    );
+    res.send({ success });
+  }
+
+  //DELETE /teacher/note
+  //Body: ID
+  async deleteNote(req, res) {
+    if(!await Note.checkIfNoteIsFromTeacher(req.body.ID, req.user.ID)){
+      res.sendStatus(401);
+      return;
+    }
+
+    await Note.remove(
+      req.body.ID
+    );
+
+    res.send({success: true});
   }
 }
 
