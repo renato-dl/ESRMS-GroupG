@@ -75,7 +75,7 @@ export class Model {
    */
   async create(data) {
     const connection = await this.db.getConnection();
-    const attributes = Object.keys(data).join(',');
+    const attributes = Object.keys(data).map((key) => `${this.tableName}.${key}`).join(',');
     const values = Object.values(data);
     const preparePattern = this.db.getPreparePattern(values.length);
 

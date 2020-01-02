@@ -39,7 +39,6 @@ teacher.delete('/note', Authorization(['IsTeacher']), TeacherController.processR
 
 teacher.get('/support-material', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'getSupportMaterial'));
 teacher.post('/support-material', UploadMiddleware.single, Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'addSupportMaterial'));
-teacher.delete('/support-material', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'deletSupportMaterial'));
-
+teacher.delete('/support-material', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'deleteSupportMaterial'));
 
 export default teacher;

@@ -6,6 +6,24 @@ class TCSR extends Model {
     super('TeacherSubjectClassRelation');
   }
 
+  async checkIfTeacherTeachesSubject(teacherId, subjectId) {
+    if (!teacherId) throw new Error('Missing or invalid teacher id');
+    if (!subjectId) throw new Error('Missing or invalid subject id');
+
+    const connenction = await this.db.getConnection();
+    const result = await connenction.query(
+      `SELECT COUNT(*) AS count
+      FROM ${this.tableName}
+      WHERE TeacherId = ? 
+      AND SubjectId = ?`,
+      [teacherId, subjectId]
+    );
+    
+    connenction.release();
+    console.log(result);
+    return result[0].count == 1;
+  }
+
   async checkIfTeacherTeachesSubjectInClass(teacherId, subjectId, classId) {
 
     if (!teacherId) throw new Error('Missing or invalid teacher id');
@@ -72,8 +90,6 @@ class TCSR extends Model {
     return false;
 
   }
-
-
 
   async getTeachingClasses(teacherId) {
     if(!teacherId){

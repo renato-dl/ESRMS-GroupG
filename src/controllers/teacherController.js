@@ -522,7 +522,7 @@ class TeacherController extends BaseController {
   //Body: ID
   async deleteNote(req, res) {
     if(!await Note.checkIfNoteIsFromTeacher(req.body.ID, req.user.ID)){
-      res.sendStatus(401);
+      res.sendStatus(401); 
       return;
     }
 
@@ -534,23 +534,41 @@ class TeacherController extends BaseController {
   }
 
   // GET /teacher/support-material
-  // Query: subjectId (optional), date (optional), page (optional), pageSize (optional)
+  // Query: subject (optional), fromDate (optional), toDate (optional), page (optional), pageSize (optional)
   async getSupportMaterial(req, res) {
-    const supportMaterial = await SupportMaterial.findAll();
-    res.send({ supportMaterial: supportMaterial || [] });
+    const supportMaterial = await SupportMaterial.findAllByTeacher(
+      req.user.ID,
+      { subject: req.query.subject, from: req.query.fromDate, to: req.query.toDate },
+      { page: req.query.page, pageSize: req.query.pageSize }
+    );
+
+    res.send({ supportMaterial: supportMaterial });
   }
 
   // POST /teacher/support-material
   // Body: subjectId, file
   async addSupportMaterial(req, res) {
-    const supportMaterial = await SupportMaterial.create();
-    res.send({ supportMaterial: supportMaterial || [] });
+    if (!await TCSR.checkIfTeacherTeachesSubject(req.user.ID, req.body.subjectId)) {
+      return res.send(401);
+    }
+
+    const supportMaterialId = await SupportMaterial.add(req.body.subjectId, req.file)
+    res.send({ supportMaterialId });
   }
 
   // DELETE /teacher/support-material
   // Body: ID
   async deleteSupportMaterial(req, res) {
-    const supportMaterial = await SupportMaterial.remove(req.body.ID);
+    const supportMaterial = await SupportMaterial.findById(req.body.ID);
+    if (!supportMaterial) {
+      return res.send(401);
+    }
+
+    if (!await TCSR.checkIfTeacherTeachesSubject(req.user.ID, supportMaterial.SubjectId)) {
+      return res.send(401);
+    }
+
+    await SupportMaterial.remove(req.body.ID);
     res.send({ success: true });
   }
 }
