@@ -20,9 +20,9 @@ teacher.patch('/grade', Authorization(['IsTeacher']), TeacherController.processR
 teacher.get('/students', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'getStudents'));
 
 teacher.get('/classes', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'getClasses'));
-teacher.post('/assignment', UploadMiddleware, Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'addAssignment'));
+teacher.post('/assignment', UploadMiddleware.multiple(10), Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'addAssignment'));
 teacher.delete('/assignment', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'deleteAssignment'));
-teacher.patch('/assignment', UploadMiddleware, Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'updateAssignment'));
+teacher.patch('/assignment', UploadMiddleware.multiple(10), Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'updateAssignment'));
 teacher.get('/assignments', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'assignmentsByClassAndSubject'));
 teacher.get('/assignment/file', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'getAssignmentFile'));
 
@@ -38,7 +38,7 @@ teacher.patch('/note', Authorization(['IsTeacher']), TeacherController.processRe
 teacher.delete('/note', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'deleteNote'));
 
 teacher.get('/support-material', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'getSupportMaterial'));
-teacher.post('/support-material', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'addSupportMaterial'));
+teacher.post('/support-material', UploadMiddleware.single, Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'addSupportMaterial'));
 teacher.delete('/support-material', Authorization(['IsTeacher']), TeacherController.processRequest.bind(TeacherController, 'deletSupportMaterial'));
 
 
