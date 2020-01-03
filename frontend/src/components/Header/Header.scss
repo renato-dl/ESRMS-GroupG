@@ -49,11 +49,11 @@
   }
 }
 
-.ui.dropdown .menu {
+.menu.transition.visible.headerCustDropdown{
   //left: -130px;
   text-align: right;
 
-  left:-132px;
+  left:-132px!important;
   i{
     color:black
   }
