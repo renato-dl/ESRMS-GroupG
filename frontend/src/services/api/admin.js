@@ -27,10 +27,10 @@ export class AdminAPIService extends BaseAPIService {
     return this.get('/admin/students', data);
   }
 
-  
   getStudents() {
     return this.get('/admin/students');
   }
+  
   updateStudent(data) {
     return this.patch('admin/student', data)
   }  
