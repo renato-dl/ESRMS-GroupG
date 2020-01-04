@@ -4,7 +4,7 @@ import { Authorization } from '../middlewares/authorization';
 
 const subject = express.Router();
 
-subject.get('/all', Authorization(['IsAdminOfficer', 'IsParent', 'IsTeacher']), CommunicationController.processRequest.bind(SubjectController, 'listAll'));
+subject.get('/all', Authorization(['IsAdminOfficer', 'IsParent', 'IsTeacher']), SubjectController.processRequest.bind(SubjectController, 'listAll'));
 
 
-export default communication;
+export default subject;
