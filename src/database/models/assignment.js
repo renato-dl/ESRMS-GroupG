@@ -1,6 +1,6 @@
 import {Model} from './base';
 import moment from 'moment';
-import File from './File';
+import File from './file';
 import {
   xorBy, 
   intersectionBy, 
