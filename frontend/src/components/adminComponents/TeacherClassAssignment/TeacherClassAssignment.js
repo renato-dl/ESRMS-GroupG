@@ -29,6 +29,10 @@ export class TeacherClassAssignment extends Component {
     fetchFreeTeachers = async () => {
         const response = await api.admin.getTeachers(); // this is incorrect change to new endpoint that should be created
         if (response) {
+            console.log(response);
+            if (response.data.message){
+                return;
+            }
             this.setState({ freeTeachers: response.data});
         }
     };
@@ -48,7 +52,7 @@ export class TeacherClassAssignment extends Component {
     };
 
     render() {
-        if(this.state.teachersDat.length) {
+        if(this.state.teachersDat.length || this.state.freeTeachers.length) {
         return (
             <Container className="class-composition contentContainer">
             <h3 className="contentHeader"> 
