@@ -11,7 +11,7 @@ export class TeacherClassAssignment extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isModalOpen:true,
+            isModalOpen:false,
             editingTeacher:null, 
 
             teachersDat:[],

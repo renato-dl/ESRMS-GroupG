@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { api } from '../../../../services/api';
+import _ from 'lodash';
 
 import {Icon, Modal, Button, Table, Dropdown} from 'semantic-ui-react';
 import Tooltip from '../../../Tooltip/Tooltip';
@@ -10,14 +11,17 @@ export class TeacherClassDetails extends Component {
         teacherID:null,
         FirstName:null,
         LastName:null,
-        classOptions:[  { key: 'af', value: '1A', text: '1A' },
-                        { key: 'ax', value: '2B', text: '2B' }
-                        ]
+        CSPairs:[{subjectId:null, classId:null}],
 
-        ,
+        classOptions:[],
         subjectOptions:[
-                        { key: 'm', value: 'm', text: 'Mathematics' },
-                        { key: 'h', value: 'h', text: 'History' }
+                        { key: '1', value: '1', text: 'Mathematics' },
+                        { key: '2', value: '2', text: 'Geography' },
+                        { key: '3', value: '3', text: 'Physics'},
+                        { key: '4', value: '4', text: 'History'},
+                        { key: '5', value: '5', text: 'Physical Education'},
+                        { key: '6', value: '6', text: 'Italian'},
+                        { key: '7', value: '7', text: 'English'},
         ]
     }
 
@@ -28,7 +32,23 @@ export class TeacherClassDetails extends Component {
         this.props.onClose();
     };
 
-    componentDidMount() {
+    setClassOptions = (dat) =>
+        _.times(dat.length, (i) => {
+            console.log(dat[i]);
+            const name = dat.Name;
+            return { key: dat[i].ID, value: dat[i].ID , text: dat[i].Name}
+    })
+    
+    async fetchClasses(){
+        const response = await api.admin.getClasslist();
+        if (response) {
+          //console.log(response)
+          //this.setState({classes:response.data})
+          this.setState({classOptions: this.setClassOptions(response.data)});
+        } 
+    }
+
+    async componentDidMount() {
         const {teacher} = this.props;
         
         if (teacher) {
@@ -40,6 +60,7 @@ export class TeacherClassDetails extends Component {
             CSPairs:[],
           });
         }
+        await this.fetchClasses();
     }
 
     render() {
