@@ -74,4 +74,8 @@ export class AdminAPIService extends BaseAPIService {
   getAllTeacherClassData(){
     return this.get('admin/teacher-class');
   }
+
+  getSubjectslist(){
+    return this.get(`/subject/all`);
+  }
 }

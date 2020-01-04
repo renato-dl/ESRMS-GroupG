@@ -34,8 +34,15 @@ export class TeacherClassDetails extends Component {
 
     setClassOptions = (dat) =>
         _.times(dat.length, (i) => {
-            console.log(dat[i]);
+            //console.log(dat[i]);
             const name = dat.Name;
+            return { key: dat[i].ID, value: dat[i].ID , text: dat[i].Name}
+    })
+    
+    setSubjectOptions = (dat) =>
+        _.times(dat.length, (i) => {
+            console.log(dat[i]);
+            //const name = dat.Name;
             return { key: dat[i].ID, value: dat[i].ID , text: dat[i].Name}
     })
     
@@ -46,6 +53,13 @@ export class TeacherClassDetails extends Component {
           //this.setState({classes:response.data})
           this.setState({classOptions: this.setClassOptions(response.data)});
         } 
+    }
+
+    fetchSubjects = async () => {
+        const response = await api.admin.getSubjectslist();
+        if(response) {
+            this.setState( {subjectOptions: this.setSubjectOptions(response.data)});
+        }
     }
 
     async componentDidMount() {
@@ -61,6 +75,7 @@ export class TeacherClassDetails extends Component {
           });
         }
         await this.fetchClasses();
+        await this.fetchSubjects();
     }
 
     render() {
