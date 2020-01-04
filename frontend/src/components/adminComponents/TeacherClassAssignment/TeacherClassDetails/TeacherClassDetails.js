@@ -14,15 +14,7 @@ export class TeacherClassDetails extends Component {
         CSPairs:[{subjectId:null, classId:null}],
 
         classOptions:[],
-        subjectOptions:[
-                        { key: '1', value: '1', text: 'Mathematics' },
-                        { key: '2', value: '2', text: 'Geography' },
-                        { key: '3', value: '3', text: 'Physics'},
-                        { key: '4', value: '4', text: 'History'},
-                        { key: '5', value: '5', text: 'Physical Education'},
-                        { key: '6', value: '6', text: 'Italian'},
-                        { key: '7', value: '7', text: 'English'},
-        ]
+        subjectOptions:[]
     }
 
     onClose = () => {
