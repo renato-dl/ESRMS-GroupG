@@ -33,5 +33,9 @@ export const AdminMenu = (props) => (
       <Icon name='wrench' />
       Internal Accounts Setup
     </Menu.Item> */}
+    <Menu.Item as={Link} to='/admin/timetables'>
+      <Icon name='clock outline' />
+      Class Timetables
+    </Menu.Item>
   </>
 );

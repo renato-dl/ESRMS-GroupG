@@ -36,6 +36,7 @@ import {Admin} from '../Admin/Admin';
 import {ConfigParent} from '../../components/ConfigParent/ConfigParent';
 import {ClassComposition} from '../../components/ClassComposition/ClassComposition';
 import {AdminStudentsEnrollment} from '../../components/adminComponents/SudentsEntrollment/admin_StudentsEnrollment';
+import {Timetables} from '../../components/adminComponents/ClassTimeTable/Timetables';
 
 import { PrivateRoute } from '../../components/PrivateRoute/PrivateRoute';
 import { Communications } from '../../components/adminComponents/Communications/Communications';
@@ -85,6 +86,7 @@ export class App extends React.Component {
               <PrivateRoute exact path="/admin/ClassComposition" component={ClassComposition}/>
               <PrivateRoute exact path="/admin/enrollStudents" component={AdminStudentsEnrollment}/>
               <PrivateRoute exact path="/admin/communications" component={Communications}/> 
+              <PrivateRoute exact path="/admin/timetables" component={Timetables}/> 
 
               <PrivateRoute exact path="/sysadmin" component={SysAdmin}/>
               <PrivateRoute exact path="/sysadmin/accounts" component={InternalAccounts}/>
