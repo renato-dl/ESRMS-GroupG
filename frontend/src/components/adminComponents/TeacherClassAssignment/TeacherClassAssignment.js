@@ -5,11 +5,15 @@ import {Icon, Container, Table, Divider, Header, List, Image, Button, Segment} f
 import IsTeacher from '../../../assets/images/iconTeacher.jpg';
 
 import { NoData } from '../../NoData/NoData';
+import TeacherClassDetails from './TeacherClassDetails/TeacherClassDetails';
 
 export class TeacherClassAssignment extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isModalOpen:true,
+            editingTeacher:null, 
+
             teachersDat:[],
             freeTeachers:[]
         }
@@ -36,7 +40,12 @@ export class TeacherClassAssignment extends Component {
 
     configureTeacherModal = (data) => {
         console.log(data);
+        this.setState({ editingTeacher: data, isModalOpen:true})
     }
+
+    onModalClose= () => {
+        this.setState({isModalOpen: false});
+    };
 
     render() {
         if(this.state.teachersDat.length) {
@@ -97,6 +106,17 @@ export class TeacherClassAssignment extends Component {
             </Table.Body>
             </Table>
 
+            {this.state.isModalOpen &&
+              <TeacherClassDetails
+                teacher={this.state.editingTeacher}
+                onClose={this.onModalClose}
+                onSave={() => {
+                  this.fetchTeacherClassData();
+                  this.fetchFreeTeachers();
+                  this.onModalClose();
+                }}
+              />
+            }
             </Container>
         )
         }else{
