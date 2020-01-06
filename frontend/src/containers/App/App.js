@@ -16,6 +16,7 @@ import {Parent} from '../Parent/Parent';
 import {Student} from '../Student/Student';
 import {ChildAttendance} from '../../components/ChildAttendance/ChildAttendance';
 import {Assignments} from '../../components/Assignments/Assignments';
+import {ChildNote} from '../../components/ChildNote/ChildNote'
 
 //*** Teacher view Components */
 import {Teacher} from '../Teacher/Teacher';
@@ -68,6 +69,9 @@ export class App extends React.Component {
               <PrivateRoute exact path="/parent/student/:studentID/marks" component={Marks}/>
               <PrivateRoute exact path="/parent/student/:studentID/assignments" component={Assignments}/>
               <PrivateRoute exact path="/parent/student/:studentID/attendance" component={ChildAttendance}/>
+              <PrivateRoute exact path="/parent/student/:studentID/note" component={ChildNote}/>
+
+
               <PrivateRoute exact path="/parent/communications" component={ParentCommunications}/> 
               
               <PrivateRoute exact path="/teacher" component={Teacher}/>
