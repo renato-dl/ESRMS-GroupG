@@ -40,6 +40,7 @@ import {AdminStudentsEnrollment} from '../../components/adminComponents/SudentsE
 
 import { PrivateRoute } from '../../components/PrivateRoute/PrivateRoute';
 import { Communications } from '../../components/adminComponents/Communications/Communications';
+import { ParentCommunications } from '../../components/ParentCommunications/ParentCommunications';
 
 export class App extends React.Component {
   static contextType = ApplicationStoreContext;
@@ -71,6 +72,7 @@ export class App extends React.Component {
               <PrivateRoute exact path="/parent/student/:studentID/note" component={ChildNote}/>
 
 
+              <PrivateRoute exact path="/parent/communications" component={ParentCommunications}/> 
               
               <PrivateRoute exact path="/teacher" component={Teacher}/>
               <PrivateRoute exact path="/teacher/subjects" component={Teacher}/>

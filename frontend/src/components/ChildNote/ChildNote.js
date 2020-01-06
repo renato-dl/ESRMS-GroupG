@@ -6,44 +6,45 @@ import {Table, Icon, Container, Dropdown } from 'semantic-ui-react';
 import moment from 'moment';
 import { NoData } from '../NoData/NoData';
 
+import ChildNoteDetail from './ChildNoteDetail';
+import Tooltip from '../Tooltip/Tooltip';
+import {ApplicationStoreContext} from '../../store';
+
 export class ChildNote extends React.Component{
+  static contextType = ApplicationStoreContext;
   constructor(props) {
     super(props);
     this.state = {
-      allMarks: [],
-      marks: [],
-      studentName: '', 
-      subjects: [],
-      selectedSubj: ''
+      noteList:[],
+      Title: '',
+      Date: null,
+      Name: '', 
+      IsSeen: null,
+      detailNoteOpen:false
     }
+  }
+
+  fetchNotes = async () =>{ 
+    const student = this.context.state.parent.selectedStudent.ID;   
+    const request={
+        studentId:this.props.match.params.studentID
+    }
+    const response = await api.parent.getChildNotes(request);
+    if (response) {
+      console.log(response)
+        this.setState({noteList:response.data});
+    }  
   }
     
   async componentDidMount(){
     const student = JSON.parse(localStorage.getItem('selectedChild'));
-    const response = await api.parent.getChildNotes(this.props.match.params.studentID);
-    if (response) {
-        console.log(response)
-    //   this.setState({ 
-    //     marks: response.data,
-    //     allMarks: response.data,
-        // studentName: student.FirstName
-    //   })
-    //   let marksSubjects = [];
-    //   let i = 1;
-    //   marksSubjects.push({key:0, value:'all', text:'All'});
-    //   this.state.marks.forEach(function(e){
-    //     let subj = {key: i, value: e.Name, text: e.Name};
-    //     i = i + 1;
-    //     marksSubjects.push(subj);
-    //   });
-    //   this.setState({subjects: marksSubjects});
-    }
+    this.fetchNotes()
   }
 
-  selectMarks = async (studentID) => {
-    console.log(studentID);
-    this.props.history.push('/marks')
-  };
+//   selectMarks = async (studentID) => {
+//     console.log(studentID);
+//     this.props.history.push('/marks')
+//   };
 
   onSelect = (event, {value}) => {
     this.setState({selectedSubj: value});
@@ -61,93 +62,79 @@ export class ChildNote extends React.Component{
     }  
   }
   
-  styleMarkColor(mark) {
-    if(mark<6){
-      return({backgroundColor: "#F8D2D3"});
+  styleNoteColor(IsSeen) {
+    if(IsSeen==0){
+      return({color: "#000000"});
     }
-      return({backgroundColor: "#C6EDBA"});
+      return({color: "#C0C0C0"});
   };
 
-  marksFormat(num) {
-    if (num == 10.25)
-      return "10 cum laude";
-    else{
-      const val = num.toString();
-      let res = val.split('.');
-      if (res.length > 1){
-        if (res[1] == '5')
-          return res[0] + '½';
-        else if (res[1] == '25')
-          return res[0] + '+';
-        else if (res[1] == '75'){
-          let valInt = parseInt(res[0]);
-          return (valInt + 1) + '-';
-        }            
-      }        
-    }
-    return num;
+  onDetailNoteClose = () =>{
+    this.setState({detailNoteOpen: false, selectedNote: null});
+    this.fetchNotes()
   }
 
+  showNote = (note) =>{
+    this.setState({detailNoteOpen: true, selectedNote: note});
+  }
   render(){
-    // console.log(this.props.match)
-    if(this.state.marks.length){
+    if(this.state.noteList.length){
       return (
-        <Container className="contentContainer">
-              <h3 className="contentHeader"> 
-              <Icon name='braille'/> 
-              {this.state.studentName ? this.state.studentName + "'s" : 'Student'} Notes            
-            </h3>  
-            <Dropdown 
-              selection
-              placeholder='Select subject'
-              value={this.state.selectedSubj}
-              options={this.state.subjects}
-              onChange={this.onSelect}
-            />       
-          <Table class='Marks_table' columns={4}>
+        <Container className="Notes-container contentContainer">
+        <h3 className="contentHeader">
+          <Icon name='bullhorn'/>
+          {this.context.state.parent ? this.context.state.parent.selectedStudent.FirstName + "'s" : 'Student'} notes
+       </h3>
+        <Table className='Notes_table'>
           <Table.Header>
               <Table.Row>
-                  <Table.HeaderCell>SUBJECT</Table.HeaderCell>
-                  <Table.HeaderCell>MARK</Table.HeaderCell>
-                  <Table.HeaderCell>TYPE</Table.HeaderCell>
-                  <Table.HeaderCell>DATE</Table.HeaderCell>
+                  <Table.HeaderCell textAlign="center">#</Table.HeaderCell>
+                  <Table.HeaderCell textAlign="center">Title</Table.HeaderCell>
+                  <Table.HeaderCell textAlign="center">Date</Table.HeaderCell>
+                  <Table.HeaderCell textAlign="center">Is Seen</Table.HeaderCell>
+                  <Table.HeaderCell textAlign="center">Name</Table.HeaderCell>
+                  <Table.HeaderCell textAlign="center">Detail</Table.HeaderCell> 
               </Table.Row>
           </Table.Header>
-            <Table.Body>
-            {this.state.marks.map((mark) =>
-              <Table.Row>
-                  <Table.Cell>{ mark.Name } </Table.Cell>
-                  <Table.Cell><span className="markField" style={this.styleMarkColor(mark.Grade)}>{ this.marksFormat(mark.Grade) }</span></Table.Cell>
-                  <Table.Cell>{ mark.Type } </Table.Cell>
-                  <Table.Cell>{ moment(mark.GradeDate).format('LL')}</Table.Cell>
+          <Table.Body>
+            {this.state.noteList.map((note,index) =>
+              <Table.Row key = {index}>
+                  <Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{index+1 }  </span></Table.Cell>
+                  <Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.Title } </span></Table.Cell>
+                  <Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ moment(note.Date).format('LL')} </span></Table.Cell>
+                  <Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.IsSeen?'Yes':'No'}  </span></Table.Cell>
+                  <Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.FirstName } { note.LastName }  </span> </Table.Cell> 
+                  <Table.Cell textAlign="center" className="edit-cell"> 
+                  <Tooltip 
+                    text="note"
+                    trigger={
+                      <Icon name="edit" onClick={() => this.showNote(note)} />
+                    }
+                  />
+                </Table.Cell>
               </Table.Row>
             )} 
-            </Table.Body>
-            </Table>
-            {/* <h3 className="contentHeader"> 
-            <Icon name='braille'/> 
-             Final Grades
-          </h3> */}
-          {/* <Table class='Marks_table' columns={3}>
-          <Table.Header>
-              <Table.Row>
-                  <Table.HeaderCell>SUBJECT</Table.HeaderCell>
-                  <Table.HeaderCell>FINAL_GRADES</Table.HeaderCell>
-                  <Table.HeaderCell>DATE</Table.HeaderCell>
-              </Table.Row>
-          </Table.Header>
-            <Table.Body></Table.Body>
-            </Table> */}
-        </Container>
-      );
+           </Table.Body>
+          </Table>
+          {this.state.detailNoteOpen &&
+            <ChildNoteDetail
+              classId={this.state.classId}
+              note={this.state.selectedNote}
+              onClose={this.onDetailNoteClose}
+              onSave={() =>{
+                this.fetchNotes();
+                this.onDetaileNoteClose();
+              }}
+            />
+          }
+       </Container>)
     }
     return (
       <Container className="contentContainer">
         <h3 className="contentHeader"> 
           <Icon name='braille' /> 
-            {this.state.studentName ? this.state.studentName + "'s" : 'Student'} Notes
+          {this.context.state.parent ? this.context.state.parent.selectedStudent.FirstName + "'s" : 'Student'} notes
         </h3>
-        this is the ChildNote page
         <NoData/>
       </Container>
     );
