@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Card, Image, Container, Icon } from 'semantic-ui-react'
+import { Button, Card, Container, Icon } from 'semantic-ui-react'
 import { NoData } from '../../NoData/NoData';
 import { api } from '../../../services/api';
 import {TimetableAdd} from './TimetableAdd';
