@@ -8,31 +8,23 @@ class Class extends Model {
   }
 
   async getClassNameById(classId) {
-    try{
-      const connection = await this.db.getConnection();
-      const sql_query = `select ID, CreationYear, Name from ${this.tableName} 
-      where ID = ? ;`;
-      const results = await connection.query(sql_query, [classId]);
+    
+    const classObj = await this.findById(classId);
+    
+    const today = moment();
+    const creation = moment().year(classObj.CreationYear).month(8).date(1);
 
-      connection.release();
-
-      if (!results.length) {
-        throw new Error('Entity not found');
-      }
-
-      const classObj = results[0];
-      const currYear = moment().utc().year();
+    let otherDate = creation.clone().add(1, 'years');
+    let year = 1;
+    while (!today.isBetween(creation, otherDate) && year < 5) {
+      year++;
+      otherDate.add(1, 'years');
       
-      const classYear =  classObj["CreationYear"]
-      const yearName = currYear - classYear + 1;
-      
-      const className = yearName + classObj["Name"];
-      return className;
-    }
-    catch(e){
-      console.log(e);
-      throw e;
-    }    
+    }      
+    const className = year + classObj["Name"];
+    return className;
+    
+        
   }
 
   async getClasses(pagination) {
