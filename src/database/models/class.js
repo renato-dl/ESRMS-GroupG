@@ -16,7 +16,7 @@ class Class extends Model {
 
     let otherDate = creation.clone().add(1, 'years');
     let year = 1;
-    while (!today.isBetween(creation, otherDate) && year < 5) {
+    while (year < 5 && !today.isBefore(otherDate, 'day')) {
       year++;
       otherDate.add(1, 'years');
       
