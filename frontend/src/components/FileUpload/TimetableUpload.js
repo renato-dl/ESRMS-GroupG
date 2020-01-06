@@ -15,7 +15,7 @@ export class TimetableUpload extends React.Component {
     return (
       <Dropzone
         accept={this.props.accept || this.defaultAccept} 
-        onDrop={this.props.onDrop}
+        onDropAccepted={this.props.onDropAccepted}
         onDropRejected={this.onDropRejected}
         maxSize={5 * 1024 * 1024}
       >

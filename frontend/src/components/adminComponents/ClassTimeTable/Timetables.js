@@ -52,7 +52,7 @@ export class Timetables extends Component {
                 Teacher Coordinator <strong>{data.Coordinator}</strong>
               </Card.Description>
             </Card.Content>
-            <Card.Content extra>
+            <Card.Content extra textAlign='center'>
                 <Button basic color='green' onClick={() =>this.showTimetable(data)}>
                   Timetable
                 </Button>
