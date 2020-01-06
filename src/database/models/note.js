@@ -137,6 +137,7 @@ class Note extends Model {
         Title: title,
         Description: description,
         Date: updateDate.format(this.db.getDateFormatString()),
+        IsSeen: false
       })
   }
 
