@@ -1761,5 +1761,139 @@ describe("Tests on findBySSN", () => {
 
 });
 
+describe("Tests on checkIfRelated", () => {
+
+  test('It should return true', async () => {
+
+      //insert a new student with parent
+      const insertParent = await User.insertParentData(
+        'Name',
+        'Lastname',
+        'parent1@parents.com',
+        'FFLPSL33H68A698Z',
+        'Password1'
+      );
+      expect(insertParent).toMatchObject({id: expect.anything()});
+  
+      const insertStudent = await Student.insertStudent(
+        "Antonio",
+        "De Giovanni",
+        "TBKHSA93A02F494U",
+        "M",
+        moment().utc().subtract(13, 'years'),
+        insertParent.id,
+        null
+      );
+
+      expect(insertStudent).toMatchObject({id: expect.anything()});
+
+      const check = await Student.checkIfRelated(insertStudent.id, insertParent.id);
+      expect(check).toBe(true);
+
+      await Student.remove(insertStudent.id);
+      await User.remove(insertParent.id);
+  });
+  
+  test('It should return false', async () => {
+
+    //insert a new student with parent
+    const insertParent = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(insertParent).toMatchObject({id: expect.anything()});
+
+    const insertStudent = await Student.insertStudent(
+      "Antonio",
+      "De Giovanni",
+      "TBKHSA93A02F494U",
+      "M",
+      moment().utc().subtract(13, 'years'),
+      insertParent.id,
+      null
+    );
+
+    expect(insertStudent).toMatchObject({id: expect.anything()});
+
+    const check = await Student.checkIfRelated(insertStudent.id, "oneotherparent");
+    expect(check).toBe(false);
+
+    await Student.remove(insertStudent.id);
+    await User.remove(insertParent.id);
+  });
+
+  test('It should throw an error when studentId is missing or invalid', async () => {
+      
+    //insert a new student with parent
+    const insertParent = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(insertParent).toMatchObject({id: expect.anything()});
+
+    const insertStudent = await Student.insertStudent(
+      "Antonio",
+      "De Giovanni",
+      "TBKHSA93A02F494U",
+      "M",
+      moment().utc().subtract(13, 'years'),
+      insertParent.id,
+      null
+    );
+
+    expect(insertStudent).toMatchObject({id: expect.anything()});
+    
+    try{
+      await Student.checkIfRelated(undefined, insertParent.id);
+    }catch(error){
+      expect(error).toHaveProperty("message", "Missing or invalid studentId");
+
+      await Student.remove(insertStudent.id);
+      await User.remove(insertParent.id);
+    }
+  });
+
+  test('It should throw an error when parentId is missing or invalid', async () => {
+    
+    //insert a new student with parent
+    const insertParent = await User.insertParentData(
+      'Name',
+      'Lastname',
+      'parent1@parents.com',
+      'FFLPSL33H68A698Z',
+      'Password1'
+    );
+    expect(insertParent).toMatchObject({id: expect.anything()});
+
+    const insertStudent = await Student.insertStudent(
+      "Antonio",
+      "De Giovanni",
+      "TBKHSA93A02F494U",
+      "M",
+      moment().utc().subtract(13, 'years'),
+      insertParent.id,
+      null
+    );
+
+    expect(insertStudent).toMatchObject({id: expect.anything()});
+    
+    try{
+      await Student.checkIfRelated(insertStudent.id, undefined);
+    }catch(error){
+      expect(error).toHaveProperty("message", "Missing or invalid parentId");
+
+      await Student.remove(insertStudent.id);
+      await User.remove(insertParent.id);
+    }
+  });
+
+});
+
 
 

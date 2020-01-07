@@ -248,6 +248,12 @@ class Student extends Model {
   }
 
   async checkIfRelated(studentId, parentId) {
+    if(!studentId){
+      throw new Error("Missing or invalid studentId");
+    }
+    if(!parentId){
+      throw new Error("Missing or invalid parentId");
+    }
     const connenction = await this.db.getConnection();
     const result = await connenction.query(
       `SELECT COUNT(*) AS count
@@ -260,10 +266,12 @@ class Student extends Model {
       return true;
     }
     return false;
-
   }
 
   async findBySSN(SSN) {
+    if(!SSN){
+      throw new Error("Missing or invalid SSN");
+    }
     const connection = await this.db.getConnection();
     const result = await connection.query(`
       SELECT *
