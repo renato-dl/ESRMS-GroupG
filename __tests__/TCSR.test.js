@@ -42,9 +42,14 @@ describe('getTeachingClasses', () =>{
       id: createClass.id
     });
 
+    //create a new subject
+    const subjectId = await Subject.create({
+      Name: "Test Subject"
+    });
+
     //assign that teacher to the class
     const insertRelation = await teacherClassSubject.create({
-      SubjectId: 1,
+      SubjectId: subjectId,
       ClassId: createClass.id,
       TeacherId: insertTeacher.id
     });
@@ -58,6 +63,7 @@ describe('getTeachingClasses', () =>{
     await teacherClassSubject.remove(insertRelation);
     await Class.remove(createClass.id);
     await User.remove(insertTeacher.id);
+    await Subject.remove(subjectId);
   });
 
   test('It should throw an error when the passed teacher id is missing or invalid', async () =>{
@@ -106,16 +112,21 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
       id: createClass.id
     });
 
+    //create a new subject
+    const subjectId = await Subject.create({
+      Name: "Test Subject"
+    });
+    
     //assign that teacher to the class
     const insertRelation = await teacherClassSubject.create({
-      SubjectId: 1,
+      SubjectId: subjectId,
       ClassId: createClass.id,
       TeacherId: insertTeacher.id
     });
 
     const checkTeaching = await TCSR.checkIfTeacherTeachesSubjectInClass(
       insertTeacher.id,
-      1,
+      subjectId,
       createClass.id
     );
 
@@ -125,6 +136,7 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
     await teacherClassSubject.remove(insertRelation);
     await Class.remove(createClass.id);
     await User.remove(insertTeacher.id);
+    await Subject.remove(subjectId);
   });
 
   test('It should return false', async () =>{
@@ -160,9 +172,14 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
       id: createClass.id
     });
 
+    //create a new subject
+    const subjectId = await Subject.create({
+      Name: "Test Subject"
+    });
+
     //assign that teacher to the class
     const insertRelation = await teacherClassSubject.create({
-      SubjectId: 1,
+      SubjectId: subjectId,
       ClassId: createClass.id,
       TeacherId: insertTeacher.id
     });
@@ -179,6 +196,7 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
     await teacherClassSubject.remove(insertRelation);
     await Class.remove(createClass.id);
     await User.remove(insertTeacher.id);
+    await Subject.remove(subjectId);
   });
 
   test('It should throw an error when the passed teacher id is missing or invalid', async () =>{
@@ -213,11 +231,16 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
      expect(createClass).toEqual({
        id: createClass.id
      });
+
+     //create a new subject
+    const subjectId = await Subject.create({
+      Name: "Test Subject"
+    });
      
     try{
       await TCSR.checkIfTeacherTeachesSubjectInClass(
         null,
-        1,
+        subjectId,
         createClass.id
       );
 
@@ -225,6 +248,7 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
       expect(error).toHaveProperty("message", "Missing or invalid teacher id");
       await Class.remove(createClass.id);
       await User.remove(insertTeacher.id);
+      await Subject.remove(subjectId);
     }
   });
 
@@ -308,10 +332,15 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
     id: createClass.id
   });
   
+  //create a new subject
+  const subjectId = await Subject.create({
+    Name: "Test Subject"
+  });
+
  try{
    await TCSR.checkIfTeacherTeachesSubjectInClass(
      insertTeacher.id,
-     1,
+     subjectId,
      null
    );
 
@@ -319,6 +348,7 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
    expect(error).toHaveProperty("message", "Missing or invalid class id");
    await Class.remove(createClass.id);
    await User.remove(insertTeacher.id);
+   await Subject.remove(subjectId);
  }
   });
 
@@ -359,9 +389,14 @@ describe('checkIfTeacherTeachesInClass', () =>{
       id: createClass.id
     });
 
+    //create a new subject
+    const subjectId = await Subject.create({
+      Name: "Test Subject"
+    });
+
     //assign that teacher to the class
     const insertRelation = await teacherClassSubject.create({
-      SubjectId: 1,
+      SubjectId: subjectId,
       ClassId: createClass.id,
       TeacherId: insertTeacher.id
     });
@@ -377,6 +412,7 @@ describe('checkIfTeacherTeachesInClass', () =>{
     await teacherClassSubject.remove(insertRelation);
     await Class.remove(createClass.id);
     await User.remove(insertTeacher.id);
+    await Subject.remove(subjectId);
   });
 
   test('It should return false', async () =>{
