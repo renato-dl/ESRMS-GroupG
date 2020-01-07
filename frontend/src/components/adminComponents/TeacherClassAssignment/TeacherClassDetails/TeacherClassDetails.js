@@ -24,7 +24,6 @@ export class TeacherClassDetails extends Component {
          this.state.CSPairs.map(obj =>{ 
             for (var prop in obj) { 
                 if (obj[prop] === null || obj[prop] === '') { 
-                    console.log("mek@ datark a")
                     this.setState({errMsg: true});
                     r = true; 
                 } 
@@ -62,7 +61,7 @@ export class TeacherClassDetails extends Component {
     
     setSubjectOptions = (dat) =>
         _.times(dat.length, (i) => {
-            console.log(dat[i]);
+            //console.log(dat[i]);
             return { key: dat[i].ID, value: dat[i].ID , text: dat[i].Name}
     })
     
@@ -91,12 +90,9 @@ export class TeacherClassDetails extends Component {
     }
 
     onSave = async () => {
-        //this.hasEmptySelectbox();
-        var a = this.hasEmptySelectbox();
-        console.log("click: " + a);
+        
         if (this.state.isSaving || this.hasEmptySelectbox()) {
           return;
-          console.log ("ape");
         }
     
         this.setState({isSaving: true});
