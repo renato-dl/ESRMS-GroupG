@@ -1625,5 +1625,88 @@ describe("Tests about getting the students based on subject and class", () => {
 
 });
 
+describe("Tests on getStudentsDataByClassId", () => {
+
+  test('It should return the list of students of that class', async () => {
+
+      //first insert a new teacher
+      const insertTeacher = await User.insertInternalAccountData( 
+        'Joe', 
+        'Kernel', 
+        'joekernel@gmail.com', 
+        'LRNMRC79A02L219A', 
+        'EasYPass1',
+        true,
+        false,
+        false
+    );
+      expect(insertTeacher).toEqual({
+          id: expect.anything()
+      });
+
+      //then insert a new class
+      const createClass = await Class.createClass(insertTeacher.id);
+      expect(createClass).toEqual({
+        id: createClass.id
+      });
+
+      //insert a new student with parent
+      const insertParent = await User.insertParentData(
+        'Name',
+        'Lastname',
+        'parent1@parents.com',
+        'FFLPSL33H68A698Z',
+        'Password1'
+      );
+      expect(insertParent).toMatchObject({id: expect.anything()});
+  
+      const insertStudent = await Student.insertStudent(
+        "Antonio",
+        "De Giovanni",
+        "TBKHSA93A02F494U",
+        "M",
+        moment().utc().subtract(13, 'years'),
+        insertParent.id,
+        null
+      );
+
+      expect(insertStudent).toMatchObject({id: expect.anything()});
+  
+      //assign student to class
+      await Class.assignStudentsToClass(createClass.id, [insertStudent.id]);
+
+      const students = await Student.getStudentsDataByClassId(
+        createClass.id
+      );
+
+      expect(students).not.toBeNull();
+      expect(students).toEqual(
+          expect.arrayContaining([
+              expect.objectContaining(
+                  {
+                      "ID": insertStudent.id,
+                      "FirstName": "Antonio",
+                      "LastName": "De Giovanni",
+                      "Gender": "M"
+                  }
+              )
+          ])
+      );
+      await Student.remove(insertStudent.id);
+      await User.remove(insertParent.id);
+      await Class.remove(createClass.id);
+      await User.remove(insertTeacher.id);
+  });
+
+  test('It should throw an error classId is invalid', async () => {
+    try{
+      await Student.getStudentsDataByClassId(undefined);
+    }catch(error){
+      expect(error).toHaveProperty("message", "Invalid class id parameters!");
+    }
+  });
+
+});
+
 
 
