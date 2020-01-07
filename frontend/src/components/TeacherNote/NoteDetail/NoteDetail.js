@@ -23,6 +23,7 @@ export class NoteDetail extends Component {
     studentName:'',
     date: new Date(),
     studentList: [],
+    isSeen:false,
     options:[],
     isSaving: false 
   };
@@ -89,7 +90,8 @@ export class NoteDetail extends Component {
         description: this.state.Description,
         date: this.state.date.toUTCString(),
         studentId:this.state.studentId,
-        noteId: this.state.noteId
+        noteId: this.state.noteId,
+        isSeen:false
       };
 
       if(!this.state.noteId) {

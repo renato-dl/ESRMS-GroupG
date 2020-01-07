@@ -8,7 +8,7 @@ describe('Testing Assignments (Parent view) component', () => {
   
   test('Test if component is rendered', () => {
     shallow(
-      <ApplicationStoreContext.Provider value={{state: {userID: '9d64fa59c91d9109b11cd9e05162c675'}}}>
+      <ApplicationStoreContext.Provider value={{state: {userID: '6e5c9976f5813e59816b40a814e29899'}}}>
         <TeacherNote {...getRouterPropsForTest()} />
       </ApplicationStoreContext.Provider>
     );

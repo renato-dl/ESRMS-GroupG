@@ -118,6 +118,7 @@ export class TeacherNote extends React.Component{
                   <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.IsSeen?'Yes':'No'}  </span></Table.Cell>
                   <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.FirstName } { note.LastName }  </span> </Table.Cell> 
                   <Table.Cell textAlign="left" className="edit-cell"> 
+                  <span className="markField" style={this.styleNoteColor(note.IsSeen)}>
                   <Tooltip 
                     text="Edit note"
                     trigger={
@@ -130,6 +131,7 @@ export class TeacherNote extends React.Component{
                       <Icon name="delete" onClick={() =>this.deleteNote(note)} />
                     }
                   />
+                  </span>
                 </Table.Cell>
               </Table.Row>
             )} 
