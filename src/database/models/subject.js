@@ -36,7 +36,7 @@ class Subject extends Model {
         `SELECT Sub.ID, Sub.Name
         FROM TeacherSubjectClassRelation tscr, Subjects Sub, Students Stu
         WHERE
-          Stu.ClassId = tscr.ClassId AND tscr.SubjectId = Sub.ID AND
+          Stu.ClassId = tscr.ClassId AND tscr. = Sub.ID ANDSubjectId
           Stu.ID = ?
         ORDER BY Sub.Name`;
 

@@ -64,6 +64,40 @@ class SupportMaterial extends Model {
     
     return await connection.query(query, [teacherId, ...Object.values(filters).filter((i) => !!i)]);
   }
+
+  async findAllByStudent(
+    studentId,
+    filters = { subject, from, to },
+    pagination = { page, pageSize }
+  ) {
+    if (!studentId) {
+      throw new Error('Missing or invalid student id.')
+    }
+
+    console.log(studentId);
+
+    const connection = await this.db.getConnection();
+    let query = `
+      SELECT SP.ID, SP.CreatedOn, S.Name as Subject, F.Name, F.Type, F.Size
+      FROM Support_Material SP, Files F, Subjects S, TeacherSubjectClassRelation TSCR, Students STU
+      WHERE F.ID = SP.FileId
+      AND S.ID = SP.SubjectId
+      AND TSCR.SubjectId = SP.SubjectId
+      AND TSCR.ClassId = STU.classId
+      AND STU.ID = ?
+      ${filters && filters.subject ? 'AND S.NAME = ?' : ''}
+      ${filters && filters.from && filters.to ? 'AND SP.CreatedOn >= ? AND SP.CreatedOn <= ?' : ''}
+      ORDER BY SP.CreatedOn DESC
+    `;
+
+    if (pagination) {
+      query += ` ${this.db.getPaginationQuery(pagination)}`
+    }
+
+    connection.release();
+    
+    return await connection.query(query, [studentId, ...Object.values(filters).filter((i) => !!i)]);
+  }
 }
 
 export default new SupportMaterial();

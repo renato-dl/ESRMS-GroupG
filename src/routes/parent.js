@@ -11,6 +11,7 @@ parent.get('/assignments', Authorization(['IsParent']), ParentController.process
 parent.get('/assignment/file', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'getAssignmentFile'));
 parent.get('/attendance', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'attendanceByStudentId'));
 parent.get('/notes', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'getNotes'));
-parent.get('/note',Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'getNote'));
+parent.get('/note', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'getNote'));
+parent.get('/support-material/:studentId', Authorization(['IsParent']), ParentController.processRequest.bind(ParentController, 'getSupportMaterial'));
 
 export default parent;
