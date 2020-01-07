@@ -78,7 +78,7 @@ export class ClassComposition extends React.Component{
       return (
         <Container className="class-composition contentContainer">
           <h3 className="contentHeader"> 
-            <Icon name='braille'/> 
+            <Icon name='linode'/> 
             Class Composition
           </h3>
           <Button color='blue' onClick={this.addClass}>
@@ -149,11 +149,23 @@ export class ClassComposition extends React.Component{
       }
 
       return (
-        <Container className="contentContainer">
+        <Container className="class-composition contentContainer">
           <h3 className="contentHeader"> 
-            <Icon name='braille' /> 
+            <Icon name='linode' /> 
             Class Composition</h3>
+            <Button color='blue' onClick={this.addClass}>
+            Add class
+            <Icon className="plus icon" name="plus"/>  
+          </Button>
           <NoData/>
+            {this.state.addClassModalOpen &&
+            <AddNewClass
+              onClose={this.onAddClassClose}
+              onSave={() =>{
+                this.fetchClasses();
+              }}
+            />
+            }
         </Container>
       );
     }

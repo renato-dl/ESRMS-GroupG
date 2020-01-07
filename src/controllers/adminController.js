@@ -5,6 +5,7 @@ import nodemailer from 'nodemailer';
 import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
 import ClassModel from '../database/models/class';
+import TCSR from '../database/models/teacherClassSubject'
 
 class AdminController extends BaseController {
 
@@ -367,6 +368,19 @@ class AdminController extends BaseController {
   async deleteClass(req, res) {
     const result = await ClassModel.deleteClass(req.body.id);
     res.send({success: result});
+  }
+
+  async createTeacherClassAssociation(req, res) {
+    const result = await TCSR.createNew(req.body.teacherId, req.body.CSPairs);
+    res.send({
+      success: true,
+      newRecords: result.newRecords
+    });
+  }
+
+  async getAll(req, res) {
+    const result = await TCSR.findAll(req.query.pagination);
+    res.send(result);
   }
   
 }
