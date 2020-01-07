@@ -109,7 +109,7 @@ export class ChildAttendance extends React.Component{
       return 'Early Exit'
       }
       else 
-      return 'Present'
+        return 'Present'
      };
 
     
@@ -130,11 +130,11 @@ export class ChildAttendance extends React.Component{
     eventPropGetter = (event) => {
       const status=event.title;
       if(status==='Absent')
-      return {className:'red'};
+        return {className:'red'};
       else if(status==='Late Entry')
-      return {className:'orange'}
+        return {className:'orange'}
       else if(status==='Early Exit')
-      return {className:'blue'}
+        return {className:'blue'}
       else return {className:'green'}
     }
 

@@ -57,7 +57,7 @@ export class FormParentDetails extends Component {
   }
  
   isEmptyStr(str) {
-    return (!str || 0 === str.length || str === undefined);
+    return (!str || 0 === str.length || str == undefined);
   }
 
   back = e => {
