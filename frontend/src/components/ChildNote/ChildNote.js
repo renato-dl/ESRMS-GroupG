@@ -45,22 +45,6 @@ export class ChildNote extends React.Component{
 //     console.log(studentID);
 //     this.props.history.push('/marks')
 //   };
-
-  onSelect = (event, {value}) => {
-    this.setState({selectedSubj: value});
-    if (value != '' && value != 'all'){
-      let selectedMarks = [];
-      this.state.allMarks.forEach(function(e){
-        if(e.Name == value)
-          selectedMarks.push(e);
-      });
-      this.setState({marks: selectedMarks});
-    }
-    else{
-      const allMarks = this.state.allMarks;
-      this.setState({marks: allMarks});
-    }  
-  }
   
   styleNoteColor(IsSeen) {
     if(IsSeen==0){
@@ -99,11 +83,11 @@ export class ChildNote extends React.Component{
             {this.state.noteList.map((note,index) =>
               <Table.Row key = {index}>
 
-<Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.FirstName } { note.LastName }  </span> </Table.Cell> 
-                  <Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.Title } </span></Table.Cell>
-                  <Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ moment(note.Date).format('LL')} </span></Table.Cell>
+<Table.Cell textAlign="center"> <span  style={this.styleNoteColor(note.IsSeen)}>{ note.FirstName } { note.LastName }  </span> </Table.Cell> 
+                  <Table.Cell textAlign="center"> <span  style={this.styleNoteColor(note.IsSeen)}>{ note.Title } </span></Table.Cell>
+                  <Table.Cell textAlign="center"> <span  style={this.styleNoteColor(note.IsSeen)}>{ moment(note.Date).format('LL')} </span></Table.Cell>
                   <Table.Cell textAlign="center" className="edit-cell"> 
-                  <span className="markField" style={this.styleNoteColor(note.IsSeen)}>
+                  <span  style={this.styleNoteColor(note.IsSeen)}>
                   <Tooltip 
                     text="note"
                     trigger={
