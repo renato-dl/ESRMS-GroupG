@@ -9,6 +9,7 @@ import Tooltip from '../../../Tooltip/Tooltip';
 export class TeacherClassDetails extends Component {
     state = {
         isSaving:false,
+        errMsg:false,
         teacherID:null,
         FirstName:null,
         LastName:null,
@@ -16,6 +17,22 @@ export class TeacherClassDetails extends Component {
 
         classOptions:[],
         subjectOptions:[]
+    }
+
+    hasEmptySelectbox = () => {
+        let r = false;
+         this.state.CSPairs.map(obj =>{ 
+            for (var prop in obj) { 
+                if (obj[prop] === null || obj[prop] === '') { 
+                    console.log("mek@ datark a")
+                    this.setState({errMsg: true});
+                    r = true; 
+                } 
+            }
+         }); 
+         
+         this.setState({errMsg: r});
+         return r;
     }
 
     handleClassChange = (e, value, index) => {
@@ -74,8 +91,12 @@ export class TeacherClassDetails extends Component {
     }
 
     onSave = async () => {
-        if (this.state.isSaving) {
+        //this.hasEmptySelectbox();
+        var a = this.hasEmptySelectbox();
+        console.log("click: " + a);
+        if (this.state.isSaving || this.hasEmptySelectbox()) {
           return;
+          console.log ("ape");
         }
     
         this.setState({isSaving: true});
@@ -183,6 +204,11 @@ export class TeacherClassDetails extends Component {
                     </Table.Row>
                 </Table.Footer>
                 </Table>
+                { this.state.errMsg && 
+                <p style={{color:'#CB2431'}}><Icon name="exclamation triangle"/>
+                    Please make sure that all fields are selected before confirmation or delete unnecessary rows.
+                </p>
+                }
                 </Modal.Content>
                 
                 <Modal.Actions>
