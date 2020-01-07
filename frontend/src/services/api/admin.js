@@ -75,6 +75,10 @@ export class AdminAPIService extends BaseAPIService {
     return this.get('admin/teacher-class');
   }
 
+  createTeacherClassAssociation(data){
+    return this.post('admin/teacher-class', data);
+  }
+
   getSubjectslist(){
     return this.get(`/subject/all`);
   }
