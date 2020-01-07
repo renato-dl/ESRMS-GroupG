@@ -79,7 +79,7 @@ export class TeacherNote extends React.Component{
          return ( 
         <Container className="Notes-container contentContainer">
         <h3 className="contentHeader">
-          <Icon name='braille'/>
+          <Icon name='bullhorn'/>
           Note Operation
         </h3>
         <Button className="ui vk button" onClick={this.addNewNote}>

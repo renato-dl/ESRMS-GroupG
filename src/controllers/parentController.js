@@ -86,7 +86,7 @@ class ParentController extends BaseController {
   }
 
   async getNotes(req, res) {
-    const related = await Student.checkIfRelated(req.body.studentId, req.user.ID);
+    const related = await Student.checkIfRelated(req.query.studentId, req.user.ID);
     if (!related) {
       throw new Error('Student is not related to user');
     }
@@ -97,7 +97,7 @@ class ParentController extends BaseController {
   async getNote(req, res) {
     let note;
     try {
-      note = await Note.findById(req.body.noteId);
+      note = await Note.findById(req.query.noteId)
     } catch (error) {
       throw new Error('Missing or invalid note id');
     }
@@ -108,7 +108,7 @@ class ParentController extends BaseController {
     }
     res.send({description: note.Description});
     if (note.IsSeen == 0) {
-      Note.update(req.body.noteId, {IsSeen: 1});
+      Note.update(req.query.noteId, {IsSeen: 1});
     }
   }
 
