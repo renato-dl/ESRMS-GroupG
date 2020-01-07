@@ -603,7 +603,6 @@ describe('Tests about visualization of students data', () => {
 
   });
 
-  
   test('It should throw an error when isAssigned parameter is invalid', async () => {
     try {
       const result = await Student.getStudentsData();
@@ -693,8 +692,6 @@ describe('Tests about visualization of students data', () => {
       expect(err).toHaveProperty('message', 'No students found!');
     } 
   });
-
-
 
 });
 
@@ -1703,6 +1700,62 @@ describe("Tests on getStudentsDataByClassId", () => {
       await Student.getStudentsDataByClassId(undefined);
     }catch(error){
       expect(error).toHaveProperty("message", "Invalid class id parameters!");
+    }
+  });
+
+});
+
+describe("Tests on findBySSN", () => {
+
+  test('It should return the student data with that SSN', async () => {
+
+      //insert a new student with parent
+      const insertParent = await User.insertParentData(
+        'Name',
+        'Lastname',
+        'parent1@parents.com',
+        'FFLPSL33H68A698Z',
+        'Password1'
+      );
+      expect(insertParent).toMatchObject({id: expect.anything()});
+  
+      const insertStudent = await Student.insertStudent(
+        "Antonio",
+        "De Giovanni",
+        "TBKHSA93A02F494U",
+        "M",
+        moment().utc().subtract(13, 'years'),
+        insertParent.id,
+        null
+      );
+
+      expect(insertStudent).toMatchObject({id: expect.anything()});
+
+      const student = await Student.findBySSN("TBKHSA93A02F494U");
+      expect(student).not.toBeNull();
+
+      expect(student).not.toBeNull();
+        expect(student).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining(
+                    {
+                        "ID": insertStudent.id,
+                        "FirstName": "Antonio",
+                        "LastName": "De Giovanni",
+                        "Gender": "M"
+                    }
+                )
+            ])
+    );
+      await Student.remove(insertStudent.id);
+      await User.remove(insertParent.id);
+  });
+
+  test('It should throw an error when SSN is invalid', async () => {
+    try{
+      await Student.findBySSN(undefined);
+    }catch(error){
+      expect(error).toHaveProperty("message", "Missing or invalid SSN");
     }
   });
 
