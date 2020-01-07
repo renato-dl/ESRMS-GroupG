@@ -126,7 +126,6 @@ export class NoteDetail extends Component {
     this.setState({students: []});
     this.props.onClose();
   };
-
   render() {
     return (
       <Modal dimmer open className="note-detail" size="small">
