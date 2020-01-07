@@ -5,6 +5,7 @@ import nodemailer from 'nodemailer';
 import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
 import ClassModel from '../database/models/class';
+import TCSR from '../database/models/teacherClassSubject'
 
 class AdminController extends BaseController {
 
@@ -341,19 +342,20 @@ class AdminController extends BaseController {
 
   async removeStudent(req, res) {
     const student = await Student.findById(req.body.ID);
-    try {
-      await Student.remove(req.body.ID);
-      await User.checkIfStillParent(student.Parent1);
-      if (student.Parent2) {
-        await User.checkIfStillParent(student.Parent2);
-      }      
-      res.send({success: true});
-    } catch(error) {
+    if (student.ClassId != null) {
       res.send({
         success: false,
-        msg: 'Only students not assigned to classes and without grades can be removed'
+        msg: 'Only students not assigned to classes can be removed'
       });
+      return;
     }
+    
+    await Student.remove(req.body.ID);
+    await User.checkIfStillParent(student.Parent1);
+    if (student.Parent2) {
+      await User.checkIfStillParent(student.Parent2);
+    }      
+    res.send({success: true});
   }
 
   async createClass(req, res) {
@@ -367,6 +369,19 @@ class AdminController extends BaseController {
   async deleteClass(req, res) {
     const result = await ClassModel.deleteClass(req.body.id);
     res.send({success: result});
+  }
+
+  async createTeacherClassAssociation(req, res) {
+    const result = await TCSR.createNew(req.body.teacherId, req.body.CSPairs);
+    res.send({
+      success: true,
+      newRecords: result.newRecords
+    });
+  }
+
+  async getAll(req, res) {
+    const result = await TCSR.findAll(req.query.pagination);
+    res.send(result);
   }
   
 }

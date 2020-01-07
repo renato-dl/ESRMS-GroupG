@@ -81,14 +81,14 @@ export class ChildAttendance extends React.Component{
       if(!this.state.attendanceForCalendar.find((a)=>moment(a.Date).isSame(pre_date,'day')))
       {
         var week_day=moment(pre_date).day()
-        if(week_day!==0){
+        /* if(week_day!==0){
           var element={
             id:++id_num,
             start: new Date(pre_date),
             end:new Date(pre_date),
             title: "Present"}
             this.state.attendanceForCalendar.push(element)
-         }
+         } */
         }
       pre_date=moment(new Date(pre_date)).add(-1, 'days').startOf('day');
       }
