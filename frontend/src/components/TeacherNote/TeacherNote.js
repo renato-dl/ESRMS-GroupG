@@ -100,11 +100,11 @@ export class TeacherNote extends React.Component{
           <Table.Header>
               <Table.Row>
                   <Table.HeaderCell textAlign="center">#</Table.HeaderCell>
+                  <Table.HeaderCell textAlign="center">Name</Table.HeaderCell>
                   <Table.HeaderCell textAlign="center">Title</Table.HeaderCell>
                   <Table.HeaderCell textAlign="center" >Description</Table.HeaderCell>
                   <Table.HeaderCell textAlign="center">Date</Table.HeaderCell>
                   <Table.HeaderCell textAlign="center">Is Seen</Table.HeaderCell>
-                  <Table.HeaderCell textAlign="center">Name</Table.HeaderCell>
                   <Table.HeaderCell textAlign="center">Action</Table.HeaderCell> 
               </Table.Row>
           </Table.Header>
@@ -112,12 +112,13 @@ export class TeacherNote extends React.Component{
             {this.state.noteList.map((note,index) =>
               <Table.Row key = {index}>
                   <Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{index+1 }  </span></Table.Cell>
+                  <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.FirstName } { note.LastName }  </span> </Table.Cell> 
                   <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.Title } </span></Table.Cell>
                   <Table.Cell textAlign="left" width={6}> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.Description } </span></Table.Cell>
                   <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ moment(note.Date).format('LL')} </span></Table.Cell>
                   <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.IsSeen?'Yes':'No'}  </span></Table.Cell>
-                  <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.FirstName } { note.LastName }  </span> </Table.Cell> 
                   <Table.Cell textAlign="left" className="edit-cell"> 
+                  <span className="markField" style={this.styleNoteColor(note.IsSeen)}>
                   <Tooltip 
                     text="Edit note"
                     trigger={
@@ -130,6 +131,7 @@ export class TeacherNote extends React.Component{
                       <Icon name="delete" onClick={() =>this.deleteNote(note)} />
                     }
                   />
+                  </span>
                 </Table.Cell>
               </Table.Row>
             )} 

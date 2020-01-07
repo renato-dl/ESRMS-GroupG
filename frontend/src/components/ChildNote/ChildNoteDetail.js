@@ -21,8 +21,7 @@ export class ChildNoteDetail extends Component {
     studentId:'',
     studentName:'',
     date: new Date(),
-    options:[],
-    isSaving: false 
+    options:[]
   };
 
   async componentDidMount() {
@@ -58,7 +57,7 @@ export class ChildNoteDetail extends Component {
           <Icon onClick={this.onClose} className="close-icn" name="close" />
         </Modal.Header>
         <Modal.Content>
-            <h4>Student Name:</h4>{this.state.studentName}
+            <h4>Teacher Name:</h4>{this.state.studentName}
             <h4>Title:</h4>{this.state.Title}
             <h4>Description:</h4>{this.state.Description}
             <h4>Date:</h4>{this.state.Date}
