@@ -19,6 +19,7 @@
     .numberInput{
       display: flex;
       float: right;
+      width: 75px !important;
     }
   
     .content {
@@ -57,10 +58,6 @@
           width: 55px !important;
         }
       }
-    }
-
-    .numberInput {
-      width: 75px !important;
     }
 }
   

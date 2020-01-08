@@ -3,7 +3,6 @@ import { api } from '../../../services/api';
 import "react-datepicker/dist/react-datepicker.css";
 import './PresentAbsentRecords.scss';
 import ConfirmationModal from './RecordDetails/ConfirmationModal';
-//import * as toastr from 'toastr';
 import moment from 'moment';
 import {Container, Icon, Label, Table, Button, Checkbox} from 'semantic-ui-react';
 
@@ -162,7 +161,7 @@ export class PresentAbsentRecords extends Component {
 
     isWeekday = date => {
         const day = moment(date).day();
-        return day !== 0;
+        return day !== 0 && day !== 6;
     };
     
     render() {

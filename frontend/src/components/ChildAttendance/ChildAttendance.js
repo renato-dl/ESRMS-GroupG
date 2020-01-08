@@ -81,14 +81,14 @@ export class ChildAttendance extends React.Component{
       if(!this.state.attendanceForCalendar.find((a)=>moment(a.Date).isSame(pre_date,'day')))
       {
         var week_day=moment(pre_date).day()
-        if(week_day!==0){
+        /* if(week_day!==0){
           var element={
             id:++id_num,
             start: new Date(pre_date),
             end:new Date(pre_date),
             title: "Present"}
             this.state.attendanceForCalendar.push(element)
-         }
+         } */
         }
       pre_date=moment(new Date(pre_date)).add(-1, 'days').startOf('day');
       }
@@ -109,7 +109,7 @@ export class ChildAttendance extends React.Component{
       return 'Early Exit'
       }
       else 
-      return 'Present'
+        return 'Present'
      };
 
     
@@ -130,11 +130,11 @@ export class ChildAttendance extends React.Component{
     eventPropGetter = (event) => {
       const status=event.title;
       if(status==='Absent')
-      return {className:'red'};
+        return {className:'red'};
       else if(status==='Late Entry')
-      return {className:'orange'}
+        return {className:'orange'}
       else if(status==='Early Exit')
-      return {className:'blue'}
+        return {className:'blue'}
       else return {className:'green'}
     }
 

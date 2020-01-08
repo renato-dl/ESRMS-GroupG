@@ -41,7 +41,7 @@ export const Header = withRouter(({history, ...props}) => {
 
       <div className="headerToolbarFiled">
         <Dropdown trigger={trigger}>
-          <Dropdown.Menu className="dropdown">
+          <Dropdown.Menu className="headerCustDropdown">
             {hasMultipleRoles && <Dropdown.Item text='Switch account' icon="shuffle" onClick={switchAccount} />}
             <Dropdown.Item text='Change Password' icon="unlock alternate" onClick={changePassword} />
             <Dropdown.Divider />

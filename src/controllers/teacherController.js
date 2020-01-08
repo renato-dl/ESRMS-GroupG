@@ -9,7 +9,7 @@ import Student from '../database/models/student';
 import StudentAttendance from '../database/models/studentAttendance';
 import ClassAttendance from '../database/models/classAttendance';
 import Assignment from '../database/models/assignment';
-import File from '../database/models/File';
+import File from '../database/models/file';
 import path from 'path';
 import moment from 'moment';
 import db from '../database';
