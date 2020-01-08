@@ -1982,21 +1982,31 @@ describe("Tests on getStudentsWithParentsData", () => {
   test('It should return students data with parents', async () => {
 
       //insert a new student with parent
+      const parentName = 'Name';
+      const parentLastName = 'Lastname';
+      const parentMail = 'parent1@parents.com';
+      const parentSSN = 'FFLPSL33H68A698Z';
+      const parentPW =  'Password1';
       const insertParent = await User.insertParentData(
-        'Name',
-        'Lastname',
-        'parent1@parents.com',
-        'FFLPSL33H68A698Z',
-        'Password1'
+        parentName,
+        parentLastName,
+        parentMail,
+        parentSSN,
+        parentPW
       );
       expect(insertParent).toMatchObject({id: expect.anything()});
   
+      const studentName = "Antonio";
+      const studentLastName = "De Giovanni";
+      const studentSSN = "TBKHSA93A02F494U";
+      const studentGender = "M";
+      const studentDate = moment().utc().subtract(13, 'years');
       const insertStudent = await Student.insertStudent(
-        "Antonio",
-        "De Giovanni",
-        "TBKHSA93A02F494U",
-        "M",
-        moment().utc().subtract(13, 'years'),
+        studentName,
+        studentLastName,
+        studentSSN,
+        studentGender,
+        studentDate,
         insertParent.id,
         null
       );
@@ -2004,7 +2014,35 @@ describe("Tests on getStudentsWithParentsData", () => {
       expect(insertStudent).toMatchObject({id: expect.anything()});
       const students = await Student.getStudentsWithParentsData();
       expect(students).not.toBeNull();
-      
+
+      expect(students).toEqual(
+        expect.arrayContaining([
+          {
+            studentInfo: {
+              ID: insertStudent.id,
+              FirstName: studentName,
+              LastName: studentLastName,
+              SSN: studentSSN,
+              BirthDate: studentDate.set({
+                "hour": 0,
+                "minute": 0, 
+                "second": 0, 
+                "millisecond" : 0
+              }).toDate(),
+              ClassId: null,
+              CreatedOn: expect.anything(),
+              Gender: studentGender
+            }, firstParent: {
+              ID: insertParent.id,
+              eMail: parentMail,
+              FirstName: parentName,
+              LastName: parentLastName,
+              SSN: parentSSN
+            }
+          }
+        ])
+      );
+
       await Student.remove(insertStudent.id);
       await User.remove(insertParent.id);
 
