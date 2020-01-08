@@ -5,7 +5,7 @@ import moment from 'moment';
 import ClassModel from '../src/database/models/class';
 
 
-describe('Tests about the insertion of student data', () => {
+describe('insertStudent', () => {
   /*
    * 1. Ok with parent2
    * 2. Ok without parent2
@@ -475,7 +475,7 @@ describe('Tests about the insertion of student data', () => {
   });
 });
 
-describe('Tests about visualization of students data', () => {
+describe('getStudentsData', () => {
   
   test('It should visualize the data of a student who is not assigned to a parent', async () => {
     const testFirstName = 'TestFirstName';
@@ -695,7 +695,7 @@ describe('Tests about visualization of students data', () => {
 
 });
 
-describe('Tests about the edition of a student', () =>{
+describe('updateStudentData', () =>{
 
   
   test('It should do the edition of a student correctly', async () => {
@@ -1316,7 +1316,7 @@ describe('Tests about the edition of a student', () =>{
 
 });
 
-describe('Tests about retreiving student data', () => {
+describe('findByParentId', () => {
 
   test('It should retrive the student of a given parent', async () => {
       const students = await Student.findByParentId("9d64fa59c91d9109b11cd9e05162c675");
@@ -1383,7 +1383,7 @@ describe('Tests about retreiving student data', () => {
 
 });
 
-describe("Tests about getting the students based on subject and class", () => {
+describe("getStudentsDataByClassIdAndSubjectId", () => {
 
   test('It should return an empty list of students when teacher passes a subject that he/she doesnt teach', async () => {
       const teacherID = '6e5c9976f5813e59816b40a814e29899';

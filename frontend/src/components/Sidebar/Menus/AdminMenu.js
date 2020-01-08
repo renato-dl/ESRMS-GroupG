@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 
 export const AdminMenu = (props) => (
   <>
-    <Menu.Item as={Link} to="/admin">
+    <Menu.Item >
       <span>
         <br/>
         <Icon name='address book outline' size="big" />
@@ -24,6 +24,10 @@ export const AdminMenu = (props) => (
     <Menu.Item as={Link} to='/admin/ClassComposition'>
       <Icon name='linode' />
       Class Compositions
+    </Menu.Item>
+    <Menu.Item as={Link} to='/admin/TeacherClasses'>
+      <Icon name='id card outline' />
+      Teacher-Class Associations
     </Menu.Item>
     <Menu.Item as={Link} to='/admin/communications'>
       <Icon name='bullhorn' />

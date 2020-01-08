@@ -21,8 +21,8 @@ export class NoteDetail extends Component {
     Description: '',
     studentId:'',
     studentName:'',
-    date: new Date(),
     studentList: [],
+    isSeen:false,
     options:[],
     isSaving: false 
   };
@@ -66,9 +66,6 @@ export class NoteDetail extends Component {
     this.setState({type: e.target.textContent});
   };
 
-  handleDateChange = (date) => {
-    this.setState({date});
-  };
 
   handleSelectChange=(event)=>{
     console.log(event)
@@ -87,9 +84,9 @@ export class NoteDetail extends Component {
       const noteData = {
         title: this.state.Title,
         description: this.state.Description,
-        date: this.state.date.toUTCString(),
         studentId:this.state.studentId,
-        noteId: this.state.noteId
+        noteId: this.state.noteId,
+        isSeen:false
       };
 
       if(!this.state.noteId) {
@@ -121,10 +118,6 @@ export class NoteDetail extends Component {
     this.setState({isSaving: false});
     this.props.onSave();
   }
-  isWeekday = date => {
-    const day = moment(date).day();
-    return day !== 0&&day!==6;
-  };
 
   onClose = () => {
     if (this.state.isSaving) {
@@ -133,7 +126,6 @@ export class NoteDetail extends Component {
     this.setState({students: []});
     this.props.onClose();
   };
-
   render() {
     return (
       <Modal dimmer open className="note-detail" size="small">
@@ -172,16 +164,6 @@ export class NoteDetail extends Component {
               value={this.state.Description}
               onChange={this.handleInputChange}
             />
-             <Form.Field>
-                <LabelDetail>Note date</LabelDetail>  
-                <DatePicker
-                  selected={this.state.date}
-                  onChange={this.handleDateChange}
-                  maxDate={new Date()}
-                  locale="en"
-                  filterDate={this.isWeekday}
-                />              
-                </Form.Field>
         </Form>
         
         </Modal.Content>

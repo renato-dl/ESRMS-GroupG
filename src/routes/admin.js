@@ -28,4 +28,7 @@ admin.delete('/class', Authorization(['IsAdminOfficer']), AdminController.proces
 
 admin.get('/teachers', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getTeachers'));
 
+admin.post('/teacher-class', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'createTeacherClassAssociation'));
+admin.get('/teacher-class', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getAll'));
+
 export default admin;
