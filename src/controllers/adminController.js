@@ -6,6 +6,7 @@ import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
 import ClassModel from '../database/models/class';
 import TCSR from '../database/models/teacherClassSubject'
+import Subject from '../database/models/subject'
 
 class AdminController extends BaseController {
 
@@ -382,6 +383,11 @@ class AdminController extends BaseController {
   async getAll(req, res) {
     const result = await TCSR.findAll(req.query.pagination);
     res.send(result);
+  }
+
+  async getSubjects(req, res) {
+    const subjects = await Subject.findAll();
+    res.send(subjects);
   }
   
 }
