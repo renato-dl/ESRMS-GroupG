@@ -1977,6 +1977,40 @@ describe("Tests on findByClassId", () => {
 
 });
 
+describe("Tests on getStudentsWithParentsData", () => {
+
+  test('It should return students data with parents', async () => {
+
+      //insert a new student with parent
+      const insertParent = await User.insertParentData(
+        'Name',
+        'Lastname',
+        'parent1@parents.com',
+        'FFLPSL33H68A698Z',
+        'Password1'
+      );
+      expect(insertParent).toMatchObject({id: expect.anything()});
+  
+      const insertStudent = await Student.insertStudent(
+        "Antonio",
+        "De Giovanni",
+        "TBKHSA93A02F494U",
+        "M",
+        moment().utc().subtract(13, 'years'),
+        insertParent.id,
+        null
+      );
+
+      expect(insertStudent).toMatchObject({id: expect.anything()});
+      const students = await Student.getStudentsWithParentsData();
+      expect(students).not.toBeNull();
+      
+      await Student.remove(insertStudent.id);
+      await User.remove(insertParent.id);
+
+  });
+
+});
 
 
 
