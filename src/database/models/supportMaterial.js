@@ -66,14 +66,12 @@ class SupportMaterial extends Model {
 
   async findAllByStudent(
     studentId,
-    filters = { subject, from, to },
-    pagination = { page, pageSize }
+    filters = { subject: '', from: '', to: '' },
+    pagination = { page: 0, pageSize: 25 }
   ) {
     if (!studentId) {
       throw new Error('Missing or invalid student id.')
     }
-
-    console.log(studentId);
 
     const connection = await this.db.getConnection();
     let query = `
@@ -95,7 +93,7 @@ class SupportMaterial extends Model {
 
     connection.release();
     
-    return await connection.query(query, [studentId, ...Object.values(filters).filter((i) => !!i)]);
+    return await connection.query(query, [studentId, ...Object.values(filters || {}).filter((i) => !!i)]);
   }
 }
 
