@@ -16,6 +16,7 @@ export class Timetables extends Component {
 
   async componentDidMount(){
     this.fetchClasses();
+    this.fetchTimetables();
   }
 
   async fetchClasses(){
@@ -24,6 +25,18 @@ export class Timetables extends Component {
       //console.log(response)
       this.setState({classes: response.data})
     } 
+  }
+
+  async fetchTimetables(){
+    try{
+      const response = await api.admin.getAllTimetables();
+      if(response){
+        console.log(response);
+      }
+    }
+    catch(err){
+      console.log(err);
+    }
   }
 
   showTimetable = (data) => {

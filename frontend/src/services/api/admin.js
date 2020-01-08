@@ -82,4 +82,16 @@ export class AdminAPIService extends BaseAPIService {
   getSubjectslist(){
     return this.get(`/subject/all`);
   }
+
+  getAllTimetables(){
+    return this.get('/timetable');
+  }
+
+  addClassTimetable(data){
+    return this.post('/timetable', data);
+  }
+
+  deleteClassTimetable(classId){
+    return this.delete(`/timetable/${classId}`);
+  }
 }
