@@ -6,6 +6,7 @@ import * as toastr from 'toastr';
 import { CommunicationDetails } from './CommunicationDetails/CommunicationDetails';
 import { CommunicationInfo } from '../../CommunicationList/CommunicationInfo/CommunicationInfo';
 import moment from 'moment';
+import { NoData } from '../../NoData/NoData';
 
 export class Communications extends React.Component {
   state = {
@@ -82,10 +83,14 @@ export class Communications extends React.Component {
           New
         </Button>
 
-        <CommunicationList
-          communications={this.state.communications}
-          onClick={this.openCommunicationInfoModal}
-        />
+        {!this.state.communications.length && <NoData />}
+
+        {!!this.state.communications && 
+          <CommunicationList
+            communications={this.state.communications}
+            onClick={this.openCommunicationInfoModal}
+          />
+        }
 
         {this.state.isCommunicationModalOpen && 
           <CommunicationDetails
