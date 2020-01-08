@@ -384,11 +384,6 @@ class AdminController extends BaseController {
     const result = await TCSR.findAll(req.query.pagination);
     res.send(result);
   }
-
-  async getSubjects(req, res) {
-    const subjects = await Subject.findAll();
-    res.send(subjects);
-  }
   
 }
 
