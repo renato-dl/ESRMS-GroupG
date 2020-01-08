@@ -1,5 +1,4 @@
 import React from 'react';
-import './Communications.scss';
 import {Icon, Container, Button} from 'semantic-ui-react';
 import { CommunicationList } from '../../CommunicationList/CommunicationList';
 import { api } from '../../../services/api';
