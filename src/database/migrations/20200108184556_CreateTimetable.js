@@ -2,7 +2,7 @@
 exports.up = function(knex) {
   return knex.schema.createTable('Timetable', function(table) {
     table.increments('ID').unsigned().primary();
-    table.enu('Day', ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']).notNullable();
+    table.enu('Day', [1, 2, 3, 4, 5]).notNullable();
     table.enu('Hour', [8, 9, 10, 11, 12, 13]).notNullable();
     table.integer('SubjectId').unsigned().notNullable();
     table.integer('ClassId').unsigned().notNullable();
