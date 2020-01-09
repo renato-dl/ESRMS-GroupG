@@ -71,6 +71,10 @@ export class ChangePassword extends React.Component {
         //window.location.replace("/login");
     }
 
+    goBack = () => {
+        window.history.go(-1);
+        return false;
+    }
 
     submitPassChange = async () => {
         this.setState({
@@ -122,7 +126,8 @@ export class ChangePassword extends React.Component {
                     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
                         <Grid.Column className="loginContainer" >
                         <Header as='h2'  textAlign='center' className="loginHeader">
-                            <Icon name="unlock alternate"/>Change Password 
+                            <div class = "backIcon" onClick={this.goBack} ><Icon name="arrow left"/></div>
+                            <div><Icon name="unlock alternate"/>Change Password </div>
                         </Header>
                         
                         <Form size='large' loading={this.state.loader}>
