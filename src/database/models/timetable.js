@@ -1,5 +1,8 @@
 import {Model} from './base';
-import {groupBy, pick} from 'lodash';
+import {
+  groupBy, 
+  pick
+} from 'lodash';
 
 class Timetable extends Model {
   constructor() {
@@ -8,12 +11,11 @@ class Timetable extends Model {
 
   async list() {
     const query = `
-      SELECT T.Day, T.Hour, S.ID as SubjectID, C.Name as ClassName, C.ID as ClassID, C.CreationYear, CONCAT_WS(' ', U.FirstName, U.LastName) as Coordinator
-      FROM Timetable T, Subjects S, Classes C, Users U
+      SELECT T.Day, T.Hour, S.ID as SubjectID, C.ID as ClassID
+      FROM Timetable T, Subjects S, Classes C
       WHERE T.ClassId = C.ID
       AND T.SubjectId = S.ID
-      AND C.CoordinatorId = U.ID
-      ORDER BY C.ID ASC, T.Hour ASC, T.Day ASC
+      ORDER BY C.ID ASC, T.Day ASC, T.Hour ASC
     `;
 
     const connection = await this.db.getConnection();
@@ -25,9 +27,6 @@ class Timetable extends Model {
       return Object.keys(grouppedData).map((ClassID) => {
         return {
           ClassID,
-          ClassName: ClassID + '' + grouppedData[ClassID][0].ClassName,
-          CreationYear: grouppedData[ClassID][0].CreationYear,
-          Coordinator: grouppedData[ClassID][0].Coordinator,
           Timetable: grouppedData[ClassID].map((item) => pick(item, ['Day', 'Hour', 'SubjectID']))
         }
       });
