@@ -39,6 +39,20 @@ class Timetable extends Model {
   async add(data) {
     return {};
   }
+
+  async remove(classId) {
+    if (!classId) {
+      throw new Error('Missing or invalid classId.');
+    }
+
+    const connection = await this.db.getConnection();
+    const schedules = await connection.query(`SELECT * FROM ${this.tableName} WHERE ClassId = ?`, [classId]);
+
+    if (schedules.length) {
+      await this.removeMany([schedules.map((i) => i.ID)]);
+      connection.release();
+    }
+  }
 }
 
 export default new Timetable();
