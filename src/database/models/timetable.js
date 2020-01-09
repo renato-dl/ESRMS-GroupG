@@ -81,6 +81,14 @@ class Timetable extends Model {
         }
 
         if (isString(entry.hour)) {
+          if (entry.hour.includes(':')) {
+            return Number(entry.hour.slice(0, entry.hour.indexOf(':')));
+          }
+
+          if (entry.hour.length > 1) {
+            return Number(`${entry.hour.charAt(0)}${entry.hour.charAt(1)}`);
+          }
+
           return Number(entry.hour.charAt(0));
         }
 
@@ -143,7 +151,7 @@ class Timetable extends Model {
       results = await this.createMany(parsedTimetableData);
     } catch(e) {
       connection.release();
-      throw new Error('Invalid timetable contents.');
+      throw new Error('Class already has a timetable or the provided timetable contents are invalid.');
     }
     
     connection.release();
