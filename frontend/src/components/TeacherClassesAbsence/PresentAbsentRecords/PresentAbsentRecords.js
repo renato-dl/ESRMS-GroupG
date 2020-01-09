@@ -3,7 +3,6 @@ import { api } from '../../../services/api';
 import "react-datepicker/dist/react-datepicker.css";
 import './PresentAbsentRecords.scss';
 import ConfirmationModal from './RecordDetails/ConfirmationModal';
-//import * as toastr from 'toastr';
 import moment from 'moment';
 import {Container, Icon, Label, Table, Button, Checkbox} from 'semantic-ui-react';
 
