@@ -9,8 +9,8 @@ class TimetableController extends BaseController {
   }
 
   async add(req, res) {
-    const timetable = await TimetableModel.add(req.body);
-    res.send(timetable);
+    const timetableSuccess = await TimetableModel.add(req.body.classId, req.body.timetable);
+    res.send({ success: timetableSuccess });
   }
 
   async remove(req, res) {
