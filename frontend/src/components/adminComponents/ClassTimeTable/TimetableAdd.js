@@ -2,23 +2,30 @@ import React, { Component } from 'react'
 import {TimetableUpload} from '../../FileUpload/TimetableUpload';
 import {FilePreview} from '../../FilePreview/FilePreview';
 import {Table, Icon, Modal, Button, Accordion } from 'semantic-ui-react';
+import {api} from '../../../services/api';
 import mime from 'mime';
 import XLSX from 'xlsx';
 import * as toastr from 'toastr';
 
 export class TimetableAdd extends Component {
+  dayOfTheWeek = {"Mon": 1, "Tue": 2, "Wed": 3, "Thu": 4, "Fri": 5}
   state = {
     attachment: null, 
     file: null, 
     classTimetable: null, 
     errorPresent: false,
     headerRow: ["Hour", "Mon", "Tue", "Wed", "Thu", "Fri"],
-    activeIndex: -1
+    activeIndex: -1, 
+    allowedSubjects: [], 
+    timetable: []
   };
 
   async componentDidMount(){
-    this.setState({attachment: 'faketimetable.xlsx', 
-    classTimetable: [{}, {Hour: '02:00', Mon: 'Latin', Tue: 'Maths', Wed: 'Greek', Thu: 'Physics', Fri: 'Gym'}]});
+    const subjects  = await api.admin.getSubjectslist();    
+    if(subjects && subjects.data){
+      this.setState({allowedSubjects: [...subjects.data, {ID: -1, Name: '-'}]});
+    }
+    //console.log(this.state.allowedSubjects);
   }
 
   onDrop = (files, event) => {
@@ -39,7 +46,8 @@ export class TimetableAdd extends Component {
         const dataParse = XLSX.utils.sheet_to_json(ws, 
           {header: headerArray, defval: 'ERROR',
           dateNF: 'hh:mm', raw: false});
-        this.setState({classTimetable: dataParse});
+        const timetableData = this.CreateTimetable(dataParse);
+        this.setState({classTimetable: timetableData});
         this.checkErrorsPresence(dataParse);
       }catch(ex){
         console.log(ex);
@@ -48,17 +56,94 @@ export class TimetableAdd extends Component {
     reader.readAsArrayBuffer(file)
   }
 
+  checkSubjectCorrectness(subject){
+    const subjects = this.state.allowedSubjects;
+    let found = false;
+    const error = this.checkErrorAbsence(subject);
+    subjects.forEach(function(elem){      
+      if(subject == elem.Name){
+        found = true;
+      }        
+    });
+    if (error && found)
+      return true;
+    else   
+      return false;
+  }
+
+  checkErrorAbsence(elem){
+    let result = true;
+    if(elem == 'ERROR')
+      result = false;
+    return result;
+  }
+
+  getSubjectId(subject){
+    let subjectId = -1;
+    const subjects = this.state.allowedSubjects;
+    subjects.forEach(function(elem){
+      if(subject == elem.Name){
+        subjectId = elem.ID;
+      }
+    });
+    return subjectId;
+  }
+
+  CreateTimetable(data){
+    let timetable = [];
+    let timetableToSave = [];
+    if (data){
+      const header = this.state.headerRow;
+      for(let i = 1; i < data.length; i++){
+        const row = data[i];
+        const tableRow = [];
+        if(header){
+          let hourToSave;
+          for(let j = 0; j < header.length; j ++){
+            const elem = header[j];
+            let cellError = false;
+            if(elem  == "Hour"){
+              hourToSave = row[elem];
+              cellError = this.checkErrorAbsence(row[elem]) ? false : true;
+            }
+            else{
+              cellError = this.checkSubjectCorrectness(row[elem]) ? false : true;
+              const subjId = this.getSubjectId(row[elem]);
+              if(subjId != -1){
+                const elemToSave = {
+                  subjectId: subjId, 
+                  hour: hourToSave, 
+                  day: this.dayOfTheWeek[elem]
+                };
+                timetableToSave.push(elemToSave);
+              }              
+            }          
+
+            const cell = {key: `col-${i}-${elem}-${row[elem]}`, 
+            content: row[elem], 
+            error: cellError};
+            tableRow.push(cell);            
+          }
+        }
+        timetable.push(tableRow);
+      }
+    }
+    this.setState({timetable: timetableToSave});
+    return timetable;    
+  }
+
   checkErrorsPresence(timetable){
     if(timetable){
-      for(let i = 0; i < timetable.length; i++){
+      for(let i = 1; i < timetable.length; i++){
         const data = timetable[i];
-        if(data["Hour"].match('ERROR') || data["Mon"].match('ERROR') || data["Tue"].match('ERROR') || 
-        data["Wed"].match('ERROR') || data["Thu"].match('ERROR') || data["Fri"].match('ERROR')){
+        if(!this.checkErrorAbsence(data["Hour"]) ||
+        !this.checkSubjectCorrectness(data["Mon"]) || !this.checkSubjectCorrectness( data["Tue"]) || 
+        !this.checkSubjectCorrectness(data["Wed"]) || !this.checkSubjectCorrectness(data["Thu"]) || 
+        !this.checkSubjectCorrectness(data["Fri"]) ){
           this.setState({errorPresent: true});
         }
       }
-    }    
-    //console.log(timetable);    
+    }       
   }
 
   handleClick = (e, titleProps) => {
@@ -70,8 +155,17 @@ export class TimetableAdd extends Component {
   }
 
   onAttachmentRemove = (name) => {
-    toastr.success('Timetable deleted!');
-    this.setState({ attachment: null, classTimetable: null});
+    try{
+      const result = api.admin.deleteClassTimetable(this.props.class.ID);
+      if(result){
+        toastr.success('Timetable deleted!');
+        this.setState({ attachment: null, classTimetable: null});
+      }
+    }
+    catch(err){
+      console.log(err);
+      toastr.error('Sorry, an unexpected error occurred!');
+    }    
   };
 
   onFileRemove = (name) => {
@@ -79,21 +173,25 @@ export class TimetableAdd extends Component {
   };
 
   renderBodyRow(data, index){
-    if(index !== 0){    
-      return {key: index || `row-${index}`,
-      cells: [ 
-        "Hour" ? {key: `col-${index}-hour-${data["Hour"]}`, content: data["Hour"], error: (data["Hour"].match("ERROR") ? true : false)} : 'None', 
-        "Mon" ? {key: `col-${index}-mon-${data["Mon"]}`, content: data["Mon"], error: (data["Mon"].match("ERROR") ? true : false)} : 'None', 
-        "Tue" ? {key: `col-${index}-tue-${data["Tue"]}`, content: data["Tue"], error: (data["Tue"].match("ERROR") ? true : false)} : 'None', 
-        "Wed" ? {key: `col-${index}-wed-${data["Wed"]}`, content: data["Wed"], error: (data["Wed"].match("ERROR") ? true : false)} : 'None', 
-        "Thu" ? {key: `col-${index}-thu-${data["Thu"]}`, content: data["Thu"], error: (data["Thu"].match("ERROR") ? true : false)} : 'None', 
-        "Fri" ? {key: `col-${index}-fri-${data["Fri"]}`, content: data["Fri"], error: (data["Fri"].match("ERROR") ? true : false)} : 'None'
-      ],}
-    }
+    return {key: index || `row-${index}`, cells: [...data]}
   }
 
   onSave = () =>{
-    toastr.success('Timetable saved!');       
+    const timetable = this.state.timetable;
+    const request = {
+      classId: this.props.class.ID,
+      timetable: timetable
+    }
+    try{
+      const result = api.admin.addClassTimetable(request);
+      //console.log(result);
+      if (result)
+        toastr.success('Timetable saved!');
+    }
+    catch(err){
+      console.log(err);
+      toastr.error("Sorry, an unexpected error occurred!");
+    }           
     this.props.onClose(); 
   }
 
