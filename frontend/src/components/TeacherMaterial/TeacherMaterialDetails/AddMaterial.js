@@ -19,7 +19,7 @@ export class AddMaterial extends Component {
                         Mathematics
                     </Header>
                     </Divider>
-                    <FileUpload onDrop={this.onDrop} />
+                    <FileUpload onDropAccepted={this.props.onDrop} />
                 
                 </Modal.Content>
                 <Modal.Actions>

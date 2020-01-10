@@ -18,13 +18,27 @@ export class TeacherMaterial extends Component {
         DeleteModalOpen:false
     }
 
-    handleItemClick = (e, { value }) => this.setState({ activeItem: value })
+    handleItemClick = async (e, { value }) => {
+        this.setState({ activeItem: value });
+        const subjects = this.state.subjects;
+        console.log(subjects);
+        const response = await api.teacher.getMaterialBySubject(value);
+        if(response && response.data){
+            console.log(response.data);
+        }
+    }
   
 
     fetchSubjects = async () => {
-        const response = await api.teacher.getTeacherSubjects(); //probably incorrect... clear out if subjects will be uniques or several for diff classes
+        const response = await api.teacher.getTeacherSubjects();
         if(response) {
+            //console.log(response);
             this.setState( {subjects: response.data, activeItem: response.data[0].subjectId});
+            const materials = await api.teacher.getMaterialBySubject(response.data[0].subject);
+            if(materials && materials.data){
+                console.log(materials);
+                this.setState({allMaterialList: materials.data});
+            }
         }
     } 
 
@@ -41,6 +55,10 @@ export class TeacherMaterial extends Component {
 
     DeleteMaterialClose = () => {
         this.setState({DeleteModalOpen:false});
+    }
+
+    onDrop = (files, event) =>{
+        
     }
 
     render() {
@@ -84,7 +102,7 @@ export class TeacherMaterial extends Component {
                                     
                                     <List.Content floated='right'>
                                     <Button.Group>
-                                        <Button icon="edit"></Button>
+                                        {/* <Button icon="edit"></Button> */}
                                         <Button.Or className = "custOrButton" text=''/>
                                         <Button icon="delete"></Button>
                                     </Button.Group>
