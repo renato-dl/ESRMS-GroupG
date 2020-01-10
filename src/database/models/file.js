@@ -19,7 +19,7 @@ class File extends Model {
   async remove(id) {
     // delete file from here;
     const file = await this.findById(id);
-    this.removeFileFromStorage(file.Key);
+    await this.removeFileFromStorage(file.Key);
     return super.remove(id);
   }
 
@@ -33,8 +33,12 @@ class File extends Model {
 
   async removeFileFromStorage(key) {
     const unlinkAsync = promisify(fs.unlink);
+    const existsAsync = promisify(fs.exists);
     try {
-      await unlinkAsync(path.join(__dirname, "../../../", "uploads", key));
+      const exists = await existsAsync(path.join(__dirname, "../../../", "uploads", key));
+      if (exists) {
+        await unlinkAsync(path.join(__dirname, "../../../", "uploads", key));
+      }
     } catch(e) {
       console.log(e);
     }
