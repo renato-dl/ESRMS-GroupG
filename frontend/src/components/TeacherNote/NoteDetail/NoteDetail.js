@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './NoteDetail.scss';
-import {Button, Modal, Form, Dropdown, Icon,LabelDetail} from 'semantic-ui-react';
+import {Button, Modal, Form, Dropdown, Icon,Label} from 'semantic-ui-react';
 import Select from 'react-select'
 import NumericInput from 'react-numeric-input';
 import "react-datepicker/dist/react-datepicker.css";
@@ -18,6 +18,7 @@ export class NoteDetail extends Component {
     classId: null,
     noteId:null,
     Title:'',
+    Date:new Date(),
     Description: '',
     studentId:'',
     studentName:'',
@@ -34,7 +35,8 @@ export class NoteDetail extends Component {
       studentId: this.props.note.StudentId,
       studentName:this.props.note.FirstName+' '+this.props.note.LastName,
       Title: this.props.note.Title,
-      Description: this.props.note.Description
+      Description: this.props.note.Description,
+      Date:this.props.note.Date
     })
   }
 
@@ -73,6 +75,11 @@ export class NoteDetail extends Component {
     this.setState({studentName:event.label})
   }
 
+  onDateChange = (date) => {
+    this.setState({ Date: date });
+  }
+
+
   onSave = async () => {
     if (this.state.isSaving) {
       return;
@@ -86,7 +93,8 @@ export class NoteDetail extends Component {
         description: this.state.Description,
         studentId:this.state.studentId,
         noteId: this.state.noteId,
-        isSeen:false
+        isSeen:false,
+        date: this.state.Date
       };
 
       if(!this.state.noteId) {
@@ -126,6 +134,12 @@ export class NoteDetail extends Component {
     this.setState({students: []});
     this.props.onClose();
   };
+
+  isWeekday = date => {
+    const day = moment(date).day();
+    return day !== 0 && day !== 6 ;
+  };
+
   render() {
     return (
       <Modal dimmer open className="note-detail" size="small">
@@ -164,6 +178,17 @@ export class NoteDetail extends Component {
               value={this.state.Description}
               onChange={this.handleInputChange}
             />
+            <h5>Date</h5>
+            <DatePicker 
+              placeholderText="Date" 
+              name="Date" 
+              maxDate={new Date()} 
+              selected={this.state.Date ? new Date(this.state.Date) : new Date()} 
+              onChange={this.onDateChange}
+              locale="en" 
+              filterDate = {this.isWeekday} 
+              disabled={this.state.noteId}
+              />
         </Form>
         
         </Modal.Content>

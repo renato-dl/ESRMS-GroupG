@@ -111,14 +111,14 @@ export class TeacherNote extends React.Component{
           <Table.Body>
             {this.state.noteList.map((note,index) =>
               <Table.Row key = {index}>
-                  <Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{index+1 }  </span></Table.Cell>
-                  <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.FirstName } { note.LastName }  </span> </Table.Cell> 
-                  <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.Title } </span></Table.Cell>
-                  <Table.Cell textAlign="left" width={6}> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.Description } </span></Table.Cell>
-                  <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ moment(note.Date).format('LL')} </span></Table.Cell>
-                  <Table.Cell textAlign="left"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.IsSeen?'Yes':'No'}  </span></Table.Cell>
+                  <Table.Cell textAlign="center"> <span  style={this.styleNoteColor(note.IsSeen)}>{index+1 }  </span></Table.Cell>
+                  <Table.Cell textAlign="left"> <span  style={this.styleNoteColor(note.IsSeen)}>{ note.FirstName } { note.LastName }  </span> </Table.Cell> 
+                  <Table.Cell textAlign="left"> <span  style={this.styleNoteColor(note.IsSeen)}>{ note.Title } </span></Table.Cell>
+                  <Table.Cell textAlign="left" width={6}> <span  style={this.styleNoteColor(note.IsSeen)}>{ note.Description } </span></Table.Cell>
+                  <Table.Cell textAlign="left"> <span   style={this.styleNoteColor(note.IsSeen)}>{ moment(note.Date).format('LL')} </span></Table.Cell>
+                  <Table.Cell textAlign="left"> <span  style={this.styleNoteColor(note.IsSeen)}>{ note.IsSeen?'Yes':'No'}  </span></Table.Cell>
                   <Table.Cell textAlign="left" className="edit-cell"> 
-                  <span className="markField" style={this.styleNoteColor(note.IsSeen)}>
+                  <span  style={this.styleNoteColor(note.IsSeen)}>
                   <Tooltip 
                     text="Edit note"
                     trigger={
