@@ -75,12 +75,12 @@ export class ChildAttendance extends React.Component{
     AddNormalLabel= async (from,to)=>{
       var startingDate = moment(from).startOf('day');
       var pre_date=moment().startOf('day');
-      var id_num=this.state.attendanceForCalendar.length;
+     //var id_num=this.state.attendanceForCalendar.length;
       while(pre_date>=startingDate)
       {
       if(!this.state.attendanceForCalendar.find((a)=>moment(a.Date).isSame(pre_date,'day')))
       {
-        var week_day=moment(pre_date).day()
+        //var week_day=moment(pre_date).day()
         /* if(week_day!==0){
           var element={
             id:++id_num,
@@ -142,7 +142,7 @@ export class ChildAttendance extends React.Component{
       return (
         <Container className="contentContainer">
         <h3 className="contentHeader"> 
-          <Icon name='braille'/> 
+          <Icon name='calendar check outline'/> 
           {this.context.state.parent ? this.context.state.parent.selectedStudent.FirstName + "'s" : 'Student'} attendance
          </h3>
  

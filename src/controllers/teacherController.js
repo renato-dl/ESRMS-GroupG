@@ -5,6 +5,7 @@ import Class from '../database/models/class';
 import TCSR from '../database/models/teacherClassSubject';
 import Grade from '../database/models/grade';
 import Note from '../database/models/note';
+import SupportMaterial from '../database/models/supportMaterial';
 import Student from '../database/models/student';
 import StudentAttendance from '../database/models/studentAttendance';
 import ClassAttendance from '../database/models/classAttendance';
@@ -521,7 +522,7 @@ class TeacherController extends BaseController {
   //Body: ID
   async deleteNote(req, res) {
     if(!await Note.checkIfNoteIsFromTeacher(req.body.ID, req.user.ID)){
-      res.sendStatus(401);
+      res.sendStatus(401); 
       return;
     }
 
@@ -530,6 +531,45 @@ class TeacherController extends BaseController {
     );
 
     res.send({success: true});
+  }
+
+  // GET /teacher/support-material
+  // Query: subject (optional), fromDate (optional), toDate (optional), page (optional), pageSize (optional)
+  async getSupportMaterial(req, res) {
+    const supportMaterial = await SupportMaterial.findAllByTeacher(
+      req.user.ID,
+      { subject: req.query.subject, from: req.query.fromDate, to: req.query.toDate },
+      { page: req.query.page, pageSize: req.query.pageSize }
+    );
+
+    res.send({ supportMaterial: supportMaterial });
+  }
+
+  // POST /teacher/support-material
+  // Body: subjectId, file
+  async addSupportMaterial(req, res) {
+    if (!await TCSR.checkIfTeacherTeachesSubject(req.user.ID, req.body.subjectId)) {
+      return res.send(401);
+    }
+
+    const supportMaterialId = await SupportMaterial.add(req.body.subjectId, req.file)
+    res.send({ supportMaterialId });
+  }
+
+  // DELETE /teacher/support-material
+  // Body: ID
+  async deleteSupportMaterial(req, res) {
+    const supportMaterial = await SupportMaterial.findById(req.body.ID);
+    if (!supportMaterial) {
+      return res.send(401);
+    }
+
+    if (!await TCSR.checkIfTeacherTeachesSubject(req.user.ID, supportMaterial.SubjectId)) {
+      return res.send(401);
+    }
+
+    await SupportMaterial.remove(req.body.ID);
+    res.send({ success: true });
   }
 }
 
