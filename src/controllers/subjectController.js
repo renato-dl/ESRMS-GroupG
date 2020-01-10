@@ -7,6 +7,7 @@ class SubjectController extends BaseController {
     const subjects = await Subject.findAll();
     res.send(subjects);
   }
+
 }
 
 export default new SubjectController();
