@@ -224,7 +224,7 @@ class AdminController extends BaseController {
   }
 
   async getTeachers(req, res) {
-    const teachers = await User.getTeachers();
+    const teachers = await User.getTeachers(req.query.coordinators);
     res.send(teachers);
   }
 
@@ -342,19 +342,20 @@ class AdminController extends BaseController {
 
   async removeStudent(req, res) {
     const student = await Student.findById(req.body.ID);
-    try {
-      await Student.remove(req.body.ID);
-      await User.checkIfStillParent(student.Parent1);
-      if (student.Parent2) {
-        await User.checkIfStillParent(student.Parent2);
-      }      
-      res.send({success: true});
-    } catch(error) {
+    if (student.ClassId != null) {
       res.send({
         success: false,
-        msg: 'Only students not assigned to classes and without grades can be removed'
+        msg: 'Only students not assigned to classes can be removed'
       });
+      return;
     }
+    
+    await Student.remove(req.body.ID);
+    await User.checkIfStillParent(student.Parent1);
+    if (student.Parent2) {
+      await User.checkIfStillParent(student.Parent2);
+    }      
+    res.send({success: true});
   }
 
   async createClass(req, res) {

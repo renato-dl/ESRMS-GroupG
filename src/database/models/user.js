@@ -489,15 +489,19 @@ class User extends Model {
   }
 
 
-  async getTeachers() {
+  async getTeachers(includeCoordinators = false) {
 
     const connection = await this.db.getConnection();
-    const teachers = await connection.query(
+    let query =
       `SELECT ID, FirstName, LastName
       FROM Users
-      WHERE isTeacher = true 
-      AND ID NOT IN (SELECT CoordinatorId FROM Classes)`
-    );
+      WHERE isTeacher = true `;
+
+    if (!includeCoordinators) {
+      query += 'AND ID NOT IN (SELECT CoordinatorId FROM Classes)'
+    }
+
+    const teachers = await connection.query(query);
 
     connection.release();
 

@@ -6,7 +6,7 @@ import teacherClassSubject from '../src/database/models/teacherClassSubject';
 import moment from 'moment';
 import db from '../src/database';
 
-describe('Tests about getting the teaching classes of a teacher', () =>{
+describe('getTeachingClasses', () =>{
   test('It should return the classes of a teacher', async () =>{
 
     //first insert a new teacher
@@ -69,7 +69,7 @@ describe('Tests about getting the teaching classes of a teacher', () =>{
 
 });
 
-describe('Tests about checking if teacher teaches a subject in a class', () =>{
+describe('checkIfTeacherTeachesSubjectInClass', () =>{
   
   test('It should return true', async () =>{
 

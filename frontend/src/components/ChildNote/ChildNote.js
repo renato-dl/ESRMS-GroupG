@@ -88,29 +88,29 @@ export class ChildNote extends React.Component{
         <Table className='Notes_table'>
           <Table.Header>
               <Table.Row>
-                  <Table.HeaderCell textAlign="center">#</Table.HeaderCell>
+                  <Table.HeaderCell textAlign="center">Teacher Name</Table.HeaderCell>
                   <Table.HeaderCell textAlign="center">Title</Table.HeaderCell>
                   <Table.HeaderCell textAlign="center">Date</Table.HeaderCell>
-                  <Table.HeaderCell textAlign="center">Is Seen</Table.HeaderCell>
-                  <Table.HeaderCell textAlign="center">Name</Table.HeaderCell>
+                  
                   <Table.HeaderCell textAlign="center">Detail</Table.HeaderCell> 
               </Table.Row>
           </Table.Header>
           <Table.Body>
             {this.state.noteList.map((note,index) =>
               <Table.Row key = {index}>
-                  <Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{index+1 }  </span></Table.Cell>
+
+<Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.FirstName } { note.LastName }  </span> </Table.Cell> 
                   <Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.Title } </span></Table.Cell>
                   <Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ moment(note.Date).format('LL')} </span></Table.Cell>
-                  <Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.IsSeen?'Yes':'No'}  </span></Table.Cell>
-                  <Table.Cell textAlign="center"> <span className="markField" style={this.styleNoteColor(note.IsSeen)}>{ note.FirstName } { note.LastName }  </span> </Table.Cell> 
                   <Table.Cell textAlign="center" className="edit-cell"> 
+                  <span className="markField" style={this.styleNoteColor(note.IsSeen)}>
                   <Tooltip 
                     text="note"
                     trigger={
-                      <Icon name="edit" onClick={() => this.showNote(note)} />
+                      <Icon name="zoom in " onClick={() => this.showNote(note)} />
                     }
                   />
+                  </span>
                 </Table.Cell>
               </Table.Row>
             )} 
