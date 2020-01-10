@@ -1,6 +1,8 @@
 import TCSR from '../src/database/models/teacherClassSubject'
 import Class from '../src/database/models/class'
 import User from '../src/database/models/user'
+import Student from '../src/database/models/student'
+import Subject from '../src/database/models/subject'
 import uuid from 'uuid';
 import teacherClassSubject from '../src/database/models/teacherClassSubject';
 import moment from 'moment';
@@ -40,9 +42,14 @@ describe('getTeachingClasses', () =>{
       id: createClass.id
     });
 
+    //create a new subject
+    const subjectId = await Subject.create({
+      Name: "Test Subject"
+    });
+
     //assign that teacher to the class
     const insertRelation = await teacherClassSubject.create({
-      SubjectId: 1,
+      SubjectId: subjectId,
       ClassId: createClass.id,
       TeacherId: insertTeacher.id
     });
@@ -56,6 +63,7 @@ describe('getTeachingClasses', () =>{
     await teacherClassSubject.remove(insertRelation);
     await Class.remove(createClass.id);
     await User.remove(insertTeacher.id);
+    await Subject.remove(subjectId);
   });
 
   test('It should throw an error when the passed teacher id is missing or invalid', async () =>{
@@ -104,16 +112,21 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
       id: createClass.id
     });
 
+    //create a new subject
+    const subjectId = await Subject.create({
+      Name: "Test Subject"
+    });
+    
     //assign that teacher to the class
     const insertRelation = await teacherClassSubject.create({
-      SubjectId: 1,
+      SubjectId: subjectId,
       ClassId: createClass.id,
       TeacherId: insertTeacher.id
     });
 
     const checkTeaching = await TCSR.checkIfTeacherTeachesSubjectInClass(
       insertTeacher.id,
-      1,
+      subjectId,
       createClass.id
     );
 
@@ -123,6 +136,7 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
     await teacherClassSubject.remove(insertRelation);
     await Class.remove(createClass.id);
     await User.remove(insertTeacher.id);
+    await Subject.remove(subjectId);
   });
 
   test('It should return false', async () =>{
@@ -158,9 +172,14 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
       id: createClass.id
     });
 
+    //create a new subject
+    const subjectId = await Subject.create({
+      Name: "Test Subject"
+    });
+
     //assign that teacher to the class
     const insertRelation = await teacherClassSubject.create({
-      SubjectId: 1,
+      SubjectId: subjectId,
       ClassId: createClass.id,
       TeacherId: insertTeacher.id
     });
@@ -177,6 +196,7 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
     await teacherClassSubject.remove(insertRelation);
     await Class.remove(createClass.id);
     await User.remove(insertTeacher.id);
+    await Subject.remove(subjectId);
   });
 
   test('It should throw an error when the passed teacher id is missing or invalid', async () =>{
@@ -211,11 +231,16 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
      expect(createClass).toEqual({
        id: createClass.id
      });
+
+     //create a new subject
+    const subjectId = await Subject.create({
+      Name: "Test Subject"
+    });
      
     try{
       await TCSR.checkIfTeacherTeachesSubjectInClass(
         null,
-        1,
+        subjectId,
         createClass.id
       );
 
@@ -223,6 +248,7 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
       expect(error).toHaveProperty("message", "Missing or invalid teacher id");
       await Class.remove(createClass.id);
       await User.remove(insertTeacher.id);
+      await Subject.remove(subjectId);
     }
   });
 
@@ -306,10 +332,15 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
     id: createClass.id
   });
   
+  //create a new subject
+  const subjectId = await Subject.create({
+    Name: "Test Subject"
+  });
+
  try{
    await TCSR.checkIfTeacherTeachesSubjectInClass(
      insertTeacher.id,
-     1,
+     subjectId,
      null
    );
 
@@ -317,10 +348,665 @@ describe('checkIfTeacherTeachesSubjectInClass', () =>{
    expect(error).toHaveProperty("message", "Missing or invalid class id");
    await Class.remove(createClass.id);
    await User.remove(insertTeacher.id);
+   await Subject.remove(subjectId);
  }
   });
 
 });
+
+describe('checkIfTeacherTeachesInClass', () =>{
+  
+  test('It should return true', async () =>{
+
+    //first insert a new teacher
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const insertTeacher = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(insertTeacher).toEqual({
+      id: expect.anything()
+    });
+
+    //then insert a new class
+    const createClass = await Class.createClass(insertTeacher.id);
+    expect(createClass).toEqual({
+      id: createClass.id
+    });
+
+    //create a new subject
+    const subjectId = await Subject.create({
+      Name: "Test Subject"
+    });
+
+    //assign that teacher to the class
+    const insertRelation = await teacherClassSubject.create({
+      SubjectId: subjectId,
+      ClassId: createClass.id,
+      TeacherId: insertTeacher.id
+    });
+
+    const checkTeaching = await TCSR.checkIfTeacherTeachesInClass(
+      insertTeacher.id,
+      createClass.id
+    );
+
+    expect(checkTeaching).toBe(true);
+
+    //clean db for future tests
+    await teacherClassSubject.remove(insertRelation);
+    await Class.remove(createClass.id);
+    await User.remove(insertTeacher.id);
+    await Subject.remove(subjectId);
+  });
+
+  test('It should return false', async () =>{
+
+    //first insert a new teacher
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const insertTeacher = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(insertTeacher).toEqual({
+      id: expect.anything()
+    });
+
+    //then insert a new class
+    const createClass = await Class.createClass(insertTeacher.id);
+    expect(createClass).toEqual({
+      id: createClass.id
+    });
+
+    const checkTeaching = await TCSR.checkIfTeacherTeachesInClass(
+      insertTeacher.id,
+      createClass.id
+    );
+
+    expect(checkTeaching).toBe(false);
+
+    //clean db for future tests
+    await Class.remove(createClass.id);
+    await User.remove(insertTeacher.id);
+  });
+
+  test('It should throw an error when the passed teacher id is missing or invalid', async () =>{
+    
+     //first insert a new teacher
+     const testFirstName = 'Joe';
+     const testLastName = 'Kernel';
+     const testEmail = 'joekernel@gmail.com';
+     const testSSN = 'LRNMRC79A02L219A';
+     const testPassword = 'EasYPass1';
+     const testIsTeacher = true;
+     const testIsAdminOfficer = false;
+     const testIsPrincipal = false;
+ 
+     const insertTeacher = await User.insertInternalAccountData( 
+         testFirstName, 
+         testLastName, 
+         testEmail, 
+         testSSN, 
+         testPassword,
+         testIsTeacher,
+         testIsAdminOfficer,
+         testIsPrincipal
+     );
+ 
+     expect(insertTeacher).toEqual({
+       id: expect.anything()
+     });
+ 
+     //then insert a new class
+     const createClass = await Class.createClass(insertTeacher.id);
+     expect(createClass).toEqual({
+       id: createClass.id
+     });
+     
+    try{
+      await TCSR.checkIfTeacherTeachesInClass(
+        null,
+        createClass.id
+      );
+
+    }catch(error){
+      expect(error).toHaveProperty("message", "Missing or invalid teacher id");
+      await Class.remove(createClass.id);
+      await User.remove(insertTeacher.id);
+    }
+  });
+
+  test('It should throw an error when the passed class id is missing or invalid', async () =>{
+    
+  //first insert a new teacher
+  const testFirstName = 'Joe';
+  const testLastName = 'Kernel';
+  const testEmail = 'joekernel@gmail.com';
+  const testSSN = 'LRNMRC79A02L219A';
+  const testPassword = 'EasYPass1';
+  const testIsTeacher = true;
+  const testIsAdminOfficer = false;
+  const testIsPrincipal = false;
+
+  const insertTeacher = await User.insertInternalAccountData( 
+      testFirstName, 
+      testLastName, 
+      testEmail, 
+      testSSN, 
+      testPassword,
+      testIsTeacher,
+      testIsAdminOfficer,
+      testIsPrincipal
+  );
+
+  expect(insertTeacher).toEqual({
+    id: expect.anything()
+  });
+
+ try{
+   await TCSR.checkIfTeacherTeachesInClass(
+     insertTeacher.id,
+     null
+   );
+
+ }catch(error){
+   expect(error).toHaveProperty("message", "Missing or invalid class id");
+   await User.remove(insertTeacher.id);
+ }
+
+});
+
+});
+
+describe('checkIfTeacherTeachesToStudent', () =>{
+  
+  test('It should return true, subject null case', async () =>{
+
+    //first insert a new teacher
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const insertTeacher = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(insertTeacher).toEqual({
+      id: expect.anything()
+    });
+
+    //then insert a new class
+    const createClass = await Class.createClass(insertTeacher.id);
+    expect(createClass).toEqual({
+      id: createClass.id
+    });
+
+    //insert a new student with parent
+    const insertParent = await User.insertParentData(
+    'Name',
+    'Lastname',
+    'parent1@parents.com',
+    'FFLPSL33H68A698Z',
+    'Password1'
+  );
+   expect(insertParent).toMatchObject({id: expect.anything()});
+
+   const insertStudent = await Student.insertStudent(
+     "Antonio",
+     "De Giovanni",
+     "TBKHSA93A02F494U",
+     "M",
+     moment().utc().subtract(13, 'years'),
+     insertParent.id,
+     null
+   );
+    expect(insertStudent).toMatchObject({id: expect.anything()});
+
+    //assign student to class
+    await Class.assignStudentsToClass(createClass.id, [insertStudent.id]);
+
+    //create a new subject
+    const subjectId = await Subject.create({
+      Name: "Test Subject"
+    })
+    
+    //assign that teacher to the class
+    const insertRelation = await teacherClassSubject.create({
+      SubjectId: subjectId,
+      ClassId: createClass.id,
+      TeacherId: insertTeacher.id
+    });
+
+    const checkTeaching = await TCSR.checkIfTeacherTeachesToStudent(
+      insertTeacher.id,
+      insertStudent.id
+    );
+
+    expect(checkTeaching).toBe(true);
+
+    //clean db for future tests
+    await Student.remove(insertStudent.id);
+    await User.remove(insertParent.id);
+    await teacherClassSubject.remove(insertRelation);
+    await Class.remove(createClass.id);
+    await User.remove(insertTeacher.id);
+    await Subject.remove(subjectId);
+  });
+
+  test('It should return false, subject null case', async () =>{
+
+    //first insert a new teacher
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const insertTeacher = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(insertTeacher).toEqual({
+      id: expect.anything()
+    });
+
+    //then insert a new class
+    const createClass = await Class.createClass(insertTeacher.id);
+    expect(createClass).toEqual({
+      id: createClass.id
+    });
+
+    //insert a new student with parent
+    const insertParent = await User.insertParentData(
+    'Name',
+    'Lastname',
+    'parent1@parents.com',
+    'FFLPSL33H68A698Z',
+    'Password1'
+  );
+   expect(insertParent).toMatchObject({id: expect.anything()});
+
+   const insertStudent = await Student.insertStudent(
+     "Antonio",
+     "De Giovanni",
+     "TBKHSA93A02F494U",
+     "M",
+     moment().utc().subtract(13, 'years'),
+     insertParent.id,
+     null
+   );
+    expect(insertStudent).toMatchObject({id: expect.anything()});
+
+    //create a new subject
+    const subjectId = await Subject.create({
+      Name: "Test Subject"
+    })
+    
+    //assign that teacher to the class
+    const insertRelation = await teacherClassSubject.create({
+      SubjectId: subjectId,
+      ClassId: createClass.id,
+      TeacherId: insertTeacher.id
+    });
+
+    const checkTeaching = await TCSR.checkIfTeacherTeachesToStudent(
+      insertTeacher.id,
+      insertStudent.id
+    );
+
+    expect(checkTeaching).toBe(false);
+
+    //clean db for future tests
+    await Student.remove(insertStudent.id);
+    await User.remove(insertParent.id);
+    await teacherClassSubject.remove(insertRelation);
+    await Class.remove(createClass.id);
+    await User.remove(insertTeacher.id);
+    await Subject.remove(subjectId);
+  });
+
+  test('It should return true, subject selected case', async () =>{
+
+    //first insert a new teacher
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const insertTeacher = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(insertTeacher).toEqual({
+      id: expect.anything()
+    });
+
+    //then insert a new class
+    const createClass = await Class.createClass(insertTeacher.id);
+    expect(createClass).toEqual({
+      id: createClass.id
+    });
+
+    //insert a new student with parent
+    const insertParent = await User.insertParentData(
+    'Name',
+    'Lastname',
+    'parent1@parents.com',
+    'FFLPSL33H68A698Z',
+    'Password1'
+  );
+   expect(insertParent).toMatchObject({id: expect.anything()});
+
+   const insertStudent = await Student.insertStudent(
+     "Antonio",
+     "De Giovanni",
+     "TBKHSA93A02F494U",
+     "M",
+     moment().utc().subtract(13, 'years'),
+     insertParent.id,
+     null
+   );
+    expect(insertStudent).toMatchObject({id: expect.anything()});
+
+    //assign student to class
+    await Class.assignStudentsToClass(createClass.id, [insertStudent.id]);
+
+    //create a new subject
+    const subjectId = await Subject.create({
+      Name: "Test Subject"
+    })
+    
+    //assign that teacher to the class
+    const insertRelation = await teacherClassSubject.create({
+      SubjectId: subjectId,
+      ClassId: createClass.id,
+      TeacherId: insertTeacher.id
+    });
+
+    const checkTeaching = await TCSR.checkIfTeacherTeachesToStudent(
+      insertTeacher.id,
+      insertStudent.id,
+      subjectId
+    );
+
+    expect(checkTeaching).toBe(true);
+
+    //clean db for future tests
+    await Student.remove(insertStudent.id);
+    await User.remove(insertParent.id);
+    await teacherClassSubject.remove(insertRelation);
+    await Class.remove(createClass.id);
+    await User.remove(insertTeacher.id);
+    await Subject.remove(subjectId);
+  });
+
+  test('It should return false, subject selected case', async () =>{
+
+    //first insert a new teacher
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const insertTeacher = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(insertTeacher).toEqual({
+      id: expect.anything()
+    });
+
+    //then insert a new class
+    const createClass = await Class.createClass(insertTeacher.id);
+    expect(createClass).toEqual({
+      id: createClass.id
+    });
+
+    //insert a new student with parent
+    const insertParent = await User.insertParentData(
+    'Name',
+    'Lastname',
+    'parent1@parents.com',
+    'FFLPSL33H68A698Z',
+    'Password1'
+  );
+   expect(insertParent).toMatchObject({id: expect.anything()});
+
+   const insertStudent = await Student.insertStudent(
+     "Antonio",
+     "De Giovanni",
+     "TBKHSA93A02F494U",
+     "M",
+     moment().utc().subtract(13, 'years'),
+     insertParent.id,
+     null
+   );
+    expect(insertStudent).toMatchObject({id: expect.anything()});
+
+    //create a new subject
+    const subjectId = await Subject.create({
+      Name: "Test Subject"
+    })
+    
+    //assign that teacher to the class
+    const insertRelation = await teacherClassSubject.create({
+      SubjectId: subjectId,
+      ClassId: createClass.id,
+      TeacherId: insertTeacher.id
+    });
+
+    const checkTeaching = await TCSR.checkIfTeacherTeachesToStudent(
+      insertTeacher.id,
+      insertStudent.id,
+      subjectId
+    );
+
+    expect(checkTeaching).toBe(false);
+
+    //clean db for future tests
+    await Student.remove(insertStudent.id);
+    await User.remove(insertParent.id);
+    await teacherClassSubject.remove(insertRelation);
+    await Class.remove(createClass.id);
+    await User.remove(insertTeacher.id);
+    await Subject.remove(subjectId);
+  });
+
+  test('It should throw an error when the passed teacher id is missing or invalid', async () =>{
+    
+     //first insert a new teacher
+     const testFirstName = 'Joe';
+     const testLastName = 'Kernel';
+     const testEmail = 'joekernel@gmail.com';
+     const testSSN = 'LRNMRC79A02L219A';
+     const testPassword = 'EasYPass1';
+     const testIsTeacher = true;
+     const testIsAdminOfficer = false;
+     const testIsPrincipal = false;
+ 
+     const insertTeacher = await User.insertInternalAccountData( 
+         testFirstName, 
+         testLastName, 
+         testEmail, 
+         testSSN, 
+         testPassword,
+         testIsTeacher,
+         testIsAdminOfficer,
+         testIsPrincipal
+     );
+ 
+     expect(insertTeacher).toEqual({
+       id: expect.anything()
+     });
+ 
+     //then insert a new class
+     const createClass = await Class.createClass(insertTeacher.id);
+     expect(createClass).toEqual({
+       id: createClass.id
+     });
+
+     //insert a new student with parent
+     const insertParent = await User.insertParentData(
+        'Name',
+        'Lastname',
+        'parent1@parents.com',
+        'FFLPSL33H68A698Z',
+        'Password1'
+     );
+     expect(insertParent).toMatchObject({id: expect.anything()});
+
+     const insertStudent = await Student.insertStudent(
+       "Antonio",
+       "De Giovanni",
+       "TBKHSA93A02F494U",
+       "M",
+       moment().utc().subtract(13, 'years'),
+       insertParent.id,
+       null
+     );
+      expect(insertStudent).toMatchObject({id: expect.anything()});
+
+      //assign student to class
+      await Class.assignStudentsToClass(createClass.id, [insertStudent.id]);
+     
+    try{
+      await TCSR.checkIfTeacherTeachesToStudent(
+        null,
+        insertStudent.id
+      );
+
+    }catch(error){
+      expect(error).toHaveProperty("message", "Missing or invalid teacher id");
+      await Student.remove(insertStudent.id);
+      await User.remove(insertParent.id);
+      await Class.remove(createClass.id);
+      await User.remove(insertTeacher.id);
+      
+    }
+  });
+
+  test('It should throw an error when the passed student id is missing or invalid', async () =>{
+    
+    //first insert a new teacher
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const insertTeacher = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(insertTeacher).toEqual({
+      id: expect.anything()
+    });
+
+    //then insert a new class
+    const createClass = await Class.createClass(insertTeacher.id);
+    expect(createClass).toEqual({
+      id: createClass.id
+    });
+
+   try{
+     await TCSR.checkIfTeacherTeachesToStudent(
+       insertTeacher.id,
+       null
+     );
+
+   }catch(error){
+     expect(error).toHaveProperty("message", "Missing or invalid student id");
+     await Class.remove(createClass.id);
+     await User.remove(insertTeacher.id);
+   }
+ });
+
+});
+
 
 describe('createNew', () => {
 

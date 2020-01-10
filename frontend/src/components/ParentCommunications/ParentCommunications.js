@@ -4,6 +4,7 @@ import {Icon, Container, } from 'semantic-ui-react';
 import { CommunicationList } from '../../components/CommunicationList/CommunicationList';
 import { api } from '../../services/api';
 import { CommunicationInfo } from '../../components/CommunicationList/CommunicationInfo/CommunicationInfo';
+import { NoData } from '../NoData/NoData';
 
 export class ParentCommunications extends React.Component {
   state = {
@@ -41,10 +42,14 @@ export class ParentCommunications extends React.Component {
           Communications
         </h3>
 
-        <CommunicationList
-          communications={this.state.communications}
-          onClick={this.openCommunicationInfoModal}
-        />
+        {!this.state.communications.length && <NoData />}
+
+        {!!this.state.communications.length && 
+          <CommunicationList
+            communications={this.state.communications}
+            onClick={this.openCommunicationInfoModal}
+          />
+        }
 
         {this.state.isComminicationInfoModalOpen && 
           <CommunicationInfo

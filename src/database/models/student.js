@@ -89,20 +89,25 @@ class Student extends Model {
 
   async validateStudentData(firstName, lastName, SSN, gender, birthDate, parent1, parent2) {
     //input data validation
-    if (!validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
+    if (!firstName || !validator.matches(firstName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
       throw new Error('Missing or invalid first name');
     }
-    if (!validator.matches(lastName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
+    if (!lastName || !validator.matches(lastName,'^[a-zA-Z]+( [a-zA-Z]+)*$')) {
       throw new Error('Missing or invalid last name');
     }
     if (!SSN || !validateSSN(SSN)) {
       throw new Error('Missing or invalid SSN');
     }
-    if (gender != 'M' && gender != 'F') {
+    if (!gender || (gender != 'M' && gender != 'F')) {
       throw new Error('Missing or invalid gender');
     }
 
+    if(!birthDate){
+      throw new Error('Missing or invalid birth date');
+    }
+    
     const date = moment.utc(birthDate);
+
     if (!date.isValid()) {
       throw new Error('Invalid birth date');
     }
@@ -248,6 +253,12 @@ class Student extends Model {
   }
 
   async checkIfRelated(studentId, parentId) {
+    if(!studentId){
+      throw new Error("Missing or invalid studentId");
+    }
+    if(!parentId){
+      throw new Error("Missing or invalid parentId");
+    }
     const connenction = await this.db.getConnection();
     const result = await connenction.query(
       `SELECT COUNT(*) AS count
@@ -260,10 +271,12 @@ class Student extends Model {
       return true;
     }
     return false;
-
   }
 
   async findBySSN(SSN) {
+    if(!SSN){
+      throw new Error("Missing or invalid SSN");
+    }
     const connection = await this.db.getConnection();
     const result = await connection.query(`
       SELECT *
