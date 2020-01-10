@@ -18,6 +18,26 @@ class Timetable extends Model {
     super('Timetable');
   }
 
+  parseHour(hour) {
+    if (isInteger(hour)) {
+      return hour;
+    }
+
+    if (isString(hour)) {
+      if (hour.includes(':')) {
+        return Number(hour.slice(0, hour.indexOf(':')));
+      }
+
+      if (hour.length > 1) {
+        return Number(`${hour.charAt(0)}${hour.charAt(1)}`);
+      }
+
+      return Number(hour.charAt(0));
+    }
+
+    return 0;
+  }
+
   async list() {
     const query = `
       SELECT T.Day, T.Hour, S.ID as SubjectID, C.ID as ClassID
@@ -31,17 +51,13 @@ class Timetable extends Model {
     const results = await connection.query(query);
     connection.release();
 
-    if (results.length) {
-      const grouppedData = groupBy(results, 'ClassID');
-      return Object.keys(grouppedData).map((ClassID) => {
-        return {
-          ClassID,
-          Timetable: grouppedData[ClassID].map((item) => pick(item, ['Day', 'Hour', 'SubjectID']))
-        }
-      });
-    }
-
-    return [];
+    const grouppedData = groupBy(results, 'ClassID');
+    return Object.keys(grouppedData).map((ClassID) => {
+      return {
+        ClassID,
+        Timetable: grouppedData[ClassID].map((item) => pick(item, ['Day', 'Hour', 'SubjectID']))
+      }
+    });
   }
 
   async add(classId, timetable) {
@@ -75,25 +91,7 @@ class Timetable extends Model {
     Object.keys(groupedByDay).forEach((day) => {
       const dayHours = groupedByDay[day];
       // check if all time slots are passed
-      const hoursReceived = [...new Set(dayHours.map((entry) => {
-        if (isInteger(entry.hour)) {
-          return entry.hour;
-        }
-
-        if (isString(entry.hour)) {
-          if (entry.hour.includes(':')) {
-            return Number(entry.hour.slice(0, entry.hour.indexOf(':')));
-          }
-
-          if (entry.hour.length > 1) {
-            return Number(`${entry.hour.charAt(0)}${entry.hour.charAt(1)}`);
-          }
-
-          return Number(entry.hour.charAt(0));
-        }
-
-        return 0;
-      }))];
+      const hoursReceived = [...new Set(dayHours.map((entry) => this.parseHour(entry.hour)))];
 
       if (hoursReceived.length > allowedHours.length) {
         throw new Error('Invalid timetable hours.');
@@ -111,7 +109,7 @@ class Timetable extends Model {
       allowedHours = [...DEFAULT_HOURS];
     });
 
-    const subjectsRecieved = [...new Set(timetable.map((entry) => entry.subjectId))];
+    const subjectsRecieved = [...new Set(timetable.map((entry) => entry.subjectId).filter((entry) => entry))];
     if (!subjectsRecieved.length) {
       throw new Error('Invalid subjects.');
     }
@@ -142,7 +140,7 @@ class Timetable extends Model {
         ClassId: classId,
         SubjectId: entry.subjectId,
         Day: entry.day,
-        Hour: '' + entry.hour
+        Hour: '' + this.parseHour(entry.hour)
       }
     });
 
