@@ -6,6 +6,48 @@ import _ from 'lodash';
 import {Icon, Modal, Button, Table, Dropdown} from 'semantic-ui-react';
 import Tooltip from '../../../Tooltip/Tooltip';
 
+
+
+const teacherOptions = [
+    {
+      key: 'Jenny Hess',
+      text: 'Jenny Hess',
+      value: 'Jenny Hess',
+      image: { avatar: true, src: '/images/avatar/small/jenny.jpg' },
+    },
+    {
+      key: 'Elliot Fu',
+      text: 'Elliot Fu',
+      value: 'Elliot Fu',
+      image: { avatar: true, src: '/images/avatar/small/elliot.jpg' },
+    },
+    {
+      key: 'Stevie Feliciano',
+      text: 'Stevie Feliciano',
+      value: 'Stevie Feliciano',
+      image: { avatar: true, src: '/images/avatar/small/stevie.jpg' },
+    },
+    {
+      key: 'Christian',
+      text: 'Christian',
+      value: 'Christian',
+      image: { avatar: true, src: '/images/avatar/small/christian.jpg' },
+    },
+    {
+      key: 'Matt',
+      text: 'Matt',
+      value: 'Matt',
+      image: { avatar: true, src: '/images/avatar/small/matt.jpg' },
+    },
+    {
+      key: 'Justen Kitsune',
+      text: 'Justen Kitsune',
+      value: 'Justen Kitsune',
+      image: { avatar: true, src: '/images/avatar/small/justen.jpg' },
+    },
+  ]
+
+
 export class TeacherClassDetails extends Component {
     state = {
         isSaving:false,
@@ -117,13 +159,12 @@ export class TeacherClassDetails extends Component {
     
 
     async componentDidMount() {
-        const {teacher} = this.props;
+        const {teachersAll} = this.props;
         
-        if (teacher) {
+        if (teachersAll) {
           this.setState({
-            teacherID: teacher.ID,
-            FirstName: teacher.FirstName,
-            LastName: teacher.LastName,
+            //teacherID: teacher.ID,
+            teacherAll:teachersAll,
 
             CSPairs:[{'subjectId':"", 'classId':""}],
           });
@@ -136,11 +177,19 @@ export class TeacherClassDetails extends Component {
         return (
             <Modal dimmer open className="topic-detail" size="small">
                 <Modal.Header>
-                    <span><Icon name='settings'/>&nbsp;<Icon name='user'/>&nbsp;{this.state.FirstName}&nbsp;{this.state.LastName}</span>
+                    <span><Icon name='plus'/>&nbsp; Add new association</span>
                     <Icon onClick={this.onClose} className="close-icn" name="close" />
                 </Modal.Header>
                 
                 <Modal.Content>
+                <Dropdown
+                    placeholder='Select Teacher'
+                    fluid
+                    selection
+                    options={teacherOptions}
+                />
+
+
                 <Table columns={3}>
                     <Table.Header>
                         <Table.Row>

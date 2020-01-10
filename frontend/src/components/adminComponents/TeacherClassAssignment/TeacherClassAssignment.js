@@ -5,6 +5,7 @@ import {Icon, Container, Table, Divider, Header, List, Image, Button, Segment} f
 import IsTeacher from '../../../assets/images/iconTeacher.jpg';
 
 import { NoData } from '../../NoData/NoData';
+import Tooltip from '../../Tooltip/Tooltip';
 import TeacherClassDetails from './TeacherClassDetails/TeacherClassDetails';
 
 export class TeacherClassAssignment extends Component {
@@ -47,6 +48,11 @@ export class TeacherClassAssignment extends Component {
         this.setState({ editingTeacher: data, isModalOpen:true})
     }
 
+    onAddAssociation = () => {
+        console.log("click");
+        this.setState({isModalOpen:true});
+    }
+
     onModalClose= () => {
         this.setState({isModalOpen: false});
     };
@@ -84,19 +90,20 @@ export class TeacherClassAssignment extends Component {
                     </Segment>
                 </div>
             </>}
-
+            <Button color="vk" onClick={this.onAddAssociation}><Icon name='add'/>Add New Associations</Button>
             <Divider horizontal>
                 <Header as='h4' color="teal" style={{width: "192px"}}>
                 <Icon name='exchange' />
                 Current Associations
                 </Header>
             </Divider>
-            <Table columns={3} color="teal">
+            <Table columns={4} color="teal">
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell>Teacher</Table.HeaderCell>
                     <Table.HeaderCell>Subject</Table.HeaderCell>
                     <Table.HeaderCell>Class</Table.HeaderCell>           
+                    <Table.HeaderCell></Table.HeaderCell>           
                 </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -105,6 +112,15 @@ export class TeacherClassAssignment extends Component {
                 <Table.Cell>{data.FirstName}&nbsp;{data.LastName}</Table.Cell>
                 <Table.Cell>{data.Subject}</Table.Cell>
                 <Table.Cell>{data.ClassName}</Table.Cell>
+                <Table.Cell width={1}>
+                    <Tooltip 
+                        text="Delete"
+                        trigger={
+                            <Button circular icon='cancel' style={{padding:"5px"}}
+                            onClick={()=>this.onDelete(data.ID)} /> 
+                        }
+                    />
+                </Table.Cell>
             </Table.Row>
             )} 
             </Table.Body>
@@ -112,7 +128,8 @@ export class TeacherClassAssignment extends Component {
 
             {this.state.isModalOpen &&
               <TeacherClassDetails
-                teacher={this.state.editingTeacher}
+                //teacher={this.state.editingTeacher}
+                teacherAll={this.state.freeTeachers}
                 onClose={this.onModalClose}
                 onSave={() => {
                   this.fetchTeacherClassData();
