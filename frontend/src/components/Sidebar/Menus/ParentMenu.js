@@ -40,9 +40,14 @@ export const ParentMenu = (props) => {
               Attendance
             </Menu.Item>
 
+            <Menu.Item as={Link} to={`/parent/student/${selectedChildID}/materials`}>
+              <Icon name='cloud download'/>
+              Subject Materials
+            </Menu.Item>
+
             <Menu.Item as={Link} to={`/parent/student/${selectedChildID}/note`}>
-              <Icon name='sticky note outline'/>
-              Notes
+              <Icon name='bell outline'/>
+              Behaviour Notes
             </Menu.Item>
           </>
         }

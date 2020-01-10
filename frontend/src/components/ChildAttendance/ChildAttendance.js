@@ -142,7 +142,7 @@ export class ChildAttendance extends React.Component{
       return (
         <Container className="contentContainer">
         <h3 className="contentHeader"> 
-          <Icon name='braille'/> 
+          <Icon name='calendar check outline'/> 
           {this.context.state.parent ? this.context.state.parent.selectedStudent.FirstName + "'s" : 'Student'} attendance
          </h3>
  

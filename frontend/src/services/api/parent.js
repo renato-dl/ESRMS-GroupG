@@ -35,4 +35,8 @@ export class ParentAPIService extends BaseAPIService {
     return this.get(`/parent/note`,data);
   }
 
+  getSubjectslist(){
+    return this.get(`/subject/all`);
+  }
+
 }
