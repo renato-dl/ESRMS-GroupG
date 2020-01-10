@@ -101,4 +101,7 @@ export class TeacherAPIService extends BaseAPIService {
   deleteNote(data){
     return this.delete(`/teacher/note`, data);
   }
+  getSubjectslist(){
+    return this.get(`/subject/all`);
+  }
 }
