@@ -9,6 +9,7 @@ import {Icon, Container, Grid, Menu, Segment, List, Button} from 'semantic-ui-re
 export class ParentMaterials extends Component {
     state={
         subjects:[],
+        allMaterialList:[],
         activeItem: null
     }
 
@@ -21,9 +22,17 @@ export class ParentMaterials extends Component {
             this.setState( {subjects: response.data, activeItem: response.data[0].ID});
         }
     }
+    fetchMaterials = async () => {
+        const child = JSON.parse(localStorage.getItem('selectedChild'));
+        const response = await api.parent.getSupportMaterials(child.ID);
+        if(Response) {
+            this.setState({allMaterialList: response.data});
+        }
+    }
 
     async componentDidMount() {
         await this.fetchSubjects();
+        await this.fetchMaterials();
     }
 
     render() {
@@ -56,8 +65,6 @@ export class ParentMaterials extends Component {
                             <Segment>
                                 {/* <NoData/> */}
 
-
-
                                 <List divided relaxed verticalAlign='middle'>
                                 <List.Item>
                                     
@@ -67,7 +74,7 @@ export class ParentMaterials extends Component {
 
                                     <List.Icon name='file' size='large' verticalAlign='middle' />
                                     <List.Content>
-                                    <List.Header className = "fileNameHeader">Semantic-Org/Semantic-UI</List.Header>
+                                    <List.Header className = "fileNameHeader">Example File Name</List.Header>
                                     {/* <List.Description as='a'>Updated 10 mins ago</List.Description> */}
                                     </List.Content>
                                 </List.Item>
@@ -79,8 +86,8 @@ export class ParentMaterials extends Component {
 
                                     <List.Icon name='file' size='large' verticalAlign='middle' />
                                     <List.Content>
-                                    <List.Header className = "fileNameHeader">Semantic-Org/Semantic-UI</List.Header>
-                                    <List.Description>Updated 10 mins ago</List.Description>
+                                    <List.Header className = "fileNameHeader">Example File Name</List.Header>
+                                    <List.Description>Jan 12, 2020</List.Description>
                                     </List.Content>
                                 </List.Item>
                                     

@@ -39,4 +39,8 @@ export class ParentAPIService extends BaseAPIService {
     return this.get(`/subject/all`);
   }
 
+  getSupportMaterials(studentID){
+    return this.get(`/parent/support-material/${studentID}`);
+  }
+
 }
