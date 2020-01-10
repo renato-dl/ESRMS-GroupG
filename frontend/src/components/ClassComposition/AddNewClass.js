@@ -15,7 +15,7 @@ export class AddNewClass extends Component {
   async componentDidMount(){
     
     try{
-      const teachers = await api.admin.getTeachers();
+      const teachers = await api.admin.getTeachers('');
       let options = [];
       if (teachers && teachers.data){
         teachers.data.forEach( e => {

@@ -27,7 +27,7 @@ export class TeacherClassAssignment extends Component {
     };
 
     fetchFreeTeachers = async () => {
-        const response = await api.admin.getTeachers(); // this is incorrect change to new endpoint that should be created
+        const response = await api.admin.getTeachers('?coordinators=true'); // still something wrong here.. Giulia tesori has class subject but still appears in free 
         if (response) {
             console.log(response);
             if (response.data.message){
