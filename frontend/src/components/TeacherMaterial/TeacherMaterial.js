@@ -5,26 +5,42 @@ import '../ParentMaterials/ParentMaterial.scss';
 
 import { NoData } from '../NoData/NoData';
 import {Icon, Container, Grid, Menu, Segment, List, Button, Divider} from 'semantic-ui-react';
+import AddMaterial from './TeacherMaterialDetails/AddMaterial';
 
 export class TeacherMaterial extends Component {
     state={
         subjects:[],
         allMaterialList:[],
-        activeItem: null
+        activeItem: null,
+
+        AddModalOpen:false,
+        EditModalOpen:false,
+        DeleteModalOpen:false
     }
 
     handleItemClick = (e, { value }) => this.setState({ activeItem: value })
   
 
     fetchSubjects = async () => {
-        const response = await api.teacher.getSubjectslist();
+        const response = await api.teacher.getTeacherSubjects(); //probably incorrect... clear out if subjects will be uniques or several for diff classes
         if(response) {
-            this.setState( {subjects: response.data, activeItem: response.data[0].ID});
+            this.setState( {subjects: response.data, activeItem: response.data[0].subjectId});
         }
     } 
 
     async componentDidMount() {
         await this.fetchSubjects();
+    }
+
+    AddMaterial = () => {
+        this.setState({AddModalOpen:true});
+    }
+    AddMaterialClose = () => {
+        this.setState({AddModalOpen:false});
+    }
+
+    DeleteMaterialClose = () => {
+        this.setState({DeleteModalOpen:false});
     }
 
     render() {
@@ -34,7 +50,7 @@ export class TeacherMaterial extends Component {
             return (
                 <Container className="contentContainer">
                     <h3 className="contentHeader"> 
-                        <Icon name='cloud download'/> 
+                        <Icon name='cloud upload'/> 
                         Subject Materials
                     </h3>
 
@@ -45,9 +61,10 @@ export class TeacherMaterial extends Component {
                                 
                             { this.state.subjects.map((data, index) =>
                             <Menu.Item
-                                name={data.Name}
-                                value={data.ID}
-                                active={activeItem === data.ID}
+                                key={index}
+                                name={data.subject}
+                                value={data.subjectId}
+                                active={activeItem === data.subjectId}
                                 onClick={this.handleItemClick}
                             />
                             )}
@@ -57,7 +74,10 @@ export class TeacherMaterial extends Component {
                         <Grid.Column stretched width={10}>
                             <Segment>
                                 {/* <NoData/> */}
-                                <Button color="vk" fluid><Icon name='upload' /> Upload New File</Button>
+                                <Button color="vk" fluid onClick={this.AddMaterial}>
+                                    <Icon name='upload' /> 
+                                    Upload New File
+                                </Button>
                                 <Divider/>
                                 <List divided relaxed verticalAlign='middle'>
                                 <List.Item>
@@ -83,14 +103,18 @@ export class TeacherMaterial extends Component {
                         </Grid.Column>
                         </Grid>
 
-
+                        {this.state.AddModalOpen && 
+                            <AddMaterial
+                                onClose={this.AddMaterialClose}
+                            />
+                        }
                 </Container>
             )
         }
         return (
             <Container className="contentContainer">
               <h3 className="contentHeader">      
-                <Icon name='cloud download'/> 
+                <Icon name='cloud upload'/> 
                 Subject Materials
               </h3>
               <NoData/>
