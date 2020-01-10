@@ -49,9 +49,9 @@ class SupportMaterial extends Model {
       FROM Support_Material SP
       INNER JOIN Files F ON F.ID = SP.FileId
       INNER JOIN Subjects S ON S.ID = SP.SubjectId
-      INNER JOIN USERS U ON U.ID = ?
+      INNER JOIN Users U ON U.ID = ?
       WHERE U.IsTeacher = true
-      ${filters && filters.subject ? 'AND S.NAME = ?' : ''}
+      ${filters && filters.subject ? 'AND S.Name = ?' : ''}
       ${filters && filters.from && filters.to ? 'AND SP.CreatedOn >= ? AND SP.CreatedOn <= ?' : ''}
       ORDER BY SP.CreatedOn DESC
     `;
