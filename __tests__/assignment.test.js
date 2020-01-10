@@ -2,9 +2,13 @@ import Assignment from '../src/database/models/assignment';
 import Student from '../src/database/models/student';
 import User from '../src/database/models/user';
 import Class from '../src/database/models/class'
-import TCS from '../src/database/models/teacherClassSubject'
-import Subject from '../src/database/models/subject'
+import TCS from '../src/database/models/teacherClassSubject';
+import Subject from '../src/database/models/subject';
+import File from '../src/database/models/file';
 import moment from 'moment';
+import fs from 'fs';
+import util from 'util';
+import path from 'path';
 
 describe("Tests about visualization of assignments by a parent", () => {
 
@@ -381,7 +385,7 @@ describe("Tests about visualization of assignments by a teacher", () => {
 
 describe("Tests about insertion of an assignment by a teacher", () => {
     
-    test("It should add correctly an assignment", async() =>{
+    test("It should add correctly an assignment", async() => {
         const subjectId = 1;
         const title = "Test title";
         const description ="Test description"
@@ -1213,14 +1217,6 @@ describe("Tests about edition of an assignment by a teacher", () => {
    
    
     });
-
-
-
-    
-
-    
-    
-
 });
 
 describe('Test weather a teacher is authorized to access a given assignment', () => {
@@ -1382,11 +1378,20 @@ describe('Test weather a teacher is authorized to access a given assignment', ()
 describe('Tests on getAttachments', () => {
 
     test('It throw an error when assignmentId is missing or invalid', async () => {
-      try {
-        await Assignment.getAttachments(null);
-      } catch(error) {
-        expect(error).toHaveProperty('message', 'Missing or invalid assignment id');
-      }
+        try {
+            await Assignment.getAttachments(null); 
+        } catch(error) {
+            expect(error).toHaveProperty('message', 'Missing or invalid assignment id');
+        }
+    });
+
+    test('It should return the attachments of an assignment', async () => {
+        const attachments = await Assignment.getAttachments(1); 
+
+        if (attachments.length) {
+            expect(attachments[0].ID).toBeGreaterThanOrEqual(1);
+            expect(attachments[0].Key).toBeTruthy();
+        }
     });
 
 });
@@ -1552,6 +1557,94 @@ describe('Tests on addAttachments', () => {
         }
     });
   
+    test('It should add attachments to a existing assignment', async () => {
+        const subjectId = 1;
+        const title = "Test title";
+        const description ="Test description"
+        let dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+
+        if(dayOfWeek == 7) {
+            dueDate.add(1, 'days'); 
+        }
+        const expectDate = new Date(dueDate);
+
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+            id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : 1,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+            subjectId,
+            createClass.id,
+            title,
+            description,
+            dueDate.format()
+        );
+    
+        expect(insertAssignment.id).not.toBeNaN();
+
+        const testFiles = [
+            { filename: 'testFile1', originalname: 'testFile1', size: 200, mimetype: 'app/test' },
+            { filename: 'testFile2', originalname: 'testFile2', size: 200, mimetype: 'app/test' },
+        ];
+        const files = testFiles.map((file) => {
+            return {
+                Key: file.filename,
+                Name: file.originalname,
+                Size: file.size,
+                Type: file.mimetype
+            }
+        });
+
+        const fileIds = await File.createMany(files);
+        const success = await Assignment.addAttachments(insertAssignment.id, fileIds);
+        expect(success).toBeTruthy();
+        const assignment = await Assignment.findOne({ ID: insertAssignment.id });
+
+        expect(assignment).not.toBe(null);
+        expect(assignment.ID).toBeTruthy();
+        expect(assignment.Title).toEqual(title);
+        expect(assignment.Description).toEqual(description);
+
+        //clean db for future tests
+        await Assignment.remove(insertAssignment.id);
+        await TCS.remove(insertRelation)
+        await Class.remove(createClass.id);
+        await User.remove(insertTeacher.id);
+        await File.removeMany(fileIds);
+    })
 });
 
 describe('Tests on updateAttachments', () => {
@@ -1715,16 +1808,285 @@ describe('Tests on updateAttachments', () => {
         }
     });
   
+    test('It should update attachments of an existing assignment and make it empty', async () => {
+        const subjectId = 1;
+        const title = "Test title";
+        const description ="Test description"
+        let dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+
+        if(dayOfWeek == 7) {
+            dueDate.add(1, 'days'); 
+        }
+        const expectDate = new Date(dueDate);
+
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+            id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : 1,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+            subjectId,
+            createClass.id,
+            title,
+            description,
+            dueDate.format()
+        );
+    
+        expect(insertAssignment.id).not.toBeNaN();
+
+        const testFiles = [
+            { filename: 'testFile1', originalname: 'testFile1', size: 200, mimetype: 'app/test' },
+            { filename: 'testFile2', originalname: 'testFile2', size: 200, mimetype: 'app/test' },
+        ];
+        const files = testFiles.map((file) => {
+            return {
+                Key: file.filename,
+                Name: file.originalname,
+                Size: file.size,
+                Type: file.mimetype
+            }
+        });
+
+        const fileIds = await File.createMany(files);
+        const success = await Assignment.addAttachments(insertAssignment.id, fileIds);
+        expect(success).toBeTruthy();
+
+        await Assignment.updateAttachments(insertAssignment.id, []);
+
+        //clean db for future tests
+        await Assignment.remove(insertAssignment.id);
+        await TCS.remove(insertRelation)
+        await Class.remove(createClass.id);
+        await User.remove(insertTeacher.id);
+        await File.removeMany(fileIds);
+    })
+
+    test('It should update attachments of an existing assignment and replace some attachments', async () => {
+        const subjectId = 1;
+        const title = "Test title";
+        const description ="Test description"
+        let dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+
+        if(dayOfWeek == 7) {
+            dueDate.add(1, 'days'); 
+        }
+        const expectDate = new Date(dueDate);
+
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+            id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : 1,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+            subjectId,
+            createClass.id,
+            title,
+            description,
+            dueDate.format()
+        );
+    
+        expect(insertAssignment.id).not.toBeNaN();
+
+        const testFiles = [
+            { filename: 'testFile1', originalname: 'testFile1', size: 200, mimetype: 'app/test' },
+            { filename: 'testFile2', originalname: 'testFile2', size: 200, mimetype: 'app/test' },
+        ];
+        const files = testFiles.map((file) => {
+            return {
+                Key: file.filename,
+                Name: file.originalname,
+                Size: file.size,
+                Type: file.mimetype
+            }
+        });
+
+        const fileIds = await File.createMany(files);
+        const success = await Assignment.addAttachments(insertAssignment.id, fileIds);
+        expect(success).toBeTruthy();
+
+        const newTestFiles = [
+            { filename: 'testFile21', originalname: 'testFile21', size: 300, mimetype: 'app/test' },
+            { filename: 'testFile22', originalname: 'testFile22', size: 400, mimetype: 'app/test' },
+        ];
+        await Assignment.updateAttachments(insertAssignment.id, newTestFiles);
+
+        //clean db for future tests
+        await Assignment.remove(insertAssignment.id);
+        await TCS.remove(insertRelation)
+        await Class.remove(createClass.id);
+        await User.remove(insertTeacher.id);
+        await File.removeMany(fileIds);
+    })
+
 });
 
 describe('Tests on findOneByfile', () => {
 
     test('It throw an error when fileID is missing or invalid', async () => {
-      try {
-        await Assignment.findOneByfile(null);
-      } catch(error) {
-        expect(error).toHaveProperty('message', 'Missing or invalid file id');
-      }
+        try {
+            await Assignment.findOneByfile(null);
+        } catch(error) {
+            expect(error).toHaveProperty('message', 'Missing or invalid file id');
+        }
+    });
+
+    test('It should return an assignment based on file id', async () => {
+        const subjectId = 1;
+        const title = "Test title";
+        const description ="Test description"
+        let dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+
+        if(dayOfWeek == 7) {
+            dueDate.add(1, 'days'); 
+        }
+        const expectDate = new Date(dueDate);
+
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+            id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : 1,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+            subjectId,
+            createClass.id,
+            title,
+            description,
+            dueDate.format()
+        );
+    
+        expect(insertAssignment.id).not.toBeNaN();
+
+        const testFiles = [
+            { filename: 'test_file_file', originalname: 'testFile', size: 200, mimetype: 'app/test' },
+            { filename: 'testFile1', originalname: 'testFile1', size: 200, mimetype: 'app/test' },
+            { filename: 'testFile2', originalname: 'testFile2', size: 200, mimetype: 'app/test' },
+            { filename: 'testFile2', originalname: 'testFile2', size: 200, mimetype: 'app/test' },
+        ];
+        const files = testFiles.map((file) => {
+            return {
+                Key: file.filename,
+                Name: file.originalname,
+                Size: file.size,
+                Type: file.mimetype
+            }
+        });
+
+        const createFileAsync = util.promisify(fs.writeFile);
+        await createFileAsync(path.join(__dirname, '../', "uploads", testFiles[0].filename), "Test Content");
+
+        const fileIds = await File.createMany(files);
+        const success = await Assignment.addAttachments(insertAssignment.id, fileIds);
+        expect(success).toBeTruthy();
+        const assignment = await Assignment.findOneByfile(fileIds[0]);
+
+        expect(assignment).not.toBe(null);
+        expect(assignment.ID).toBeTruthy();
+        expect(assignment.Title).toEqual(title);
+        expect(assignment.Description).toEqual(description);
+
+        //clean db for future tests
+        await Assignment.remove(insertAssignment.id);
+        await TCS.remove(insertRelation)
+        await Class.remove(createClass.id);
+        await User.remove(insertTeacher.id);
+        await File.remove(fileIds[0]);
+        await File.removeMany(fileIds.slice(1));
     });
 
 });
