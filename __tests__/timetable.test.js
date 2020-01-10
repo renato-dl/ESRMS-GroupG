@@ -46,7 +46,6 @@ beforeAll(async () => {
             }
         }
     
-        console.log(timetableData);
         return timetableData;
     }
 })
@@ -242,6 +241,5 @@ afterAll(async () => {
         await Subject.removeMany(testSubjectIDs);
     } catch (e) {
         console.log('An error occurred while cleaning up on timetable tests afterAll()');
-        console.log(e);
     }
 })
