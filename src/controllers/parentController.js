@@ -5,6 +5,7 @@ import Subject from '../database/models/subject';
 import Assignment from '../database/models/assignment';
 import File from '../database/models/file';
 import StudentAttendance from '../database/models/studentAttendance';
+import SupportMaterial from '../database/models/supportMaterial';
 import path from 'path';
 import Note from '../database/models/note';
 
@@ -102,7 +103,7 @@ class ParentController extends BaseController {
       throw new Error('Missing or invalid note id');
     }
     const related = await Student.checkIfRelated(note.StudentId, req.user.ID);
-    if (!related) {
+    if (!related) { 
       res.sendStatus(401);
       return;
     }
@@ -110,6 +111,28 @@ class ParentController extends BaseController {
     if (note.IsSeen == 0) {
       Note.update(req.query.noteId, {IsSeen: 1});
     }
+  }
+
+  async getSupportMaterial(req, res) {
+    const related = await Student.checkIfRelated(req.params.studentId, req.user.ID);
+    if (!related) {
+      return res.sendStatus(401);
+    }
+
+    const supportMaterial = await SupportMaterial.findAllByStudent(
+      req.params.studentId,
+      { 
+        subject: req.query.subject,
+        to: req.query.to,
+        from: req.query.from
+      },
+      {
+        page: req.query.page,
+        pageSize: req.query.pageSize
+      }
+    );
+    
+    res.send(supportMaterial);
   }
 
 }
