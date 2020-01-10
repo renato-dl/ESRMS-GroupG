@@ -4,7 +4,7 @@ exports.seed = function(knex) {
   return knex('Timetable').del()
     .then(function () {
       // Inserts seed entries
-      return knex('TimeTable').insert([
+      return knex('Timetable').insert([
         // Class 1
         {Day: 1, Hour: '8', ClassId: 1, SubjectId: 1},
         {Day: 1, Hour: '9', ClassId: 1, SubjectId: 2},
