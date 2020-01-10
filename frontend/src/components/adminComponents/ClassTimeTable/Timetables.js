@@ -10,7 +10,8 @@ export class Timetables extends Component {
     this.state = {
       classes: [], 
       classData: null, 
-      timetableModalOpen: false
+      timetableModalOpen: false,
+      classesTimetables: null,
     }
   }
 
@@ -20,19 +21,30 @@ export class Timetables extends Component {
   }
 
   async fetchClasses(){
-    const response = await api.admin.getClasslist();
-    if (response) {
-      //console.log(response)
-      this.setState({classes: response.data})
-    } 
+    try{
+      const response = await api.admin.getClasslist();
+      if (response && response.data) {
+        //console.log(response)
+        this.setState({classes: response.data})
+      } 
+    }
+    catch(ex){
+      console.log(ex);
+    }    
   }
 
   async fetchTimetables(){
     try{
       const response = await api.admin.getAllTimetables();
-      if(response){
-        console.log(response);
-      }
+      if(response && response.data && response.data.timetables){
+        // console.log(response.data);
+        const timetablesDict = {};
+        response.data.timetables.forEach(function(elem){
+          timetablesDict[elem.ClassID] = elem.Timetable;
+        });
+        console.log(timetablesDict);
+        this.setState({ classesTimetables: timetablesDict });
+      }      
     }
     catch(err){
       console.log(err);
@@ -44,8 +56,16 @@ export class Timetables extends Component {
   }
 
   onModalClose = () => {
+    this.fetchTimetables();
     this.setState({classData: null, timetableModalOpen: false});
   };
+
+  getTimetable(classD){
+    const timetables = this.state.classesTimetables;
+    const classId = classD.ID;
+    const timetable = timetables[classId];
+    return timetable;
+  }
 
   render() {
     if(this.state.classes.length) {
@@ -75,6 +95,7 @@ export class Timetables extends Component {
       </Card.Group>
       {this.state.timetableModalOpen &&
         <TimetableAdd
+          timetable={this.getTimetable(this.state.classData)}
           class={this.state.classData}
           onClose={this.onModalClose}
         />
