@@ -29,7 +29,8 @@ admin.delete('/class', Authorization(['IsAdminOfficer']), AdminController.proces
 admin.get('/teachers', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getTeachers'));
 
 admin.post('/teacher-class', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'createTeacherClassAssociation'));
-admin.get('/teacher-class', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getAll'));
+admin.get('/teacher-class', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getAllTeacherClassAssociations'));
+admin.delete('/teacher-class', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'deleteTeacherClassAssociation'));
 admin.get('/subjects', Authorization(['IsAdminOfficer']), AdminController.processRequest.bind(AdminController, 'getSubjects'));
 
 export default admin;
