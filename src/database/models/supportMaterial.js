@@ -1,5 +1,5 @@
 import {Model} from './base';
-import File from './File';
+import File from './file';
 
 class SupportMaterial extends Model {
   constructor() {
