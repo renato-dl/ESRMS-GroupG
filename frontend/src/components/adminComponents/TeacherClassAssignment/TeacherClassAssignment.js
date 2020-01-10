@@ -27,7 +27,7 @@ export class TeacherClassAssignment extends Component {
     };
 
     fetchFreeTeachers = async () => {
-        const response = await api.admin.getTeachersWithNoClassSubject(); // still something wrong here.. Giulia tesori has class subject but still appears in free 
+        const response = await api.admin.getTeachers('?coordinators=true'); // still something wrong here.. Giulia tesori has class subject but still appears in free 
         if (response) {
             console.log(response);
             if (response.data.message){

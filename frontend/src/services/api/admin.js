@@ -59,14 +59,10 @@ export class AdminAPIService extends BaseAPIService {
     return this.delete('/admin/student', {ID: studentID});
   }
 
-  getTeachers(){
-    return this.get(`/admin/teachers`);
+  getTeachers(s){
+    return this.get(`/admin/teachers${s}`);
   }
   
-  getTeachersWithNoClassSubject(){
-    return this.get(`/admin/teachers?coordinators=true`);
-  }
-
   addNewClass(data){
     return this.post('/admin/class',data);
   }
