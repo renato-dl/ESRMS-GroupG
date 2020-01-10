@@ -3,6 +3,7 @@ import Student from '../src/database/models/student';
 import User from '../src/database/models/user';
 import Class from '../src/database/models/class'
 import TCS from '../src/database/models/teacherClassSubject'
+import Subject from '../src/database/models/subject'
 import moment from 'moment';
 
 describe("Tests about visualization of assignments by a parent", () => {
@@ -56,6 +57,19 @@ describe("Tests about visualization of assignments by a parent", () => {
           expect(error).toHaveProperty('message', 'There are no assignments for the chosen student!');
       }
   });
+
+  test('Should throw Error with message \'Missing or invalid student id\' when passing student id is missing or invalid', async () => {
+    try {
+        await Assignment.findByStudentId(
+            null,
+            {}, 
+            {}
+        );
+    } catch(error) {
+        expect(error).toBeInstanceOf(Error);
+        expect(error).toHaveProperty('message', 'Missing or invalid student id');
+    }
+});
 
 });
 
@@ -1363,4 +1377,354 @@ describe('Test weather a teacher is authorized to access a given assignment', ()
 
     });
   
+});
+
+describe('Tests on getAttachments', () => {
+
+    test('It throw an error when assignmentId is missing or invalid', async () => {
+      try {
+        await Assignment.getAttachments(null);
+      } catch(error) {
+        expect(error).toHaveProperty('message', 'Missing or invalid assignment id');
+      }
+    });
+
+});
+
+describe('Tests on addAttachments', () => {
+
+    test('It throw an error when assignmentId is missing or invalid', async () => {
+      try {
+        const fileIds = [{ID: 213213142}];
+        await Assignment.addAttachments(null, fileIds);
+      } catch(error) {
+        expect(error).toHaveProperty('message', 'Missing or invalid assignment id');
+      }
+    });
+    
+    test('It throw an error when fileIds parameter is missing or invalid', async () => {
+        
+        const title = "Test title";
+        const description ="Test description"
+        let dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
+
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        const subjectId = await Subject.create({Name:"Test subject"});
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : subjectId,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+          subjectId,
+          createClass.id,
+          title,
+          description,
+          dueDate.format(),
+          null
+        );
+    
+        expect(insertAssignment.id).not.toBeNaN();
+
+        try {
+          await Assignment.addAttachments(insertAssignment.id, null);
+        } catch(error) {
+          expect(error).toHaveProperty('message', 'Missing or invalid files');
+
+          //clean db for future tests
+          await Assignment.remove(insertAssignment.id);
+          await TCS.remove(insertRelation);
+          await Subject.remove(subjectId);
+          await Class.remove(createClass.id);
+          await User.remove(insertTeacher.id);
+        }
+    });
+
+    test('It throw an error when fileIds parameter is not an array', async () => {
+        
+        const title = "Test title";
+        const description ="Test description"
+        let dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
+
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        const subjectId = await Subject.create({Name:"Test subject"});
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : subjectId,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+          subjectId,
+          createClass.id,
+          title,
+          description,
+          dueDate.format(),
+          null
+        );
+    
+        expect(insertAssignment.id).not.toBeNaN();
+        
+        try {
+          const fileIds = {ID: 213213142};
+          await Assignment.addAttachments(insertAssignment.id, fileIds);
+
+        } catch(error) {
+          expect(error).toHaveProperty('message', 'Files must be an array');
+
+          //clean db for future tests
+          await Assignment.remove(insertAssignment.id);
+          await TCS.remove(insertRelation);
+          await Subject.remove(subjectId);
+          await Class.remove(createClass.id);
+          await User.remove(insertTeacher.id);
+        }
+    });
+  
+});
+
+describe('Tests on updateAttachments', () => {
+
+    test('It throw an error when assignmentId is missing or invalid', async () => {
+      try {
+        const arr = [{ID: 213213142}];
+        await Assignment.updateAttachments(null, arr);
+      } catch(error) {
+        expect(error).toHaveProperty('message', 'Missing or invalid assignment id');
+      }
+    });
+    
+    test('It throw an error when updatedAttachments parameter is missing or invalid', async () => {
+        
+        const title = "Test title";
+        const description ="Test description"
+        let dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
+
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        const subjectId = await Subject.create({Name:"Test subject"});
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : subjectId,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+          subjectId,
+          createClass.id,
+          title,
+          description,
+          dueDate.format(),
+          null
+        );
+    
+        expect(insertAssignment.id).not.toBeNaN();
+
+        try {
+          await Assignment.updateAttachments(insertAssignment.id, null);
+        } catch(error) {
+          expect(error).toHaveProperty('message', 'Missing or invalid files');
+
+          //clean db for future tests
+          await Assignment.remove(insertAssignment.id);
+          await TCS.remove(insertRelation);
+          await Subject.remove(subjectId);
+          await Class.remove(createClass.id);
+          await User.remove(insertTeacher.id);
+        }
+    });
+
+    test('It throw an error when updatedAttachments parameter is not an array', async () => {
+        
+        const title = "Test title";
+        const description ="Test description"
+        let dueDate = moment.utc().set({
+            "hour": 0,
+            "minute": 0, 
+            "second": 0, 
+            "millisecond" : 0
+        });
+        dueDate.add(1, 'days'); 
+        const dayOfWeek = dueDate.isoWeekday();
+
+        if(dayOfWeek == 7){
+            dueDate.add(1, 'days'); 
+        }
+
+        //first add new teacher
+        const insertTeacher = await User.insertInternalAccountData( 
+            "Joe", 
+            "Kernel", 
+            "joekernel@gmail.com", 
+            "LRNMRC79A02L219A", 
+            "EasyPass1",
+            true,
+            false,
+            false
+        );
+    
+        expect(insertTeacher).toEqual({
+          id: expect.anything()
+        });
+
+        //create new class
+        const createClass = await Class.createClass(insertTeacher.id);
+        expect(createClass).toEqual({
+            id: createClass.id
+        });
+
+        const subjectId = await Subject.create({Name:"Test subject"});
+
+        //assign teacher, class, subject
+        const insertRelation = await TCS.create({
+            SubjectId : subjectId,
+            ClassId : createClass.id,
+            TeacherId : insertTeacher.id
+        });
+
+        //insert assignment
+        const insertAssignment = await Assignment.addAssignment(
+          subjectId,
+          createClass.id,
+          title,
+          description,
+          dueDate.format(),
+          null
+        );
+    
+        expect(insertAssignment.id).not.toBeNaN();
+        
+        try {
+          const arr = {ID: 213213142};
+          await Assignment.updateAttachments(insertAssignment.id, arr);
+
+        } catch(error) {
+          expect(error).toHaveProperty('message', 'Files must be an array');
+
+          //clean db for future tests
+          await Assignment.remove(insertAssignment.id);
+          await TCS.remove(insertRelation);
+          await Subject.remove(subjectId);
+          await Class.remove(createClass.id);
+          await User.remove(insertTeacher.id);
+        }
+    });
+  
+});
+
+describe('Tests on findOneByfile', () => {
+
+    test('It throw an error when fileID is missing or invalid', async () => {
+      try {
+        await Assignment.findOneByfile(null);
+      } catch(error) {
+        expect(error).toHaveProperty('message', 'Missing or invalid file id');
+      }
+    });
+
 });
