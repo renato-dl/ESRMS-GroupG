@@ -2,10 +2,10 @@ import User from '../src/database/models/user';
 import Student from '../src/database/models/student';
 import db from '../src/database';
 import moment from 'moment';
-import ClassModel from '../src/database/models/class';
+import Class from '../src/database/models/class';
+import uuid from 'uuid';
 
-
-describe('Tests about the visualization of inserted parents', () =>{
+describe('getParentData', () =>{
 
   test('It should show the inserted parent data', async () => {
 
@@ -45,7 +45,7 @@ describe('Tests about the visualization of inserted parents', () =>{
 });
 
 
-describe('Tests about the insertion of parent data by admin', () => {
+describe('insertParentData', () => {
 
     /*
     * 1. Ok
@@ -235,7 +235,7 @@ describe('Tests about the insertion of parent data by admin', () => {
 
 });
 
-describe('Tests about the insertion of internal account by admin', () => {
+describe('insertInternalAccountData', () => {
 
   /*
   * 1. Ok
@@ -604,7 +604,7 @@ describe('Tests about the insertion of internal account by admin', () => {
 
 }); 
 
-describe('Tests about editing internal accounts by admin', () => {
+describe('editInternalAccount', () => {
 
   /*
   * 1. Ok
@@ -873,7 +873,7 @@ describe('Tests about editing internal accounts by admin', () => {
 
 }); 
 
-describe('Tests about the visualisation of internal accounts by SysAdmin', () =>{
+describe('findInternalAccounts', () =>{
   test('It should receive only internal accounts', async () => {
 
     const result = await User.findInternalAccounts();
@@ -884,7 +884,7 @@ describe('Tests about the visualisation of internal accounts by SysAdmin', () =>
   });  
 });
 
-describe('Tests about deletion of accounts', () =>{
+describe('deleteAccount', () =>{
   
   test('It should perform the deletion correctly', async () => {
 
@@ -1105,7 +1105,7 @@ describe('Tests about deletion of accounts', () =>{
 
 });
 
-describe('Tests about visualization of teachers data', () => {
+describe('getTeachers', () => {
 
   test('It should show data of teachers who are not coordinators', async () =>{
     const testFirstName = 'Joe';
@@ -1149,6 +1149,281 @@ describe('Tests about visualization of teachers data', () => {
 
   });
 
+  test('It should show data of all teachers', async () =>{
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+
+    const result = await User.insertInternalAccountData( 
+        testFirstName, 
+        testLastName, 
+        testEmail, 
+        testSSN, 
+        testPassword,
+        testIsTeacher,
+        testIsAdminOfficer,
+        testIsPrincipal
+    );
+
+    expect(result).toEqual({
+      id: expect.anything()
+    });
+
+    // Create class
+    const classId = await Class.create({
+      CreationYear: moment().utc().format('YYYY'),
+      Name: 'ì',
+      CoordinatorId: result.id
+    });
+
+    const teachers = await User.getTeachers(true);
+    expect(teachers).toEqual(
+      expect.arrayContaining(
+          [
+              expect.objectContaining(
+                  {
+                      "ID": result.id,
+                      "FirstName": testFirstName,
+                      "LastName": testLastName,
+                  }
+      )]));
+
+    //delete result for future tests
+    await Class.remove(classId);
+    await User.remove(result.id);
+
+  });
+
+
 });
 
+describe('getUserRolesById', () => {
+
+  test('It should return correct roles for user', async () =>{
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+    const testIsParent = true;
+
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: testEmail,
+      SSN: testSSN,
+      Password: testPassword,
+      FirstName: testFirstName,
+      LastName: testLastName,
+      IsTeacher: testIsTeacher,
+      IsParent: testIsParent,
+      IsAdminOfficer: testIsAdminOfficer,
+      IsPrincipal: testIsPrincipal
+    });
+
+    const roles = await User.getUserRolesById(userId);    
+    
+    expect(roles[0]).toEqual(
+      { IsParent: 1,
+      IsTeacher: 1,
+      IsPrincipal: 0,
+      IsAdminOfficer: 0,
+      IsSysAdmin: 0 }
+    );
+
+    //delete result for future tests
+    await User.remove(userId);
+
+  });
+
+});
+
+describe('makeParentIfNotAlready', () => {
+
+  test('Already parent', async () =>{
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+    const testIsParent = true;
+
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: testEmail,
+      SSN: testSSN,
+      Password: testPassword,
+      FirstName: testFirstName,
+      LastName: testLastName,
+      IsTeacher: testIsTeacher,
+      IsParent: testIsParent,
+      IsAdminOfficer: testIsAdminOfficer,
+      IsPrincipal: testIsPrincipal
+    });
+
+    await User.makeParentIfNotAlready(userId);
+
+    const roles = await User.getUserRolesById(userId);    
+    
+    expect(roles[0]).toEqual(
+      { IsParent: 1,
+      IsTeacher: 1,
+      IsPrincipal: 0,
+      IsAdminOfficer: 0,
+      IsSysAdmin: 0 }
+    );
+
+    //delete result for future tests
+    await User.remove(userId);
+
+  });
+
+  test('Becomes parent', async () =>{
+    const testFirstName = 'Joe';
+    const testLastName = 'Kernel';
+    const testEmail = 'joekernel@gmail.com';
+    const testSSN = 'LRNMRC79A02L219A';
+    const testPassword = 'EasYPass1';
+    const testIsTeacher = true;
+    const testIsAdminOfficer = false;
+    const testIsPrincipal = false;
+    const testIsParent = false;
+
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: testEmail,
+      SSN: testSSN,
+      Password: testPassword,
+      FirstName: testFirstName,
+      LastName: testLastName,
+      IsTeacher: testIsTeacher,
+      IsParent: testIsParent,
+      IsAdminOfficer: testIsAdminOfficer,
+      IsPrincipal: testIsPrincipal
+    });
+
+    await User.makeParentIfNotAlready(userId);
+
+    const roles = await User.getUserRolesById(userId);    
+
+    expect(roles[0]).toEqual(
+      { IsParent: 1,
+      IsTeacher: 1,
+      IsPrincipal: 0,
+      IsAdminOfficer: 0,
+      IsSysAdmin: 0 }
+    );
+
+    //delete result for future tests
+    await User.remove(userId);
+
+  });
+
+  test('Invalid userId', async () =>{
+    try {
+      await User.makeParentIfNotAlready('A');
+    } catch(error) {
+      expect(error).toHaveProperty('message', 'Invalid userId');
+    }
+    
+  });
+
+});
+
+describe('checkIfStillParent', () => {
+  // Has children
+  // No children but teacher
+  // No children -> remove
+
+  test('Still parent', async () =>{
+
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: 'abc@cba.ab',
+      SSN: 'SCIWWN72A14H620P',
+      Password: 'pass',
+      FirstName: 'Teach',
+      LastName: 'Er',
+      IsTeacher: 1,
+      IsParent: 1
+    });
+
+    const s1Id = uuid.v4();
+    await Student.create({
+      ID: s1Id,
+      FirstName: 'AAA',
+      LastName: 'AAA',
+      SSN: 'ZZGSCD71A54Z325N',
+      BirthDate: '2013-05-11',
+      Parent1: userId,
+      Gender: 'M'
+    });
+    
+    await User.checkIfStillParent(userId);
+    const result = await User.findById(userId);
+    expect(result.IsParent).toBe(1);
+
+    await Student.remove(s1Id);
+    await User.remove(userId);
+  });
+
+  test('Not parent anymore', async () =>{
+
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: 'abc@cba.ab',
+      SSN: 'SCIWWN72A14H620P',
+      Password: 'pass',
+      FirstName: 'Teach',
+      LastName: 'Er',
+      IsTeacher: 1,
+      IsParent: 1
+    });
+
+    await User.checkIfStillParent(userId);
+    const result = await User.findById(userId);
+    expect(result.IsParent).toBe(0);
+
+    await User.remove(userId);
+  });
+
+  test('User removed', async () =>{
+
+    const userId = uuid.v4();
+    await User.create({
+      id: userId,
+      eMail: 'abc@cba.ab',
+      SSN: 'SCIWWN72A14H620P',
+      Password: 'pass',
+      FirstName: 'Teach',
+      LastName: 'Er',
+      IsTeacher: 0,
+      IsParent: 1
+    });
+
+    await User.checkIfStillParent(userId);
+    try {
+      await User.findById(userId);
+    } catch(error) {
+      expect(error).toHaveProperty('message', 'Entity not found');
+    }
+  });
+
+
+});
 
