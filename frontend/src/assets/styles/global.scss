@@ -119,3 +119,16 @@
         background: orange !important;
     }
 }
+
+.backIcon{
+    float:left;
+    height:30px;
+    width:30px;
+}
+.backIcon:hover{
+    height:30px;
+    width:30px;
+    background-color: #fff;
+    box-shadow: 4px 3px 6px #888888;
+    cursor: pointer;
+}

@@ -82,8 +82,8 @@ export class ChildNote extends React.Component{
       return (
         <Container className="Notes-container contentContainer">
         <h3 className="contentHeader">
-          <Icon name='bullhorn'/>
-          {this.context.state.parent ? this.context.state.parent.selectedStudent.FirstName + "'s" : 'Student'} notes
+          <Icon name='bell outline'/>
+          {this.context.state.parent ? this.context.state.parent.selectedStudent.FirstName + "'s" : 'Student'} behaviour notes
        </h3>
         <Table className='Notes_table'>
           <Table.Header>
@@ -132,8 +132,8 @@ export class ChildNote extends React.Component{
     return (
       <Container className="contentContainer">
         <h3 className="contentHeader"> 
-          <Icon name='braille' /> 
-          {this.context.state.parent ? this.context.state.parent.selectedStudent.FirstName + "'s" : 'Student'} notes
+          <Icon name='bell outline' /> 
+          {this.context.state.parent ? this.context.state.parent.selectedStudent.FirstName + "'s" : 'Student'} behaviour notes
         </h3>
         <NoData/>
       </Container>
