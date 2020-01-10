@@ -105,21 +105,7 @@ class User extends Model {
 
     await this.validateUserData(firstName, lastName, eMail, SSN);
 
-    const connection = await this.db.getConnection();
-
-    const selectResult = await connection.query(
-      `SELECT COUNT(*) AS count
-      FROM Users
-      WHERE SSN = ? OR eMail = ?;`,
-      [SSN, eMail]
-    );
-
-    connection.release();
-
-    if (selectResult[0].count != 0) {
-      connection.release();
-      throw new Error('Parent already in db')
-    }
+    await this.checkIfAlreadyExists(SSN, eMail);
 
     //insert of data
     const parentId = uuid();
@@ -154,21 +140,7 @@ class User extends Model {
       }
     }
 
-    const connection = await this.db.getConnection();
-
-    const selectResult = await connection.query(
-      `SELECT COUNT(*) AS count
-      FROM Users
-      WHERE SSN = ? OR eMail = ?;`,
-      [SSN, eMail]
-    );
-
-    connection.release();
-
-    if (selectResult[0].count != 0) {
-      connection.release();
-      throw new Error('User already in db')
-    }
+    await this.checkIfAlreadyExists(SSN, eMail);
 
     //insert of data
     const userId = uuid();
@@ -202,6 +174,24 @@ class User extends Model {
       throw new Error('A user must be at least admin officer, principal or teacher');
     }
     return;
+  }
+
+  async checkIfAlreadyExists(SSN, eMail) {
+    const connection = await this.db.getConnection();
+
+    const selectResult = await connection.query(
+      `SELECT COUNT(*) AS count
+      FROM Users
+      WHERE SSN = ? OR eMail = ?;`,
+      [SSN, eMail]
+    );
+
+    connection.release();
+
+    if (selectResult[0].count != 0) {
+      connection.release();
+      throw new Error('User already in db')
+    }
   }
 
   async updateParentData(parentId, firstName, lastName, eMail, SSN) {

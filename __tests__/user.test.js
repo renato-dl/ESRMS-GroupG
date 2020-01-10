@@ -186,7 +186,7 @@ describe('insertParentData', () => {
     }
   });
 
-  test('It should throw Error with message \'Parent already in db\'', async () => {
+  test('It should throw Error with message \'User already in db\'', async () => {
 
 
     const testFirstName = 'Nome';
@@ -213,7 +213,7 @@ describe('insertParentData', () => {
       );
     } catch(error){
       expect(error).toBeInstanceOf(Error);
-      expect(error).toHaveProperty('message', 'Parent already in db');
+      expect(error).toHaveProperty('message', 'User already in db');
 
       //delete result for future tests
       const connection = await db.getConnection();
