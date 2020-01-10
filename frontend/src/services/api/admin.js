@@ -59,10 +59,10 @@ export class AdminAPIService extends BaseAPIService {
     return this.delete('/admin/student', {ID: studentID});
   }
 
-  getTeachers(){
-    return this.get('/admin/teachers');
+  getTeachers(s){
+    return this.get(`/admin/teachers${s}`);
   }
-
+  
   addNewClass(data){
     return this.post('/admin/class',data);
   }
@@ -81,5 +81,17 @@ export class AdminAPIService extends BaseAPIService {
 
   getSubjectslist(){
     return this.get(`/subject/all`);
+  }
+
+  getAllTimetables(){
+    return this.get('/timetable');
+  }
+
+  addClassTimetable(data){
+    return this.post('/timetable', data);
+  }
+
+  deleteClassTimetable(classId){
+    return this.delete(`/timetable/${classId}`);
   }
 }
