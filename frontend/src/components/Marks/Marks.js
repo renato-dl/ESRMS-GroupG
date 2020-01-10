@@ -93,7 +93,7 @@ export class Marks extends React.Component{
       return (
         <Container className="contentContainer">
               <h3 className="contentHeader"> 
-              <Icon name='braille'/> 
+              <Icon name='sort numeric up'/> 
               {this.state.studentName ? this.state.studentName + "'s" : 'Student'} grades            
             </h3>  
             <Dropdown 
@@ -143,7 +143,7 @@ export class Marks extends React.Component{
     return (
       <Container className="contentContainer">
         <h3 className="contentHeader"> 
-          <Icon name='braille' /> 
+          <Icon name='sort numeric up' /> 
             {this.state.studentName ? this.state.studentName + "'s" : 'Student'} grades
         </h3>
         <NoData/>

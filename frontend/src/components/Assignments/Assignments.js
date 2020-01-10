@@ -75,7 +75,7 @@ export class Assignments extends React.Component {
     return (
       <Container className="contentContainer">
         <h3 className="contentHeader"> 
-          <Icon name='braille'/> 
+          <Icon name='home'/> 
           {this.context.state.parent ? this.context.state.parent.selectedStudent.FirstName + "'s" : 'Student'} assignments
         </h3>
 
