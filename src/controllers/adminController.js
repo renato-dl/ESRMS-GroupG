@@ -380,9 +380,18 @@ class AdminController extends BaseController {
     });
   }
 
-  async getAll(req, res) {
+  async getAllTeacherClassAssociations(req, res) {
     const result = await TCSR.findAll(req.query.pagination);
     res.send(result);
+  }
+
+  async deleteTeacherClassAssociation(req, res) {
+    if(!req.body.id) {
+      throw new Error('Missing or invalid id');
+    }
+    await TCSR.findById(req.body.id);
+    await TCSR.remove(req.body.id);
+    res.send({success: true});
   }
   
 }
