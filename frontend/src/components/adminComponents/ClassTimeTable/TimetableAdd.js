@@ -28,7 +28,8 @@ export class TimetableAdd extends Component {
     if(subjects && subjects.data){
       this.setState({allowedSubjects: [...subjects.data, {ID: -1, Name: '-'}]});
     }
-    if(this.props.timetable && this.props.length > 0){
+    if(this.props.timetable && this.props.timetable.length > 0){
+      // console.log(this.props.timetable)
       this.setState({isPreviousPresent: true});
       this.mapSavedTimetable(this.props.timetable);
     }
@@ -47,7 +48,7 @@ export class TimetableAdd extends Component {
         hourDict[day] = this.getSubjectNameById(elem.SubjectID);
         timeDict[elem.Hour] = hourDict;
       }
-      console.log(timeDict);
+      // console.log(timeDict);
       const dataForTable = [];
       let rowIndex = 1;
       let elemIndex = 0;
@@ -137,7 +138,7 @@ export class TimetableAdd extends Component {
     let subjectName = "None";
     const subjects = this.state.allowedSubjects;
     subjects.forEach(function(elem){
-      if(subjectId == elem.ID){
+      if(subjectId === elem.ID){
         subjectName = elem.Name;
       }
     });
@@ -164,7 +165,7 @@ export class TimetableAdd extends Component {
             else{
               cellError = this.checkSubjectCorrectness(row[elem]) ? false : true;
               const subjId = this.getSubjectId(row[elem]);
-              if(subjId != -1){
+              if(subjId !== -1){
                 const elemToSave = {
                   subjectId: subjId, 
                   hour: hourToSave, 
@@ -189,6 +190,7 @@ export class TimetableAdd extends Component {
 
   checkErrorsPresence(timetable){
     if(timetable){
+      let incorrectContent = false;
       for(let i = 1; i < timetable.length; i++){
         const data = timetable[i];
         if(!this.checkErrorAbsence(data["Hour"]) ||
@@ -196,8 +198,20 @@ export class TimetableAdd extends Component {
         !this.checkSubjectCorrectness(data["Wed"]) || !this.checkSubjectCorrectness(data["Thu"]) || 
         !this.checkSubjectCorrectness(data["Fri"]) ){
           this.setState({errorPresent: true});
+          incorrectContent = true;
         }
       }
+      if(incorrectContent){
+        toastr.error("Incorrect timetable data!");
+      }
+      if(timetable.length <= 0){
+        this.setState({errorPresent: true});
+        toastr.error("Timetable empty!");
+      }
+    }
+    else{
+      this.setState({errorPresent: true});
+      toastr.error("Timetable empty!");
     }       
   }
 
@@ -209,17 +223,18 @@ export class TimetableAdd extends Component {
     this.setState({ activeIndex: newIndex })
   }
 
-  onTimetableRemove = (name) => {
+  onTimetableRemove = async (name) => {
     try{
-      const result = api.admin.deleteClassTimetable(this.props.class.ID);
-      if(result){
+      const result = await api.admin.deleteClassTimetable(this.props.class.ID);
+      if(result && result.data && result.data.success){
+        // console.log(result);
         toastr.success('Timetable deleted!');
         this.setState({ prevTimetable: null, classTimetable: null});
       }
     }
     catch(err){
       console.log(err);
-      toastr.error('Sorry, an unexpected error occurred!');
+      toastr.error(err);
     }    
     this.props.onClose(); 
   };
@@ -233,21 +248,21 @@ export class TimetableAdd extends Component {
     return {key: index || `row-${index}`, cells: [...data]}
   }
 
-  onSave = () =>{
+  onSave = async () =>{
     const timetable = this.state.timetable;
     const request = {
       classId: this.props.class.ID,
       timetable: timetable
     }
     try{
-      const result = api.admin.addClassTimetable(request);
-      //console.log(result);
-      if (result)
+      const result = await api.admin.addClassTimetable(request);
+      // console.log(result);
+      if (result && result.data && result.data.success)
         toastr.success('Timetable saved!');
     }
     catch(err){
       console.log(err);
-      toastr.error("Sorry, an unexpected error occurred!");
+      toastr.error(err);
     }           
     this.props.onClose(); 
   }

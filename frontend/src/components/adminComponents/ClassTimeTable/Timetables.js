@@ -42,7 +42,7 @@ export class Timetables extends Component {
         response.data.timetables.forEach(function(elem){
           timetablesDict[elem.ClassID] = elem.Timetable;
         });
-        console.log(timetablesDict);
+        // console.log(timetablesDict);
         this.setState({ classesTimetables: timetablesDict });
       }      
     }
@@ -55,8 +55,8 @@ export class Timetables extends Component {
     this.setState({ classData: data, timetableModalOpen: true });
   }
 
-  onModalClose = () => {
-    this.fetchTimetables();
+  onModalClose = async () => {
+    await this.fetchTimetables();
     this.setState({classData: null, timetableModalOpen: false});
   };
 
