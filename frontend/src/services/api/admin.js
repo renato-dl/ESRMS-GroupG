@@ -60,7 +60,11 @@ export class AdminAPIService extends BaseAPIService {
   }
 
   getTeachers(){
-    return this.get('/admin/teachers');
+    return this.get(`/admin/teachers`);
+  }
+  
+  getTeachersWithNoClassSubject(){
+    return this.get(`/admin/teachers?coordinators=true`);
   }
 
   addNewClass(data){
