@@ -5,6 +5,7 @@ import indexRouter from './routes/index';
 import parentRouter from './routes/parent';
 import teacherRouter from './routes/teacher';
 import adminRouter from './routes/admin';
+import timetableRouter from './routes/timetable';
 import communicationRouter from './routes/communication';
 import subjectRouter from './routes/subject'
 import {config} from './config';
@@ -57,6 +58,7 @@ export class Application {
     this.app.use(`${config.env.api_prefix}/admin`, Authentication.authenticate(), adminRouter);
     this.app.use(`${config.env.api_prefix}/communication`, Authentication.authenticate(), communicationRouter);
     this.app.use(`${config.env.api_prefix}/subject`, Authentication.authenticate(), subjectRouter);
+    this.app.use(`${config.env.api_prefix}/timetable`, Authentication.authenticate(), timetableRouter);
   }
 
   // sends back the index.html for the client if none of the routes is matched
