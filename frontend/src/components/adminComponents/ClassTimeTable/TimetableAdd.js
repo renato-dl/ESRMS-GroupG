@@ -6,26 +6,71 @@ import {api} from '../../../services/api';
 import mime from 'mime';
 import XLSX from 'xlsx';
 import * as toastr from 'toastr';
-
+import moment from 'moment';
 export class TimetableAdd extends Component {
   dayOfTheWeek = {"Mon": 1, "Tue": 2, "Wed": 3, "Thu": 4, "Fri": 5}
+  dayOfTheWeekById = {1: "Mon", 2: "Tue", 3: "Wed", 4: "Thu", 5: "Fri"}
   state = {
-    attachment: null, 
     file: null, 
     classTimetable: null, 
     errorPresent: false,
     headerRow: ["Hour", "Mon", "Tue", "Wed", "Thu", "Fri"],
     activeIndex: -1, 
     allowedSubjects: [], 
-    timetable: []
+    timetable: [], 
+    previousTimetable: null, 
+    isPreviousPresent: false
   };
+  getSubjectNameById = this.getSubjectNameById.bind(this);
 
   async componentDidMount(){
     const subjects  = await api.admin.getSubjectslist();    
     if(subjects && subjects.data){
       this.setState({allowedSubjects: [...subjects.data, {ID: -1, Name: '-'}]});
     }
+    if(this.props.timetable && this.props.timetable.length > 0){
+      // console.log(this.props.timetable)
+      this.setState({isPreviousPresent: true});
+      this.mapSavedTimetable(this.props.timetable);
+    }
     //console.log(this.state.allowedSubjects);
+  }
+
+  mapSavedTimetable(prevTimetable){
+      const timeDict = {}
+      for(let i = 0; i < prevTimetable.length; i++){
+        const elem = prevTimetable[i];
+        let hourDict = timeDict[elem.Hour];
+        if(!hourDict){
+          hourDict = {};
+        }
+        const day = this.dayOfTheWeekById[elem.Day];
+        hourDict[day] = this.getSubjectNameById(elem.SubjectID);
+        timeDict[elem.Hour] = hourDict;
+      }
+      // console.log(timeDict);
+      const dataForTable = [];
+      let rowIndex = 1;
+      let elemIndex = 0;
+      for(let keyD in timeDict){
+        const dataRow = [];
+        const hourFormat = moment().hour(keyD).minute(0).format('HH:mm');
+        const cellHour = {key: `col-${rowIndex}-Hour-${hourFormat}`, content: hourFormat, error: false};
+        dataRow.push(cellHour);
+        elemIndex = elemIndex + 1;
+        for(let j = 1; j < this.state.headerRow.length; j ++){
+          const head = this.state.headerRow[j];
+          const elem = timeDict[keyD][head];
+          const cell = {key: `col-${rowIndex}-${head}-${elem}`, content: elem, error: false};
+          dataRow.push(cell);
+          elemIndex = elemIndex + 1;
+        }
+        dataForTable.push(dataRow);
+        rowIndex = rowIndex + 1;
+        elemIndex = 0;
+      }
+      //console.log(dataForTable);
+      this.setState({previousTimetable: dataForTable});
   }
 
   onDrop = (files, event) => {
@@ -89,6 +134,17 @@ export class TimetableAdd extends Component {
     return subjectId;
   }
 
+  getSubjectNameById(subjectId){
+    let subjectName = "None";
+    const subjects = this.state.allowedSubjects;
+    subjects.forEach(function(elem){
+      if(subjectId === elem.ID){
+        subjectName = elem.Name;
+      }
+    });
+    return subjectName;
+  }
+
   CreateTimetable(data){
     let timetable = [];
     let timetableToSave = [];
@@ -109,7 +165,7 @@ export class TimetableAdd extends Component {
             else{
               cellError = this.checkSubjectCorrectness(row[elem]) ? false : true;
               const subjId = this.getSubjectId(row[elem]);
-              if(subjId != -1){
+              if(subjId !== -1){
                 const elemToSave = {
                   subjectId: subjId, 
                   hour: hourToSave, 
@@ -134,6 +190,7 @@ export class TimetableAdd extends Component {
 
   checkErrorsPresence(timetable){
     if(timetable){
+      let incorrectContent = false;
       for(let i = 1; i < timetable.length; i++){
         const data = timetable[i];
         if(!this.checkErrorAbsence(data["Hour"]) ||
@@ -141,8 +198,20 @@ export class TimetableAdd extends Component {
         !this.checkSubjectCorrectness(data["Wed"]) || !this.checkSubjectCorrectness(data["Thu"]) || 
         !this.checkSubjectCorrectness(data["Fri"]) ){
           this.setState({errorPresent: true});
+          incorrectContent = true;
         }
       }
+      if(incorrectContent){
+        toastr.error("Incorrect timetable data!");
+      }
+      if(timetable.length <= 0){
+        this.setState({errorPresent: true});
+        toastr.error("Timetable empty!");
+      }
+    }
+    else{
+      this.setState({errorPresent: true});
+      toastr.error("Timetable empty!");
     }       
   }
 
@@ -154,18 +223,20 @@ export class TimetableAdd extends Component {
     this.setState({ activeIndex: newIndex })
   }
 
-  onAttachmentRemove = (name) => {
+  onTimetableRemove = async (name) => {
     try{
-      const result = api.admin.deleteClassTimetable(this.props.class.ID);
-      if(result){
+      const result = await api.admin.deleteClassTimetable(this.props.class.ID);
+      if(result && result.data && result.data.success){
+        // console.log(result);
         toastr.success('Timetable deleted!');
-        this.setState({ attachment: null, classTimetable: null});
+        this.setState({ prevTimetable: null, classTimetable: null});
       }
     }
     catch(err){
       console.log(err);
-      toastr.error('Sorry, an unexpected error occurred!');
+      toastr.error(err);
     }    
+    this.props.onClose(); 
   };
 
   onFileRemove = (name) => {
@@ -173,24 +244,25 @@ export class TimetableAdd extends Component {
   };
 
   renderBodyRow(data, index){
+    //console.log(data);
     return {key: index || `row-${index}`, cells: [...data]}
   }
 
-  onSave = () =>{
+  onSave = async () =>{
     const timetable = this.state.timetable;
     const request = {
       classId: this.props.class.ID,
       timetable: timetable
     }
     try{
-      const result = api.admin.addClassTimetable(request);
-      //console.log(result);
-      if (result)
+      const result = await api.admin.addClassTimetable(request);
+      // console.log(result);
+      if (result && result.data && result.data.success)
         toastr.success('Timetable saved!');
     }
     catch(err){
       console.log(err);
-      toastr.error("Sorry, an unexpected error occurred!");
+      toastr.error(err);
     }           
     this.props.onClose(); 
   }
@@ -203,7 +275,7 @@ export class TimetableAdd extends Component {
         <Icon onClick={this.props.onClose} className="close-icn" name="close" />
       </Modal.Header>
       <Modal.Content>
-      {!this.state.classTimetable && 
+      {!this.state.isPreviousPresent && 
       <Accordion fluid styled>
         <Accordion.Title 
           active={this.state.activeIndex === 0}
@@ -290,8 +362,16 @@ export class TimetableAdd extends Component {
         </Accordion.Content>
       </Accordion>       
       }   
-      {!this.state.classTimetable &&
-      <br />}     
+      {!this.state.classTimetable && !this.state.previousTimetable &&
+      <br />}
+      {this.props.timetable &&
+        <Table
+          headerRow={this.state.headerRow}
+          tableData={this.state.previousTimetable}
+          renderBodyRow={this.renderBodyRow}
+          >
+        </Table>
+      }     
       {this.state.classTimetable && 
       <Table 
         headerRow={this.state.headerRow}
@@ -304,24 +384,25 @@ export class TimetableAdd extends Component {
         type={mime.getExtension(this.state.file.type)} 
         name={this.state.file.name} 
         onRemove={this.onFileRemove}
-      />}
-      {this.state.attachment && 
-      <FilePreview 
-        type={mime.getExtension(this.state.attachment.type)} 
-        name={this.state.attachment.name} 
-        onRemove={this.onAttachmentRemove}
-      />}       
+      />}      
       </div>
       <div>
-      {(!this.state.file && !this.state.attachment) &&
+      {(!this.state.file && !this.state.previousTimetable) &&
         <TimetableUpload onDropAccepted={this.onDrop} /> 
         }        
       </div>
       </Modal.Content>
-      {!this.state.attachment && 
+      {!this.state.previousTimetable && 
       <Modal.Actions>
         <Button color='green'  onClick={this.onSave} disabled={!this.state.classTimetable || this.state.errorPresent}>
           <Icon name='checkmark'  /> Save
+        </Button>
+      </Modal.Actions>
+      }
+      {this.state.previousTimetable &&
+      <Modal.Actions>
+        <Button color='red'  onClick={this.onTimetableRemove}>
+          <Icon name='delete'  /> Delete
         </Button>
       </Modal.Actions>
       }

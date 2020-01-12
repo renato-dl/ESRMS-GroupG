@@ -74,17 +74,7 @@ class Assignment extends Model {
       throw new Error('Missing or invalid class id');
     }
     
-    if (!title) {
-      throw new Error('Missing or invalid title');
-    }
-
-    if (!description) {
-      throw new Error('Missing or invalid description');
-    }
-
-    if (!dueDate) {
-      throw new Error('Missing or invalid due date');
-    }
+    this.validateAssignmentInfo(title, description, dueDate);
 
     const date = moment.utc(dueDate);
     const dayOfWeek = moment.utc(dueDate).isoWeekday();
@@ -115,15 +105,8 @@ class Assignment extends Model {
     if (!assId) {
       throw new Error('Missing or invalid assignment id');
     }
-    if (!title) {
-      throw new Error('Missing or invalid title');
-    }
-    if (!description) {
-      throw new Error('Missing or invalid description');
-    }
-    if(!dueDate){
-      throw new Error('Missing or invalid due date');
-    }
+    
+    this.validateAssignmentInfo(title, description, dueDate);
 
     const date = moment.utc(dueDate);
     const dayOfWeek = moment.utc(dueDate).isoWeekday();
@@ -141,6 +124,20 @@ class Assignment extends Model {
       Description: description,
       DueDate: date.format(this.db.getDateFormatString())
     })
+  }
+
+  validateAssignmentInfo(title, description, dueDate) {
+    if (!title) {
+      throw new Error('Missing or invalid title');
+    }
+
+    if (!description) {
+      throw new Error('Missing or invalid description');
+    }
+
+    if (!dueDate) {
+      throw new Error('Missing or invalid due date');
+    }
   }
 
   async findByClassAndSubject(classId, subjectId, dateRange, pagination) {

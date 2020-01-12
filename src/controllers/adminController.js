@@ -6,7 +6,6 @@ import {config} from '../config/';
 import {genRandomString} from '../services/passwordGenerator';
 import ClassModel from '../database/models/class';
 import TCSR from '../database/models/teacherClassSubject'
-import Subject from '../database/models/subject'
 
 class AdminController extends BaseController {
 
