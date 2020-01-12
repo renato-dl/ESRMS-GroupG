@@ -389,7 +389,11 @@ class AdminController extends BaseController {
       throw new Error('Missing or invalid id');
     }
     await TCSR.findById(req.body.id);
-    await TCSR.remove(req.body.id);
+    try {
+      await TCSR.remove(req.body.id);
+    } catch {
+      throw new Error('Cannot remove association if teacher has assigned topics');
+    }    
     res.send({success: true});
   }
   
