@@ -548,27 +548,20 @@ class TeacherController extends BaseController {
   // POST /teacher/support-material
   // Body: subjectId, file
   async addSupportMaterial(req, res) {
-    if (!await TCSR.checkIfTeacherTeachesSubject(req.user.ID, req.body.subjectId)) {
-      return res.send(401);
-    }
+    const supportMaterialId = await SupportMaterial.add(
+      req.user.ID,
+      req.body.subjectId,  
+      req.body.classId,
+      req.file
+    );
 
-    const supportMaterialId = await SupportMaterial.add(req.body.subjectId, req.file)
     res.send({ supportMaterialId });
   }
 
   // DELETE /teacher/support-material
   // Body: ID
   async deleteSupportMaterial(req, res) {
-    const supportMaterial = await SupportMaterial.findById(req.body.ID);
-    if (!supportMaterial) {
-      return res.send(401);
-    }
-
-    if (!await TCSR.checkIfTeacherTeachesSubject(req.user.ID, supportMaterial.SubjectId)) {
-      return res.send(401);
-    }
-
-    await SupportMaterial.remove(req.body.ID);
+    await SupportMaterial.remove(req.user.ID, req.body.ID);
     res.send({ success: true });
   }
 }
