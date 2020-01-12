@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
 import { api } from '../../../services/api';
-import {Icon, Container, Table, Divider, Header, List, Image, Button, Segment} from 'semantic-ui-react';
+import {Icon, Container, Table, Divider, Header, Button} from 'semantic-ui-react';
 
-import IsTeacher from '../../../assets/images/iconTeacher.jpg';
+//import IsTeacher from '../../../assets/images/iconTeacher.jpg';
+//import * as toastr from 'toastr';
 
 import { NoData } from '../../NoData/NoData';
+import Tooltip from '../../Tooltip/Tooltip';
 import TeacherClassDetails from './TeacherClassDetails/TeacherClassDetails';
+import TeacherClassDelete from './TeacherClassDetails/TeacherClassDelete';
 
 export class TeacherClassAssignment extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isModalOpen:false,
+            deleteModalOpen:false,
+            associationId:null,
             editingTeacher:null, 
 
             teachersDat:[],
@@ -47,8 +52,36 @@ export class TeacherClassAssignment extends Component {
         this.setState({ editingTeacher: data, isModalOpen:true})
     }
 
-    onModalClose= () => {
+    onAddAssociation = () => {
+        console.log("click");
+        this.setState({isModalOpen:true});
+    }
+
+    /* onDeleteAssociation = async (id) => {
+        try{
+        const response = await api.admin.deleteTeacherAssociation(id);
+        if (response.data.success) {
+            await this.fetchTeacherClassData();
+            toastr.success('Associaiton removed successfully!');
+        } else {
+            toastr.error(response.data.msg);
+        }
+        }
+        catch(e){
+        toastr.error(e);
+        }
+    } */
+
+    onModalClose = () => {
         this.setState({isModalOpen: false});
+    };
+
+    onDeleteModalClose = () => {
+        this.setState({deleteModalOpen:false});
+    };
+    
+    onDeleteModalOpen = (id) => {
+        this.setState({associationId: id, deleteModalOpen:true});
     };
 
     render() {
@@ -58,45 +91,20 @@ export class TeacherClassAssignment extends Component {
             <h3 className="contentHeader"> 
             <Icon name='id card outline' /> 
             Teacher-Subject-Class Associations</h3>
-
-            { this.state.freeTeachers.length !==0 && <>
-                <Divider horizontal>
-                    <Header as='h4'color="red" style={{width: "140px"}}>
-                    <Icon name='settings' />
-                    New Teachers
-                    </Header>
-                </Divider>
-
-                <div style = {{width:"100%", maxHeight:"200px", overflowY:"scroll"}}>
-                    <Segment compact style = {{margin:"auto"}}>
-                    <List selection divided verticalAlign='middle' size="large" >
-                    
-                    {this.state.freeTeachers.map((data, index) =>
-                        <List.Item key={index} onClick={()=>this.configureTeacherModal(data)}>
-                        <Image avatar src={IsTeacher} />
-                        <List.Content>
-                            <List.Header style={{color:"#41648A"}}>{data.FirstName}&nbsp;{data.LastName}</List.Header>
-                        </List.Content>
-                        </List.Item>
-                    )}
-                    
-                    </List>
-                    </Segment>
-                </div>
-            </>}
-
+            <Button color="vk" onClick={this.onAddAssociation}><Icon name='add'/>Create New Associations</Button>
             <Divider horizontal>
-                <Header as='h4' color="teal" style={{width: "192px"}}>
+                <Header as='h4' color="teal" style={{width: "125px"}}>
                 <Icon name='exchange' />
-                Current Associations
+                Associations
                 </Header>
             </Divider>
-            <Table columns={3} color="teal">
+            <Table columns={4} color="teal">
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell>Teacher</Table.HeaderCell>
                     <Table.HeaderCell>Subject</Table.HeaderCell>
                     <Table.HeaderCell>Class</Table.HeaderCell>           
+                    <Table.HeaderCell></Table.HeaderCell>           
                 </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -105,6 +113,15 @@ export class TeacherClassAssignment extends Component {
                 <Table.Cell>{data.FirstName}&nbsp;{data.LastName}</Table.Cell>
                 <Table.Cell>{data.Subject}</Table.Cell>
                 <Table.Cell>{data.ClassName}</Table.Cell>
+                <Table.Cell width={1}>
+                    <Tooltip 
+                        text="Delete"
+                        trigger={
+                            <Button icon='cancel' style={{padding:"5px"}}
+                            onClick={()=>this.onDeleteModalOpen(data.ID)} /> 
+                        }
+                    />
+                </Table.Cell>
             </Table.Row>
             )} 
             </Table.Body>
@@ -112,12 +129,23 @@ export class TeacherClassAssignment extends Component {
 
             {this.state.isModalOpen &&
               <TeacherClassDetails
-                teacher={this.state.editingTeacher}
+                //teacher={this.state.editingTeacher}
+                teacherAll={this.state.freeTeachers}
                 onClose={this.onModalClose}
                 onSave={() => {
                   this.fetchTeacherClassData();
                   this.fetchFreeTeachers();
                   this.onModalClose();
+                }}
+              />
+            }
+            {this.state.deleteModalOpen &&
+              <TeacherClassDelete
+                associationId={this.state.associationId}
+                onClose={this.onDeleteModalClose}
+                onDeleted={() => {
+                    this.fetchTeacherClassData(); 
+                    this.onDeleteModalClose();
                 }}
               />
             }
