@@ -8,7 +8,7 @@ class SupportMaterial extends Model {
   }
 
   async add(teacherID, subjectID, classID, file) { 
-    if (!subjectID) {
+    if (!teacherID) {
       throw new Error('Teacher id is required');
     }
 
@@ -60,10 +60,6 @@ class SupportMaterial extends Model {
     }
 
     const supportMaterial = await this.findById(supportMaterialID);
-    if (!supportMaterial) {
-      throw new Error('Missing or invalid support material');
-    }
-
     const tscr = await TeacherSubjectClassRelation.findById(supportMaterial.TeacherSubjectClassRelationId);
     if (!tscr || tscr.TeacherId !== teacherID) {
       throw new Error('Teacher is not allowed to remove this support material');
