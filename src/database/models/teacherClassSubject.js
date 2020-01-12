@@ -21,7 +21,7 @@ class TCSR extends Model {
     
     connenction.release();
     console.log(result);
-    return result[0].count == 1;
+    return result[0].count >= 1;
   }
 
   async checkIfTeacherTeachesSubjectInClass(teacherId, subjectId, classId) {
