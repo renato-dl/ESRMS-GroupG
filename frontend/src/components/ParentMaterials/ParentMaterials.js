@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { api } from '../../services/api';
-
 import './ParentMaterial.scss';
-
+import moment from 'moment';
+import fileDownload from 'js-file-download/file-download';
 import { NoData } from '../NoData/NoData';
 import {Icon, Container, Grid, Menu, Segment, List, Button} from 'semantic-ui-react';
 
@@ -10,11 +10,30 @@ export class ParentMaterials extends Component {
     state={
         subjects:[],
         allMaterialList:[],
+        materialListBySubject:[],
         activeItem: null
     }
 
-    handleItemClick = (e, { value }) => this.setState({ activeItem: value })
+    handleDownload =  async (fileName) => {
+        console.log(fileName);
+        const response = await api.parent.getSupportMaterialFile(fileName);
+        fileDownload(response.data, fileName);
+    };
+
+    handleItemClick = (e, { value }) => {
+        e.preventDefault();
+        this.setState({ activeItem: value })
+        this.filterMaterials(value);
+    }    
   
+    filterMaterials = (id) => {
+        let materials = [];
+        this.state.allMaterialList.forEach(function(e){
+            if(e.SubjectID == id)
+            materials.push(e);
+        });
+        this.setState({materialListBySubject: materials});
+    }
 
     fetchSubjects = async () => {
         const response = await api.parent.getSubjectslist();
@@ -33,6 +52,7 @@ export class ParentMaterials extends Component {
     async componentDidMount() {
         await this.fetchSubjects();
         await this.fetchMaterials();
+        this.filterMaterials(this.state.activeItem);
     }
 
     render() {
@@ -52,6 +72,7 @@ export class ParentMaterials extends Component {
                                 
                             { this.state.subjects.map((data, index) =>
                             <Menu.Item
+                                key={index}
                                 name={data.Name}
                                 value={data.ID}
                                 active={activeItem === data.ID}
@@ -63,42 +84,31 @@ export class ParentMaterials extends Component {
 
                         <Grid.Column stretched width={10}>
                             <Segment>
-                                {/* <NoData/> */}
-
+                                {this.state.materialListBySubject.length === 0 &&
+                                <NoData/>
+                                }
+                                {this.state.materialListBySubject.length !==0  &&
                                 <List divided relaxed verticalAlign='middle'>
-                                <List.Item>
+                                    {this.state.materialListBySubject.map((elem, index) => 
+                                        <List.Item key={index}>
                                     
-                                    <List.Content floated='right'>
-                                        <Button icon="download"></Button>
-                                    </List.Content>
-
-                                    <List.Icon name='file' size='large' verticalAlign='middle' />
-                                    <List.Content>
-                                    <List.Header className = "fileNameHeader">Example File Name</List.Header>
-                                    {/* <List.Description as='a'>Updated 10 mins ago</List.Description> */}
-                                    </List.Content>
-                                </List.Item>
-                                <List.Item>
-                                    
-                                    <List.Content floated='right'>
-                                        <Button icon="download"></Button>
-                                    </List.Content>
-
-                                    <List.Icon name='file' size='large' verticalAlign='middle' />
-                                    <List.Content>
-                                    <List.Header className = "fileNameHeader">Example File Name</List.Header>
-                                    <List.Description>Jan 12, 2020</List.Description>
-                                    </List.Content>
-                                </List.Item>
-                                    
+                                        <List.Content floated='right'>
+                                            <Button icon="download" onClick={() => {this.handleDownload(elem.ID)}}></Button>
+                                        </List.Content>
+    
+                                        <List.Icon name='file' size='large' verticalAlign='middle' />
+                                        <List.Content>
+                                        <List.Header className = "fileNameHeader">{elem.Name}</List.Header>
+                                        <List.Description>{moment(elem.CreatedOn).format('MMM D, YYYY')}</List.Description>
+                                        </List.Content>
+                                    </List.Item>
+                                    )}
                                 </List>
-
+                                }
 
                             </Segment>
                         </Grid.Column>
                         </Grid>
-
-
                 </Container>
             )
         }

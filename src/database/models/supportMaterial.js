@@ -75,14 +75,14 @@ class SupportMaterial extends Model {
 
     const connection = await this.db.getConnection();
     let query = `
-      SELECT SP.ID, SP.CreatedOn, S.Name as Subject, F.Name, F.Type, F.Size
+      SELECT SP.ID, SP.CreatedOn, S.ID as SubjectID, S.Name as SubjectName, F.Name, F.Type, F.Size
       FROM Support_Material SP, Files F, Subjects S, TeacherSubjectClassRelation TSCR, Students STU
       WHERE F.ID = SP.FileId
       AND S.ID = SP.SubjectId
       AND TSCR.SubjectId = SP.SubjectId
       AND TSCR.ClassId = STU.classId
       AND STU.ID = ?
-      ${filters && filters.subject ? 'AND S.NAME = ?' : ''}
+      ${filters && filters.subject ? 'AND S.ID = ?' : ''}
       ${filters && filters.from && filters.to ? 'AND SP.CreatedOn >= ? AND SP.CreatedOn <= ?' : ''}
       ORDER BY SP.CreatedOn DESC
     `;

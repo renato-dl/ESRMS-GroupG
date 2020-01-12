@@ -42,5 +42,8 @@ export class ParentAPIService extends BaseAPIService {
   getSupportMaterials(studentID){
     return this.get(`/parent/support-material/${studentID}`);
   }
-
+  
+  getSupportMaterialFile(fileID) {
+    return this.get(`/parent/support-material/file?ID=${fileID}`, null, 'arraybuffer');
+  }
 }

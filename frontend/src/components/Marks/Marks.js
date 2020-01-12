@@ -103,7 +103,7 @@ export class Marks extends React.Component{
               options={this.state.subjects}
               onChange={this.onSelect}
             />       
-          <Table class='Marks_table' columns={4}>
+          <Table className='Marks_table' columns={4}>
           <Table.Header>
               <Table.Row>
                   <Table.HeaderCell>SUBJECT</Table.HeaderCell>
