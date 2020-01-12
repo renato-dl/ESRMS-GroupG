@@ -25,8 +25,12 @@ export const AdminMenu = (props) => (
       <Icon name='linode' />
       Class Compositions
     </Menu.Item>
+    <Menu.Item as={Link} to='/admin/timetables'>
+      <Icon name='clock outline' />
+      Class Timetables
+    </Menu.Item>
     <Menu.Item as={Link} to='/admin/TeacherClasses'>
-      <Icon name='id card outline' />
+      <Icon name='exchange icon' />
       Teacher-Class Associations
     </Menu.Item>
     <Menu.Item as={Link} to='/admin/communications'>
@@ -37,9 +41,5 @@ export const AdminMenu = (props) => (
       <Icon name='wrench' />
       Internal Accounts Setup
     </Menu.Item> */}
-    <Menu.Item as={Link} to='/admin/timetables'>
-      <Icon name='clock outline' />
-      Class Timetables
-    </Menu.Item>
   </>
 );

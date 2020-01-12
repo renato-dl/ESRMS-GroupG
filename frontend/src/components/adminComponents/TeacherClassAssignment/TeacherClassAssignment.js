@@ -66,11 +66,11 @@ export class TeacherClassAssignment extends Component {
     };
 
     render() {
-        if(this.state.teachersDat.length || this.state.freeTeachers.length) {
+        if(this.state.teachersDat.length) {
         return (
             <Container className="class-composition contentContainer">
             <h3 className="contentHeader"> 
-            <Icon name='id card outline' /> 
+            <Icon name='exchange icon' /> 
             Teacher-Subject-Class Associations</h3>
             <Button color="vk" onClick={this.onAddAssociation}><Icon name='add'/>Create New Associations</Button>
             <Divider horizontal>
@@ -136,9 +136,22 @@ export class TeacherClassAssignment extends Component {
             return (
                 <Container className="class-composition contentContainer">
                 <h3 className="contentHeader"> 
-                <Icon name='id card outline' /> 
+                <Icon name='exchange icon' /> 
                 Teacher-Subject-Class Associations</h3>
+                <Button color="vk" onClick={this.onAddAssociation}><Icon name='add'/>Create New Associations</Button>
                 <NoData/>
+                {this.state.isModalOpen &&
+                    <TeacherClassDetails
+                        //teacher={this.state.editingTeacher}
+                        teacherAll={this.state.freeTeachers}
+                        onClose={this.onModalClose}
+                        onSave={() => {
+                        this.fetchTeacherClassData();
+                        this.fetchFreeTeachers();
+                        this.onModalClose();
+                        }}
+                    />
+                }
                 </Container>
             )
         }
