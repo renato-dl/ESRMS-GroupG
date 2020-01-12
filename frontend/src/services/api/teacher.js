@@ -101,4 +101,22 @@ export class TeacherAPIService extends BaseAPIService {
   deleteNote(data){
     return this.delete(`/teacher/note`, data);
   }
+
+  // Support Material
+
+  getMaterialBySubject(subject){
+    return this.get(`/teacher/support-material?subject=${subject}`);
+  }
+
+  addMaterialBySubjectId(data){
+    return this.post('/teacher/support-material', data);
+  }
+
+  deleteMaterialById(data){
+    return this.delete('/teacher/support-material', data);
+  }
+
+  /* getSubjectslist(){
+    return this.get(`/subject/all`);
+  } */
 }
