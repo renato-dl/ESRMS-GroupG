@@ -25,13 +25,6 @@ export class AddMaterial extends Component {
         this.setState({isSaving: true});
     
         try {
-        //   const formData = new FormData();
-        //   formData.set('subjectId', this.state.subjectId);
-        //   formData.set('title', this.state.title);
-        //   formData.set('description', this.state.description);
-        //   formData.set('dueDate', this.state.date.toISOString());
-          
-          //formData.set('attachments', JSON.stringify(this.state.attachments || []));
         const requests = [];
         this.state.files.forEach((file) => {
             try {
@@ -39,8 +32,6 @@ export class AddMaterial extends Component {
                 formData.set('subjectId', this.state.subjectId);
                 formData.append('file', file);
                 requests.push(formData);
-                // const response = await api.teacher.AddMaterial(formData);
-                // console.log(response);
             } catch (error) {
                 console.log(error);
             }
@@ -55,21 +46,6 @@ export class AddMaterial extends Component {
             this.setState({isSaving: false});
             toastr.error(e);
         }
-    
-        //   if(!this.state.id) {
-        //     await api.teacher.addAssignment(formData);
-        //     toastr.success(`Assignment ${this.state.id ? 'updated' : 'added'} successfully.`);
-        //   } else {
-        //     const reqResult = await api.teacher.updateAssignment(formData);  
-            
-        //     if (reqResult.data.success) {
-        //       toastr.success('Assignment updated successfully.');
-        //     } else {
-        //       toastr.error(reqResult.data.message);
-        //       this.setState({isSaving: false});
-        //       return;
-        //     }
-        //   }
         } catch (e) {
           this.setState({isSaving: false});
           return toastr.error(e);
