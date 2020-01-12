@@ -42,11 +42,24 @@ export class TeacherMaterial extends Component {
         }        
     }
 
+    removeDuplications(subjectList){
+        let uniques = {};
+        let uniqueSubjects = [];
+        subjectList.forEach(function(elem){
+            if(!uniques[elem.subjectId]){
+                uniqueSubjects.push(elem);
+                uniques[elem.subjectId] = true;
+            }                
+        });
+        return uniqueSubjects;
+    }
+
     fetchSubjects = async () => {
         try {
             const response = await api.teacher.getTeacherSubjects();
             if(response && response.data) {
-                this.setState( {subjects: response.data, activeItem: response.data[0].subjectId});
+                const subjectList = this.removeDuplications(response.data);
+                this.setState( {subjects: subjectList, activeItem: response.data[0].subjectId});
                 this.setState({selectedSubject: response.data[0]});
                 await this.fetchMaterials(response.data[0].subject);
             }
