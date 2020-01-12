@@ -13,7 +13,6 @@ import {AppSidebar} from '../../components/Sidebar/Sidebar';
 
 //*** Parent view Components */
 import {Parent} from '../Parent/Parent';
-import {Student} from '../Student/Student';
 import {ChildAttendance} from '../../components/ChildAttendance/ChildAttendance';
 import {Assignments} from '../../components/Assignments/Assignments';
 import {ParentMaterials} from '../../components/ParentMaterials/ParentMaterials';
@@ -71,7 +70,6 @@ export class App extends React.Component {
             <Switch>
 
               <PrivateRoute exact path="/parent" component={Parent} />
-              <PrivateRoute exact path="/parent/student/:studentID" component={Student} />
               <PrivateRoute exact path="/parent/student/:studentID/marks" component={Marks}/>
               <PrivateRoute exact path="/parent/student/:studentID/assignments" component={Assignments}/>
               <PrivateRoute exact path="/parent/student/:studentID/materials" component={ParentMaterials}/>
