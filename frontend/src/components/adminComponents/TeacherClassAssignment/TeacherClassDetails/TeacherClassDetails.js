@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 
 import IsTeacher from '../../../../assets/images/iconTeacher.jpg';
-import {Icon, Modal, Button, Table, Dropdown, Header, Image} from 'semantic-ui-react';
+import {Icon, Modal, Button, Table, Dropdown, Header, Image, Divider} from 'semantic-ui-react';
 import Tooltip from '../../../Tooltip/Tooltip';
 
 export class TeacherClassDetails extends Component {
@@ -68,13 +68,11 @@ export class TeacherClassDetails extends Component {
     
     setSubjectOptions = (dat) =>
         _.times(dat.length, (i) => {
-            //console.log(dat[i]);
             return { key: dat[i].ID, value: dat[i].ID , text: dat[i].Name}
     })
 
     setTeacherOptions = (dat) =>
         _.times(dat.length, (i) => {
-            //const name = dat.Name;
             return { key: dat[i].ID, value: dat[i].ID , text: dat[i].FirstName +" "+ dat[i].LastName, icon: 'user outline'}
     })
 
@@ -150,21 +148,21 @@ export class TeacherClassDetails extends Component {
                 </Modal.Header>
                 
                 <Modal.Content>
-
-                <Header as='h4'>
-                    <Image avatar src={IsTeacher} style={{marginRight:"10px"}}/>
-                    <Dropdown
-                        fluid
-                        search
-                        selection
-                        options={this.state.teacherOptions}
-                        placeholder='Set Teacher'
-                        onChange={(e, {value}) => {this.handleTeacherChange(e, {value})}}
-                    />
-                </Header>
+                    <Divider horizontal> <Header as='h4' color="grey" style={{width: "55px"}}>Techer</Header></Divider>
+                    <Header as='h4' style={{borderBottom: '3px solid #4d7198', paddingBottom: '15px', margin:"0"}}>
+                        <Image avatar src={IsTeacher} style={{marginRight:"10px"}}/>
+                        <Dropdown
+                            fluid
+                            search
+                            selection
+                            options={this.state.teacherOptions}
+                            placeholder='Set Teacher'
+                            onChange={(e, {value}) => {this.handleTeacherChange(e, {value})}}
+                        />
+                    </Header>
+                    <Divider horizontal><Header as='h4' color="grey" style={{width: "92px"}}>Associations</Header></Divider>
 
                     <Table columns={3} basic="very">
-
                     <Table.Body>
                         {this.state.CSPairs.length > 0 &&
                         this.state.CSPairs.map((data, index) =>
@@ -191,7 +189,7 @@ export class TeacherClassDetails extends Component {
                                 <Tooltip 
                                     text="Delete"
                                     trigger={
-                                        <Button icon='cancel' style={{padding:"5px"}}
+                                        <Button basic icon='cancel' style={{padding:"3px"}} disabled={index===0}
                                         onClick={()=>this.onDeleteAssociationRow(index)} /> 
                                     }
                                 />
@@ -218,8 +216,8 @@ export class TeacherClassDetails extends Component {
                 </Modal.Content>
                 
                 <Modal.Actions>
-                <Button positive onClick={this.onSave} disabled={!this.state.teacherID}>
-                    <Icon name='checkmark' /> Confirm
+                <Button positive onClick={this.onSave} disabled={!this.state.teacherID || !this.state.CSPairs.length}>
+                    <Icon name='checkmark' /> Save
                 </Button>
                 </Modal.Actions>
             </Modal>

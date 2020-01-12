@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { api } from '../../../services/api';
 import {Icon, Container, Table, Divider, Header, Button} from 'semantic-ui-react';
 
-//import IsTeacher from '../../../assets/images/iconTeacher.jpg';
-//import * as toastr from 'toastr';
-
 import { NoData } from '../../NoData/NoData';
 import Tooltip from '../../Tooltip/Tooltip';
 import TeacherClassDetails from './TeacherClassDetails/TeacherClassDetails';
@@ -32,9 +29,9 @@ export class TeacherClassAssignment extends Component {
     };
 
     fetchFreeTeachers = async () => {
-        const response = await api.admin.getTeachers('?coordinators=true'); // still something wrong here.. Giulia tesori has class subject but still appears in free 
+        const response = await api.admin.getTeachers('?coordinators=true');
         if (response) {
-            console.log(response);
+            //console.log(response);
             if (response.data.message){
                 return;
             }
@@ -53,24 +50,8 @@ export class TeacherClassAssignment extends Component {
     }
 
     onAddAssociation = () => {
-        console.log("click");
         this.setState({isModalOpen:true});
     }
-
-    /* onDeleteAssociation = async (id) => {
-        try{
-        const response = await api.admin.deleteTeacherAssociation(id);
-        if (response.data.success) {
-            await this.fetchTeacherClassData();
-            toastr.success('Associaiton removed successfully!');
-        } else {
-            toastr.error(response.data.msg);
-        }
-        }
-        catch(e){
-        toastr.error(e);
-        }
-    } */
 
     onModalClose = () => {
         this.setState({isModalOpen: false});
@@ -117,7 +98,7 @@ export class TeacherClassAssignment extends Component {
                     <Tooltip 
                         text="Delete"
                         trigger={
-                            <Button icon='cancel' style={{padding:"5px"}}
+                            <Button icon='cancel' style={{padding:"3px"}}
                             onClick={()=>this.onDeleteModalOpen(data.ID)} /> 
                         }
                     />
