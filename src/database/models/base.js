@@ -165,8 +165,11 @@ export class Model {
    */
   async remove(id) {
     const connection = await this.db.getConnection();
-    await connection.query(`DELETE FROM ${this.tableName} WHERE ID = ?`, [id]);
-    connection.release();
+    try {
+      await connection.query(`DELETE FROM ${this.tableName} WHERE ID = ?`, [id]);
+    } finally {
+      connection.release();
+    }
   }
 
   /**
