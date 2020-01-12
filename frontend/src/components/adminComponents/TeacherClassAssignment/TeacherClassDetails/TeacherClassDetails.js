@@ -3,62 +3,23 @@ import { api } from '../../../../services/api';
 import * as toastr from 'toastr';
 import _ from 'lodash';
 
-import {Icon, Modal, Button, Table, Dropdown} from 'semantic-ui-react';
+
+import IsTeacher from '../../../../assets/images/iconTeacher.jpg';
+import {Icon, Modal, Button, Table, Dropdown, Header, Image} from 'semantic-ui-react';
 import Tooltip from '../../../Tooltip/Tooltip';
-
-
-
-const teacherOptions = [
-    {
-      key: 'Jenny Hess',
-      text: 'Jenny Hess',
-      value: 'Jenny Hess',
-      image: { avatar: true, src: '/images/avatar/small/jenny.jpg' },
-    },
-    {
-      key: 'Elliot Fu',
-      text: 'Elliot Fu',
-      value: 'Elliot Fu',
-      image: { avatar: true, src: '/images/avatar/small/elliot.jpg' },
-    },
-    {
-      key: 'Stevie Feliciano',
-      text: 'Stevie Feliciano',
-      value: 'Stevie Feliciano',
-      image: { avatar: true, src: '/images/avatar/small/stevie.jpg' },
-    },
-    {
-      key: 'Christian',
-      text: 'Christian',
-      value: 'Christian',
-      image: { avatar: true, src: '/images/avatar/small/christian.jpg' },
-    },
-    {
-      key: 'Matt',
-      text: 'Matt',
-      value: 'Matt',
-      image: { avatar: true, src: '/images/avatar/small/matt.jpg' },
-    },
-    {
-      key: 'Justen Kitsune',
-      text: 'Justen Kitsune',
-      value: 'Justen Kitsune',
-      image: { avatar: true, src: '/images/avatar/small/justen.jpg' },
-    },
-  ]
-
 
 export class TeacherClassDetails extends Component {
     state = {
         isSaving:false,
         errMsg:false,
         teacherID:null,
-        FirstName:null,
-        LastName:null,
+        //FirstName:null,
+        //LastName:null,
         CSPairs:[],
 
         classOptions:[],
-        subjectOptions:[]
+        subjectOptions:[],
+        teacherOptions:[]
     }
 
     hasEmptySelectbox = () => {
@@ -88,6 +49,10 @@ export class TeacherClassDetails extends Component {
         this.setState({CSPairs: array});
     }
 
+    handleTeacherChange = (e, value) =>{
+        this.setState({teacherID: value.value})
+    }
+
     onClose = () => {
         if (this.state.isSaving) {
           return;
@@ -106,7 +71,13 @@ export class TeacherClassDetails extends Component {
             //console.log(dat[i]);
             return { key: dat[i].ID, value: dat[i].ID , text: dat[i].Name}
     })
-    
+
+    setTeacherOptions = (dat) =>
+        _.times(dat.length, (i) => {
+            //const name = dat.Name;
+            return { key: dat[i].ID, value: dat[i].ID , text: dat[i].FirstName +" "+ dat[i].LastName, icon: 'user outline'}
+    })
+
     async fetchClasses(){
         const response = await api.admin.getClasslist();
         if (response) {
@@ -159,13 +130,10 @@ export class TeacherClassDetails extends Component {
     
 
     async componentDidMount() {
-        const {teachersAll} = this.props;
-        
-        if (teachersAll) {
+        const teacherAll = this.props;
+        if (teacherAll) {
           this.setState({
-            //teacherID: teacher.ID,
-            teacherAll:teachersAll,
-
+            teacherOptions:this.setTeacherOptions(teacherAll.teacherAll),
             CSPairs:[{'subjectId':"", 'classId':""}],
           });
         }
@@ -175,29 +143,27 @@ export class TeacherClassDetails extends Component {
 
     render() {
         return (
-            <Modal dimmer open className="topic-detail" size="small">
+            <Modal dimmer open className="topic-detail" size="tiny">
                 <Modal.Header>
-                    <span><Icon name='plus'/>&nbsp; Add new association</span>
+                    New associations
                     <Icon onClick={this.onClose} className="close-icn" name="close" />
                 </Modal.Header>
                 
                 <Modal.Content>
-                <Dropdown
-                    placeholder='Select Teacher'
-                    fluid
-                    selection
-                    options={teacherOptions}
-                />
 
+                <Header as='h4'>
+                    <Image avatar src={IsTeacher} style={{marginRight:"10px"}}/>
+                    <Dropdown
+                        fluid
+                        search
+                        selection
+                        options={this.state.teacherOptions}
+                        placeholder='Set Teacher'
+                        onChange={(e, {value}) => {this.handleTeacherChange(e, {value})}}
+                    />
+                </Header>
 
-                <Table columns={3}>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell textAlign="center">Class</Table.HeaderCell>
-                            <Table.HeaderCell textAlign="center">Subject</Table.HeaderCell>
-                            <Table.HeaderCell textAlign="center" width={1}></Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
+                    <Table columns={3} basic="very">
 
                     <Table.Body>
                         {this.state.CSPairs.length > 0 &&
@@ -206,7 +172,7 @@ export class TeacherClassDetails extends Component {
                             <Table.Cell>
                                 <Dropdown fluid search selection
                                     options={this.state.classOptions}
-                                    placeholder='Select Class'
+                                    placeholder='Set Class'
                                     name='class'
                                     value={this.state.CSPairs[index].classId}
                                     onChange={(e, {value}) => {this.handleClassChange(e, {value}, index)} }
@@ -215,21 +181,20 @@ export class TeacherClassDetails extends Component {
                             <Table.Cell>
                                 <Dropdown fluid search selection
                                     options={this.state.subjectOptions}
-                                    placeholder='Select Subject'
+                                    placeholder='Set Subject'
                                     name='subject'
                                     value={this.state.CSPairs[index].subjectId}
                                     onChange={(e, {value}) => {this.handleSubjectChange(e, {value}, index)}}
                                 />
                             </Table.Cell>
                             <Table.Cell textAlign="center" width={1}>
-                                {(index >= 1) && <Tooltip 
+                                <Tooltip 
                                     text="Delete"
                                     trigger={
-                                        <Button circular icon='cancel' style={{padding:"5px"}}
+                                        <Button icon='cancel' style={{padding:"5px"}}
                                         onClick={()=>this.onDeleteAssociationRow(index)} /> 
                                     }
                                 />
-                                }
                             </Table.Cell>
                         </Table.Row>
                         )}
@@ -237,15 +202,11 @@ export class TeacherClassDetails extends Component {
 
                     <Table.Footer fullWidth>
                     <Table.Row>
-                       
-                    
-                    <Table.HeaderCell colSpan='4' textAlign="center">
-                        <Button  size='small' fluid color="vk" onClick={this.onAddAssociationRow}>
-                        <span><Icon name='plus' /> Add Association</span>
-                        </Button>
-
-                    </Table.HeaderCell>
-                    
+                        <Table.HeaderCell colSpan='4' textAlign="center">
+                            <Button  size='small' fluid color='vk' onClick={this.onAddAssociationRow}>
+                            <span><Icon name='plus' /> Add</span>
+                            </Button>
+                        </Table.HeaderCell>
                     </Table.Row>
                 </Table.Footer>
                 </Table>
@@ -257,7 +218,7 @@ export class TeacherClassDetails extends Component {
                 </Modal.Content>
                 
                 <Modal.Actions>
-                <Button positive onClick={this.onSave}>
+                <Button positive onClick={this.onSave} disabled={!this.state.teacherID}>
                     <Icon name='checkmark' /> Confirm
                 </Button>
                 </Modal.Actions>

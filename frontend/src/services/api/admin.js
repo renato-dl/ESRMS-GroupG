@@ -72,11 +72,15 @@ export class AdminAPIService extends BaseAPIService {
   }
 
   getAllTeacherClassData(){
-    return this.get('admin/teacher-class');
+    return this.get('/admin/teacher-class');
   }
 
   createTeacherClassAssociation(data){
-    return this.post('admin/teacher-class', data);
+    return this.post('/admin/teacher-class', data);
+  }
+
+  deleteTeacherAssociation(id){
+    return this.delete('/admin/teacher-class', {id:id});
   }
 
   getSubjectslist(){
