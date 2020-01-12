@@ -143,6 +143,10 @@ export class GradeDetail extends Component {
           <Icon onClick={this.onClose} className="close-icn" name="close" />
         </Modal.Header>
         <Modal.Content>
+          <Modal.Description className="gradeDescription">
+            The mark 10.25 equals to 10 cum laude.            
+          </Modal.Description>
+          <br />
           <Form loading={this.state.isSaving}>
             <Form.Group widths='equal'>
             <Form.Select
@@ -179,7 +183,7 @@ export class GradeDetail extends Component {
                     step={0.25}
                     value={this.state.studentMarks.get(eStudent.ID)}
                     onChange={(e) => {this.changeValue(eStudent.ID, e)} }
-                  />                   
+                  />                                   
                 </Form.Field>                 
               )}          
           </Form>

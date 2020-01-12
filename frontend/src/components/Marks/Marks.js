@@ -27,20 +27,32 @@ export class Marks extends React.Component{
         allMarks: response.data,
         studentName: student.FirstName
       })
-      let marksSubjects = [];
-      let i = 1;
-      marksSubjects.push({key:0, value:'all', text:'All'});
-      this.state.marks.forEach(function(e){
-        let subj = {key: i, value: e.Name, text: e.Name};
-        i = i + 1;
-        marksSubjects.push(subj);
-      });
-      this.setState({subjects: marksSubjects});
+      await this.createSubjectsDropdown();
     }
   }
 
+  async createSubjectsDropdown(){
+    let marksSubjects = [];
+    marksSubjects.push({key:0, value:'all', text:'All'});
+    this.setState({selectedSubj: 'all'});
+    let i = 1;
+    try {
+      const subjects = await api.parent.getSubjectslist();
+      if(subjects && subjects.data){
+        subjects.data.forEach(function(e){
+          let subj = {key: i, value: e.Name, text: e.Name};
+          i = i + 1;
+          marksSubjects.push(subj);
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    this.setState({subjects: marksSubjects});
+  }
+
   selectMarks = async (studentID) => {
-    console.log(studentID);
+    // console.log(studentID);
     this.props.history.push('/marks')
   };
 
@@ -88,8 +100,6 @@ export class Marks extends React.Component{
   }
 
   render(){
-    // console.log(this.props.match)
-    if(this.state.marks.length){
       return (
         <Container className="contentContainer">
               <h3 className="contentHeader"> 
@@ -103,18 +113,19 @@ export class Marks extends React.Component{
               options={this.state.subjects}
               onChange={this.onSelect}
             />       
-          <Table className='Marks_table' columns={4}>
-          <Table.Header>
-              <Table.Row>
-                  <Table.HeaderCell>SUBJECT</Table.HeaderCell>
-                  <Table.HeaderCell>MARK</Table.HeaderCell>
-                  <Table.HeaderCell>TYPE</Table.HeaderCell>
-                  <Table.HeaderCell>DATE</Table.HeaderCell>
-              </Table.Row>
-          </Table.Header>
+          {this.state.marks.length != 0 &&
+            <Table className='Marks_table' columns={4}>
+            <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell>SUBJECT</Table.HeaderCell>
+                    <Table.HeaderCell>MARK</Table.HeaderCell>
+                    <Table.HeaderCell>TYPE</Table.HeaderCell>
+                    <Table.HeaderCell>DATE</Table.HeaderCell>
+                </Table.Row>
+            </Table.Header>
             <Table.Body>
-            {this.state.marks.map((mark) =>
-              <Table.Row>
+            {this.state.marks.map((mark, index) =>
+              <Table.Row key={index}>
                   <Table.Cell>{ mark.Name } </Table.Cell>
                   <Table.Cell><span className="markField" style={this.styleMarkColor(mark.Grade)}>{ this.marksFormat(mark.Grade) }</span></Table.Cell>
                   <Table.Cell>{ mark.Type } </Table.Cell>
@@ -123,6 +134,11 @@ export class Marks extends React.Component{
             )} 
             </Table.Body>
             </Table>
+          }
+          {this.state.marks.length == 0 &&
+            <NoData/>
+          }
+          
             {/* <h3 className="contentHeader"> 
             <Icon name='braille'/> 
              Final Grades
@@ -139,15 +155,5 @@ export class Marks extends React.Component{
             </Table> */}
         </Container>
       );
-    }
-    return (
-      <Container className="contentContainer">
-        <h3 className="contentHeader"> 
-          <Icon name='sort numeric up' /> 
-            {this.state.studentName ? this.state.studentName + "'s" : 'Student'} grades
-        </h3>
-        <NoData/>
-      </Container>
-    );
   }
 }
