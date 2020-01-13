@@ -19,9 +19,9 @@ export class TeacherClassDelete extends Component {
                 toastr.error(response.data.msg);
                 this.props.onClose();
             }
-        }
-        catch(e){
-        toastr.error(e);
+        }catch(e){
+            toastr.error(e);
+            this.props.onClose();
         }
     }
 
