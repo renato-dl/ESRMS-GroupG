@@ -15,7 +15,7 @@ export class TeacherClassesNote extends Component {
     async componentDidMount() {
         const response = await api.teacher.getTeacherClasses();
         if (response) {
-          this.setState({ classList: response.data })
+            this.setState({ classList: response.data })
         }
     }
 
@@ -37,17 +37,17 @@ export class TeacherClassesNote extends Component {
                         <Card style = {{border: "1px solid #41648A"}} key={cls.ClassId}>
                             <Card.Content>
                                 <Image
-                                floated='right'
-                                size='mini'
-                                src={ClassIcon}
+                                    floated='right'
+                                    size='mini'
+                                    src={ClassIcon}
                                 />
                                 <Card.Header><h1 style ={{color: '#536574'}}>Class: {cls.ClassName}</h1></Card.Header>
                             </Card.Content>
                             <Card.Content extra>
                                 <Button fluid color='orange'
-                                onClick={()=>this.onRecordsClick(cls.ClassId, cls.ClassName)}
+                                    onClick={()=>this.onRecordsClick(cls.ClassId, cls.ClassName)}
                                 >
-                                Operations of Notes 
+                                    Operations of Notes 
                                 </Button>
                             </Card.Content>
                         </Card>

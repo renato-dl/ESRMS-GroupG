@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Button, Card, Container, Icon } from 'semantic-ui-react'
+import { Button, Card, Container, Icon, Image } from 'semantic-ui-react'
 import { NoData } from '../../NoData/NoData';
 import { api } from '../../../services/api';
 import {TimetableAdd} from './TimetableAdd';
+import ClockIcon from '../../../assets/images/clock.png';
 
 export class Timetables extends Component {
   constructor(props) {
@@ -77,16 +78,23 @@ export class Timetables extends Component {
         </h3>
         <Card.Group>
           {this.state.classes.map((data, index) =>
-            <Card key={index}>
+            <Card style = {{border: "1px solid #41648A"}} key={index}>
             <Card.Content>
-              <Card.Header>Class {data.Name}</Card.Header>
+              <Image
+                floated='right'
+                size='mini'
+                src={ClockIcon}
+              />
+              <Card.Header>
+                <h1 style ={{color: '#536574'}}> Class {data.Name} </h1>
+              </Card.Header>
               {/* <Card.Meta>Created on {data.CreationYear}</Card.Meta> */}
               <Card.Description>
-                Teacher Coordinator <strong>{data.Coordinator}</strong>
+                <span style ={{fontSize: '16px'}}>Teacher Coordinator <strong>{data.Coordinator}</strong></span>
               </Card.Description>
             </Card.Content>
             <Card.Content extra textAlign='center'>
-                <Button basic color='green' onClick={() =>this.showTimetable(data)}>
+                <Button fluid color='blue' onClick={() =>this.showTimetable(data)}>
                   Timetable
                 </Button>
             </Card.Content>
