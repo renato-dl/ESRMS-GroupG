@@ -436,7 +436,7 @@ class TeacherController extends BaseController {
   async getAssignmentFile(req, res) {
     const fileKey = req.query.ID;
     if (!fileKey) {
-      throw new Error("Missing or invalid assignment id");
+      throw new Error("Missing or invalid file id");
     }
     
     const file = await File.findOne({ Key: fileKey });
@@ -538,7 +538,7 @@ class TeacherController extends BaseController {
   async getSupportMaterial(req, res) {
     const supportMaterial = await SupportMaterial.findAllByTeacher(
       req.user.ID,
-      { subject: req.query.subject, from: req.query.fromDate, to: req.query.toDate },
+      { subject: req.query.subject, classId: req.query.classId, from: req.query.fromDate, to: req.query.toDate },
       { page: req.query.page, pageSize: req.query.pageSize }
     );
 
@@ -548,28 +548,51 @@ class TeacherController extends BaseController {
   // POST /teacher/support-material
   // Body: subjectId, file
   async addSupportMaterial(req, res) {
-    if (!await TCSR.checkIfTeacherTeachesSubject(req.user.ID, req.body.subjectId)) {
-      return res.send(401);
-    }
+    const supportMaterialId = await SupportMaterial.add(
+      req.user.ID,
+      req.body.subjectId,  
+      req.body.classId,
+      req.file
+    );
 
-    const supportMaterialId = await SupportMaterial.add(req.body.subjectId, req.file)
     res.send({ supportMaterialId });
   }
 
   // DELETE /teacher/support-material
   // Body: ID
   async deleteSupportMaterial(req, res) {
-    const supportMaterial = await SupportMaterial.findById(req.body.ID);
-    if (!supportMaterial) {
-      return res.send(401);
-    }
-
-    if (!await TCSR.checkIfTeacherTeachesSubject(req.user.ID, supportMaterial.SubjectId)) {
-      return res.send(401);
-    }
-
-    await SupportMaterial.remove(req.body.ID);
+    await SupportMaterial.remove(req.user.ID, req.body.ID);
     res.send({ success: true });
+  }
+
+  async getSupportFile(req, res) {
+    const fileKey = req.query.ID;
+    if (!fileKey) {
+      throw new Error("Missing or invalid file id");
+    }
+    
+    const file = await File.findOne({ Key: fileKey });
+    if (!file) {
+      res.sendStatus(404);
+      return;
+    }
+
+    const support = await SupportMaterial.findOne({ FileId: file.ID });
+    if (!support) {
+      return res.sendStatus(404);
+    }
+
+    const relation = await TCSR.findById(support.TeacherSubjectClassRelationId);
+    if (!relation) {
+      return res.sendStatus(401);
+    }
+
+    if (relation.TeacherId !== req.user.ID) {
+      return res.sendStatus(401);
+    }
+
+    const filePath = path.join(__dirname, "../../", "uploads", file.Key);
+    res.download(filePath);
   }
 }
 
