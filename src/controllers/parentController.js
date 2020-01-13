@@ -70,10 +70,10 @@ class ParentController extends BaseController {
     res.send(attendance);
   }
 
-  async getAssignmentFile(req, res) {
+  async getFile(req, res) {
     const fileKey = req.query.ID;
     if (!fileKey) {
-      throw new Error("Missing or invalid assignment id");
+      throw new Error("Missing or invalid file id");
     } 
 
     const file = await File.findOne({ Key: fileKey });
