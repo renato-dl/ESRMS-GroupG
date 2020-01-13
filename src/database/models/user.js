@@ -386,7 +386,7 @@ class User extends Model {
       }
     }
     if(user.IsSysAdmin && !isAdminOfficer) {
-      throw new Error ('SysAdmin must be Admin Officer');
+      throw new Error ('SysAdmin must be Secretary Officer');
     }
     
     const connection = await this.db.getConnection();
