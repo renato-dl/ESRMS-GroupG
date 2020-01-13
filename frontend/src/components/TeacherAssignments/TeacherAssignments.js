@@ -35,8 +35,8 @@ export class TeacherAssignments extends Component {
   }
 
   fetchAssignments = async (from, to) => {
-    const fromDate = moment().startOf('month').startOf('day').toDate().toISOString();
-    const toDate = moment().endOf('month').endOf('day').toDate().toISOString();
+    const fromDate = moment(from).startOf('month').startOf('day').toDate().toISOString();
+    const toDate = moment(to).endOf('month').endOf('day').toDate().toISOString();
     const subjectId = this.props.match.params.subjectID;
     const classId = this.props.match.params.classID;
     this.setState({classID: classId, subjectID: subjectId});
