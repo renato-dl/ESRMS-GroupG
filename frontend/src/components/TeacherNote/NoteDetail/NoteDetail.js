@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import './NoteDetail.scss';
-import {Button, Modal, Form, Dropdown, Icon,Label} from 'semantic-ui-react';
+import {Button, Modal, Form, Icon} from 'semantic-ui-react';
 import Select from 'react-select'
-import NumericInput from 'react-numeric-input';
 import "react-datepicker/dist/react-datepicker.css";
 import { api } from '../../../services/api';
 

@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
 // import './NoteDetail.scss';
-import {Button, Modal, Form, Dropdown, Icon,LabelDetail} from 'semantic-ui-react';
-import Select from 'react-select'
-import NumericInput from 'react-numeric-input';
+import { Modal, Icon } from 'semantic-ui-react';
 import { api } from '../../services/api';
 
-import * as toastr from 'toastr';
-
 import moment from 'moment';
-import DatePicker , { registerLocale } from "react-datepicker";
+import { registerLocale } from "react-datepicker";
 import en from "date-fns/locale/en-GB";
 registerLocale("en", en);
 

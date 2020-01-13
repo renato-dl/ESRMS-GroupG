@@ -1,7 +1,7 @@
 import React from 'react';
 import { api } from '../../services/api';
 // import './Marks.scss';
-import {Table, Icon, Container, Dropdown } from 'semantic-ui-react';
+import {Table, Icon, Container } from 'semantic-ui-react';
 
 import moment from 'moment';
 import { NoData } from '../NoData/NoData';
@@ -25,7 +25,7 @@ export class ChildNote extends React.Component{
   }
 
   fetchNotes = async () =>{ 
-    const student = this.context.state.parent.selectedStudent.ID;   
+    // const student = this.context.state.parent.selectedStudent.ID;   
     const request={
         studentId:this.props.match.params.studentID
     }
@@ -37,7 +37,7 @@ export class ChildNote extends React.Component{
   }
     
   async componentDidMount(){
-    const student = JSON.parse(localStorage.getItem('selectedChild'));
+    // const student = JSON.parse(localStorage.getItem('selectedChild'));
     this.fetchNotes()
   }
 
