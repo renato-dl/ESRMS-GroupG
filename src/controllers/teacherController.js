@@ -538,7 +538,7 @@ class TeacherController extends BaseController {
   async getSupportMaterial(req, res) {
     const supportMaterial = await SupportMaterial.findAllByTeacher(
       req.user.ID,
-      { subject: req.query.subject, from: req.query.fromDate, to: req.query.toDate },
+      { subject: req.query.subject, classId: req.query.classId, from: req.query.fromDate, to: req.query.toDate },
       { page: req.query.page, pageSize: req.query.pageSize }
     );
 
