@@ -21,7 +21,7 @@ class TCSR extends Model {
     
     connenction.release();
     console.log(result);
-    return result[0].count == 1;
+    return result[0].count >= 1;
   }
 
   async checkIfTeacherTeachesSubjectInClass(teacherId, subjectId, classId) {
@@ -91,6 +91,27 @@ class TCSR extends Model {
 
   }
 
+  async checkIfClassHasTeacherForSubject(classId, subjectId) {
+    const connenction = await this.db.getConnection();
+    let result;
+    try {
+      result = await connenction.query(
+        `SELECT COUNT(*) AS count
+        FROM ${this.tableName}
+        WHERE ClassId = ? AND SubjectId = ?`,
+        [classId, subjectId]
+      );
+    } catch (error) {
+      console.log(error);
+    } finally {
+      connection.release();
+    }
+    if (result[0].count > 0) {
+      return true;
+    }
+    return false;
+  }
+
   async getTeachingClasses(teacherId) {
     if(!teacherId){
       throw new Error('Missing or invalid teacher id');
@@ -141,6 +162,7 @@ class TCSR extends Model {
       result = await connection.batch(query, values);
     } catch (error) {
       console.log(error);
+      throw new Error('Only one teacher can teach a subject to a class');
     } finally {
       connection.release();
     }
