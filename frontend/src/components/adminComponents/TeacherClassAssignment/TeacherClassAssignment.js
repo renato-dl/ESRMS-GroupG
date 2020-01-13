@@ -146,9 +146,9 @@ export class TeacherClassAssignment extends Component {
                         teacherAll={this.state.freeTeachers}
                         onClose={this.onModalClose}
                         onSave={() => {
-                        this.fetchTeacherClassData();
-                        this.fetchFreeTeachers();
-                        this.onModalClose();
+                            this.fetchTeacherClassData();
+                            this.fetchFreeTeachers();
+                            this.onModalClose();
                         }}
                     />
                 }

@@ -10,14 +10,15 @@ export class TeacherClassDelete extends Component {
     onDeleteAssociation = async () => {
         const id = this.props.associationId;
         try{
-        const response = await api.admin.deleteTeacherAssociation(id);
-        if (response.data.success) {
-            //await this.fetchTeacherClassData();
-            toastr.success('Associaiton removed successfully!');
-            this.props.onDeleted();
-        } else {
-            toastr.error(response.data.msg);
-        }
+            const response = await api.admin.deleteTeacherAssociation(id);
+            if (response.data.success) {
+                //await this.fetchTeacherClassData();
+                toastr.success('Associaiton removed successfully!');
+                this.props.onDeleted();
+            } else {
+                toastr.error(response.data.msg);
+                this.props.onClose();
+            }
         }
         catch(e){
         toastr.error(e);
