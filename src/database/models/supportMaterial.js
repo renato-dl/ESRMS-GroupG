@@ -79,7 +79,7 @@ class SupportMaterial extends Model {
 
     const connection = await this.db.getConnection();
     let query = `
-      SELECT SP.ID, SP.CreatedOn, S.Name as Subject, F.Name, F.Type, F.Size, TSCR.ClassId
+      SELECT SP.ID, SP.CreatedOn, S.Name as Subject, F.Key, F.Name, F.Type, F.Size, TSCR.ClassId
       FROM Support_Material SP
       INNER JOIN TeacherSubjectClassRelation TSCR ON TSCR.ID = SP.TeacherSubjectClassRelationId
       INNER JOIN Files F ON F.ID = SP.FileId
@@ -111,7 +111,7 @@ class SupportMaterial extends Model {
 
     const connection = await this.db.getConnection();
     let query = `
-      SELECT SP.ID, SP.CreatedOn, S.ID as SubjectID, S.Name as SubjectName, F.Name, F.Type, F.Size
+      SELECT SP.ID, SP.CreatedOn, S.ID as SubjectID, S.Name as SubjectName, F.Key, F.Name, F.Type, F.Size
       FROM Support_Material SP, Files F, Subjects S, TeacherSubjectClassRelation TSCR, Students STU
       WHERE SP.TeacherSubjectClassRelationId = TSCR.ID
       AND F.ID = SP.FileId

@@ -41,6 +41,7 @@ export class TeacherMaterial extends Component {
             const response = await api.teacher.getMaterialBySubject(subject.subject);
             if(response && response.data){
                 this.setState({allMaterialList: response.data.supportMaterial });
+                console.log(response.data.supportMaterial);
             }
         } catch (error) {
             console.log(error);
@@ -173,7 +174,7 @@ export class TeacherMaterial extends Component {
                                             <Tooltip 
                                                 text="Download"
                                                 trigger={
-                                                    <Button icon="download" color="vk" onClick={() => {this.handleDownload(elem.ID)}}></Button> 
+                                                    <Button icon="download" color="vk" onClick={() => {this.handleDownload(elem.Key)}}></Button> 
                                                 }
                                             />
                                             <Button.Or className = "custOrButton" text=''/>
