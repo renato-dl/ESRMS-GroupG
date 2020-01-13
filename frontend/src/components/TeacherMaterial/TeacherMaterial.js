@@ -9,6 +9,7 @@ import AddMaterial from './TeacherMaterialDetails/AddMaterial';
 
 import moment from 'moment';
 import toastr from 'toastr';
+import TeacherDeleteMaterialConfirmation from './TeacherMaterialDetails/TeacherDeleteMaterialConfirmation';
 
 export class TeacherMaterial extends Component {
     state={
@@ -18,6 +19,8 @@ export class TeacherMaterial extends Component {
         selectedSubject: null,
 
         AddModalOpen:false,
+        deleteModalOpen:false,
+        fileToDelete:[],
 
         MAX_ALLOWED_FILES: 10
     }
@@ -92,7 +95,15 @@ export class TeacherMaterial extends Component {
         this.setState({AddModalOpen:false});
     }
 
-    async deleteMaterial(obj){
+    onDeleteModalClose = () => {
+        this.setState({deleteModalOpen:false});
+    };
+    
+    onDeleteModalOpen = (file) => {
+        this.setState({fileToDelete: file, deleteModalOpen:true});
+    };
+
+    /* async deleteMaterial(obj){
         const request = {ID: obj.ID};
         try {
             const response = await api.teacher.deleteMaterialById(request);
@@ -105,7 +116,7 @@ export class TeacherMaterial extends Component {
         }
         await this.fetchMaterials(obj.Subject);
     }
-
+ */
     render() {
         const { activeItem } = this.state
 
@@ -150,7 +161,7 @@ export class TeacherMaterial extends Component {
                                         <Button.Group>
                                             {/* <Button icon="edit"></Button> */}
                                             <Button.Or className = "custOrButton" text=''/>
-                                            <Button icon="delete"onClick={() => this .deleteMaterial(elem)}></Button>
+                                            <Button icon="delete"onClick={() => this .onDeleteModalOpen(elem)}></Button>
                                         </Button.Group>
                                         </List.Content>
     
@@ -171,6 +182,16 @@ export class TeacherMaterial extends Component {
                                 subject={this.state.selectedSubject}
                                 maxFiles={this.state.MAX_ALLOWED_FILES}
                                 onClose={this.AddMaterialClose}
+                            />
+                        }
+                        {this.state.deleteModalOpen &&
+                            <TeacherDeleteMaterialConfirmation
+                                file={this.state.fileToDelete}
+                                onClose={this.onDeleteModalClose}
+                                onDeleted={() => {
+                                    this.fetchMaterials(this.state.fileToDelete.Subject); 
+                                    this.onDeleteModalClose();
+                                }}
                             />
                         }
                 </Container>
