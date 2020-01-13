@@ -1,18 +1,42 @@
 .big-calendar {
+  .rbc-toolbar{
+    background-color:#b9cbde;
+    height:45px;
+    padding:5px
+  }
+
+  @media (min-width: 320px) and (max-width: 767px) {
+    .rbc-toolbar{
+      background-color:#b9cbde;
+      height:65px;
+      padding:5px
+    }
+  }
+
+  .rbc-toolbar-label{
+    color:#41648A;
+    font-size:24px;
+    font-weight:bold;
+    text-align: center;
+  }
+  .rbc-btn-group > *{
+    border:1px solid #41648A;
+    background-color: #fff;
+  }
   .default-event {
     background: #008272 !important;
   }
 
   .red {
-    background: red !important;
+    background: #db2828 !important;
   }
 
   .blue {
-    background: blue !important;
+    background: #2185D0 !important;
   }
 
   .orange {
-    background: orange !important;
+    background: #F2711C !important;
   }
   .green {
     background: green !important;

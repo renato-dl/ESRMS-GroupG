@@ -2,13 +2,14 @@ import React from 'react';
 import { api } from '../../services/api';
 import './ChildAttendance.scss';
 import { Calendar } from '../Calendar/Calendar';
-import { Icon,Container} from 'semantic-ui-react'
+import { Icon, Container, Card, Button} from 'semantic-ui-react'
 import moment from 'moment';
 import {ApplicationStoreContext} from '../../store';
 
 import {AttendanceDetailsAbsence} from'./AttendanceDetails/AttendanceDetailsAbsence'
 import {AttendanceDetailsEarlyexit} from './AttendanceDetails/AttendanceDetailsEarlyexit'
 import {AttendanceDetailsLateentry}from './AttendanceDetails/AttendanceDetailsLateentry'
+import TotalFilteredAttendance from './AttendanceDetails/TotalFilteredAttendance';
 
 export class ChildAttendance extends React.Component{
   static contextType = ApplicationStoreContext;
@@ -19,15 +20,55 @@ export class ChildAttendance extends React.Component{
         attendanceForCalendar: [],
         attendanceModalOpen: false,
         attendanceDataForModal: null,
-        attendanceNormal:null
+        attendanceNormal:null,
+
+        totalEarlyExists:null,
+        totalLateEntries:null,
+        totalAbsene:null,
+        totalYearArray:[],
+        modalArr:[],
+        modalTitle:null,
+        isTotoalModalOpen: false
       }
+    }
+
+    filterRecords = (id) => {
+      let records = [];
+      this.state.totalYearArray.forEach(function(e){
+          if(e.title == id){
+            records.push(e);
+          }
+      });
+      return records;
+    }
+
+    OpenTotalDetails = (title) => {
+      this.setState({modalArr: this.filterRecords(title), modalTitle: title});
+      this.setState({isTotoalModalOpen:true});
+    }
+
+    getYearRecords = async() => {
+      let from = new Date(2019, 9, 1).toISOString;
+      let to = new Date().toISOString();
+      await this.fetchAttendance(from, to, true);
+      this.setState({
+        totalEarlyExists:this.filterRecords("Early Exit").length,
+        totalAbsene:this.filterRecords("Absent").length,
+        totalLateEntries:this.filterRecords("Late Entry").length,
+
+      })
+    }
+
+    CloseTotalDetails = () =>{
+      this.setState({isTotoalModalOpen:false, modalArr:[], modalTitle:null });
     }
 
     async componentDidMount() {
         await this.onNavigate(new Date());
+        await this.getYearRecords();
       }
     
-    fetchAttendance = async (from, to) => {
+    fetchAttendance = async (from, to, forYearSummary) => {
         const student = this.context.state.parent.selectedStudent.ID;
         const response = await api.parent.getChildAttendance(student, from , to);
           if (response) {
@@ -51,23 +92,41 @@ export class ChildAttendance extends React.Component{
              }
              return allAttendances;
            }, []);
-           this.setState({
-            attendanceForCalendar: attendances.map((attendance) => {
-              return {
-                id: attendance.ID,
-                start: new Date(attendance.Date),
-                end: new Date(attendance.Date),
-                Date:attendance.Date,
-                title:this.getDailyStatus(attendance.EarlyExit,attendance.LateEntry),
-                EarlyExit: attendance.EarlyExit,
-                LateEntry:attendance.LateEntry,
-                EntryTeacherName:attendance.EntryTeacherName,
-                ExitTeacherName: attendance.ExitTeacherName
-              }
+            if(!forYearSummary){
+              this.setState({
+                attendanceForCalendar: attendances.map((attendance) => {
+                  return {
+                    id: attendance.ID,
+                    start: new Date(attendance.Date),
+                    end: new Date(attendance.Date),
+                    Date:attendance.Date,
+                    title:this.getDailyStatus(attendance.EarlyExit,attendance.LateEntry),
+                    EarlyExit: attendance.EarlyExit,
+                    LateEntry:attendance.LateEntry,
+                    EntryTeacherName:attendance.EntryTeacherName,
+                    ExitTeacherName: attendance.ExitTeacherName
+                  }
+                }
+                ),
+                attendance: attendances
+              })
+            }else{
+              this.setState({
+                totalYearArray:attendances.map((attendance) => {
+                  return {
+                    id: attendance.ID,
+                    start: new Date(attendance.Date),
+                    end: new Date(attendance.Date),
+                    Date:attendance.Date,
+                    title:this.getDailyStatus(attendance.EarlyExit,attendance.LateEntry),
+                    EarlyExit: attendance.EarlyExit,
+                    LateEntry:attendance.LateEntry,
+                    EntryTeacherName:attendance.EntryTeacherName,
+                    ExitTeacherName: attendance.ExitTeacherName
+                  }
+                })
+              })
             }
-            ),
-            attendance: this.state.attendanceForCalendar
-          })
         }
         await this.AddNormalLabel(from,to)
       };
@@ -124,7 +183,7 @@ export class ChildAttendance extends React.Component{
     onNavigate = async (data) => {
       const from = moment(data).startOf('month').startOf('day').toDate().toISOString();
       const to = moment(data).endOf('month').endOf('day').toDate().toISOString();
-      await this.fetchAttendance(from, to);
+      await this.fetchAttendance(from, to, false);
     } 
 
     eventPropGetter = (event) => {
@@ -145,6 +204,42 @@ export class ChildAttendance extends React.Component{
           <Icon name='calendar check outline'/> 
           {this.context.state.parent ? this.context.state.parent.selectedStudent.FirstName + "'s" : 'Student'} attendance
          </h3>
+
+         <Card.Group style={{marginBottom:"20px"}} centered>
+          <Card color="red">
+            <Card.Content><Card.Header textAlign="center" style ={{color: "#db2828"}}>
+              <Icon name="warning circle"/> All Absences: {this.state.totalAbsene}</Card.Header>
+            </Card.Content>
+            <Card.Content extra><Button fluid basic color="red" onClick={() => {this.OpenTotalDetails("Absent")}}  disabled={this.state.totalAbsene===0}>
+              <b>Details <Icon name="arrow right"/></b></Button>
+            </Card.Content>
+          </Card>
+
+          <Card color="orange">
+            <Card.Content><Card.Header textAlign="center" style ={{color: "#F2711C"}}>
+              <Icon name="clock outline"/> All Late Entries: {this.state.totalLateEntries}</Card.Header>
+            </Card.Content>
+            <Card.Content extra><Button fluid basic color="orange" onClick={()=>{this.OpenTotalDetails("Late Entry")}} disabled={this.state.totalLateEntries===0}>
+              <b>Details <Icon name="arrow right"/></b></Button>
+            </Card.Content>
+          </Card>
+
+          <Card color="blue">
+            <Card.Content><Card.Header textAlign="center" style ={{color: "#2185D0"}}>
+              <Icon name="hourglass half"/> All Early Exits: {this.state.totalEarlyExists}</Card.Header>
+            </Card.Content>
+            <Card.Content extra><Button fluid basic color="blue" onClick={()=>{this.OpenTotalDetails("Early Exit")}} disabled = {this.state.totalEarlyExists===0}>
+                <b>Details <Icon name="arrow right"/></b></Button>
+            </Card.Content>
+          </Card>
+        </Card.Group>
+          {this.state.isTotoalModalOpen &&
+            <TotalFilteredAttendance
+              modalArr={this.state.modalArr}
+              modalTitle={this.state.modalTitle}
+              onClose={this.CloseTotalDetails}
+            />
+          }
  
          <div className="calendarContainer">
            <Calendar 

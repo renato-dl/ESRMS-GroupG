@@ -181,7 +181,7 @@ export class TeacherAssignment extends Component {
               ))}
             </div>
             
-            {currentFilesLength < MAX_ALLOWED_FILES && <FileUpload onDrop={this.onDrop} />}
+            {currentFilesLength < MAX_ALLOWED_FILES && <FileUpload onDropAccepted={this.onDrop} />}
 
             </Form.Field>
           </Form>

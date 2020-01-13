@@ -3,12 +3,15 @@ import { api } from '../../services/api';
 
 import '../ParentMaterials/ParentMaterial.scss';
 
+import Tooltip from '../Tooltip/Tooltip';
 import { NoData } from '../NoData/NoData';
+import fileDownload from 'js-file-download/file-download';
 import {Icon, Container, Grid, Menu, Segment, List, Button, Divider} from 'semantic-ui-react';
 import AddMaterial from './TeacherMaterialDetails/AddMaterial';
 
 import moment from 'moment';
 import toastr from 'toastr';
+import TeacherDeleteMaterialConfirmation from './TeacherMaterialDetails/TeacherDeleteMaterialConfirmation';
 
 export class TeacherMaterial extends Component {
     state={
@@ -18,6 +21,8 @@ export class TeacherMaterial extends Component {
         selectedSubject: null,
 
         AddModalOpen:false,
+        deleteModalOpen:false,
+        fileToDelete:[],
 
         MAX_ALLOWED_FILES: 10
     }
@@ -27,7 +32,7 @@ export class TeacherMaterial extends Component {
         const subjects = this.state.subjects;
         let subject = '';
         subjects.forEach(function(elem){
-            if(elem.subjectId == value){
+            if(elem.subjectId == value.split(",")[0] && elem.classId == value.split(",")[1]){
                 subject = elem;
             }                
         })
@@ -36,13 +41,14 @@ export class TeacherMaterial extends Component {
             const response = await api.teacher.getMaterialBySubject(subject.subject);
             if(response && response.data){
                 this.setState({allMaterialList: response.data.supportMaterial });
+                console.log(response.data.supportMaterial);
             }
         } catch (error) {
             console.log(error);
         }        
     }
 
-    removeDuplications(subjectList){
+    /* removeDuplications(subjectList){
         let uniques = {};
         let uniqueSubjects = [];
         subjectList.forEach(function(elem){
@@ -52,14 +58,15 @@ export class TeacherMaterial extends Component {
             }                
         });
         return uniqueSubjects;
-    }
+    } */
 
     fetchSubjects = async () => {
         try {
             const response = await api.teacher.getTeacherSubjects();
             if(response && response.data) {
-                const subjectList = this.removeDuplications(response.data);
-                this.setState( {subjects: subjectList, activeItem: response.data[0].subjectId});
+                //const subjectList = this.removeDuplications(response.data);
+                const subjectList = response.data;
+                this.setState( {subjects: subjectList, activeItem: response.data[0].subjectId + ',' + response.data[0].classId});
                 this.setState({selectedSubject: response.data[0]});
                 await this.fetchMaterials(response.data[0].subject);
             }
@@ -91,7 +98,21 @@ export class TeacherMaterial extends Component {
         this.setState({AddModalOpen:false});
     }
 
-    async deleteMaterial(obj){
+    onDeleteModalClose = () => {
+        this.setState({deleteModalOpen:false});
+    };
+    
+    onDeleteModalOpen = (file) => {
+        this.setState({fileToDelete: file, deleteModalOpen:true});
+    };
+
+    handleDownload =  async (fileName) => {
+        console.log(fileName);
+        const response = await api.teacher.getMaterialFile(fileName);
+        fileDownload(response.data, fileName);
+    };
+
+    /* async deleteMaterial(obj){
         const request = {ID: obj.ID};
         try {
             const response = await api.teacher.deleteMaterialById(request);
@@ -104,7 +125,7 @@ export class TeacherMaterial extends Component {
         }
         await this.fetchMaterials(obj.Subject);
     }
-
+ */
     render() {
         const { activeItem } = this.state
 
@@ -124,9 +145,9 @@ export class TeacherMaterial extends Component {
                             { this.state.subjects.map((data, index) =>
                             <Menu.Item
                                 key={index}
-                                name={data.subject}
-                                value={data.subjectId}
-                                active={activeItem === data.subjectId}
+                                name={data.subject + " " + data.class}
+                                value={data.subjectId + ',' + data.classId}
+                                active={activeItem === data.subjectId + ',' + data.classId}
                                 onClick={this.handleItemClick}
                             />
                             )}
@@ -146,10 +167,23 @@ export class TeacherMaterial extends Component {
                                         <List.Item key={index}>
                                     
                                         <List.Content floated='right'>
-                                        <Button.Group>
-                                            {/* <Button icon="edit"></Button> */}
+                                        <Button.Group size="mini">
+                                            {/* <Button icon="download"></Button>
                                             <Button.Or className = "custOrButton" text=''/>
-                                            <Button icon="delete"onClick={() => this .deleteMaterial(elem)}></Button>
+                                            <Button icon="delete"onClick={() => this .onDeleteModalOpen(elem)}></Button> */}
+                                            <Tooltip 
+                                                text="Download"
+                                                trigger={
+                                                    <Button icon="download" color="vk" onClick={() => {this.handleDownload(elem.Key)}}></Button> 
+                                                }
+                                            />
+                                            <Button.Or className = "custOrButton" text=''/>
+                                            <Tooltip 
+                                                text="Delete"
+                                                trigger={
+                                                    <Button icon="delete" color="google plus" onClick={() => this .onDeleteModalOpen(elem)}></Button>
+                                                }
+                                            />
                                         </Button.Group>
                                         </List.Content>
     
@@ -167,9 +201,19 @@ export class TeacherMaterial extends Component {
 
                         {this.state.AddModalOpen && 
                             <AddMaterial
-                                subjectId={this.state.activeItem}
+                                subject={this.state.selectedSubject}
                                 maxFiles={this.state.MAX_ALLOWED_FILES}
                                 onClose={this.AddMaterialClose}
+                            />
+                        }
+                        {this.state.deleteModalOpen &&
+                            <TeacherDeleteMaterialConfirmation
+                                file={this.state.fileToDelete}
+                                onClose={this.onDeleteModalClose}
+                                onDeleted={() => {
+                                    this.fetchMaterials(this.state.fileToDelete.Subject); 
+                                    this.onDeleteModalClose();
+                                }}
                             />
                         }
                 </Container>

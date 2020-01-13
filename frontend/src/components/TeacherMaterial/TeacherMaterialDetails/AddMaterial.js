@@ -13,7 +13,9 @@ import mime from 'mime';
 export class AddMaterial extends Component {
     state = {
         files: [],
-        subjectId: this.props.subjectId,
+        subject:this.props.subject,
+        //subjectId: this.props.subjectId,
+        //classId:this.props.classId,
         isSaving: false
     };
 
@@ -29,7 +31,8 @@ export class AddMaterial extends Component {
         this.state.files.forEach((file) => {
             try {
                 const formData = new FormData();
-                formData.set('subjectId', this.state.subjectId);
+                formData.set('subjectId', this.state.subject.subjectId);
+                formData.set('classId', this.state.subject.classId);
                 formData.append('file', file);
                 requests.push(formData);
             } catch (error) {
@@ -76,9 +79,9 @@ export class AddMaterial extends Component {
                 </Modal.Header>
                 <Modal.Content>
                     <Divider horizontal>
-                    <Header as='h4'>
-                        {/* <Icon name='book' /> */}
-                        Mathematics
+                    <Header as='h3' color="brown">
+                        <Icon name='book' />
+                        {this.state.subject.subject} {this.state.subject.class}
                     </Header>
                     </Divider>
                     {this.state.files.map((file, index) => (
