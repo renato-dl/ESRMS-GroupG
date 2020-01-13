@@ -385,6 +385,9 @@ class User extends Model {
         throw new Error('There is already a principal')
       }
     }
+    if(user.IsSysAdmin && !isAdminOfficer) {
+      throw new Error ('SysAdmin must be Secretary Officer');
+    }
     
     const connection = await this.db.getConnection();
 
