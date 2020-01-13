@@ -8,7 +8,7 @@ export class FileUpload extends React.Component {
   defaultAccept = [mime.getType('doc'), mime.getType('docx'), mime.getType('pdf'), mime.getType('jpeg'), mime.getType('jpg')];
 
   onDropRejected = (files) => {
-    toastr.error(files[0].name + ' is not valid. Please upload a [.doc, .docx, .pdf, .jpg, .jpeg] file under 5MB.');
+    toastr.error(files[0].name + (this.props.errorMessage ? this.props.errorMessage : ' is not valid. Please upload a [.doc, .docx, .pdf, .jpg, .jpeg] file under 5MB.'));
   }
 
   render() {
