@@ -89,8 +89,8 @@ export class ClassComposition extends React.Component{
           <Table.Header>
               <Table.Row>
                   <Table.HeaderCell>Class Name</Table.HeaderCell>
-                  <Table.HeaderCell>CreationYear</Table.HeaderCell>
-                  <Table.HeaderCell>CoordinatorName</Table.HeaderCell>
+                  {/* <Table.HeaderCell>CreationYear</Table.HeaderCell> */}
+                  <Table.HeaderCell>Coordinator Name</Table.HeaderCell>
                   <Table.HeaderCell>Details</Table.HeaderCell>           
               </Table.Row>
           </Table.Header>
@@ -98,7 +98,7 @@ export class ClassComposition extends React.Component{
             {this.state.Class_composition.map((data, index) =>
               <Table.Row key={index}>
                   <Table.Cell>{ data.Name } </Table.Cell>
-                  <Table.Cell>{data.CreationYear}</Table.Cell>
+                  {/* <Table.Cell>{data.CreationYear}</Table.Cell> */}
                   <Table.Cell>{data.Coordinator}</Table.Cell>
                   <Table.Cell>
                     <Button color='blue' type='button' onClick={() =>{

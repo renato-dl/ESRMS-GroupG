@@ -80,7 +80,7 @@ export class Timetables extends Component {
             <Card key={index}>
             <Card.Content>
               <Card.Header>Class {data.Name}</Card.Header>
-              <Card.Meta>Created on {data.CreationYear}</Card.Meta>
+              {/* <Card.Meta>Created on {data.CreationYear}</Card.Meta> */}
               <Card.Description>
                 Teacher Coordinator <strong>{data.Coordinator}</strong>
               </Card.Description>
