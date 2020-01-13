@@ -22,7 +22,8 @@
     width:100vw;
     height:100vh;
     background-color:#f7f7f7;
-    background: #fff url(../../assets/images/loginBkgr.jpg) no-repeat top center;
+    background: #fff;
+    background: url(../../assets/images/loginBkgr.jpg) no-repeat top center;
     //background: #fff url(../../assets/images/blurAbstr2.jpg) no-repeat top center;
     filter: blur(10px);
     -webkit-filter: blur(10px);

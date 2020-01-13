@@ -21,7 +21,6 @@ export class TimetableAdd extends Component {
     previousTimetable: null, 
     isPreviousPresent: false
   };
-  getSubjectNameById = this.getSubjectNameById.bind(this);
 
   async componentDidMount(){
     const subjects  = await api.admin.getSubjectslist();    
