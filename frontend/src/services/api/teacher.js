@@ -112,6 +112,10 @@ export class TeacherAPIService extends BaseAPIService {
     return this.post('/teacher/support-material', data);
   }
 
+  getMaterialFile(data){
+    return this.get(`/teacher/support-material?ID=${data}`);
+  }
+
   deleteMaterialById(data){
     return this.delete('/teacher/support-material', data);
   }
