@@ -113,7 +113,7 @@ export class TeacherAPIService extends BaseAPIService {
   }
 
   getMaterialFile(data){
-    return this.get(`/teacher/support-material?ID=${data}`);
+    return this.get(`/teacher/support-material/file?ID=${data}`, null, 'arraybuffer');
   }
 
   deleteMaterialById(data){

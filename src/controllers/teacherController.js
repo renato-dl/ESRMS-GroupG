@@ -14,6 +14,7 @@ import File from '../database/models/file';
 import path from 'path';
 import moment from 'moment';
 import db from '../database';
+import fs from 'fs';
 
 class TeacherController extends BaseController {
 
@@ -452,6 +453,9 @@ class TeacherController extends BaseController {
     }
 
     const filePath = path.join(__dirname, "../../", "uploads", file.Key);
+    if (!fs.existsSync(filePath)) {
+      return res.sendStatus(404);
+    }
     res.download(filePath);
   }
 
@@ -591,7 +595,11 @@ class TeacherController extends BaseController {
       return res.sendStatus(401);
     }
 
-    const filePath = path.join(__dirname, "../../", "uploads", file.Key);
+    const filePath = path.join(__dirname, "../../", "uploads", fileKey);
+    if (!fs.existsSync(filePath)) {
+      return res.sendStatus(404);
+    }
+    
     res.download(filePath);
   }
 }

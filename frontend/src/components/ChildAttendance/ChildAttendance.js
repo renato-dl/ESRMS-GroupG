@@ -48,7 +48,7 @@ export class ChildAttendance extends React.Component{
     }
 
     getYearRecords = async() => {
-      let from = new Date(2019, 9, 1).toISOString;
+      let from = new Date(2019, 9, 1).toISOString();
       let to = new Date().toISOString();
       await this.fetchAttendance(from, to, true);
       this.setState({
