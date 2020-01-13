@@ -111,10 +111,7 @@ export class TimetableAdd extends Component {
         found = true;
       }        
     });
-    if (error && found)
-      return true;
-    else   
-      return false;
+      return (error && found);
   }
 
   checkErrorAbsence(elem){
