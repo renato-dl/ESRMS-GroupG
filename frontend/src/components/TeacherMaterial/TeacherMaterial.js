@@ -3,7 +3,9 @@ import { api } from '../../services/api';
 
 import '../ParentMaterials/ParentMaterial.scss';
 
+import Tooltip from '../Tooltip/Tooltip';
 import { NoData } from '../NoData/NoData';
+import fileDownload from 'js-file-download/file-download';
 import {Icon, Container, Grid, Menu, Segment, List, Button, Divider} from 'semantic-ui-react';
 import AddMaterial from './TeacherMaterialDetails/AddMaterial';
 
@@ -103,6 +105,12 @@ export class TeacherMaterial extends Component {
         this.setState({fileToDelete: file, deleteModalOpen:true});
     };
 
+    handleDownload =  async (fileName) => {
+        console.log(fileName);
+        const response = await api.teacher.getMaterialFile(fileName);
+        fileDownload(response.data, fileName);
+    };
+
     /* async deleteMaterial(obj){
         const request = {ID: obj.ID};
         try {
@@ -158,10 +166,23 @@ export class TeacherMaterial extends Component {
                                         <List.Item key={index}>
                                     
                                         <List.Content floated='right'>
-                                        <Button.Group>
-                                            {/* <Button icon="edit"></Button> */}
+                                        <Button.Group size="mini">
+                                            {/* <Button icon="download"></Button>
                                             <Button.Or className = "custOrButton" text=''/>
-                                            <Button icon="delete"onClick={() => this .onDeleteModalOpen(elem)}></Button>
+                                            <Button icon="delete"onClick={() => this .onDeleteModalOpen(elem)}></Button> */}
+                                            <Tooltip 
+                                                text="Download"
+                                                trigger={
+                                                    <Button icon="download" color="vk" onClick={() => {this.handleDownload(elem.ID)}}></Button> 
+                                                }
+                                            />
+                                            <Button.Or className = "custOrButton" text=''/>
+                                            <Tooltip 
+                                                text="Delete"
+                                                trigger={
+                                                    <Button icon="delete" color="google plus" onClick={() => this .onDeleteModalOpen(elem)}></Button>
+                                                }
+                                            />
                                         </Button.Group>
                                         </List.Content>
     
