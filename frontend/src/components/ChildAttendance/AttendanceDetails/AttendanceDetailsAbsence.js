@@ -4,7 +4,7 @@ import moment from 'moment';
 import './AttendanceDetails.scss';
 
 export const AttendanceDetailsAbsence = (props) => (
-  <Modal dimmer open className="attendance-detail" size="small">
+  <Modal dimmer open className="attendance-detail" size="tiny">
     <Modal.Header>
       <span>Attendance details</span>
       <Icon onClick={props.onClose} className="close-icn" name="close" />
