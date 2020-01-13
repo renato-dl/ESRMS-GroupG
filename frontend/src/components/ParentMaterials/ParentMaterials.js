@@ -15,7 +15,6 @@ export class ParentMaterials extends Component {
     }
 
     handleDownload =  async (fileName) => {
-        console.log(fileName);
         const response = await api.parent.getSupportMaterialFile(fileName);
         fileDownload(response.data, fileName);
     };

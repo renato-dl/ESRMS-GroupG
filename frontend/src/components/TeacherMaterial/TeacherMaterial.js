@@ -107,7 +107,6 @@ export class TeacherMaterial extends Component {
     };
 
     handleDownload =  async (fileName) => {
-        console.log(fileName);
         const response = await api.teacher.getMaterialFile(fileName);
         fileDownload(response.data, fileName);
     };
