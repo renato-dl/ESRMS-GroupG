@@ -8,6 +8,7 @@ import StudentAttendance from '../database/models/studentAttendance';
 import SupportMaterial from '../database/models/supportMaterial';
 import path from 'path';
 import Note from '../database/models/note';
+import fs from 'fs';
 
 class ParentController extends BaseController {
 
@@ -78,11 +79,14 @@ class ParentController extends BaseController {
 
     const file = await File.findOne({ Key: fileKey });
     if (!file) {
-      res.sendStatus(404);
-      return;
+      return res.sendStatus(404);
     }
 
     const filePath = path.join(__dirname, "../../", "uploads", file.Key);
+    if (!fs.existsSync(filePath)) {
+      return res.sendStatus(404);
+    }
+
     res.download(filePath);
   }
 
