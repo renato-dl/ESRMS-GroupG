@@ -15,7 +15,6 @@ export class ParentMaterials extends Component {
     }
 
     handleDownload =  async (fileName) => {
-        console.log(fileName);
         const response = await api.parent.getSupportMaterialFile(fileName);
         fileDownload(response.data, fileName);
     };
@@ -25,7 +24,7 @@ export class ParentMaterials extends Component {
         this.setState({ activeItem: value })
         this.filterMaterials(value);
     }    
-  
+
     filterMaterials = (id) => {
         let materials = [];
         this.state.allMaterialList.forEach(function(e){
@@ -93,7 +92,7 @@ export class ParentMaterials extends Component {
                                         <List.Item key={index}>
                                     
                                         <List.Content floated='right'>
-                                            <Button icon="download" onClick={() => {this.handleDownload(elem.ID)}}></Button>
+                                            <Button icon="download" onClick={() => {this.handleDownload(elem.Key)}}></Button>
                                         </List.Content>
     
                                         <List.Icon name='file' size='large' verticalAlign='middle' />
