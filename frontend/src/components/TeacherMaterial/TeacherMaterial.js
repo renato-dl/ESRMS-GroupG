@@ -27,7 +27,7 @@ export class TeacherMaterial extends Component {
         const subjects = this.state.subjects;
         let subject = '';
         subjects.forEach(function(elem){
-            if(elem.subjectId == value){
+            if(elem.subjectId == value.split(",")[0] && elem.classId == value.split(",")[1]){
                 subject = elem;
             }                
         })
@@ -42,7 +42,7 @@ export class TeacherMaterial extends Component {
         }        
     }
 
-    removeDuplications(subjectList){
+    /* removeDuplications(subjectList){
         let uniques = {};
         let uniqueSubjects = [];
         subjectList.forEach(function(elem){
@@ -52,14 +52,15 @@ export class TeacherMaterial extends Component {
             }                
         });
         return uniqueSubjects;
-    }
+    } */
 
     fetchSubjects = async () => {
         try {
             const response = await api.teacher.getTeacherSubjects();
             if(response && response.data) {
-                const subjectList = this.removeDuplications(response.data);
-                this.setState( {subjects: subjectList, activeItem: response.data[0].subjectId});
+                //const subjectList = this.removeDuplications(response.data);
+                const subjectList = response.data;
+                this.setState( {subjects: subjectList, activeItem: response.data[0].subjectId + ',' + response.data[0].classId});
                 this.setState({selectedSubject: response.data[0]});
                 await this.fetchMaterials(response.data[0].subject);
             }
@@ -124,9 +125,9 @@ export class TeacherMaterial extends Component {
                             { this.state.subjects.map((data, index) =>
                             <Menu.Item
                                 key={index}
-                                name={data.subject}
-                                value={data.subjectId}
-                                active={activeItem === data.subjectId}
+                                name={data.subject + " " + data.class}
+                                value={data.subjectId + ',' + data.classId}
+                                active={activeItem === data.subjectId + ',' + data.classId}
                                 onClick={this.handleItemClick}
                             />
                             )}
@@ -167,7 +168,7 @@ export class TeacherMaterial extends Component {
 
                         {this.state.AddModalOpen && 
                             <AddMaterial
-                                subjectId={this.state.activeItem}
+                                subject={this.state.selectedSubject}
                                 maxFiles={this.state.MAX_ALLOWED_FILES}
                                 onClose={this.AddMaterialClose}
                             />
