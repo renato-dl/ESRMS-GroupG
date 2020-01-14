@@ -28,8 +28,9 @@ export class ParentMaterials extends Component {
     filterMaterials = (id) => {
         let materials = [];
         this.state.allMaterialList.forEach(function(e){
-            if(e.SubjectID == id)
-            materials.push(e);
+            if(e.SubjectID == id){
+                materials.push(e);
+            }
         });
         this.setState({materialListBySubject: materials});
     }

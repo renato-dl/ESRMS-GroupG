@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {TimetableUpload} from '../../FileUpload/TimetableUpload';
+import {FileUpload} from '../../FileUpload/FileUpload';
 import {FilePreview} from '../../FilePreview/FilePreview';
 import {Table, Icon, Modal, Button, Accordion } from 'semantic-ui-react';
 import {api} from '../../../services/api';
@@ -19,9 +19,10 @@ export class TimetableAdd extends Component {
     allowedSubjects: [], 
     timetable: [], 
     previousTimetable: null, 
-    isPreviousPresent: false
+    isPreviousPresent: false, 
+    acceptedExtensions: [mime.getType('xlsx')], 
+    excelErrorMessage: 'is not valid. Please upload a [.xlsx] file under 5MB.'
   };
-  getSubjectNameById = this.getSubjectNameById.bind(this);
 
   async componentDidMount(){
     const subjects  = await api.admin.getSubjectslist();    
@@ -110,10 +111,7 @@ export class TimetableAdd extends Component {
         found = true;
       }        
     });
-    if (error && found)
-      return true;
-    else   
-      return false;
+      return (error && found);
   }
 
   checkErrorAbsence(elem){
@@ -388,7 +386,9 @@ export class TimetableAdd extends Component {
       </div>
       <div>
       {(!this.state.file && !this.state.previousTimetable) &&
-        <TimetableUpload onDropAccepted={this.onDrop} /> 
+        <FileUpload onDropAccepted={this.onDrop} 
+        accept={this.state.acceptedExtensions}
+        errorMessage={this.state.excelErrorMessage}/> 
         }        
       </div>
       </Modal.Content>

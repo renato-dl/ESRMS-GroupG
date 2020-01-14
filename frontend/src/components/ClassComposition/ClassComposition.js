@@ -110,7 +110,7 @@ export class ClassComposition extends React.Component{
                     }}>Students 
                     <Icon className="cog icon" name="cog"/>            
                     </Button>
-                    <Button color='red' onClick={() =>this.deleteClass(data)}>
+                    <Button color='red' style={{margin:'3px 3px 3px 0'}} onClick={() =>this.deleteClass(data)}>
                       Delete
                     <Icon className="delete icon" name="delete"/>  
                     </Button>

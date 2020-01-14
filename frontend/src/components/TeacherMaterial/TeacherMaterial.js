@@ -10,7 +10,6 @@ import {Icon, Container, Grid, Menu, Segment, List, Button, Divider} from 'seman
 import AddMaterial from './TeacherMaterialDetails/AddMaterial';
 
 import moment from 'moment';
-import toastr from 'toastr';
 import TeacherDeleteMaterialConfirmation from './TeacherMaterialDetails/TeacherDeleteMaterialConfirmation';
 
 export class TeacherMaterial extends Component {

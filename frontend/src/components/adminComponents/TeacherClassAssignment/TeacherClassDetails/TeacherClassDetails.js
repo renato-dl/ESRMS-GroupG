@@ -62,7 +62,7 @@ export class TeacherClassDetails extends Component {
 
     setClassOptions = (dat) =>
         _.times(dat.length, (i) => {
-            const name = dat.Name;
+            // const name = dat.Name;
             return { key: dat[i].ID, value: dat[i].ID , text: dat[i].Name}
     })
     
