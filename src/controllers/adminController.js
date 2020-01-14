@@ -391,7 +391,7 @@ class AdminController extends BaseController {
     await TCSR.findById(req.body.id);
     try {
       await TCSR.remove(req.body.id);
-    } catch {
+    } catch (error) {
       throw new Error('Cannot remove association if teacher has assigned topics');
     }    
     res.send({success: true});
