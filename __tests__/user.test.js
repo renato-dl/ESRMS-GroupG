@@ -667,7 +667,7 @@ describe('editInternalAccount', () => {
     await User.remove(insertResult.id);
   }); 
 
-  test('It should throw an error when removing the role of a teacher assigned to a class  ', async () => {
+  test('It should throw an error when removing the role of a teacher assigned to a class', async () => {
 
     // Perform insertion
     const testFirstName = 'Joe';
@@ -695,13 +695,18 @@ describe('editInternalAccount', () => {
       id: expect.anything()
     });
 
+    const classId = await Class.create({
+      CreationYear: moment().utc().format('YYYY'),
+      Name: 'ì',
+      CoordinatorId: insertResult.id
+    });
     //then asign that teacher to a class
     
     const connection = await db.getConnection();
     const assignTeacherToClass = await connection.query(
       `INSERT INTO TeacherSubjectClassRelation (SubjectId, ClassId, TeacherId)
-      VALUES (1, 1, ?)`,
-      [insertResult.id]
+      VALUES (1, ?, ?)`,
+      [classId, insertResult.id]
 
     );
 
@@ -728,6 +733,7 @@ describe('editInternalAccount', () => {
       [assignTeacherToClass.insertId]
     );
     connection.release();
+    await Class.remove(classId);
     await User.remove(insertResult.id);
    }
   });
@@ -1017,11 +1023,17 @@ describe('deleteAccount', () =>{
       id: expect.anything()
     });
 
+    const classId = await Class.create({
+      CreationYear: moment().utc().format('YYYY'),
+      Name: 'ì',
+      CoordinatorId: result.id
+    });
+
     const connection = await db.getConnection();
     const assignTeacherToClass = await connection.query(
       `INSERT INTO TeacherSubjectClassRelation (SubjectId, ClassId, TeacherId)
-      VALUES (1, 1, ?)`,
-      [result.id]
+      VALUES (1, ?, ?)`,
+      [classId, result.id]
 
     );
 
@@ -1041,7 +1053,8 @@ describe('deleteAccount', () =>{
       );
 
       connection.release();
-
+      
+      await Class.remove(classId);
       await User.remove(result.id);
     }
 
