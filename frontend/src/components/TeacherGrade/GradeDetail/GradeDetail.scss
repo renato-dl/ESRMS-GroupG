@@ -11,6 +11,10 @@
       }
     }
 
+    .gradeDescription{
+      color: darkgray;
+    }
+
     button i{
       float: left;
       cursor: pointer;
@@ -19,6 +23,7 @@
     .numberInput{
       display: flex;
       float: right;
+      width: 75px !important;
     }
   
     .content {
@@ -57,10 +62,6 @@
           width: 55px !important;
         }
       }
-    }
-
-    .numberInput {
-      width: 75px !important;
     }
 }
   

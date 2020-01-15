@@ -5,6 +5,10 @@ export class CommunicationAPIService extends BaseAPIService {
     return this.get('/communication');
   }
 
+  listForParent() {
+    return this.get('/communication/parent');
+  }
+
   add(title, description, isImportant, dueDate) {
     return this.post('/communication', { title, description, isImportant, dueDate });
   }

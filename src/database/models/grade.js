@@ -45,7 +45,7 @@ class Grade extends Model {
     if(isNaN(parsedGrade)){
       throw new Error('Missing or invalid grade');
     }
-    if ( parsedGrade < 0 || parsedGrade > 10 ) {
+    if ( parsedGrade < 0 || parsedGrade > 10.25 ) {
       throw new Error('Invalid grade');
     }
     if((parsedGrade * 100) % 25 != 0){
@@ -129,17 +129,17 @@ class Grade extends Model {
     return false;
   }
 
-  updateGrade(ID, Grade, Type) {
+  updateGrade(ID, grade, Type) {
     if (!ID) {
       throw new Error('Missing or invalid grade id');
     }
 
-    const parsedGrade = parseFloat(Grade);
+    const parsedGrade = parseFloat(grade);
     
     if(isNaN(parsedGrade)){
       throw new Error('Missing or invalid grade');
     }
-    if ( parsedGrade < 0 || parsedGrade > 10 ) {
+    if ( parsedGrade < 0 || parsedGrade > 10.25 ) {
       throw new Error('Invalid grade');
     }
     if((parsedGrade * 100) % 25 != 0){
@@ -149,7 +149,7 @@ class Grade extends Model {
       throw new Error('Missing or invalid type');
     }
 
-    return this.update(ID, {Grade, Type})
+    return this.update(ID, {Grade: grade, Type})
   }
 
 }

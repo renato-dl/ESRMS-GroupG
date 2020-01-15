@@ -16,12 +16,17 @@ export const Header = withRouter(({history, ...props}) => {
   const switchAccount = () => {
     history.push("/roles");
   };
+
+  const changePassword = () => {
+    history.push("/changePassword")
+  }
   
   const logOut = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("roles");
-    localStorage.removeItem("serializedState");
+    //localStorage.removeItem("token");
+    //localStorage.removeItem("role");
+    //localStorage.removeItem("roles");
+    //localStorage.removeItem("serializedState");
+    localStorage.clear();
     window.location.replace("/login");
   };
 
@@ -36,9 +41,11 @@ export const Header = withRouter(({history, ...props}) => {
 
       <div className="headerToolbarFiled">
         <Dropdown trigger={trigger}>
-          <Dropdown.Menu>
-            {hasMultipleRoles && <Dropdown.Item text='Switch account' onClick={switchAccount} />}
-            <Dropdown.Item text='Logout' onClick={logOut} />
+          <Dropdown.Menu className="headerCustDropdown">
+            {hasMultipleRoles && <Dropdown.Item text='Switch account' icon="shuffle" onClick={switchAccount} />}
+            <Dropdown.Item text='Change Password' icon="unlock alternate" onClick={changePassword} />
+            <Dropdown.Divider />
+            <Dropdown.Item text='Logout' icon="sign out" onClick={logOut} />
           </Dropdown.Menu>
         </Dropdown>
       </div>

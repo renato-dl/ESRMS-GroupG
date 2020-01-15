@@ -27,4 +27,23 @@ export class ParentAPIService extends BaseAPIService {
     return this.get(`/parent/assignment/file?ID=${fileID}`, null, 'arraybuffer');
   }
 
+  getChildNotes(data) {
+    return this.get(`/parent/notes`,data);
+  }
+
+  getChildNote(data) {
+    return this.get(`/parent/note`,data);
+  }
+
+  getSubjectslist(){
+    return this.get(`/subject/all`);
+  }
+
+  getSupportMaterials(studentID){
+    return this.get(`/parent/support-material/${studentID}`);
+  }
+  
+  getSupportMaterialFile(fileID) {
+    return this.get(`/parent/support-material/file?ID=${fileID}`, null, 'arraybuffer');
+  }
 }

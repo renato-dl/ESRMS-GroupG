@@ -268,8 +268,9 @@ class StudentAttendance extends Model {
       from: date,
       to: date
     });
+    let result;
     if (existingRecord.length == 0) { // present
-      const result = await this.create({
+      result = await this.create({
         StudentId: studentId,
         Date: today.format(this.db.getDateFormatString()),
         EarlyExit: time,
@@ -290,7 +291,6 @@ class StudentAttendance extends Model {
       WHERE StudentId = ? AND Date = '${date}' 
     `;
     const connection = await this.db.getConnection();
-    let result;
     try {
       result = await connection.query(query, [teacherId, studentId]);
     } catch (error) {

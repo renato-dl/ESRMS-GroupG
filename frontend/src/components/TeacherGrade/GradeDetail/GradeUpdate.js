@@ -123,7 +123,7 @@ export class GradeUpdate extends Component {
                   className="numberInput" 
                   valueType="decimal" 
                   min={0} 
-                  max={10} 
+                  max={10.25} 
                   step={0.25}
                   value={this.state.value}
                   onChange={(e) => {this.changeValue(e)} }
@@ -132,7 +132,7 @@ export class GradeUpdate extends Component {
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button  positive onClick={this.onSave} disabled={this.updated || (this.state.value === null || (parseFloat(this.state.value) < 0.00) || (parseFloat(this.state.value) > 10.00))}>
+        <Button  positive onClick={this.onSave} disabled={this.updated || (this.state.value === null || (parseFloat(this.state.value) < 0.00) || (parseFloat(this.state.value) > 10.25))}>
           <Icon name='checkmark' /> Update Grade
         </Button>
 

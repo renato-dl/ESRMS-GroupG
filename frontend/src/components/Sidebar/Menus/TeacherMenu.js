@@ -23,6 +23,14 @@ export const TeacherMenu = (props) => {
         <Icon name='group' />
         Attendance Register
       </Menu.Item> 
+      <Menu.Item as={Link} to={`/teacher/materials`}>
+        <Icon name='cloud upload'/>
+        Subject Materials
+      </Menu.Item>
+      <Menu.Item as={Link} to='/teacher/classesfornote'>
+        <Icon name='bullhorn' />
+        Note Operation
+      </Menu.Item> 
       {/* <Menu.Item as={Link} to='/teacher/marks'>
         <Icon name='sort numeric up' />
         Marks

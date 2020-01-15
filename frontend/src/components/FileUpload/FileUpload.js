@@ -8,17 +8,16 @@ export class FileUpload extends React.Component {
   defaultAccept = [mime.getType('doc'), mime.getType('docx'), mime.getType('pdf'), mime.getType('jpeg'), mime.getType('jpg')];
 
   onDropRejected = (files) => {
-    toastr.error(files[0].name + ' is not valid. Please upload a [.doc, .docx, .pdf, .jpg, .jpeg] file under 5MB.');
+    toastr.error(files[0].name + (this.props.errorMessage ? this.props.errorMessage : ' is not valid. Please upload a [.doc, .docx, .pdf, .jpg, .jpeg] file under 5MB.'));
   }
 
   render() {
     return (
       <Dropzone
         accept={this.props.accept || this.defaultAccept} 
-        onDrop={this.props.onDrop}
+        onDropAccepted={this.props.onDropAccepted}
         onDropRejected={this.onDropRejected}
         maxSize={5 * 1024 * 1024}
-        multiple={false}
       >
         {({getRootProps, getInputProps, isDragAccept, isDragActive, isDragReject}) => {
           const classNames = ['file-upload'];
@@ -34,7 +33,7 @@ export class FileUpload extends React.Component {
             <section className="container">
               <div {...getRootProps({className: classNames.join(' ')})}>
                 <input {...getInputProps()} />
-                <b>Drag 'n' drop a file here, or click to select</b>
+                <b>Drag 'n' drop a file(s) here, or click to select</b>
               </div>
             </section>
           );

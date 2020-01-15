@@ -10,27 +10,32 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({
+const multerUpload = multer({
   storage, 
-  fileFilter: (req, file, cb)  =>{
+  fileFilter: (req, file, cb)  => {
     const isValidType = validateFileType(file.mimetype);
-    if(!isValidType){
+    if(!isValidType) {
       return cb (new Error("Allowed file types are: PDF, DOC, DOCX, JPG, JPEG"), false);
     }
 
     cb(null, true);
   },
   limits : { fileSize: 5*1024*1024 },
-  
-}).single('file');
+});
 
-
-export const UploadMiddleware = (req, res, next) => {
-  upload(req, res, (err) => {
+export const UploadMiddleware = {
+  single: (req, res, next) => multerUpload.single('file')(req, res, (err) => {
     if (err) {
       return res.status(422).send({ msg: err.message });
     }
 
     next();
-  });
+  }),
+  multiple: (numberOfFiles) => (req, res, next) => multerUpload.array('files', numberOfFiles)(req, res, (err) => {
+    if (err) {
+      return res.status(422).send({ msg: err.message });
+    }
+
+    next();
+  })
 }

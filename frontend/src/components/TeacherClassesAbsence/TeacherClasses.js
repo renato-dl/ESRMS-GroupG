@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { api } from '../../services/api';
 
-import { Container, Button, Card, Image, Icon, List } from 'semantic-ui-react';
+import { Container, Button, Card, Image, Icon } from 'semantic-ui-react';
 import { NoData } from '../NoData/NoData';
 
 import ClassIcon from '../../assets/images/class2.png';

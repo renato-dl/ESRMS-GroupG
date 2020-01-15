@@ -78,7 +78,7 @@ export class ClassComposition extends React.Component{
       return (
         <Container className="class-composition contentContainer">
           <h3 className="contentHeader"> 
-            <Icon name='braille'/> 
+            <Icon name='linode'/> 
             Class Composition
           </h3>
           <Button color='blue' onClick={this.addClass}>
@@ -89,8 +89,8 @@ export class ClassComposition extends React.Component{
           <Table.Header>
               <Table.Row>
                   <Table.HeaderCell>Class Name</Table.HeaderCell>
-                  <Table.HeaderCell>CreationYear</Table.HeaderCell>
-                  <Table.HeaderCell>CoordinatorName</Table.HeaderCell>
+                  {/* <Table.HeaderCell>CreationYear</Table.HeaderCell> */}
+                  <Table.HeaderCell>Coordinator Name</Table.HeaderCell>
                   <Table.HeaderCell>Details</Table.HeaderCell>           
               </Table.Row>
           </Table.Header>
@@ -98,7 +98,7 @@ export class ClassComposition extends React.Component{
             {this.state.Class_composition.map((data, index) =>
               <Table.Row key={index}>
                   <Table.Cell>{ data.Name } </Table.Cell>
-                  <Table.Cell>{data.CreationYear}</Table.Cell>
+                  {/* <Table.Cell>{data.CreationYear}</Table.Cell> */}
                   <Table.Cell>{data.Coordinator}</Table.Cell>
                   <Table.Cell>
                     <Button color='blue' type='button' onClick={() =>{
@@ -110,7 +110,7 @@ export class ClassComposition extends React.Component{
                     }}>Students 
                     <Icon className="cog icon" name="cog"/>            
                     </Button>
-                    <Button color='red' onClick={() =>this.deleteClass(data)}>
+                    <Button color='red' style={{margin:'3px 3px 3px 0'}} onClick={() =>this.deleteClass(data)}>
                       Delete
                     <Icon className="delete icon" name="delete"/>  
                     </Button>
@@ -149,11 +149,23 @@ export class ClassComposition extends React.Component{
       }
 
       return (
-        <Container className="contentContainer">
+        <Container className="class-composition contentContainer">
           <h3 className="contentHeader"> 
-            <Icon name='braille' /> 
+            <Icon name='linode' /> 
             Class Composition</h3>
+            <Button color='blue' onClick={this.addClass}>
+            Add class
+            <Icon className="plus icon" name="plus"/>  
+          </Button>
           <NoData/>
+            {this.state.addClassModalOpen &&
+            <AddNewClass
+              onClose={this.onAddClassClose}
+              onSave={() =>{
+                this.fetchClasses();
+              }}
+            />
+            }
         </Container>
       );
     }

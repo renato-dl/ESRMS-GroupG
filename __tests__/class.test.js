@@ -193,8 +193,6 @@ describe('Tests about assignment of student to a class', () =>{
 });
 
 describe('Tests about classes', () => {
-
-
   test('It should not throw errors while getting the list of classes', async () => {
     expect(Class.getClasses()).resolves.not.toThrow();
   });
@@ -230,8 +228,15 @@ describe('Tests about classes', () => {
         ]
       )
     );
-  })
+  });
 
+  test("It should retrieve the class name by its id", async() =>{
+    const classObj = await Class.getClassNameById(1);
+    expect(classObj).not.toBeNull();
+    expect(classObj).toHaveLength(2);
+    expect(classObj).toEqual("1A");
+  });
+  
 });
 
 describe('Tests about creation of classes', () =>{

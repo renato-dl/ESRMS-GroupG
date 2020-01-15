@@ -27,10 +27,10 @@ export class AdminAPIService extends BaseAPIService {
     return this.get('/admin/students', data);
   }
 
-  
   getStudents() {
     return this.get('/admin/students');
   }
+  
   updateStudent(data) {
     return this.patch('admin/student', data)
   }  
@@ -59,15 +59,43 @@ export class AdminAPIService extends BaseAPIService {
     return this.delete('/admin/student', {ID: studentID});
   }
 
-  getTeachers(){
-    return this.get('/admin/teachers');
+  getTeachers(s){
+    return this.get(`/admin/teachers${s}`);
   }
-
+  
   addNewClass(data){
     return this.post('/admin/class',data);
   }
 
   deleteClass(data){
     return this.delete('/admin/class', data);
+  }
+
+  getAllTeacherClassData(){
+    return this.get('/admin/teacher-class');
+  }
+
+  createTeacherClassAssociation(data){
+    return this.post('/admin/teacher-class', data);
+  }
+
+  deleteTeacherAssociation(id){
+    return this.delete('/admin/teacher-class', {id:id});
+  }
+
+  getSubjectslist(){
+    return this.get(`/subject/all`);
+  }
+
+  getAllTimetables(){
+    return this.get('/timetable');
+  }
+
+  addClassTimetable(data){
+    return this.post('/timetable', data);
+  }
+
+  deleteClassTimetable(classId){
+    return this.delete(`/timetable/${classId}`);
   }
 }

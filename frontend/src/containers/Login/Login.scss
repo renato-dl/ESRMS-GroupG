@@ -20,9 +20,10 @@
     content: '';
     position:fixed;
     width:100vw;
-    height:100vh;
+    height:100vh;    
+    // background: #fff;
+    background: url(../../assets/images/loginBkgr.jpg) no-repeat top center;
     background-color:#f7f7f7;
-    background: #fff url(../../assets/images/loginBkgr.jpg) no-repeat top center;
     //background: #fff url(../../assets/images/blurAbstr2.jpg) no-repeat top center;
     filter: blur(10px);
     -webkit-filter: blur(10px);
@@ -45,5 +46,18 @@
 .roles-text {
     display: flex !important;
     justify-content: center;
+}
+
+.chpwdInput input::placeholder {
+    color: #677e91!important;
+    opacity: 1; /* Firefox */
+}
+.invMsg{
+    float:left;
+    text-align: center;
+    width:100%;
+    background: #fff6f6;
+    border:1px solid #e0b4b4;
+    color: #9f3a38;
 }
 

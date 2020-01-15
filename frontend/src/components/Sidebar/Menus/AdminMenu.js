@@ -4,17 +4,17 @@ import {Link} from 'react-router-dom';
 
 export const AdminMenu = (props) => (
   <>
-    <Menu.Item as={Link} to="/admin">
+    <Menu.Item >
       <span>
         <br/>
-        <Icon name='address book outline' size="big" />
+        <Icon className='address book outline' size="big" />
         Secretary Officer 
         <br/><br/>
       </span>
     </Menu.Item>
 
     <Menu.Item as={Link} to='/admin/enrollStudents'>
-      <Icon name='child' />
+      <Icon className='child' />
       Students
     </Menu.Item>
     {/* <Menu.Item as={Link} to='/admin/configParent'>
@@ -22,11 +22,19 @@ export const AdminMenu = (props) => (
       Parents' Access
     </Menu.Item> */}
     <Menu.Item as={Link} to='/admin/ClassComposition'>
-      <Icon name='linode' />
+      <Icon className='linode' />
       Class Compositions
     </Menu.Item>
+    <Menu.Item as={Link} to='/admin/timetables'>
+      <Icon className='clock outline' />
+      Class Timetables
+    </Menu.Item>
+    <Menu.Item as={Link} to='/admin/TeacherClasses'>
+      <Icon className='exchange icon' />
+      Teacher-Class Associations
+    </Menu.Item>
     <Menu.Item as={Link} to='/admin/communications'>
-      <Icon name='bullhorn' />
+      <Icon className='bullhorn' />
       Communications
     </Menu.Item>
     {/* <Menu.Item as={Link} to='/accounts'>

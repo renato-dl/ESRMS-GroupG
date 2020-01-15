@@ -132,7 +132,7 @@ export class GradeDetail extends Component {
 
   isWeekday = date => {
     const day = moment(date).day();
-    return day !== 0;
+    return day !== 0 && day !== 6;
   };
 
   render() {
@@ -143,6 +143,10 @@ export class GradeDetail extends Component {
           <Icon onClick={this.onClose} className="close-icn" name="close" />
         </Modal.Header>
         <Modal.Content>
+          <Modal.Description className="gradeDescription">
+            The mark 10.25 equals to 10 cum laude.            
+          </Modal.Description>
+          <br />
           <Form loading={this.state.isSaving}>
             <Form.Group widths='equal'>
             <Form.Select
@@ -175,11 +179,11 @@ export class GradeDetail extends Component {
                     className="numberInput" 
                     valueType="decimal" 
                     min={0} 
-                    max={10} 
+                    max={10.25} 
                     step={0.25}
                     value={this.state.studentMarks.get(eStudent.ID)}
                     onChange={(e) => {this.changeValue(eStudent.ID, e)} }
-                  />                   
+                  />                                   
                 </Form.Field>                 
               )}          
           </Form>

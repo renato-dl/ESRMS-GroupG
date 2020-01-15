@@ -7,11 +7,12 @@ import * as toastr from 'toastr';
 import moment from 'moment';
 import DatePicker , { registerLocale } from "react-datepicker";
 import en from "date-fns/locale/en-GB";
-import mime from 'mime';
 import {FilePreview} from '../../FilePreview/FilePreview.js';
 import {FileUpload} from '../../FileUpload/FileUpload';
+import mime from 'mime';
 
 registerLocale("en", en);
+const MAX_ALLOWED_FILES = 10;
 
 export class TeacherAssignment extends Component {
   state = {
@@ -19,15 +20,21 @@ export class TeacherAssignment extends Component {
     title: '',
     description: '',
     date: moment().add(1, 'days').toDate(),
-    attachment: null,
+    attachments: [],
     classId: '',
     subjectId: '',
     isSaving: false,
-    file: null
+    files: [],
   };
 
   onDrop = (files) => {
-    this.setState({ file: files[0] });
+
+    const currentFilesCount = this.state.files.length + this.state.attachments.length;
+    if (files.length > MAX_ALLOWED_FILES || (currentFilesCount + files.length) > MAX_ALLOWED_FILES) {
+      return toastr.error("Assignment cannot have more than 10 attachments!");
+    }
+
+    this.setState({ files: [...this.state.files, ...files] });
   }
 
   componentDidMount() {
@@ -44,7 +51,7 @@ export class TeacherAssignment extends Component {
         title: assignment.Title,
         description: assignment.Description,
         date: new Date(assignment.DueDate),
-        attachment: assignment.AttachmentFile
+        attachments: assignment.files
       });
     }
   }
@@ -73,11 +80,11 @@ export class TeacherAssignment extends Component {
       formData.set('description', this.state.description);
       formData.set('dueDate', this.state.date.toISOString());
       
-      if (this.state.attachment) {
-        formData.set('attachmentFile', this.state.attachment);
-      }
+      formData.set('attachments', JSON.stringify(this.state.attachments || []));
 
-      formData.set('file', this.state.file);
+      this.state.files.forEach((file) => {
+        formData.append('files', file);
+      });
 
       if(!this.state.id) {
         await api.teacher.addAssignment(formData);
@@ -104,14 +111,20 @@ export class TeacherAssignment extends Component {
 
   isWeekday = date => {
     const day = moment(date).day();
-    return day !== 0;
+    return day !== 0 && day !== 6;
   };
 
-  onFileRemove = () => {
-    this.setState({ file: null, attachment: null });
-  }
+  onAttachmentRemove = (name) => {
+    this.setState({ attachments: this.state.attachments.filter((a) => a.Name !== name)});
+  };
+
+  onFileRemove = (name) => {
+    this.setState({ files: this.state.files.filter((a) => a.name !== name)});
+  };
 
   render() {
+    const currentFilesLength = this.state.files.length + this.state.attachments.length;
+
     return (
       <Modal dimmer open className="assignment-detail" size="small">
         <Modal.Header>
@@ -149,18 +162,27 @@ export class TeacherAssignment extends Component {
               </Form.Field>
             </Form.Group>
             <Form.Field>
-            {!this.state.file && !this.state.attachment && <FileUpload onDrop={this.onDrop} />}
-            {(this.state.file || this.state.attachment) &&
-              <FilePreview 
-                type={
-                  this.state.file ? mime.getExtension(this.state.file.type) : this.state.attachment.split('.').pop()
-                } 
-                name={
-                  this.state.file ? this.state.file.name : this.state.attachment
-                } 
-                onRemove={this.onFileRemove}
-              />
-            }
+
+            {(!!this.state.files.length || !!this.state.attachments.length) && <LabelDetail>Attachments</LabelDetail>}
+            <div className="files">
+              {this.state.files.map((file) => (
+                <FilePreview 
+                  type={mime.getExtension(file.type)} 
+                  name={file.name} 
+                  onRemove={this.onFileRemove}
+                />
+              ))}
+              {this.state.attachments.map((file) => (
+                <FilePreview 
+                  type={mime.getExtension(file.Type)} 
+                  name={file.Name} 
+                  onRemove={this.onAttachmentRemove}
+                />
+              ))}
+            </div>
+            
+            {currentFilesLength < MAX_ALLOWED_FILES && <FileUpload onDropAccepted={this.onDrop} />}
+
             </Form.Field>
           </Form>
         </Modal.Content>

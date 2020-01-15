@@ -7,6 +7,7 @@ exports.up = function(knex) {
     table.string('TeacherId').notNullable();
 
     table.unique(['SubjectId', 'ClassId', 'TeacherId']);
+    table.unique(['SubjectId', 'ClassId']);
     table.foreign('SubjectId').references('Subjects.ID');
     table.foreign('ClassId').references('Classes.ID');
     table.foreign('TeacherId').references('Users.ID');

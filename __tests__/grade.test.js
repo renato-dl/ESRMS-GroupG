@@ -223,8 +223,11 @@ describe('Tests about insertion of a grade by teacher', () => {
     const studentId = "868d6ec1dfc8467f6d260c48b5620543"
     const grade = "6.0"
     const type = "Oral";
-    let date = moment.utc();
-    date.add('1', 'days');
+    let date = moment.utc().add('1', 'days');
+
+    while (date.isoWeekday() == 6 || date.isoWeekday() == 7) {
+      date.add(1, 'days');
+    }
 
     try{
       const result = await Grade.addGrade(

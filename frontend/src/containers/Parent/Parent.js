@@ -20,6 +20,8 @@ export class Parent extends React.Component {
     if (response) {
       this.setState({children: response.data})
     }
+    localStorage.removeItem('selectedChild');
+    this.context.setSelectedStudent({});
   }
  
   selectChild = async (child) => {
